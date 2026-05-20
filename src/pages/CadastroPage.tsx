@@ -3,9 +3,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
-import { AuthShell, Field } from '@/pages/LoginPage'
+import { AuthShell, Field } from '@/components/AuthShell'
 import { PasswordInput } from '@/components/PasswordInput'
-import { LoginBackground } from '@/components/LoginBackground'
 import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWidget'
 import { usePwnedCheck } from '@/hooks/usePwnedCheck'
 
@@ -74,10 +73,8 @@ export function CadastroPage() {
 
   if (success) {
     return (
-      <>
-        <LoginBackground />
-        <AuthShell title="Verifique seu e-mail" subtitle="Falta so confirmar pra acessar">
-          <div className="space-y-4 text-sm text-bold-white/70 text-center">
+      <AuthShell title="Verifique seu e-mail" subtitle="Falta so confirmar pra acessar">
+        <div className="space-y-4 text-sm text-bold-white/70 text-center">
             <p>
               Mandamos um link de confirmacao para <strong className="text-bold-white">{email}</strong>.
             </p>
@@ -91,15 +88,12 @@ export function CadastroPage() {
             </button>
           </div>
         </AuthShell>
-      </>
     )
   }
 
   return (
-    <>
-      <LoginBackground />
-      <AuthShell title="Criar conta" subtitle="Cadastre-se para acessar as aulas">
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <AuthShell title="Criar conta" subtitle="Cadastre-se para acessar as aulas">
+      <form onSubmit={handleSubmit} className="space-y-4">
           <Field label="Nome completo" type="text" value={fullName} onChange={setFullName} required />
           <Field label="E-mail" type="email" value={email} onChange={setEmail} autoComplete="email" required />
           <PasswordInput
@@ -140,8 +134,7 @@ export function CadastroPage() {
               Entrar
             </Link>
           </p>
-        </form>
-      </AuthShell>
-    </>
+      </form>
+    </AuthShell>
   )
 }

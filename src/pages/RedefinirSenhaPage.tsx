@@ -2,9 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { AuthShell } from '@/pages/LoginPage'
+import { AuthShell } from '@/components/AuthShell'
 import { PasswordInput } from '@/components/PasswordInput'
-import { LoginBackground } from '@/components/LoginBackground'
 import { usePwnedCheck } from '@/hooks/usePwnedCheck'
 
 export function RedefinirSenhaPage() {
@@ -69,57 +68,46 @@ export function RedefinirSenhaPage() {
 
   if (checkingSession) {
     return (
-      <>
-        <LoginBackground />
-        <AuthShell title="Carregando...">
-          <p className="text-center text-sm text-bold-white/60 flex items-center justify-center gap-2 py-4">
-            <Loader2 className="animate-spin" size={14} />
-            Verificando link de recuperacao
-          </p>
-        </AuthShell>
-      </>
+      <AuthShell title="Carregando...">
+        <p className="text-center text-sm text-bold-white/60 flex items-center justify-center gap-2 py-4">
+          <Loader2 className="animate-spin" size={14} />
+          Verificando link de recuperacao
+        </p>
+      </AuthShell>
     )
   }
 
   if (!hasRecoverySession) {
     return (
-      <>
-        <LoginBackground />
-        <AuthShell title="Link invalido ou expirado" subtitle="Volte e peca um novo link de redefinicao">
-          <div className="space-y-3 text-sm text-bold-white/70 text-center">
-            <p>O link de redefinicao de senha precisa ser usado em ate 1 hora.</p>
-            <Link
-              to="/recuperar-senha"
-              className="block mt-4 py-3 rounded-md bg-bold-yellow text-bold-black font-semibold hover:opacity-90 transition"
-            >
-              Pedir novo link
-            </Link>
-            <Link to="/login" className="block text-xs text-bold-white/60 hover:text-bold-yellow">
-              Voltar para login
-            </Link>
-          </div>
-        </AuthShell>
-      </>
+      <AuthShell title="Link invalido ou expirado" subtitle="Volte e peca um novo link de redefinicao">
+        <div className="space-y-3 text-sm text-bold-white/70 text-center">
+          <p>O link de redefinicao de senha precisa ser usado em ate 1 hora.</p>
+          <Link
+            to="/recuperar-senha"
+            className="block mt-4 py-3 rounded-md bg-bold-yellow text-bold-black font-semibold hover:opacity-90 transition"
+          >
+            Pedir novo link
+          </Link>
+          <Link to="/login" className="block text-xs text-bold-white/60 hover:text-bold-yellow">
+            Voltar para login
+          </Link>
+        </div>
+      </AuthShell>
     )
   }
 
   if (success) {
     return (
-      <>
-        <LoginBackground />
-        <AuthShell title="Senha redefinida" subtitle="Redirecionando para o app...">
-          <p className="flex items-center justify-center gap-2 text-sm text-bold-yellow">
-            <CheckCircle2 size={16} /> Sua senha foi atualizada com sucesso.
-          </p>
-        </AuthShell>
-      </>
+      <AuthShell title="Senha redefinida" subtitle="Redirecionando para o app...">
+        <p className="flex items-center justify-center gap-2 text-sm text-bold-yellow">
+          <CheckCircle2 size={16} /> Sua senha foi atualizada com sucesso.
+        </p>
+      </AuthShell>
     )
   }
 
   return (
-    <>
-      <LoginBackground />
-      <AuthShell title="Definir nova senha" subtitle="Escolha uma senha segura">
+    <AuthShell title="Definir nova senha" subtitle="Escolha uma senha segura">
         <form onSubmit={handleSubmit} className="space-y-4">
           <PasswordInput
             label="Nova senha"
@@ -153,8 +141,7 @@ export function RedefinirSenhaPage() {
             {submitting && <Loader2 className="animate-spin" size={16} />}
             Atualizar senha
           </button>
-        </form>
-      </AuthShell>
-    </>
+      </form>
+    </AuthShell>
   )
 }

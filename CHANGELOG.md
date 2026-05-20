@@ -5,6 +5,24 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v2.1.0 — 2026-05-20
+
+### Comportamento / CSS (Y bump)
+- **3 layouts de login pra testar** — switch live no canto inferior direito via query param `?style=`
+  - `center` (anterior): glass card centralizado + LoginBackground (gradient mesh + obturador rotativo + particulas)
+  - `split` (novo padrao): video da BOLD em loop a esquerda (3/5 da tela) + form a direita em fundo preto solido. Estilo Pedro Sobral / Universo Subido. Comunica visualmente "plataforma de audiovisual" desde o primeiro segundo
+  - `full-video` (novo): video da BOLD em loop full screen + overlay escuro + form glass centralizado
+- **Switcher fixo** "Centro / Split / Video BG" no canto inferior direito de qualquer pagina de auth — pra escolher visualmente. Sai do projeto quando voce decidir o definitivo
+- Refatoracao: `AuthShell` movido pra `src/components/AuthShell.tsx`, `LoginBackground` agora interno (paginas nao precisam mais importar separado)
+- Mobile-first: split vira vertical (video em cima, form embaixo) em telas < md
+
+### Detalhes UX
+- Tagline sobre o video no layout split: "BOLDSTUDIO • Audiovisual do basico ao avancado"
+- Gradient escuro overlay no video pra blend com o form
+- Header logo do form fica menor (h-10) no split pra manter equilibrio
+
+---
+
 ## v2.0.1 — 2026-05-20
 
 ### Correção pontual

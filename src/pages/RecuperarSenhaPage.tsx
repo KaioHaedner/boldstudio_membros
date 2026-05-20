@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { AuthShell, Field } from '@/pages/LoginPage'
+import { AuthShell, Field } from '@/components/AuthShell'
 
 export function RecuperarSenhaPage() {
   const { resetPassword } = useAuth()
