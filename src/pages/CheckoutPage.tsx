@@ -25,8 +25,8 @@ export function CheckoutPage() {
 
             <h2 className="text-lg font-bold">Em breve</h2>
             <p className="text-sm text-bold-white/60 leading-relaxed">
-              O gateway de pagamento esta sendo definido. Em breve voce vai poder comprar acesso ao
-              curso BOLD por aqui — com PIX, cartao ou parcelado.
+              O gateway de pagamento está sendo definido. Em breve você vai poder comprar acesso ao
+              curso BOLD por aqui (PIX, cartão ou parcelado).
             </p>
 
             <div className="rounded-md bg-bold-yellow/5 border border-bold-yellow/20 p-3 text-left">
@@ -35,8 +35,8 @@ export function CheckoutPage() {
                 Enquanto isso
               </p>
               <p className="text-xs text-bold-white/70">
-                Caso voce ja tenha contratado com o time BOLD por outro canal, peca pra eles liberarem
-                seu acesso manual. Depois e so logar normalmente.
+                Caso você já tenha contratado com o time BOLD por outro canal, peça para eles liberarem
+                seu acesso manual. Depois é só logar normalmente.
               </p>
             </div>
 
@@ -51,7 +51,7 @@ export function CheckoutPage() {
                 to="/"
                 className="block w-full py-2 text-xs text-bold-white/60 hover:text-bold-yellow transition"
               >
-                Voltar ao inicio
+                Voltar ao início
               </Link>
             </div>
           </div>

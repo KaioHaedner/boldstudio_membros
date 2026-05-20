@@ -25,7 +25,7 @@ export function RecuperarSenhaPage() {
     return (
       <AuthShell title="Link enviado" subtitle="Verifique sua caixa de entrada">
         <p className="text-sm text-bold-white/70 text-center">
-          Se houver conta com <strong className="text-bold-white">{email}</strong>, voce vai receber um e-mail com link para redefinir a senha.
+          Se houver conta com <strong className="text-bold-white">{email}</strong>, você vai receber um e-mail com link para redefinir a senha.
         </p>
         <Link
           to="/login"
@@ -38,7 +38,7 @@ export function RecuperarSenhaPage() {
   }
 
   return (
-    <AuthShell title="Esqueci minha senha" subtitle="Vamos te enviar um link de redefinicao">
+    <AuthShell title="Esqueci minha senha" subtitle="Vamos te enviar um link de redefinição">
       <form onSubmit={handleSubmit} className="space-y-4">
         <Field label="E-mail" type="email" value={email} onChange={setEmail} autoComplete="email" required />
 

@@ -83,7 +83,7 @@ export function AdminModuloEditPage() {
 
   async function handleDelete() {
     if (!id) return
-    if (!confirm(`Excluir modulo "${title}"? TUDO sera apagado (aulas, progresso dos alunos, comentarios).`)) return
+    if (!confirm(`Excluir módulo "${title}"? TUDO será apagado (aulas, progresso dos alunos, comentários).`)) return
     await supabase.from('modules').delete().eq('id', id)
     navigate('/admin/modulos')
   }
@@ -92,7 +92,7 @@ export function AdminModuloEditPage() {
   if (!modulo) {
     return (
       <div className="text-center py-16">
-        <h1 className="text-2xl font-bold">Modulo nao encontrado</h1>
+        <h1 className="text-2xl font-bold">Módulo não encontrado</h1>
         <Link to="/admin/modulos" className="mt-4 inline-block text-bold-yellow hover:underline">
           Voltar
         </Link>
@@ -103,16 +103,16 @@ export function AdminModuloEditPage() {
   return (
     <div className="space-y-6">
       <Link to="/admin/modulos" className="inline-flex items-center gap-1 text-xs text-bold-white/60 hover:text-bold-yellow">
-        <ArrowLeft size={12} /> Todos os modulos
+        <ArrowLeft size={12} /> Todos os módulos
       </Link>
 
       <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-bold-white/10 bg-bold-gray/40 p-5">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-bold-yellow">Dados do modulo</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-bold-yellow">Dados do módulo</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-6 gap-3">
-          <Field label="Titulo" value={title} onChange={setTitle} required className="sm:col-span-5" />
+          <Field label="Título" value={title} onChange={setTitle} required className="sm:col-span-5" />
           <Field label="Ordem" type="number" value={String(displayOrder)} onChange={(v) => setDisplayOrder(Number(v) || 0)} className="sm:col-span-1" />
-          <TextArea label="Descricao" value={description} onChange={setDescription} className="sm:col-span-6" />
+          <TextArea label="Descrição" value={description} onChange={setDescription} className="sm:col-span-6" />
           <Field label="URL da capa" value={coverUrl} onChange={setCoverUrl} placeholder="https://..." className="sm:col-span-5" />
           <label className="sm:col-span-1 flex flex-col gap-1">
             <span className="text-[10px] uppercase tracking-wider text-bold-white/60">Ativo</span>
@@ -143,7 +143,7 @@ export function AdminModuloEditPage() {
             onClick={handleDelete}
             className="inline-flex items-center gap-1.5 text-xs text-red-400/80 hover:text-red-400 transition"
           >
-            <Trash2 size={12} /> Excluir modulo
+            <Trash2 size={12} /> Excluir módulo
           </button>
           <button
             type="submit"
@@ -165,7 +165,7 @@ export function AdminModuloEditPage() {
 
         {lessons.length === 0 ? (
           <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 p-6 text-center text-xs text-bold-white/60">
-            Nenhuma aula. Clique em "Nova aula" pra comecar.
+            Nenhuma aula. Clique em "Nova aula" para começar.
           </div>
         ) : (
           <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 divide-y divide-bold-white/10">
@@ -188,9 +188,9 @@ export function AdminModuloEditPage() {
                   <span className="text-[10px] uppercase tracking-wider text-bold-white/40">inativo</span>
                 )}
                 {l.panda_video_id ? (
-                  <span className="text-[10px] uppercase tracking-wider text-green-400">video</span>
+                  <span className="text-[10px] uppercase tracking-wider text-green-400">vídeo</span>
                 ) : (
-                  <span className="text-[10px] uppercase tracking-wider text-amber-400">sem video</span>
+                  <span className="text-[10px] uppercase tracking-wider text-amber-400">sem vídeo</span>
                 )}
               </Link>
             ))}

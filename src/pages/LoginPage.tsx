@@ -56,7 +56,7 @@ export function LoginPage() {
   }
 
   return (
-    <AuthShell title="Entrar" subtitle="Acesse sua area de aluno">
+    <AuthShell title="Entrar" subtitle="Acesse sua área de aluno">
       <form onSubmit={handleSubmit} className="space-y-4">
           <Field
             label="E-mail"
@@ -116,8 +116,8 @@ function traduzirErro(msg: string): string {
   const m = msg.toLowerCase()
   if (m.includes('invalid login')) return 'E-mail ou senha incorretos.'
   if (m.includes('email not confirmed')) return 'Confirme seu e-mail antes de entrar.'
-  if (m.includes('captcha')) return 'Captcha invalido. Tente novamente.'
-  if (m.includes('user already registered')) return 'Esse e-mail ja tem cadastro.'
-  if (m.includes('weak password')) return 'Senha muito fraca. Use 6+ caracteres.'
+  if (m.includes('captcha')) return 'Captcha inválido. Tente novamente.'
+  if (m.includes('user already registered')) return 'Esse e-mail já tem cadastro.'
+  if (m.includes('weak password')) return 'Senha muito fraca. Use no mínimo 6 caracteres.'
   return msg
 }

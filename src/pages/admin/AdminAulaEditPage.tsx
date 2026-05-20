@@ -81,7 +81,7 @@ export function AdminAulaEditPage() {
 
   async function handleDelete() {
     if (!id || !aula) return
-    if (!confirm(`Excluir aula "${title}"? Progresso e comentarios serao apagados.`)) return
+    if (!confirm(`Excluir aula "${title}"? Progresso e comentários serão apagados.`)) return
     await supabase.from('lessons').delete().eq('id', id)
     navigate(`/admin/modulos/${aula.module_id}`)
   }
@@ -100,7 +100,7 @@ export function AdminAulaEditPage() {
   if (!aula) {
     return (
       <div className="text-center py-16">
-        <h1 className="text-2xl font-bold">Aula nao encontrada</h1>
+        <h1 className="text-2xl font-bold">Aula não encontrada</h1>
         <Link to="/admin/modulos" className="mt-4 inline-block text-bold-yellow hover:underline">
           Voltar
         </Link>
@@ -114,16 +114,16 @@ export function AdminAulaEditPage() {
         to={`/admin/modulos/${aula.module_id}`}
         className="inline-flex items-center gap-1 text-xs text-bold-white/60 hover:text-bold-yellow"
       >
-        <ArrowLeft size={12} /> Voltar ao modulo
+        <ArrowLeft size={12} /> Voltar ao módulo
       </Link>
 
       <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-bold-white/10 bg-bold-gray/40 p-5">
         <h2 className="text-sm font-bold uppercase tracking-widest text-bold-yellow">Dados da aula</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-6 gap-3">
-          <Field label="Titulo" value={title} onChange={setTitle} required className="sm:col-span-5" />
+          <Field label="Título" value={title} onChange={setTitle} required className="sm:col-span-5" />
           <Field label="Ordem" type="number" value={String(displayOrder)} onChange={(v) => setDisplayOrder(Number(v) || 0)} className="sm:col-span-1" />
-          <TextArea label="Descricao" value={description} onChange={setDescription} className="sm:col-span-6" />
+          <TextArea label="Descrição" value={description} onChange={setDescription} className="sm:col-span-6" />
           <Field
             label="Panda Video ID"
             value={pandaId}
@@ -132,7 +132,7 @@ export function AdminAulaEditPage() {
             className="sm:col-span-4"
           />
           <Field
-            label="Duracao (min)"
+            label="Duração (min)"
             type="number"
             value={durationMin}
             onChange={setDurationMin}

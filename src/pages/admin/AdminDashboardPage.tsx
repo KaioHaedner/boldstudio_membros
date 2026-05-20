@@ -45,15 +45,15 @@ export function AdminDashboardPage() {
     }
   }, [])
 
-  if (loading || !stats) return <Loader label="Carregando metricas..." />
+  if (loading || !stats) return <Loader label="Carregando métricas..." />
 
   const cards = [
-    { icon: BookOpen, label: 'Modulos', value: stats.modulos, color: 'text-bold-yellow', to: '/admin/modulos' },
+    { icon: BookOpen, label: 'Módulos', value: stats.modulos, color: 'text-bold-yellow', to: '/admin/modulos' },
     { icon: PlayCircle, label: 'Aulas', value: stats.aulas, color: 'text-bold-yellow', to: '/admin/modulos' },
     { icon: Users, label: 'Alunos cadastrados', value: stats.alunos, color: 'text-blue-400', to: '/admin/alunos' },
     { icon: ShoppingCart, label: 'Compras aprovadas', value: stats.vendasAprovadas, color: 'text-green-400', to: '/admin/alunos' },
-    { icon: MessageSquare, label: 'Comentarios pendentes', value: stats.comentariosPendentes, color: 'text-amber-400', to: '/admin/comentarios' },
-    { icon: CheckCircle, label: 'Aulas concluidas (total)', value: stats.aulasConcluidasTotal, color: 'text-green-400' },
+    { icon: MessageSquare, label: 'Comentários pendentes', value: stats.comentariosPendentes, color: 'text-amber-400', to: '/admin/comentarios' },
+    { icon: CheckCircle, label: 'Aulas concluídas (total)', value: stats.aulasConcluidasTotal, color: 'text-green-400' },
   ]
 
   return (
@@ -61,10 +61,10 @@ export function AdminDashboardPage() {
       <header>
         <p className="text-xs text-bold-yellow uppercase tracking-widest">Admin</p>
         <h1 className="text-2xl md:text-3xl font-extrabold mt-1.5">
-          Ola, {profile?.full_name?.split(' ')[0] ?? 'admin'}
+          Olá, {profile?.full_name?.split(' ')[0] ?? 'admin'}
         </h1>
         <p className="mt-2 text-sm text-bold-white/60">
-          Visao geral da plataforma BOLDSTUDIO.
+          Visão geral da plataforma BOLDSTUDIO.
         </p>
       </header>
 
@@ -92,7 +92,7 @@ export function AdminDashboardPage() {
             to="/admin/modulos"
             className="px-4 py-2 rounded-md bg-bold-yellow text-bold-black text-sm font-semibold hover:opacity-90 transition"
           >
-            + Novo modulo
+            + Novo módulo
           </Link>
           <Link
             to="/admin/alunos"
@@ -104,7 +104,7 @@ export function AdminDashboardPage() {
             to="/admin/comentarios"
             className="px-4 py-2 rounded-md border border-bold-white/15 text-sm hover:border-bold-yellow hover:text-bold-yellow transition"
           >
-            Moderar comentarios
+            Moderar comentários
           </Link>
         </div>
       </section>

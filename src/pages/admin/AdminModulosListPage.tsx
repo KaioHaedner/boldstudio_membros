@@ -30,8 +30,8 @@ export function AdminModulosListPage() {
     <div className="space-y-6">
       <header className="flex items-end justify-between">
         <div>
-          <p className="text-xs text-bold-yellow uppercase tracking-widest">Conteudo</p>
-          <h1 className="text-2xl md:text-3xl font-extrabold mt-1.5">Modulos</h1>
+          <p className="text-xs text-bold-yellow uppercase tracking-widest">Conteúdo</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold mt-1.5">Módulos</h1>
         </div>
       </header>
 
@@ -44,10 +44,10 @@ export function AdminModulosListPage() {
       )}
 
       {loading ? (
-        <Loader label="Carregando modulos..." />
+        <Loader label="Carregando módulos..." />
       ) : modulos.length === 0 ? (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 p-8 text-center text-sm text-bold-white/60">
-          Nenhum modulo criado ainda. Crie o primeiro acima.
+          Nenhum módulo criado ainda. Crie o primeiro acima.
         </div>
       ) : (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 divide-y divide-bold-white/10">
@@ -93,7 +93,7 @@ function CriarModuloForm({ onCreated, nextOrder }: { onCreated: () => void; next
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Titulo do novo modulo"
+        placeholder="Título do novo módulo"
         className="flex-1 rounded-md bg-bold-black border border-bold-white/15 px-3 py-2 text-sm placeholder-bold-white/30 focus:outline-none focus:border-bold-yellow focus:ring-1 focus:ring-bold-yellow"
         required
       />
@@ -103,7 +103,7 @@ function CriarModuloForm({ onCreated, nextOrder }: { onCreated: () => void; next
         className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-bold-yellow text-bold-black text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition"
       >
         {submitting ? <Loader2 className="animate-spin" size={14} /> : <Plus size={14} />}
-        Criar modulo
+        Criar módulo
       </button>
       {error && <p className="text-xs text-red-400 mt-1 sm:basis-full">{error}</p>}
     </form>
@@ -121,7 +121,7 @@ function ModuloRow({ modulo, onChanged }: { modulo: Module; onChanged: () => voi
   }
 
   async function remove() {
-    if (!confirm(`Excluir modulo "${modulo.title}"? Todas as aulas e progresso vinculados tambem serao apagados.`)) return
+    if (!confirm(`Excluir módulo "${modulo.title}"? Todas as aulas e progresso vinculados também serão apagados.`)) return
     setBusy(true)
     await supabase.from('modules').delete().eq('id', modulo.id)
     setBusy(false)

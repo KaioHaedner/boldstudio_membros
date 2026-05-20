@@ -72,25 +72,25 @@ function PwnedHint({ status, count }: { status: PwnedResult['status']; count: nu
     case 'checking':
       icon = <Loader2 size={12} className="animate-spin" />
       className = 'text-bold-white/40'
-      text = 'verificando se a senha esta em vazamentos...'
+      text = 'Verificando se a senha está em vazamentos...'
       break
     case 'safe':
       icon = <CheckCircle2 size={12} />
       className = 'text-green-400'
-      text = 'senha nao encontrada em vazamentos publicos.'
+      text = 'Senha não encontrada em vazamentos públicos.'
       break
     case 'pwned':
       icon = <AlertTriangle size={12} />
       className = 'text-red-400'
       text =
         count > 1000
-          ? `senha vazou ${count.toLocaleString('pt-BR')} vezes em data breaches publicos. escolha outra.`
-          : `senha encontrada em vazamentos publicos. escolha outra mais segura.`
+          ? `Senha vazou ${count.toLocaleString('pt-BR')} vezes em vazamentos públicos. Escolha outra.`
+          : `Senha encontrada em vazamentos públicos. Escolha outra mais segura.`
       break
     case 'error':
       icon = <AlertTriangle size={12} />
       className = 'text-amber-400'
-      text = 'nao foi possivel verificar a senha agora (tente de novo).'
+      text = 'Não foi possível verificar a senha agora (tente de novo).'
       break
   }
 

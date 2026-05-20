@@ -19,12 +19,12 @@ export function CertificadoPage() {
 
         <h2 className="text-lg font-bold">Certificado em desenvolvimento</h2>
         <p className="text-sm text-bold-white/60 max-w-md mx-auto">
-          Assim que voce concluir 100% das aulas, o certificado fica disponivel pra download aqui
-          (PDF assinado digitalmente com seu nome, codigo unico e data de conclusao).
+          Assim que você concluir 100% das aulas, o certificado fica disponível para download aqui
+          (PDF assinado digitalmente com seu nome, código único e data de conclusão).
         </p>
 
         <p className="text-[11px] text-bold-white/40">
-          Esta feature chega na versao 2.x da plataforma.
+          Esta funcionalidade chega numa próxima versão da plataforma.
         </p>
 
         <div className="pt-4">

@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { LoginBackground } from '@/components/LoginBackground'
+import { VideoBackground } from '@/components/VideoBackground'
 import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
 
@@ -49,40 +50,33 @@ function CenterLayout({ title, subtitle, children }: AuthShellProps) {
   )
 }
 
-/* ============== LAYOUT 2: SPLIT (estilo Pedro Sobral) ============== */
+/* ============== LAYOUT 2: SPLIT (esquerda motion graphics, direita formulário) ============== */
 function SplitLayout({ title, subtitle, children }: AuthShellProps) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-bold-black text-bold-white">
-      {/* COLUNA ESQUERDA: VIDEO */}
+      {/* Coluna esquerda: motion graphics BOLD (substituirá vídeo real do estúdio quando disponível) */}
       <div className="relative md:w-3/5 lg:w-2/3 h-[35vh] md:h-screen overflow-hidden">
-        <video
-          src="/brand/logo-animated.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Gradient overlay pra dar profundidade + fundir com o form */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-bold-black/20 to-bold-black md:bg-gradient-to-r md:from-transparent md:via-bold-black/10 md:to-bold-black" />
-        <div className="absolute inset-0 bg-gradient-to-t from-bold-black via-transparent to-transparent md:bg-gradient-to-t md:from-transparent" />
+        <VideoBackground />
 
-        {/* Tagline sobre o video */}
+        {/* Gradiente para fundir a coluna esquerda com o formulário à direita */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-bold-black/20 to-bold-black md:bg-gradient-to-r md:from-transparent md:via-bold-black/10 md:to-bold-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bold-black via-transparent to-transparent md:bg-gradient-to-t md:from-transparent pointer-events-none" />
+
+        {/* Texto sobre o background */}
         <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 z-10 max-w-md">
           <p className="text-[10px] uppercase tracking-[0.3em] text-bold-yellow font-bold mb-2">
             boldstudio
           </p>
           <h2 className="text-xl md:text-3xl font-extrabold leading-tight">
-            Audiovisual do basico ao avancado.
+            Audiovisual do básico ao avançado.
           </h2>
           <p className="hidden md:block mt-2 text-sm text-bold-white/70 max-w-xs">
-            Captacao, equipamento, proposta, negociacao e vendas — em videos diretos ao ponto.
+            Captação, equipamento, proposta, negociação e vendas. Em vídeos diretos ao ponto.
           </p>
         </div>
       </div>
 
-      {/* COLUNA DIREITA: FORM */}
+      {/* Coluna direita: formulário */}
       <div className="md:w-2/5 lg:w-1/3 flex items-center justify-center p-6 md:p-10 bg-bold-black">
         <div className="w-full max-w-sm">
           <HeaderLogo title={title} subtitle={subtitle} compact />
@@ -94,21 +88,11 @@ function SplitLayout({ title, subtitle, children }: AuthShellProps) {
   )
 }
 
-/* ============== LAYOUT 3: FULL-VIDEO (vídeo cobre tudo + form glass centralizado) ============== */
+/* ============== LAYOUT 3: FULL-VIDEO (motion graphics ocupa tudo, formulário centralizado) ============== */
 function FullVideoLayout({ title, subtitle, children }: AuthShellProps) {
   return (
     <div className="min-h-screen relative text-bold-white flex items-center justify-center px-4 py-12 overflow-hidden">
-      <video
-        src="/brand/logo-animated.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover -z-10"
-      />
-      <div className="absolute inset-0 bg-bold-black/70 backdrop-blur-sm -z-10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-bold-black via-transparent to-bold-black -z-10" />
+      <VideoBackground />
 
       <div className="w-full max-w-sm relative z-10">
         <HeaderLogo title={title} subtitle={subtitle} />

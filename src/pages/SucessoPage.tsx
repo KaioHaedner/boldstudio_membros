@@ -23,16 +23,16 @@ export function SucessoPage() {
 
             <h1 className="text-2xl font-extrabold">Compra confirmada!</h1>
             <p className="text-sm text-bold-white/70 leading-relaxed">
-              Parabens! Sua compra do <strong className="text-bold-yellow">curso BOLD</strong> foi
-              aprovada. Em instantes voce vai receber um e-mail com instrucoes pra acessar a area
+              Parabéns! Sua compra do <strong className="text-bold-yellow">curso BOLD</strong> foi
+              aprovada. Em instantes você vai receber um e-mail com instruções para acessar a área
               de alunos.
             </p>
 
             <div className="rounded-md bg-bold-yellow/5 border border-bold-yellow/20 p-3 flex items-start gap-2 text-left">
               <Mail className="text-bold-yellow shrink-0 mt-0.5" size={16} />
               <p className="text-xs text-bold-white/70">
-                Nao recebeu? Verifique a caixa de spam. Se ate 15 min nao chegar, fala com o suporte
-                BOLD.
+                Não recebeu? Verifique a caixa de spam. Se em até 15 minutos nada chegar, fala com o
+                suporte BOLD.
               </p>
             </div>
 

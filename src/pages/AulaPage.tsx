@@ -27,7 +27,7 @@ export function AulaPage() {
   if (!lesson) {
     return (
       <div className="text-center py-16">
-        <h1 className="text-2xl font-bold">Aula nao encontrada</h1>
+        <h1 className="text-2xl font-bold">Aula não encontrada</h1>
         <Link to="/dashboard" className="mt-4 inline-block text-bold-yellow hover:underline">
           Voltar para o dashboard
         </Link>
@@ -43,7 +43,7 @@ export function AulaPage() {
         to={`/modulo/${lesson.module_id}`}
         className="inline-flex items-center gap-1 text-sm text-bold-white/60 hover:text-bold-yellow"
       >
-        <ArrowLeft size={14} /> Voltar para o modulo
+        <ArrowLeft size={14} /> Voltar para o módulo
       </Link>
 
       <div className="aspect-video w-full overflow-hidden rounded-lg border border-bold-white/10 bg-bold-gray relative">
@@ -80,7 +80,7 @@ export function AulaPage() {
           )}
         >
           <CheckCircle2 size={16} />
-          {watched ? 'Aula concluida' : 'Marcar como vista'}
+          {watched ? 'Aula concluída' : 'Marcar como vista'}
         </button>
 
         {next && (
@@ -89,7 +89,7 @@ export function AulaPage() {
             onClick={() => navigate(`/aula/${next.id}`)}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md border border-bold-white/15 text-bold-white hover:border-bold-yellow hover:text-bold-yellow transition"
           >
-            Proxima aula <ArrowRight size={16} />
+            Próxima aula <ArrowRight size={16} />
           </button>
         )}
       </div>
@@ -147,7 +147,7 @@ function PandaPlaceholder() {
       <Film size={48} />
       <p className="text-sm">Aula aguardando upload no Panda Video</p>
       <p className="text-xs text-bold-white/20">
-        Quando o video for publicado, ele aparece aqui automaticamente.
+        Quando o vídeo for publicado, ele aparece aqui automaticamente.
       </p>
     </div>
   )

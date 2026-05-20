@@ -31,7 +31,7 @@ export function CadastroPage() {
     setError(null)
 
     if (password !== confirm) {
-      setError('As senhas nao coincidem.')
+      setError('As senhas não coincidem.')
       return
     }
     if (password.length < 6) {
@@ -39,11 +39,11 @@ export function CadastroPage() {
       return
     }
     if (pwned.status === 'pwned') {
-      setError('Essa senha foi encontrada em vazamentos publicos. Escolha outra.')
+      setError('Essa senha foi encontrada em vazamentos públicos. Escolha outra.')
       return
     }
     if (pwned.status === 'checking') {
-      setError('Aguarde a verificacao da senha terminar.')
+      setError('Aguarde a verificação da senha terminar.')
       return
     }
     if (!captchaToken) {
@@ -129,7 +129,7 @@ export function CadastroPage() {
           </button>
 
           <p className="text-center text-xs text-bold-white/60">
-            Ja tem conta?{' '}
+            Já tem conta?{' '}
             <Link to="/login" className="text-bold-yellow hover:underline">
               Entrar
             </Link>

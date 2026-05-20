@@ -15,12 +15,12 @@ export function ModuloPage() {
   const watchedLessons = lessons.filter((l) => progressByLessonId[l.id]?.watched).length
   const percent = totalLessons > 0 ? Math.round((watchedLessons / totalLessons) * 100) : 0
 
-  if (loadingModule || loadingLessons) return <Loader label="Carregando modulo..." />
+  if (loadingModule || loadingLessons) return <Loader label="Carregando módulo..." />
 
   if (!module) {
     return (
       <div className="text-center py-16">
-        <h1 className="text-2xl font-bold">Modulo nao encontrado</h1>
+        <h1 className="text-2xl font-bold">Módulo não encontrado</h1>
         <Link to="/dashboard" className="mt-4 inline-block text-bold-yellow hover:underline">
           Voltar para o dashboard
         </Link>
@@ -34,12 +34,12 @@ export function ModuloPage() {
         to="/dashboard"
         className="inline-flex items-center gap-1 text-sm text-bold-white/60 hover:text-bold-yellow"
       >
-        <ArrowLeft size={14} /> Todos os modulos
+        <ArrowLeft size={14} /> Todos os módulos
       </Link>
 
       <header className="space-y-4">
         <p className="text-sm text-bold-yellow uppercase tracking-widest">
-          Modulo {module.display_order || '—'}
+          Módulo {module.display_order || '.'}
         </p>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{module.title}</h1>
         {module.description && (
@@ -66,7 +66,7 @@ export function ModuloPage() {
       <section className="rounded-lg border border-bold-white/10 bg-bold-gray divide-y divide-bold-white/10">
         {lessons.length === 0 && (
           <div className="p-8 text-center text-sm text-bold-white/60">
-            Nenhuma aula publicada neste modulo ainda.
+            Nenhuma aula publicada neste módulo ainda.
           </div>
         )}
         {lessons.map((lesson, idx) => {
@@ -94,7 +94,7 @@ export function ModuloPage() {
                   )}
                   {watched && (
                     <span className="inline-flex items-center gap-1 text-bold-yellow">
-                      <CheckCircle2 size={12} /> Concluida
+                      <CheckCircle2 size={12} /> Concluída
                     </span>
                   )}
                 </div>

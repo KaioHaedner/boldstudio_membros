@@ -56,7 +56,7 @@ export function AdminComentariosPage() {
   }
 
   async function remove(id: string) {
-    if (!confirm('Excluir este comentario?')) return
+    if (!confirm('Excluir este comentário?')) return
     await supabase.from('comments').delete().eq('id', id)
     load()
   }
@@ -64,8 +64,8 @@ export function AdminComentariosPage() {
   return (
     <div className="space-y-5">
       <header>
-        <p className="text-xs text-bold-yellow uppercase tracking-widest">Moderacao</p>
-        <h1 className="text-2xl md:text-3xl font-extrabold mt-1.5">Comentarios</h1>
+        <p className="text-xs text-bold-yellow uppercase tracking-widest">Moderação</p>
+        <h1 className="text-2xl md:text-3xl font-extrabold mt-1.5">Comentários</h1>
       </header>
 
       <div className="flex gap-2 border-b border-bold-white/10">
@@ -78,11 +78,11 @@ export function AdminComentariosPage() {
       </div>
 
       {loading ? (
-        <Loader label="Carregando comentarios..." />
+        <Loader label="Carregando comentários..." />
       ) : items.length === 0 ? (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 p-8 text-center text-sm text-bold-white/60">
           <MessageSquare className="mx-auto mb-3 text-bold-white/30" size={32} />
-          {tab === 'pending' ? 'Nenhum comentario pendente.' : 'Nenhum comentario aprovado ainda.'}
+          {tab === 'pending' ? 'Nenhum comentário pendente.' : 'Nenhum comentário aprovado ainda.'}
         </div>
       ) : (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 divide-y divide-bold-white/10">

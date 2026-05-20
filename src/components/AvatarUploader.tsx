@@ -22,11 +22,11 @@ export function AvatarUploader({ size = 192, onChanged }: AvatarUploaderProps) {
     setError(null)
 
     if (!ACCEPTED.includes(file.type)) {
-      setError('Formato invalido. Use PNG, JPG ou WEBP.')
+      setError('Formato inválido. Use PNG, JPG ou WEBP.')
       return
     }
     if (file.size > MAX_SIZE_BYTES) {
-      setError('Imagem muito grande (max 3 MB).')
+      setError('Imagem muito grande (máximo 3 MB).')
       return
     }
 
@@ -149,7 +149,7 @@ export function AvatarUploader({ size = 192, onChanged }: AvatarUploaderProps) {
         )}
 
         <p className="text-[10px] text-bold-white/30 uppercase tracking-widest mt-1">
-          PNG / JPG / WEBP — max 3MB
+          PNG / JPG / WEBP. Máximo 3MB
         </p>
       </div>
     </div>

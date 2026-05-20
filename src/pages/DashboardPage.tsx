@@ -14,17 +14,17 @@ export function DashboardPage() {
     <div className="space-y-8">
       <header>
         <p className="text-sm text-bold-yellow uppercase tracking-widest">Bem-vindo</p>
-        <h1 className="text-3xl md:text-4xl font-extrabold mt-2">Ola, {primeiroNome}.</h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold mt-2">Olá, {primeiroNome}.</h1>
         <p className="mt-2 text-bold-white/60 max-w-xl">
-          Escolha um modulo abaixo para comecar ou continuar de onde parou.
+          Escolha um módulo abaixo para começar ou continuar de onde parou.
         </p>
       </header>
 
-      {loading && <Loader label="Carregando modulos..." />}
+      {loading && <Loader label="Carregando módulos..." />}
 
       {error && (
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-          Erro ao carregar modulos: {error}
+          Erro ao carregar módulos: {error}
         </div>
       )}
 
@@ -55,7 +55,7 @@ export function DashboardPage() {
               </div>
               <div className="p-4 flex flex-col gap-2 flex-1">
                 <p className="text-xs text-bold-yellow uppercase tracking-widest">
-                  Modulo {m.display_order || '—'}
+                  Módulo {m.display_order || '.'}
                 </p>
                 <h2 className="text-lg font-bold leading-tight">{m.title}</h2>
                 {m.description && (
@@ -77,9 +77,9 @@ function EmptyState() {
   return (
     <div className="rounded-lg border border-bold-white/10 bg-bold-gray p-8 text-center">
       <BookOpen size={40} className="mx-auto mb-4 text-bold-yellow" />
-      <h2 className="text-lg font-bold">Nenhum modulo disponivel ainda</h2>
+      <h2 className="text-lg font-bold">Nenhum módulo disponível ainda</h2>
       <p className="mt-2 text-sm text-bold-white/60 max-w-md mx-auto">
-        Os modulos do curso vao aparecer aqui assim que estiverem publicados. Volte em breve.
+        Os módulos do curso vão aparecer aqui assim que estiverem publicados. Volte em breve.
       </p>
     </div>
   )

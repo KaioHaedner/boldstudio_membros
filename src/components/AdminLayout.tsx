@@ -12,10 +12,10 @@ import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
 
 const ITEMS = [
-  { to: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/admin/modulos', icon: BookOpen, label: 'Modulos' },
+  { to: '/admin', icon: LayoutDashboard, label: 'Painel' },
+  { to: '/admin/modulos', icon: BookOpen, label: 'Módulos' },
   { to: '/admin/alunos', icon: Users, label: 'Alunos' },
-  { to: '/admin/comentarios', icon: MessageSquare, label: 'Comentarios' },
+  { to: '/admin/comentarios', icon: MessageSquare, label: 'Comentários' },
 ]
 
 export function AdminLayout() {

@@ -78,11 +78,11 @@ export function PerfilPage() {
     setSaved(false)
 
     if (!fullName.trim()) {
-      setError('Nome eh obrigatorio.')
+      setError('Nome é obrigatório.')
       return
     }
     if (!isValidWhatsapp(whatsapp)) {
-      setError('WhatsApp invalido. Use DDD + numero.')
+      setError('WhatsApp inválido. Use DDD mais número.')
       return
     }
 
@@ -120,7 +120,7 @@ export function PerfilPage() {
         <p className="text-bold-yellow uppercase tracking-widest text-xs">Conta</p>
         <h1 className="text-2xl font-extrabold mt-1.5">Meu perfil</h1>
         <p className="mt-1 text-bold-white/60 text-xs">
-          Atualize seus dados. WhatsApp eh obrigatorio. O e-mail nao pode ser alterado por aqui.
+          Atualize seus dados. WhatsApp é obrigatório. O e-mail não pode ser alterado por aqui.
         </p>
       </header>
 
@@ -164,7 +164,7 @@ export function PerfilPage() {
           </section>
 
           <section>
-            <SectionTitle>Endereco</SectionTitle>
+            <SectionTitle>Endereço</SectionTitle>
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-3.5">
               <div className="sm:col-span-2">
                 <Field
@@ -182,17 +182,17 @@ export function PerfilPage() {
                   }
                 />
                 {cepNotFound && (
-                  <p className="mt-1 text-[11px] text-amber-400">CEP nao encontrado.</p>
+                  <p className="mt-1 text-[11px] text-amber-400">CEP não encontrado.</p>
                 )}
               </div>
 
               <Field label="Rua" type="text" value={rua} onChange={setRua} className="sm:col-span-4" />
-              <Field label="Numero" type="text" value={numero} onChange={setNumero} className="sm:col-span-1" />
+              <Field label="Número" type="text" value={numero} onChange={setNumero} className="sm:col-span-1" />
               <Field label="Complemento" type="text" value={complemento} onChange={setComplemento} className="sm:col-span-3" placeholder="Apto, sala..." />
               <Field label="Bairro" type="text" value={bairro} onChange={setBairro} className="sm:col-span-2" />
               <Field label="Cidade" type="text" value={cidade} onChange={setCidade} className="sm:col-span-3" />
               <Field label="UF" type="text" value={estado} onChange={(v) => setEstado(v.toUpperCase().slice(0, 2))} className="sm:col-span-1" />
-              <Field label="Pais" type="text" value={pais} onChange={setPais} className="sm:col-span-2" />
+              <Field label="País" type="text" value={pais} onChange={setPais} className="sm:col-span-2" />
             </div>
           </section>
 
@@ -215,7 +215,7 @@ export function PerfilPage() {
               className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-bold-yellow text-bold-black text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition"
             >
               {submitting && <Loader2 className="animate-spin" size={14} />}
-              Salvar alteracoes
+              Salvar alterações
             </button>
           </div>
 
@@ -296,7 +296,7 @@ function SendResetButton({ email }: { email: string }) {
   if (sent) {
     return (
       <p className="text-xs text-bold-yellow inline-flex items-center gap-1.5">
-        <CheckCircle2 size={12} /> Link de troca enviado para {email}
+        <CheckCircle2 size={12} /> Link de troca enviado para {email}.
       </p>
     )
   }

@@ -42,11 +42,11 @@ export function RedefinirSenhaPage() {
     setError(null)
 
     if (password !== confirm) {
-      setError('As senhas nao coincidem.')
+      setError('As senhas não coincidem.')
       return
     }
     if (password.length < 6) {
-      setError('Senha precisa ter pelo menos 6 caracteres.')
+      setError('A senha precisa ter pelo menos 6 caracteres.')
       return
     }
     if (pwned.status === 'pwned') {
@@ -71,7 +71,7 @@ export function RedefinirSenhaPage() {
       <AuthShell title="Carregando...">
         <p className="text-center text-sm text-bold-white/60 flex items-center justify-center gap-2 py-4">
           <Loader2 className="animate-spin" size={14} />
-          Verificando link de recuperacao
+          Verificando link de recuperação
         </p>
       </AuthShell>
     )
@@ -79,9 +79,9 @@ export function RedefinirSenhaPage() {
 
   if (!hasRecoverySession) {
     return (
-      <AuthShell title="Link invalido ou expirado" subtitle="Volte e peca um novo link de redefinicao">
+      <AuthShell title="Link inválido ou expirado" subtitle="Volte e peça um novo link de redefinição">
         <div className="space-y-3 text-sm text-bold-white/70 text-center">
-          <p>O link de redefinicao de senha precisa ser usado em ate 1 hora.</p>
+          <p>O link de redefinição de senha precisa ser usado em até 1 hora.</p>
           <Link
             to="/recuperar-senha"
             className="block mt-4 py-3 rounded-md bg-bold-yellow text-bold-black font-semibold hover:opacity-90 transition"

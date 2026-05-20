@@ -89,7 +89,7 @@ export function AdminAlunosPage() {
         <Loader label="Carregando alunos..." />
       ) : filtered.length === 0 ? (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 p-8 text-center text-sm text-bold-white/60">
-          {search ? 'Nenhum resultado pra essa busca.' : 'Nenhum aluno cadastrado ainda.'}
+          {search ? 'Nenhum resultado para essa busca.' : 'Nenhum aluno cadastrado ainda.'}
         </div>
       ) : (
         <div className="rounded-lg border border-bold-white/10 bg-bold-gray/40 divide-y divide-bold-white/10">
@@ -163,7 +163,7 @@ function AlunoRowItem({ aluno, onChanged }: { aluno: AlunoRow; onChanged: () => 
           )}
         </div>
         <p className="text-[11px] text-bold-white/50 mt-0.5">
-          {aluno.whatsapp || 'sem whatsapp'} • desde {formatDate(aluno.created_at)} • <span className="font-mono">{aluno.id.slice(0, 8)}</span>
+          {aluno.whatsapp || 'sem WhatsApp'} • desde {formatDate(aluno.created_at)} • <span className="font-mono">{aluno.id.slice(0, 8)}</span>
         </p>
         {feedback && (
           <p className={`text-[11px] mt-1 ${feedback.startsWith('erro') ? 'text-red-400' : 'text-bold-yellow'}`}>

@@ -5,6 +5,18 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v2.1.1 — 2026-05-20
+
+### Correções pontuais
+- **VideoBackground próprio (motion graphics)** substitui o uso do `logo-animated.mp4` nos layouts split e full-video
+  - 5 camadas: pulso radial, ondas SVG horizontais com gradientes amarelos, obturador BOLD girando devagar, partículas flutuantes com glow, vinheta escura nas bordas
+  - 100% CSS e SVG, sem dependências, sem requisições de mídia
+  - Quando o cliente disponibilizar vídeo cinematográfico real do estúdio, substitui o componente sem mexer no resto
+- **Revisão ortográfica completa em pt-BR**: corrigidos acentos, til, cedilha em todas as páginas visíveis ao usuário (`/`, `/login`, `/cadastro`, `/recuperar-senha`, `/redefinir-senha`, `/dashboard`, `/modulo/:id`, `/aula/:id`, `/perfil`, `/checkout`, `/sucesso`, `/certificado`, `/404`, `/admin/*`)
+- **Removidos todos os travessões (em-dash)** do projeto. Substituídos por ponto final, vírgula ou parênteses
+
+---
+
 ## v2.1.0 — 2026-05-20
 
 ### Comportamento / CSS (Y bump)
