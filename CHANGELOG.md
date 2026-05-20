@@ -5,6 +5,16 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v2.0.1 — 2026-05-20
+
+### Correção pontual
+- **Fix:** `new row violates row-level security policy` ao subir avatar no /perfil
+  - Causa: a policy de INSERT no bucket `avatars` usava `(storage.foldername(name))[1] = auth.uid()::text`. Em alguns contextos do Storage essa avaliação falhava silenciosamente
+  - Solução: substituida por `name LIKE auth.uid()::text || '/%'` (mais explicita, equivalente, sem dependencia do helper `storage.foldername`)
+  - Restaurada policy `avatars_select_all` (necessaria pra upsert funcionar — Storage RLS exige SELECT mesmo em bucket publico quando se faz upsert)
+
+---
+
 ## v2.0.0 — 2026-05-20
 
 Primeira release MAJOR pos-setup. Backoffice admin completo + paginas de fluxo de compra.
