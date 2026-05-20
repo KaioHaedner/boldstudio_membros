@@ -1,19 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-const SESSION_KEY = 'bold:splash-shown'
-const SPLASH_DURATION_MS = 5000
+const DEFAULT_STORAGE_KEY = 'bold:splash-shown'
+const DEFAULT_DURATION_MS = 5000
 
 interface SplashScreenProps {
   onFinish?: () => void
   forceShow?: boolean
+  storageKey?: string
+  durationMs?: number
 }
 
-export function SplashScreen({ onFinish, forceShow = false }: SplashScreenProps) {
+export function SplashScreen({
+  onFinish,
+  forceShow = false,
+  storageKey = DEFAULT_STORAGE_KEY,
+  durationMs = DEFAULT_DURATION_MS,
+}: SplashScreenProps) {
   const [shouldShow, setShouldShow] = useState<boolean>(() => {
     if (forceShow) return true
     if (typeof window === 'undefined') return false
-    return sessionStorage.getItem(SESSION_KEY) !== '1'
+    return sessionStorage.getItem(storageKey) !== '1'
   })
   const [fadingOut, setFadingOut] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -23,14 +30,14 @@ export function SplashScreen({ onFinish, forceShow = false }: SplashScreenProps)
     const timer = window.setTimeout(() => {
       setFadingOut(true)
       window.setTimeout(() => {
-        sessionStorage.setItem(SESSION_KEY, '1')
+        sessionStorage.setItem(storageKey, '1')
         setShouldShow(false)
         onFinish?.()
       }, 400)
-    }, SPLASH_DURATION_MS)
+    }, durationMs)
 
     return () => window.clearTimeout(timer)
-  }, [shouldShow, onFinish])
+  }, [shouldShow, onFinish, storageKey, durationMs])
 
   if (!shouldShow) return null
 
