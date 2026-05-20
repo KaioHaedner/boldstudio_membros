@@ -5,6 +5,38 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v2.0.0 — 2026-05-20
+
+Primeira release MAJOR pos-setup. Backoffice admin completo + paginas de fluxo de compra.
+
+### Novas paginas (layout/estrutura)
+**Admin (5 rotas novas, sob `/admin` com requireAdmin):**
+- `/admin` — Dashboard com 6 metricas (modulos, aulas, alunos, vendas, comentarios pendentes, aulas concluidas)
+- `/admin/modulos` — Lista + criar modulo inline + ativar/desativar/excluir
+- `/admin/modulos/:id` — Editar modulo (titulo, descricao, cover, ordem, ativo) + gerenciar aulas
+- `/admin/aulas/:id` — Editar aula (panda_video_id, duracao, materiais JSON dinamicos)
+- `/admin/alunos` — Lista de profiles + busca + liberar acesso manual (cria purchase approved gateway=manual) + promover/rebaixar admin
+- `/admin/comentarios` — Moderacao com tabs Pendentes/Aprovados, botoes aprovar/excluir
+
+**Fluxo de compra (3 paginas publicas):**
+- `/checkout` — Placeholder elegante "gateway em definicao" com glass card e LoginBackground
+- `/sucesso` — Confirmacao pos-compra, alerta de verificar e-mail/spam
+- `/certificado` (protegida) — Placeholder "em desenvolvimento" pra V2
+
+**Auth:**
+- `/redefinir-senha` — Nova pagina que recebe token de recovery (#access_token) e permite trocar senha. Detecta evento PASSWORD_RECOVERY do Supabase, valida HIBP, redireciona pra /dashboard apos sucesso
+- `/recuperar-senha` agora redireciona pro `/redefinir-senha` no link de email (em vez do mesmo path)
+
+### Components novos
+- `AdminLayout` — Sidebar fixa esquerda com 4 secoes + mobile bottom nav + voltar ao app + logout
+- Componentes de form admin reusaveis (Field, TextArea)
+
+### Backend
+- Sem migrations novas (a v1.0.0 ja preparou todas as tabelas)
+- Admin opera todas as tabelas via policies `*_admin_write` ja existentes (modules, lessons, profiles, purchases, comments)
+
+---
+
 ## v1.1.1 — 2026-05-20
 
 ### Correção pontual
