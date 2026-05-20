@@ -15,7 +15,15 @@ export interface Profile {
   full_name: string | null
   avatar_url: string | null
   phone: string | null
-  address: string | null
+  whatsapp: string
+  cep: string | null
+  rua: string | null
+  numero: string | null
+  complemento: string | null
+  bairro: string | null
+  cidade: string | null
+  estado: string | null
+  pais: string | null
   role: 'student' | 'admin' | 'instructor'
 }
 
@@ -47,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadProfile = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, full_name, avatar_url, phone, address, role')
+      .select('id, full_name, avatar_url, phone, whatsapp, cep, rua, numero, complemento, bairro, cidade, estado, pais, role')
       .eq('id', userId)
       .maybeSingle()
 

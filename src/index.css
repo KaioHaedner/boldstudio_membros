@@ -45,3 +45,61 @@ html, body, #root {
 button {
   font-family: inherit;
 }
+
+/* ============== ANIMACOES (LoginBackground) ============== */
+
+@keyframes rotate-slow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.animate-rotate-slow {
+  animation: rotate-slow 60s linear infinite;
+}
+
+@keyframes blob-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(8%, 6%) scale(1.08); }
+  66%      { transform: translate(-6%, 10%) scale(0.95); }
+}
+.animate-blob-1 {
+  animation: blob-1 24s ease-in-out infinite;
+}
+
+@keyframes blob-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-10%, -8%) scale(1.12); }
+}
+.animate-blob-2 {
+  animation: blob-2 30s ease-in-out infinite;
+}
+
+@keyframes blob-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-7%, -5%) scale(1.15); }
+  70%      { transform: translate(5%, 4%) scale(0.9); }
+}
+.animate-blob-3 {
+  animation: blob-3 36s ease-in-out infinite;
+}
+
+@keyframes float-particle {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(20px, -120px); opacity: 0; }
+}
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+/* ============== Glassmorphism util ============== */
+.glass-card {
+  background: rgba(40, 40, 40, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 30px 60px -15px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 215, 18, 0.08) inset,
+    0 0 60px -20px rgba(255, 215, 18, 0.15);
+}

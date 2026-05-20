@@ -51,7 +51,7 @@ export function SplashScreen({
     >
       <video
         ref={videoRef}
-        src="/brand/loader.mp4"
+        src="/brand/logo-animated.mp4"
         autoPlay
         muted
         playsInline
