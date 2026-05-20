@@ -5,6 +5,17 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v1.1.1 — 2026-05-20
+
+### Correção pontual
+- **Cursor:** removido o cursor 3D circular (dot+ring) da v1.1.0
+- Substituído por **cursor nativo amarelo** (seta padrão do SO, só repintada em `#FFD712` com contorno preto)
+- Mão apontando também em amarelo nos elementos clicáveis (links, botões)
+- Implementação via SVG inline em `data:image/svg+xml` no CSS (sem dependência extra, escalável, funciona em todos os navegadores)
+- Componente `CursorFollower.tsx` removido do projeto
+
+---
+
 ## v1.1.0 — 2026-05-20
 
 ### Comportamento (JS)

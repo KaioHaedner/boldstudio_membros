@@ -77,30 +77,34 @@ html {
   background: #0a0a0a;
 }
 
-/* ============== CURSOR BOLD (esconde cursor nativo no desktop) ============== */
+/* ============== CURSOR BOLD (seta nativa em amarelo) ============== */
 
-@media (pointer: fine) {
-  body,
-  a,
-  button,
-  select,
-  summary,
-  label,
-  [role="button"],
-  [data-cursor-hover] {
-    cursor: none;
-  }
-  /* Inputs mantem o cursor text padrao pra UX de digitacao */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="tel"],
-  input[type="search"],
-  input[type="number"],
-  input[type="url"],
-  textarea {
-    cursor: text;
-  }
+/* Seta padrao amarela com contorno preto (visivel em qualquer fundo) */
+body {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path fill='%23FFD712' stroke='%23000' stroke-width='1.5' stroke-linejoin='round' d='M4,2 L4,21 L9,17 L11.5,23.5 L14.5,22.3 L12,15.8 L19,15.8 Z'/></svg>") 4 2, auto;
+}
+
+/* Mao apontando amarela em elementos clicaveis */
+a,
+button,
+select,
+summary,
+label[for],
+[role="button"],
+[data-cursor-hover] {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path fill='%23FFD712' stroke='%23000' stroke-width='1.5' stroke-linejoin='round' d='M10,3 L10,12 L8.5,12 C7.5,12 7,12.8 7,13.6 L7,16 C7,21 10,25 14,25 L17,25 C20.5,25 23,22.5 23,19 L23,12.5 C23,11.7 22.3,11 21.5,11 C20.7,11 20,11.7 20,12.5 L20,11 C20,10.2 19.3,9.5 18.5,9.5 C17.7,9.5 17,10.2 17,11 L17,9.5 C17,8.7 16.3,8 15.5,8 C14.7,8 14,8.7 14,9.5 L14,5 C14,4.2 13.3,3.5 12.5,3.5 C11.7,3.5 11,4.2 11,5 Z'/></svg>") 10 3, pointer;
+}
+
+/* Inputs mantem cursor de texto padrao do SO */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="search"],
+input[type="number"],
+input[type="url"],
+textarea {
+  cursor: text;
 }
 
 /* ============== ANIMACOES (LoginBackground) ============== */
