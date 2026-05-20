@@ -5,6 +5,17 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v1.0.1 — 2026-05-20
+
+### Correções pontuais
+- **Fix:** `permission denied for function has_active_purchase` ao carregar /dashboard
+  - Causa: REVOKE EXECUTE do `authenticated` (aplicado no setup pra fechar advisor) impedia que as policies RLS chamassem a função
+  - Solução: movidas `is_admin()` e `has_active_purchase()` pra schema `internal` (não exposto pelo Data API), com EXECUTE pro `authenticated` — RLS funciona, mas funções não viram RPC endpoints
+- **Fix:** advisor `public_bucket_allows_listing` no bucket `avatars`
+  - Drop da policy de SELECT (bucket público dispensa policy explícita)
+
+---
+
 ## v1.0.0 — 2026-05-19
 
 Primeira versao oficial publicada. Inclui plataforma completa de membros e diferenciais visuais BOLD.
