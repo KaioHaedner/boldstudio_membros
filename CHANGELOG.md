@@ -5,6 +5,15 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v2.1.2 — 2026-05-20
+
+### Consolidação da sessão
+- Versão bumpada para refletir o estado consolidado pós revisão ortográfica e VideoBackground próprio
+- Nada novo no código do BOLD nesta versão (foi housekeeping)
+- Sessão também resolveu fora do BOLD: dois bugs no AgroNortão (upload de logo bloqueado por RLS no bucket `fotos-cupons`, e erro de salvar empresa por colunas `email` e `observacoes` faltando em `empresas_meta`)
+
+---
+
 ## v2.1.1 — 2026-05-20
 
 ### Correções pontuais
