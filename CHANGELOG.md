@@ -5,6 +5,28 @@ Convencao de versionamento (definida pelo cliente):
 - **0.X.0** — mudancas de CSS / JavaScript / comportamento
 - **0.0.X** — correcoes pontuais
 
+## v1.1.0 — 2026-05-20
+
+### Comportamento (JS)
+- **HaveIBeenPwned check** ao digitar senha no /cadastro
+  - Hash SHA-1 via Web Crypto, manda só os 5 primeiros chars pra `api.pwnedpasswords.com/range` (k-anonymity)
+  - Servidor nunca ve a senha nem o hash completo
+  - Debounce 600ms, indica visualmente: checking → safe / pwned (com count) / error
+  - Bloqueia submit se senha vazou
+  - Substitui a "Leaked Password Protection" do Supabase Pro ($25/mes) — feito gratis no frontend
+
+### Visual (CSS)
+- **Scrollbar amarela BOLD** com gradient `#FFD712 → #E5BE10`, glow no hover, border preto pra contraste
+  - Funciona em Chromium (webkit-scrollbar) e Firefox (scrollbar-color)
+- **Cursor custom 3D amarelo** (so desktop, `pointer: fine`)
+  - Dot interno 8px com `mix-blend-mode: difference` (contraste em qualquer fundo)
+  - Ring externo 44px com glow amarelo + sombra interna + perspective 3D que tilta conforme velocidade do mouse
+  - Hover em links/botoes: ring escala 1.6x + opacidade 0.9
+  - Click: dot encolhe (feedback tactile)
+  - Esconde cursor nativo exceto em inputs de texto (mantem cursor de digitacao)
+
+---
+
 ## v1.0.1 — 2026-05-20
 
 ### Correções pontuais

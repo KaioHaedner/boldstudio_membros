@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { AlertTriangle, CheckCircle2, Eye, EyeOff, Loader2 } from 'lucide-react'
+import type { PwnedResult } from '@/hooks/usePwnedCheck'
 
 interface PasswordInputProps {
   label: string
@@ -9,6 +10,7 @@ interface PasswordInputProps {
   required?: boolean
   placeholder?: string
   minLength?: number
+  pwned?: PwnedResult
 }
 
 export function PasswordInput({
@@ -19,8 +21,15 @@ export function PasswordInput({
   required,
   placeholder,
   minLength,
+  pwned,
 }: PasswordInputProps) {
   const [show, setShow] = useState(false)
+
+  const status = pwned?.status ?? 'idle'
+
+  let borderClass = 'border-bold-white/15 focus:border-bold-yellow focus:ring-bold-yellow'
+  if (status === 'pwned') borderClass = 'border-red-500/60 focus:border-red-500 focus:ring-red-500'
+  else if (status === 'safe') borderClass = 'border-green-500/40 focus:border-green-500 focus:ring-green-500'
 
   return (
     <label className="block">
@@ -34,7 +43,7 @@ export function PasswordInput({
           required={required}
           placeholder={placeholder}
           minLength={minLength}
-          className="w-full rounded-md bg-bold-black border border-bold-white/15 px-3 py-2.5 pr-11 text-bold-white placeholder-bold-white/30 focus:outline-none focus:border-bold-yellow focus:ring-1 focus:ring-bold-yellow"
+          className={`w-full rounded-md bg-bold-black border px-3 py-2.5 pr-11 text-bold-white placeholder-bold-white/30 focus:outline-none focus:ring-1 transition ${borderClass}`}
         />
         <button
           type="button"
@@ -46,6 +55,49 @@ export function PasswordInput({
           {show ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
       </div>
+
+      {pwned && status !== 'idle' && (
+        <PwnedHint status={status} count={pwned.count} />
+      )}
     </label>
+  )
+}
+
+function PwnedHint({ status, count }: { status: PwnedResult['status']; count: number }) {
+  let icon: ReactNode = null
+  let className = ''
+  let text = ''
+
+  switch (status) {
+    case 'checking':
+      icon = <Loader2 size={12} className="animate-spin" />
+      className = 'text-bold-white/40'
+      text = 'verificando se a senha esta em vazamentos...'
+      break
+    case 'safe':
+      icon = <CheckCircle2 size={12} />
+      className = 'text-green-400'
+      text = 'senha nao encontrada em vazamentos publicos.'
+      break
+    case 'pwned':
+      icon = <AlertTriangle size={12} />
+      className = 'text-red-400'
+      text =
+        count > 1000
+          ? `senha vazou ${count.toLocaleString('pt-BR')} vezes em data breaches publicos. escolha outra.`
+          : `senha encontrada em vazamentos publicos. escolha outra mais segura.`
+      break
+    case 'error':
+      icon = <AlertTriangle size={12} />
+      className = 'text-amber-400'
+      text = 'nao foi possivel verificar a senha agora (tente de novo).'
+      break
+  }
+
+  return (
+    <p className={`mt-1.5 flex items-start gap-1.5 text-[11px] ${className}`}>
+      <span className="mt-px shrink-0">{icon}</span>
+      <span>{text}</span>
+    </p>
   )
 }

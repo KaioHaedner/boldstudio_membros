@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppLayout } from '@/components/AppLayout'
+import { CursorFollower } from '@/components/CursorFollower'
 import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { CadastroPage } from '@/pages/CadastroPage'
@@ -16,6 +17,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CursorFollower />
         <Routes>
           {/* publicas */}
           <Route path="/" element={<LandingPage />} />

@@ -7,6 +7,7 @@ import { AuthShell, Field } from '@/pages/LoginPage'
 import { PasswordInput } from '@/components/PasswordInput'
 import { LoginBackground } from '@/components/LoginBackground'
 import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWidget'
+import { usePwnedCheck } from '@/hooks/usePwnedCheck'
 
 export function CadastroPage() {
   const { session } = useAuth()
@@ -22,6 +23,8 @@ export function CadastroPage() {
   const [success, setSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
+  const pwned = usePwnedCheck(password)
+
   if (session) return <Navigate to="/dashboard" replace />
 
   async function handleSubmit(e: FormEvent) {
@@ -34,6 +37,14 @@ export function CadastroPage() {
     }
     if (password.length < 6) {
       setError('A senha precisa ter pelo menos 6 caracteres.')
+      return
+    }
+    if (pwned.status === 'pwned') {
+      setError('Essa senha foi encontrada em vazamentos publicos. Escolha outra.')
+      return
+    }
+    if (pwned.status === 'checking') {
+      setError('Aguarde a verificacao da senha terminar.')
       return
     }
     if (!captchaToken) {
@@ -91,7 +102,15 @@ export function CadastroPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field label="Nome completo" type="text" value={fullName} onChange={setFullName} required />
           <Field label="E-mail" type="email" value={email} onChange={setEmail} autoComplete="email" required />
-          <PasswordInput label="Senha" value={password} onChange={setPassword} autoComplete="new-password" required minLength={6} />
+          <PasswordInput
+            label="Senha"
+            value={password}
+            onChange={setPassword}
+            autoComplete="new-password"
+            required
+            minLength={6}
+            pwned={pwned}
+          />
           <PasswordInput label="Confirmar senha" value={confirm} onChange={setConfirm} autoComplete="new-password" required minLength={6} />
 
           <CaptchaWidget
@@ -108,8 +127,8 @@ export function CadastroPage() {
 
           <button
             type="submit"
-            disabled={submitting || !captchaToken}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-md bg-bold-yellow text-bold-black font-semibold hover:opacity-90 disabled:opacity-50 transition"
+            disabled={submitting || !captchaToken || pwned.status === 'pwned' || pwned.status === 'checking'}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-md bg-bold-yellow text-bold-black font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             {submitting && <Loader2 className="animate-spin" size={16} />}
             Criar conta
