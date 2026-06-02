@@ -8,6 +8,9 @@ import {
   Users,
   Smartphone,
   Activity,
+  Bug,
+  ShieldCheck,
+  Link2,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { APP_VERSION } from '@/lib/version'
@@ -20,6 +23,9 @@ const ITEMS = [
   { to: '/admin/comentarios', icon: MessageSquare, label: 'Comentários' },
   { to: '/admin/dispositivos', icon: Smartphone, label: 'Dispositivos' },
   { to: '/admin/acessos', icon: Activity, label: 'Acessos' },
+  { to: '/admin/lgpd', icon: ShieldCheck, label: 'LGPD' },
+  { to: '/admin/erros', icon: Bug, label: 'Erros' },
+  { to: '/admin/links', icon: Link2, label: 'Links' },
 ]
 
 export function AdminLayout() {

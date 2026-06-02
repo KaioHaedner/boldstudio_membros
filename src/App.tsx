@@ -32,6 +32,9 @@ import { AdminAlunosPage } from '@/pages/admin/AdminAlunosPage'
 import { AdminComentariosPage } from '@/pages/admin/AdminComentariosPage'
 import { AdminDispositivosPage } from '@/pages/admin/AdminDispositivosPage'
 import { AdminAcessosPage } from '@/pages/admin/AdminAcessosPage'
+import { AdminLgpdPage } from '@/pages/admin/AdminLgpdPage'
+import { AdminErrosPage } from '@/pages/admin/AdminErrosPage'
+import { AdminLinksPage } from '@/pages/admin/AdminLinksPage'
 
 // Porteiro da raiz: o dominio principal mostra a landing/portfolio;
 // os subdominios de area (academy/admin/crew) vao direto pro login tematico.
@@ -91,6 +94,9 @@ function App() {
             <Route path="/admin/comentarios" element={<AdminComentariosPage />} />
             <Route path="/admin/dispositivos" element={<AdminDispositivosPage />} />
             <Route path="/admin/acessos" element={<AdminAcessosPage />} />
+            <Route path="/admin/lgpd" element={<AdminLgpdPage />} />
+            <Route path="/admin/erros" element={<AdminErrosPage />} />
+            <Route path="/admin/links" element={<AdminLinksPage />} />
           </Route>
 
           <Route path="/app" element={<Navigate to="/dashboard" replace />} />
