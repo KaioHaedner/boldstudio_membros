@@ -9,6 +9,7 @@ import {
 } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
+import { clear2fa } from '@/lib/twoFactor'
 
 export interface Profile {
   id: string
@@ -121,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const signOut = useCallback<AuthContextValue['signOut']>(async () => {
+    clear2fa()
     await supabase.auth.signOut()
   }, [])
 

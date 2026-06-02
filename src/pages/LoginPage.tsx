@@ -7,6 +7,7 @@ import { PasswordInput } from '@/components/PasswordInput'
 import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWidget'
 import { AuthShell, Field } from '@/components/AuthShell'
 import { registerDevice, logAccess } from '@/lib/deviceTracking'
+import { clear2fa } from '@/lib/twoFactor'
 
 export { AuthShell, Field } // re-export pra compatibilidade com imports legados
 
@@ -58,8 +59,11 @@ export function LoginPage() {
       void registerDevice(userId)
       void logAccess(userId, email, 'login')
     }
+    // 2FA: senha OK porem ainda nao verificado. Dispara o codigo e vai pro /2fa.
+    clear2fa()
+    void supabase.functions.invoke('send-login-otp')
     sessionStorage.removeItem(APP_SPLASH_KEY)
-    navigate(from, { replace: true })
+    navigate('/2fa', { replace: true })
   }
 
   return (

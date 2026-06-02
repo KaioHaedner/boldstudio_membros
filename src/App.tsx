@@ -8,6 +8,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
 import { RedefinirSenhaPage } from '@/pages/RedefinirSenhaPage'
+import { TwoFactorPage } from '@/pages/TwoFactorPage'
 import { CheckoutPage } from '@/pages/CheckoutPage'
 import { SucessoPage } from '@/pages/SucessoPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -36,6 +37,7 @@ function App() {
           <Route path="/cadastro" element={<CadastroPage />} />
           <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
           <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+          <Route path="/2fa" element={<TwoFactorPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/sucesso" element={<SucessoPage />} />
 
