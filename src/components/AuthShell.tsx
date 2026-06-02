@@ -1,4 +1,5 @@
 import { StudioVideoBg } from '@/components/StudioVideoBg'
+import { CameraRays, CameraEmitter } from '@/components/CameraEmitter'
 import { getArea } from '@/lib/area'
 import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
@@ -9,12 +10,37 @@ interface AuthShellProps {
   children: React.ReactNode
 }
 
-// Cada subdominio tem um tema de entrada proprio.
+function fxCamera(): boolean {
+  if (typeof window === 'undefined') return false
+  return new URLSearchParams(window.location.search).get('fx') === 'camera'
+}
+
+// Cada subdominio tem um tema de entrada proprio. ?fx=camera ativa o tema "camera" (demo).
 export function AuthShell(props: AuthShellProps) {
+  if (fxCamera()) return <CameraAuthLayout {...props} />
   const area = getArea()
   if (area === 'admin') return <AdminAuthLayout {...props} />
   if (area === 'crew') return <CrewAuthLayout {...props} />
   return <AcademyAuthLayout {...props} />
+}
+
+/* ============== TEMA CAMERA — emissor de luz projetando o form (Bold) ============== */
+function CameraAuthLayout({ title, subtitle, children }: AuthShellProps) {
+  return (
+    <div className="min-h-screen relative bg-bold-black text-bold-white flex flex-col items-center justify-center px-4 py-12 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_85%,rgba(255,215,18,0.10),transparent_60%)] pointer-events-none" />
+      <div className="relative flex flex-col items-center w-full max-w-sm">
+        <div className="cam-form w-full">
+          <p className="cam-label">{title}</p>
+          {subtitle && <p className="text-center text-sm text-bold-white/70 -mt-1">{subtitle}</p>}
+          <div className="space-y-4 mt-1">{children}</div>
+          <VersionTag />
+        </div>
+        <CameraRays />
+        <CameraEmitter />
+      </div>
+    </div>
+  )
 }
 
 /* ============== ACADEMY — video de fundo + paineis de vidro ============== */
