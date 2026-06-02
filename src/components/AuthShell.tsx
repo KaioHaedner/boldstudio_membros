@@ -1,4 +1,5 @@
 import { CameraRays, CameraEmitter } from '@/components/CameraEmitter'
+import { PoweredByBold } from '@/components/PoweredByBold'
 import { APP_VERSION } from '@/lib/version'
 
 interface AuthShellProps {
@@ -25,6 +26,8 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
         <CameraRays />
         <CameraEmitter />
       </div>
+
+      <PoweredByBold className="relative mt-10" />
     </div>
   )
 }
