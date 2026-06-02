@@ -31,11 +31,11 @@ function CameraForm({ title, subtitle, children }: AuthShellProps) {
         <p className="cam-label">{title}</p>
         {subtitle && <p className="text-center text-sm text-bold-white/70 -mt-1">{subtitle}</p>}
         <div className="space-y-4 mt-1">{children}</div>
+        <PoweredByBold className="flex justify-center mt-4" />
         <VersionTag />
       </div>
       <CameraRays />
       <CameraEmitter />
-      <PoweredByBold className="relative mt-8" />
     </div>
   )
 }
@@ -76,7 +76,7 @@ function CameraAuthLayout(props: AuthShellProps) {
 function VersionTag() {
   return (
     <p className="mt-5 text-center text-[10px] text-bold-white/30 uppercase tracking-widest">
-      bold. v{APP_VERSION}
+      BoldStudios v{APP_VERSION}
     </p>
   )
 }
