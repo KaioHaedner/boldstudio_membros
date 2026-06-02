@@ -6,6 +6,8 @@ import {
   LogOut,
   MessageSquare,
   Users,
+  Smartphone,
+  Activity,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { APP_VERSION } from '@/lib/version'
@@ -16,6 +18,8 @@ const ITEMS = [
   { to: '/admin/modulos', icon: BookOpen, label: 'Módulos' },
   { to: '/admin/alunos', icon: Users, label: 'Alunos' },
   { to: '/admin/comentarios', icon: MessageSquare, label: 'Comentários' },
+  { to: '/admin/dispositivos', icon: Smartphone, label: 'Dispositivos' },
+  { to: '/admin/acessos', icon: Activity, label: 'Acessos' },
 ]
 
 export function AdminLayout() {

@@ -6,7 +6,7 @@
 -- ========= PROFILES: role worker + campos de contato/LGPD =========
 alter table public.profiles drop constraint if exists profiles_role_check;
 alter table public.profiles
-  add constraint profiles_role_check check (role in ('student','admin','instructor','worker'));
+  add constraint profiles_role_check check (role in ('student','admin','instructor','crew'));
 
 alter table public.profiles add column if not exists cpf text;
 -- (whatsapp, phone e address ja existem)
@@ -72,7 +72,7 @@ create table if not exists public.access_links (
   token text not null unique,
   created_by uuid references auth.users(id) on delete set null,
   label text,
-  role_granted text not null default 'student' check (role_granted in ('student','worker','instructor','admin')),
+  role_granted text not null default 'student' check (role_granted in ('student','crew','instructor','admin')),
   intended_email text,
   expires_at timestamptz,
   max_uses int not null default 1,

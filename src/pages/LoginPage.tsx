@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { PasswordInput } from '@/components/PasswordInput'
 import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWidget'
 import { AuthShell, Field } from '@/components/AuthShell'
+import { registerDevice, logAccess } from '@/lib/deviceTracking'
 
 export { AuthShell, Field } // re-export pra compatibilidade com imports legados
 
@@ -38,7 +39,7 @@ export function LoginPage() {
     }
 
     setSubmitting(true)
-    const { error: signErr } = await supabase.auth.signInWithPassword({
+    const { data, error: signErr } = await supabase.auth.signInWithPassword({
       email,
       password,
       options: { captchaToken },
@@ -50,6 +51,12 @@ export function LoginPage() {
     if (signErr) {
       setError(traduzirErro(signErr.message))
       return
+    }
+    // Tracking (fire-and-forget, nao bloqueia a navegacao)
+    const userId = data.user?.id
+    if (userId) {
+      void registerDevice(userId)
+      void logAccess(userId, email, 'login')
     }
     sessionStorage.removeItem(APP_SPLASH_KEY)
     navigate(from, { replace: true })

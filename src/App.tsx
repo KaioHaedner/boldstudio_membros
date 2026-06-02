@@ -22,6 +22,8 @@ import { AdminModuloEditPage } from '@/pages/admin/AdminModuloEditPage'
 import { AdminAulaEditPage } from '@/pages/admin/AdminAulaEditPage'
 import { AdminAlunosPage } from '@/pages/admin/AdminAlunosPage'
 import { AdminComentariosPage } from '@/pages/admin/AdminComentariosPage'
+import { AdminDispositivosPage } from '@/pages/admin/AdminDispositivosPage'
+import { AdminAcessosPage } from '@/pages/admin/AdminAcessosPage'
 
 function App() {
   return (
@@ -66,6 +68,8 @@ function App() {
             <Route path="/admin/aulas/:id" element={<AdminAulaEditPage />} />
             <Route path="/admin/alunos" element={<AdminAlunosPage />} />
             <Route path="/admin/comentarios" element={<AdminComentariosPage />} />
+            <Route path="/admin/dispositivos" element={<AdminDispositivosPage />} />
+            <Route path="/admin/acessos" element={<AdminAcessosPage />} />
           </Route>
 
           <Route path="/app" element={<Navigate to="/dashboard" replace />} />
