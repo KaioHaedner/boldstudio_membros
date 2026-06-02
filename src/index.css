@@ -188,6 +188,19 @@ textarea {
   background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
 }
 
+/* ============== ANIMACOES (Toast / notificacoes) ============== */
+@keyframes toast-in {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.animate-toast-in { animation: toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes toast-bar {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+.animate-toast-bar { animation: toast-bar 4.5s linear forwards; }
+
 /* ============== Glassmorphism util ============== */
 .glass-card {
   background: rgba(40, 40, 40, 0.55);

@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { AuthShell, Field } from '@/components/AuthShell'
+import { useToast } from '@/components/Toast'
 
 export function RecuperarSenhaPage() {
   const { resetPassword } = useAuth()
+  const toast = useToast()
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState(false)
@@ -17,8 +19,13 @@ export function RecuperarSenhaPage() {
     setSubmitting(true)
     const { error } = await resetPassword(email)
     setSubmitting(false)
-    if (error) setError(error)
-    else setSent(true)
+    if (error) {
+      setError(error)
+      toast.error('Não foi possível enviar', error)
+    } else {
+      setSent(true)
+      toast.success('Link enviado', 'Confira sua caixa de entrada.')
+    }
   }
 
   if (sent) {

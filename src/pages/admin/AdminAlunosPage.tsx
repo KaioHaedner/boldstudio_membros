@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CheckCircle2, Loader2, Search, ShieldCheck, UserCheck, UserMinus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Loader } from '@/components/Loader'
+import { useToast } from '@/components/Toast'
 
 interface AlunoRow {
   id: string
@@ -105,6 +106,7 @@ export function AdminAlunosPage() {
 function AlunoRowItem({ aluno, onChanged }: { aluno: AlunoRow; onChanged: () => void }) {
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<string | null>(null)
+  const toast = useToast()
 
   async function liberarAcesso() {
     setBusy(true)
@@ -120,10 +122,12 @@ function AlunoRowItem({ aluno, onChanged }: { aluno: AlunoRow; onChanged: () => 
     setBusy(false)
     if (error) {
       setFeedback(`erro: ${error.message}`)
+      toast.error('Falha ao liberar acesso', error.message)
       setTimeout(() => setFeedback(null), 3500)
       return
     }
     setFeedback('acesso liberado')
+    toast.success('Acesso liberado', `${aluno.full_name || 'Aluno'} agora tem acesso ao curso.`)
     setTimeout(() => setFeedback(null), 2000)
     onChanged()
   }
@@ -138,10 +142,12 @@ function AlunoRowItem({ aluno, onChanged }: { aluno: AlunoRow; onChanged: () => 
     setBusy(false)
     if (error) {
       setFeedback(`erro: ${error.message}`)
+      toast.error('Falha ao alterar papel', error.message)
       setTimeout(() => setFeedback(null), 3500)
       return
     }
     setFeedback(newRole === 'admin' ? 'promovido a admin' : 'voltou a student')
+    toast.success(newRole === 'admin' ? 'Promovido a admin' : 'Rebaixado a aluno', aluno.full_name || undefined)
     setTimeout(() => setFeedback(null), 2000)
     onChanged()
   }

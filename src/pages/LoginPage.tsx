@@ -8,6 +8,7 @@ import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWid
 import { AuthShell, Field } from '@/components/AuthShell'
 import { registerDevice, logAccess } from '@/lib/deviceTracking'
 import { clear2fa } from '@/lib/twoFactor'
+import { useToast } from '@/components/Toast'
 
 export { AuthShell, Field } // re-export pra compatibilidade com imports legados
 
@@ -15,6 +16,7 @@ const APP_SPLASH_KEY = 'bold:app-splash-shown'
 
 export function LoginPage() {
   const { session, loading: authLoading } = useAuth()
+  const toast = useToast()
   const navigate = useNavigate()
   const location = useLocation()
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname ?? '/dashboard'
@@ -36,6 +38,7 @@ export function LoginPage() {
 
     if (!captchaToken) {
       setError('Complete o captcha antes de entrar.')
+      toast.warning('Captcha pendente', 'Marque "Sou humano" antes de entrar.')
       return
     }
 
@@ -50,9 +53,12 @@ export function LoginPage() {
     setCaptchaToken(null)
 
     if (signErr) {
-      setError(traduzirErro(signErr.message))
+      const msg = traduzirErro(signErr.message)
+      setError(msg)
+      toast.error('Login reprovado', msg)
       return
     }
+    toast.success('Login aprovado', 'Enviamos um código de verificação.')
     // Tracking (fire-and-forget, nao bloqueia a navegacao)
     const userId = data.user?.id
     if (userId) {

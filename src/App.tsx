@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { getArea } from '@/lib/area'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { ToastProvider } from '@/components/Toast'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppLayout } from '@/components/AppLayout'
 import { AdminLayout } from '@/components/AdminLayout'
@@ -37,6 +38,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ToastProvider>
         <Routes>
           {/* publicas */}
           <Route path="/" element={<RootGate />} />
@@ -84,6 +86,7 @@ function App() {
           <Route path="/app" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   )

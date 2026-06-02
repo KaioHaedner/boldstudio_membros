@@ -7,9 +7,11 @@ import { AuthShell, Field } from '@/components/AuthShell'
 import { PasswordInput } from '@/components/PasswordInput'
 import { CaptchaWidget, type CaptchaWidgetHandle } from '@/components/CaptchaWidget'
 import { usePwnedCheck } from '@/hooks/usePwnedCheck'
+import { useToast } from '@/components/Toast'
 
 export function CadastroPage() {
   const { session } = useAuth()
+  const toast = useToast()
   const navigate = useNavigate()
 
   const [fullName, setFullName] = useState('')
@@ -66,9 +68,11 @@ export function CadastroPage() {
 
     if (signErr) {
       setError(signErr.message)
+      toast.error('Cadastro reprovado', signErr.message)
       return
     }
     setSuccess(true)
+    toast.success('Conta criada!', 'Confirme seu e-mail para ativar o acesso.')
   }
 
   if (success) {

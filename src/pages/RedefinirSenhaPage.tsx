@@ -5,9 +5,11 @@ import { supabase } from '@/lib/supabase'
 import { AuthShell } from '@/components/AuthShell'
 import { PasswordInput } from '@/components/PasswordInput'
 import { usePwnedCheck } from '@/hooks/usePwnedCheck'
+import { useToast } from '@/components/Toast'
 
 export function RedefinirSenhaPage() {
   const navigate = useNavigate()
+  const toast = useToast()
   const [hasRecoverySession, setHasRecoverySession] = useState(false)
   const [checkingSession, setCheckingSession] = useState(true)
 
@@ -60,9 +62,11 @@ export function RedefinirSenhaPage() {
 
     if (updErr) {
       setError(updErr.message)
+      toast.error('Não foi possível atualizar', updErr.message)
       return
     }
     setSuccess(true)
+    toast.success('Senha redefinida', 'Redirecionando para o app...')
     setTimeout(() => navigate('/dashboard'), 2500)
   }
 

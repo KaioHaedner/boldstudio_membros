@@ -6,11 +6,13 @@ import { supabase } from '@/lib/supabase'
 import { AuthShell } from '@/components/AuthShell'
 import { is2faVerified, set2faVerified } from '@/lib/twoFactor'
 import { homeForRole } from '@/lib/area'
+import { useToast } from '@/components/Toast'
 
 type Channel = 'email' | 'sms' | 'whatsapp'
 
 export function TwoFactorPage() {
   const { session, loading, profile, signOut } = useAuth()
+  const toast = useToast()
   const navigate = useNavigate()
   const [channel, setChannel] = useState<Channel>('email')
   const [sentTo, setSentTo] = useState<string | null>(null)
@@ -37,13 +39,17 @@ export function TwoFactorPage() {
 
     if (invErr) {
       setError('Não foi possível validar agora. Tente de novo.')
+      toast.error('Falha na verificação', 'Tente novamente em instantes.')
       return
     }
     if (!data?.success) {
-      setError(traduzir(data?.error, data?.remaining))
+      const msg = traduzir(data?.error, data?.remaining)
+      setError(msg)
+      toast.error('Código reprovado', msg)
       return
     }
     set2faVerified()
+    toast.success('Verificado!', 'Acesso liberado. Bem-vindo à Bold.')
     navigate(homeForRole(profile?.role), { replace: true })
   }
 
@@ -58,16 +64,21 @@ export function TwoFactorPage() {
       setChannel('email')
       setSentTo(null)
       setInfo('Código enviado pro seu e-mail.')
+      toast.success('Código enviado', 'Confira seu e-mail.')
     } else {
       const { data, error: invErr } = await supabase.functions.invoke('send-phone-otp', {
         body: { channel: ch },
       })
       if (invErr || !data?.success) {
-        setError(traduzir(data?.error))
+        const msg = traduzir(data?.error)
+        setError(msg)
+        toast.error('Não foi possível enviar', msg)
       } else {
         setChannel(ch)
         setSentTo(data.to ?? null)
-        setInfo(`Código enviado por ${ch === 'sms' ? 'SMS' : 'WhatsApp'}${data.to ? ` para ${data.to}` : ''}.`)
+        const canal = ch === 'sms' ? 'SMS' : 'WhatsApp'
+        setInfo(`Código enviado por ${canal}${data.to ? ` para ${data.to}` : ''}.`)
+        toast.success('Código enviado', `Enviamos por ${canal}.`)
       }
     }
     setSending(null)
