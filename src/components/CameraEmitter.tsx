@@ -4,7 +4,7 @@
 export function CameraRays() {
   return (
     <div className="cam-rays">
-      <svg fill="none" viewBox="0 0 299 152" height="9em" width="18em" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg fill="none" viewBox="0 0 299 152" height="5.5em" width="13em" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path fill="url(#camRays)" d="M149.5 152H133.42L0 0H149.5L299 0L165.58 152H149.5Z" />
         <defs>
           <linearGradient gradientUnits="userSpaceOnUse" y2="12.1981" x2="150.12" y1="152" x1="149.5" id="camRays">
@@ -20,7 +20,7 @@ export function CameraRays() {
 export function CameraEmitter() {
   return (
     <div className="cam-emitter">
-      <svg fill="none" viewBox="0 0 160 61" height={61} width={160} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg fill="none" viewBox="0 0 160 61" height={42} width={110} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <g filter="url(#camF0)">
           <path fill="#2B2B2B" d="M80 27.9997C121.974 27.9997 156 22.4032 156 15.4996L156 40.4998C156 47.4034 121.974 52.9998 80 52.9998C38.0265 52.9998 4.00028 47.4034 4 40.4998V40.4998V15.51C4.0342 22.4089 38.0474 27.9997 80 27.9997Z" clipRule="evenodd" fillRule="evenodd" />
         </g>

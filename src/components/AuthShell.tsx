@@ -35,8 +35,8 @@ function CameraForm({ title, subtitle, children, badge }: AuthShellProps & { bad
         </div>
         {showTitle && <p className="cam-label">{title}</p>}
         {subtitle && <p className="text-center text-sm text-bold-white/70 -mt-1">{subtitle}</p>}
-        <div className="space-y-4 mt-1">{children}</div>
-        <PoweredByBold className="flex justify-center mt-3" />
+        <div className="space-y-3 mt-1">{children}</div>
+        <PoweredByBold className="flex justify-center mt-2" />
         <VersionTag />
       </div>
       <CameraRays />
@@ -48,7 +48,7 @@ function CameraForm({ title, subtitle, children, badge }: AuthShellProps & { bad
 /* ============== ACADEMY — video de fundo + form camera (blur) de canto + texto Bold ============== */
 function AcademyCameraLayout(props: AuthShellProps) {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-bold-black text-bold-white flex items-center justify-center md:justify-end px-4 md:px-16 py-12">
+    <div className="min-h-screen relative overflow-hidden bg-bold-black text-bold-white flex items-center justify-center md:justify-end px-4 md:px-16 py-6">
       <StudioVideoBg />
       <div className="absolute inset-0 bg-gradient-to-t from-bold-black/60 via-bold-black/15 to-bold-black/30 pointer-events-none" />
 

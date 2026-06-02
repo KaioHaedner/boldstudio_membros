@@ -7,7 +7,7 @@ export function PoweredByBold({ className }: { className?: string }) {
     <div className={className}>
       <button type="button" className="brutalist-btn" aria-label="Powered by Kaio H. e BoldStudio">
         <div className="brutalist-logo">
-          <Aperture className="brutalist-icon" size={34} strokeWidth={1.5} />
+          <Aperture className="brutalist-icon" size={28} strokeWidth={1.5} />
         </div>
         <div className="brutalist-text">
           <span>Powered By</span>
