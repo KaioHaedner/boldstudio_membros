@@ -274,7 +274,7 @@ textarea {
 .cam-rays {
   position: relative;
   z-index: 2;
-  bottom: -1.5em;
+  margin-top: -1.25em;
   animation: cam-rays 2.5s ease-in-out infinite;
   filter: drop-shadow(0 0 12px rgba(255, 215, 18, 0.45));
 }
@@ -283,14 +283,14 @@ textarea {
   z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.85em;
   padding: 1.75rem;
   border-radius: 0.75rem;
   border: 2px solid rgba(255, 215, 18, 0.45);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 64px 0 rgba(255, 215, 18, 0.15) inset, 0 0 28px rgba(255, 215, 18, 0.22);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   animation: cam-float 3.2s ease-in-out infinite;
 }
 .cam-label {
@@ -324,17 +324,17 @@ textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 142px;
-  height: 142px;
+  width: 92px;
+  height: 92px;
   color: #FFD712;
   font-weight: bold;
   position: relative;
   cursor: pointer;
   overflow: hidden;
   background-color: #0d0d0d;
-  border: 3px solid #FFD712;
+  border: 2px solid #FFD712;
   border-radius: 12px;
-  box-shadow: 4px 4px 1px #000000;
+  box-shadow: 3px 3px 1px #000000;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .brutalist-btn:hover {

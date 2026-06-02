@@ -18,20 +18,25 @@ export function AuthShell(props: AuthShellProps) {
 }
 
 // Bloco do form com efeito camera (emissor + raios + blur)
-function CameraForm({ title, subtitle, children }: AuthShellProps) {
+function CameraForm({ title, subtitle, children, badge }: AuthShellProps & { badge?: string }) {
+  // No academy, o badge "Academy" substitui o titulo "Entrar"
+  const showTitle = !(badge && title === 'Entrar')
   return (
     <div className="relative z-10 flex flex-col items-center w-full max-w-sm">
       <div className="cam-form w-full">
-        <img
-          src="/brand/logo-primary.png"
-          alt="bold."
-          className="h-9 w-auto mx-auto mb-2 drop-shadow-[0_0_16px_rgba(255,215,18,0.35)]"
-          draggable={false}
-        />
-        <p className="cam-label">{title}</p>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <img
+            src="/brand/logo-primary.png"
+            alt="bold."
+            className="h-8 w-auto drop-shadow-[0_0_16px_rgba(255,215,18,0.35)]"
+            draggable={false}
+          />
+          {badge && <span className="text-xl font-extrabold tracking-tight text-bold-yellow">{badge}</span>}
+        </div>
+        {showTitle && <p className="cam-label">{title}</p>}
         {subtitle && <p className="text-center text-sm text-bold-white/70 -mt-1">{subtitle}</p>}
         <div className="space-y-4 mt-1">{children}</div>
-        <PoweredByBold className="flex justify-center mt-4" />
+        <PoweredByBold className="flex justify-center mt-3" />
         <VersionTag />
       </div>
       <CameraRays />
@@ -47,10 +52,10 @@ function AcademyCameraLayout(props: AuthShellProps) {
       <StudioVideoBg />
       <div className="absolute inset-0 bg-gradient-to-t from-bold-black/60 via-bold-black/15 to-bold-black/30 pointer-events-none" />
 
-      {/* Texto da Bold no canto inferior esquerdo */}
-      <div className="hidden md:block absolute bottom-10 left-10 z-10 max-w-md">
+      {/* Texto da Bold rente ao card (centralizado vertical) com blur */}
+      <div className="hidden md:block absolute left-10 top-1/2 -translate-y-1/2 z-10 max-w-md rounded-2xl border border-bold-white/10 bg-bold-black/35 backdrop-blur-2xl p-6 shadow-2xl">
         <p className="text-[10px] uppercase tracking-[0.3em] text-bold-yellow font-bold mb-2">academy</p>
-        <h2 className="text-2xl lg:text-3xl font-extrabold leading-tight drop-shadow-lg">
+        <h2 className="text-2xl lg:text-3xl font-extrabold leading-tight">
           Audiovisual do básico ao avançado.
         </h2>
         <p className="mt-2 text-sm text-bold-white/75 max-w-xs">
@@ -58,7 +63,7 @@ function AcademyCameraLayout(props: AuthShellProps) {
         </p>
       </div>
 
-      <CameraForm {...props} />
+      <CameraForm {...props} badge="Academy" />
     </div>
   )
 }
