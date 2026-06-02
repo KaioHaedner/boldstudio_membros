@@ -1,19 +1,23 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Loader2, RefreshCw } from 'lucide-react'
+import { Loader2, RefreshCw, Mail, MessageSquare, Phone } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { AuthShell } from '@/components/AuthShell'
 import { is2faVerified, set2faVerified } from '@/lib/twoFactor'
 
+type Channel = 'email' | 'sms' | 'whatsapp'
+
 export function TwoFactorPage() {
   const { session, loading, signOut } = useAuth()
   const navigate = useNavigate()
+  const [channel, setChannel] = useState<Channel>('email')
+  const [sentTo, setSentTo] = useState<string | null>(null)
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [resending, setResending] = useState(false)
-  const [resent, setResent] = useState(false)
+  const [sending, setSending] = useState<Channel | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
 
   if (!loading && !session) return <Navigate to="/login" replace />
   if (is2faVerified()) return <Navigate to="/dashboard" replace />
@@ -26,9 +30,8 @@ export function TwoFactorPage() {
       return
     }
     setSubmitting(true)
-    const { data, error: invErr } = await supabase.functions.invoke('verify-login-otp', {
-      body: { code },
-    })
+    const fn = channel === 'email' ? 'verify-login-otp' : 'verify-phone-otp'
+    const { data, error: invErr } = await supabase.functions.invoke(fn, { body: { code } })
     setSubmitting(false)
 
     if (invErr) {
@@ -43,14 +46,31 @@ export function TwoFactorPage() {
     navigate('/dashboard', { replace: true })
   }
 
-  async function handleResend() {
-    setResending(true)
+  // Troca o canal e dispara o envio do codigo
+  async function enviarPor(ch: Channel) {
+    setSending(ch)
     setError(null)
-    await supabase.functions.invoke('send-login-otp')
-    setResending(false)
-    setResent(true)
+    setInfo(null)
     setCode('')
-    setTimeout(() => setResent(false), 4000)
+    if (ch === 'email') {
+      await supabase.functions.invoke('send-login-otp')
+      setChannel('email')
+      setSentTo(null)
+      setInfo('Código enviado pro seu e-mail.')
+    } else {
+      const { data, error: invErr } = await supabase.functions.invoke('send-phone-otp', {
+        body: { channel: ch },
+      })
+      if (invErr || !data?.success) {
+        setError(traduzir(data?.error))
+      } else {
+        setChannel(ch)
+        setSentTo(data.to ?? null)
+        setInfo(`Código enviado por ${ch === 'sms' ? 'SMS' : 'WhatsApp'}${data.to ? ` para ${data.to}` : ''}.`)
+      }
+    }
+    setSending(null)
+    setTimeout(() => setInfo(null), 5000)
   }
 
   async function handleTrocarConta() {
@@ -58,8 +78,13 @@ export function TwoFactorPage() {
     navigate('/login', { replace: true })
   }
 
+  const subtitle =
+    channel === 'email'
+      ? 'Enviamos um código de 6 dígitos pro seu e-mail'
+      : `Código enviado por ${channel === 'sms' ? 'SMS' : 'WhatsApp'}${sentTo ? ` para ${sentTo}` : ''}`
+
   return (
-    <AuthShell title="Verificação em 2 etapas" subtitle="Enviamos um código de 6 dígitos pro seu e-mail">
+    <AuthShell title="Verificação em 2 etapas" subtitle={subtitle}>
       <form onSubmit={handleVerify} className="space-y-4">
         <label className="block">
           <span className="text-xs uppercase tracking-wider text-bold-white/60">Código</span>
@@ -74,9 +99,9 @@ export function TwoFactorPage() {
           />
         </label>
 
-        {resent && (
+        {info && (
           <p className="text-sm text-green-300 bg-green-500/10 border border-green-500/30 rounded-md p-3">
-            Novo código enviado! Confira seu e-mail.
+            {info}
           </p>
         )}
         {error && (
@@ -94,26 +119,62 @@ export function TwoFactorPage() {
           Verificar e entrar
         </button>
 
-        <div className="flex items-center justify-between text-xs">
+        {/* Canais alternativos */}
+        <div className="pt-2 border-t border-bold-white/10">
+          <p className="text-[11px] text-bold-white/40 text-center mb-2">Receber o código por:</p>
+          <div className="grid grid-cols-3 gap-2">
+            <ChannelBtn active={channel === 'email'} busy={sending === 'email'} onClick={() => enviarPor('email')} icon={Mail} label="E-mail" />
+            <ChannelBtn active={channel === 'sms'} busy={sending === 'sms'} onClick={() => enviarPor('sms')} icon={Phone} label="SMS" />
+            <ChannelBtn active={channel === 'whatsapp'} busy={sending === 'whatsapp'} onClick={() => enviarPor('whatsapp')} icon={MessageSquare} label="WhatsApp" />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between text-xs pt-1">
           <button
             type="button"
-            onClick={handleResend}
-            disabled={resending}
+            onClick={() => enviarPor(channel)}
+            disabled={sending !== null}
             className="flex items-center gap-1.5 text-bold-white/60 hover:text-bold-yellow disabled:opacity-50 transition"
           >
-            <RefreshCw size={12} className={resending ? 'animate-spin' : ''} />
-            Reenviar código
+            <RefreshCw size={12} className={sending ? 'animate-spin' : ''} />
+            Reenviar
           </button>
-          <button
-            type="button"
-            onClick={handleTrocarConta}
-            className="text-bold-white/60 hover:text-bold-white transition"
-          >
+          <button type="button" onClick={handleTrocarConta} className="text-bold-white/60 hover:text-bold-white transition">
             Entrar com outra conta
           </button>
         </div>
       </form>
     </AuthShell>
+  )
+}
+
+function ChannelBtn({
+  active,
+  busy,
+  onClick,
+  icon: Icon,
+  label,
+}: {
+  active: boolean
+  busy: boolean
+  onClick: () => void
+  icon: typeof Mail
+  label: string
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={busy}
+      className={`flex flex-col items-center gap-1 py-2 rounded-md border text-[11px] transition ${
+        active
+          ? 'border-bold-yellow bg-bold-yellow/10 text-bold-yellow'
+          : 'border-bold-white/10 text-bold-white/60 hover:border-bold-white/30'
+      } disabled:opacity-50`}
+    >
+      {busy ? <Loader2 className="animate-spin" size={14} /> : <Icon size={14} />}
+      {label}
+    </button>
   )
 }
 
@@ -124,11 +185,15 @@ function traduzir(err?: string, remaining?: number): string {
         ? `Código incorreto. ${remaining} tentativa(s) restante(s).`
         : 'Código incorreto.'
     case 'expired':
-      return 'O código expirou. Clique em "Reenviar código".'
+      return 'O código expirou. Reenvie um novo.'
     case 'no_code':
-      return 'Nenhum código ativo. Clique em "Reenviar código".'
+      return 'Nenhum código ativo. Clique em reenviar.'
     case 'too_many':
       return 'Muitas tentativas. Reenvie um novo código.'
+    case 'no_phone':
+      return 'Você não tem celular cadastrado. Use o e-mail ou atualize seu perfil.'
+    case 'twilio_error':
+      return 'Falha ao enviar pro celular. Tente o e-mail.'
     case 'invalid_format':
       return 'Digite os 6 dígitos do código.'
     default:
