@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { getArea } from '@/lib/area'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppLayout } from '@/components/AppLayout'
@@ -26,13 +27,19 @@ import { AdminComentariosPage } from '@/pages/admin/AdminComentariosPage'
 import { AdminDispositivosPage } from '@/pages/admin/AdminDispositivosPage'
 import { AdminAcessosPage } from '@/pages/admin/AdminAcessosPage'
 
+// Porteiro da raiz: o dominio principal mostra a landing/portfolio;
+// os subdominios de area (academy/admin/crew) vao direto pro login tematico.
+function RootGate() {
+  return getArea() === 'public' ? <LandingPage /> : <Navigate to="/login" replace />
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
           {/* publicas */}
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<RootGate />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/cadastro" element={<CadastroPage />} />
           <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
