@@ -17,6 +17,11 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { ModuloPage } from '@/pages/ModuloPage'
 import { AulaPage } from '@/pages/AulaPage'
 import { PerfilPage } from '@/pages/PerfilPage'
+import { TrilhasPage } from '@/pages/TrilhasPage'
+import { RotaPage } from '@/pages/RotaPage'
+import { ArsenalPage } from '@/pages/ArsenalPage'
+import { ConquistasPage } from '@/pages/ConquistasPage'
+import { EvolucaoPage } from '@/pages/EvolucaoPage'
 import { CertificadoPage } from '@/pages/CertificadoPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage'
@@ -59,6 +64,11 @@ function App() {
             }
           >
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/trilhas" element={<TrilhasPage />} />
+            <Route path="/rota" element={<RotaPage />} />
+            <Route path="/arsenal" element={<ArsenalPage />} />
+            <Route path="/conquistas" element={<ConquistasPage />} />
+            <Route path="/evolucao" element={<EvolucaoPage />} />
             <Route path="/modulo/:id" element={<ModuloPage />} />
             <Route path="/aula/:id" element={<AulaPage />} />
             <Route path="/perfil" element={<PerfilPage />} />
