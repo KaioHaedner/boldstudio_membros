@@ -52,8 +52,8 @@ function AcademyCameraLayout(props: AuthShellProps) {
       <StudioVideoBg />
       <div className="absolute inset-0 bg-gradient-to-t from-bold-black/60 via-bold-black/15 to-bold-black/30 pointer-events-none" />
 
-      {/* Texto da Bold rente ao card (centralizado vertical) com blur */}
-      <div className="hidden md:block absolute left-10 top-1/2 -translate-y-1/2 z-10 max-w-md rounded-2xl border border-bold-white/10 bg-bold-black/35 backdrop-blur-2xl p-6 shadow-2xl">
+      {/* Texto da Bold no canto inferior esquerdo, com blur */}
+      <div className="hidden md:block absolute bottom-10 left-10 z-10 max-w-md rounded-2xl border border-bold-white/10 bg-bold-black/35 backdrop-blur-2xl p-6 shadow-2xl">
         <p className="text-[10px] uppercase tracking-[0.3em] text-bold-yellow font-bold mb-2">academy</p>
         <h2 className="text-2xl lg:text-3xl font-extrabold leading-tight">
           Audiovisual do básico ao avançado.
