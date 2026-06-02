@@ -324,17 +324,17 @@ textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 74px;
-  height: 74px;
+  width: 142px;
+  height: 142px;
   color: #FFD712;
   font-weight: bold;
   position: relative;
   cursor: pointer;
   overflow: hidden;
   background-color: #0d0d0d;
-  border: 2px solid #FFD712;
+  border: 3px solid #FFD712;
   border-radius: 12px;
-  box-shadow: 3px 3px 1px #000000;
+  box-shadow: 4px 4px 1px #000000;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .brutalist-btn:hover {
