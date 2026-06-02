@@ -33,8 +33,20 @@ function AcademyAuthLayout({ title, subtitle, children }: AuthShellProps) {
         </p>
       </div>
 
-      <div className="relative z-10 w-full max-w-sm rounded-2xl border border-bold-white/10 bg-bold-black/45 backdrop-blur-2xl p-6 md:p-8 shadow-2xl">
-        <HeaderLogo title={title} subtitle={subtitle} compact />
+      <div className="relative z-10 w-full max-w-sm rounded-2xl border-2 border-bold-yellow/50 bg-bold-black/45 backdrop-blur-2xl p-6 md:p-8 shadow-2xl">
+        <div className="flex flex-col items-center mb-6">
+          <div className="flex items-center gap-2">
+            <img
+              src="/brand/logo-primary.png"
+              alt="bold."
+              className="h-10 w-auto drop-shadow-[0_4px_20px_rgba(255,215,18,0.3)] select-none"
+              draggable={false}
+            />
+            <span className="text-2xl font-extrabold tracking-tight text-bold-yellow">Academy</span>
+          </div>
+          {title !== 'Entrar' && <h1 className="mt-2 text-xl font-extrabold tracking-tight">{title}</h1>}
+          {subtitle && <p className="mt-1 text-sm text-bold-white/60 text-center">{subtitle}</p>}
+        </div>
         <div className="space-y-4">{children}</div>
         <PoweredByBold className="flex justify-center mt-5" />
         <VersionTag />
