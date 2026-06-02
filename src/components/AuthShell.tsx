@@ -1,20 +1,7 @@
-import { useSearchParams } from 'react-router-dom'
-import { LoginBackground } from '@/components/LoginBackground'
-import { VideoBackground } from '@/components/VideoBackground'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
+import { getArea } from '@/lib/area'
 import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
-
-export type LoginLayout = 'center' | 'split' | 'full-video'
-
-const VALID_LAYOUTS: LoginLayout[] = ['center', 'split', 'full-video']
-const DEFAULT_LAYOUT: LoginLayout = 'split'
-
-export function useLoginLayout(): LoginLayout {
-  const [params] = useSearchParams()
-  const s = params.get('style')
-  return VALID_LAYOUTS.includes(s as LoginLayout) ? (s as LoginLayout) : DEFAULT_LAYOUT
-}
 
 interface AuthShellProps {
   title: string
@@ -22,59 +9,29 @@ interface AuthShellProps {
   children: React.ReactNode
 }
 
+// Cada subdominio tem um tema de entrada proprio.
 export function AuthShell(props: AuthShellProps) {
-  const layout = useLoginLayout()
-
-  return (
-    <>
-      {layout === 'split' && <SplitLayout {...props} />}
-      {layout === 'center' && <CenterLayout {...props} />}
-      {layout === 'full-video' && <FullVideoLayout {...props} />}
-      <LayoutSwitcher current={layout} />
-    </>
-  )
+  const area = getArea()
+  if (area === 'admin') return <AdminAuthLayout {...props} />
+  if (area === 'crew') return <CrewAuthLayout {...props} />
+  return <AcademyAuthLayout {...props} />
 }
 
-/* ============== LAYOUT 1: CENTER (atual) ============== */
-function CenterLayout({ title, subtitle, children }: AuthShellProps) {
-  return (
-    <>
-      <LoginBackground />
-      <div className="min-h-screen text-bold-white flex items-center justify-center px-4 py-12 relative">
-        <div className="w-full max-w-sm relative z-10">
-          <HeaderLogo title={title} subtitle={subtitle} />
-          <div className="glass-card rounded-lg p-6">{children}</div>
-          <VersionTag />
-        </div>
-      </div>
-    </>
-  )
-}
-
-/* ============== LAYOUT 2: SPLIT (vídeo do estúdio nítido + painéis de vidro no form e no título) ============== */
-function SplitLayout({ title, subtitle, children }: AuthShellProps) {
+/* ============== ACADEMY — video de fundo + paineis de vidro ============== */
+function AcademyAuthLayout({ title, subtitle, children }: AuthShellProps) {
   return (
     <div className="min-h-screen relative overflow-hidden text-bold-white flex items-center justify-center md:justify-end px-4 md:px-16 py-12">
-      {/* Vídeo do estúdio cobrindo a tela (nítido) */}
       <StudioVideoBg />
-
-      {/* Overlay bem suave só pra dar contraste — não borra o vídeo */}
       <div className="absolute inset-0 bg-gradient-to-t from-bold-black/55 via-bold-black/10 to-bold-black/25 pointer-events-none" />
 
-      {/* Painel de vidro com o título (canto inferior esquerdo, desktop) */}
       <div className="hidden md:block absolute bottom-10 left-10 z-10 max-w-md rounded-2xl border border-bold-white/10 bg-bold-black/35 backdrop-blur-2xl p-6 shadow-2xl">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-bold-yellow font-bold mb-2">
-          boldstudio
-        </p>
-        <h2 className="text-2xl lg:text-3xl font-extrabold leading-tight">
-          Audiovisual do básico ao avançado.
-        </h2>
+        <p className="text-[10px] uppercase tracking-[0.3em] text-bold-yellow font-bold mb-2">academy</p>
+        <h2 className="text-2xl lg:text-3xl font-extrabold leading-tight">Audiovisual do básico ao avançado.</h2>
         <p className="mt-2 text-sm text-bold-white/75 max-w-xs">
           Captação, equipamento, proposta, negociação e vendas. Em vídeos diretos ao ponto.
         </p>
       </div>
 
-      {/* Painel de vidro com o formulário (blur ofusca o vídeo atrás) */}
       <div className="relative z-10 w-full max-w-sm rounded-2xl border border-bold-white/10 bg-bold-black/45 backdrop-blur-2xl p-6 md:p-8 shadow-2xl">
         <HeaderLogo title={title} subtitle={subtitle} compact />
         <div className="space-y-4">{children}</div>
@@ -84,16 +41,80 @@ function SplitLayout({ title, subtitle, children }: AuthShellProps) {
   )
 }
 
-/* ============== LAYOUT 3: FULL-VIDEO (motion graphics ocupa tudo, formulário centralizado) ============== */
-function FullVideoLayout({ title, subtitle, children }: AuthShellProps) {
+/* ============== ADMIN — apresentacao sobria com "ADMIN" em destaque ============== */
+function AdminAuthLayout({ title, subtitle, children }: AuthShellProps) {
   return (
-    <div className="min-h-screen relative text-bold-white flex items-center justify-center px-4 py-12 overflow-hidden">
-      <VideoBackground />
+    <div className="min-h-screen flex bg-bold-black text-bold-white">
+      {/* Lado esquerdo: marca ADMIN (sem video, sobrio) */}
+      <div className="hidden md:flex md:w-1/2 lg:w-3/5 relative flex-col justify-center px-12 lg:px-20 border-r border-bold-white/10 overflow-hidden">
+        {/* fundo: grid sutil + glow amarelo */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'linear-gradient(#FFD712 1px, transparent 1px), linear-gradient(90deg, #FFD712 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+        <div className="absolute -top-40 -left-40 w-[420px] h-[420px] rounded-full bg-bold-yellow/[0.07] blur-[120px]" />
 
-      <div className="w-full max-w-sm relative z-10">
-        <HeaderLogo title={title} subtitle={subtitle} />
-        <div className="glass-card rounded-lg p-6">{children}</div>
-        <VersionTag />
+        <div className="relative z-10">
+          <img src="/brand/logo-primary.png" alt="bold." className="h-9 w-auto mb-8" draggable={false} />
+          <p className="text-[11px] uppercase tracking-[0.4em] text-bold-yellow font-bold mb-3">painel de controle</p>
+          <h1 className="text-6xl lg:text-8xl font-extrabold tracking-tight leading-none">ADMIN</h1>
+          <p className="mt-6 text-bold-white/55 max-w-sm text-sm">
+            Acesso restrito aos administradores da BOLD Studio. Gestão de alunos, conteúdo,
+            segurança e operação.
+          </p>
+        </div>
+      </div>
+
+      {/* Lado direito: formulario */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <div className="md:hidden mb-6 flex items-center gap-2">
+            <img src="/brand/logo-primary.png" alt="bold." className="h-7 w-auto" />
+            <span className="text-2xl font-extrabold tracking-tight text-bold-yellow">ADMIN</span>
+          </div>
+          <HeaderLogo title={title} subtitle={subtitle} compact hideLogoOnMobile />
+          <div className="space-y-4">{children}</div>
+          <VersionTag />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ============== CREW — foto da equipe (placeholder ate ter as fotos reais) ============== */
+function CrewAuthLayout({ title, subtitle, children }: AuthShellProps) {
+  const membros = ['Pedro', 'Miguel', 'William', 'Equipe', 'Bold', 'Crew']
+  return (
+    <div className="min-h-screen flex bg-bold-black text-bold-white">
+      <div className="hidden md:flex md:w-1/2 lg:w-3/5 relative flex-col justify-center px-12 lg:px-20 border-r border-bold-white/10 overflow-hidden">
+        <div className="absolute -bottom-40 -right-40 w-[420px] h-[420px] rounded-full bg-bold-yellow/[0.06] blur-[120px]" />
+        <div className="relative z-10">
+          <img src="/brand/logo-primary.png" alt="bold." className="h-9 w-auto mb-8" draggable={false} />
+          <p className="text-[11px] uppercase tracking-[0.4em] text-bold-yellow font-bold mb-3">time interno</p>
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-none mb-8">CREW</h1>
+          {/* Grid de fotos (placeholder com iniciais ate subir as fotos reais) */}
+          <div className="grid grid-cols-3 gap-3 max-w-md">
+            {membros.map((m) => (
+              <div
+                key={m}
+                className="aspect-square rounded-xl bg-bold-gray border border-bold-white/10 flex items-center justify-center text-bold-white/40 text-xs font-semibold"
+              >
+                {m}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <HeaderLogo title={title} subtitle={subtitle} compact />
+          <div className="space-y-4">{children}</div>
+          <VersionTag />
+        </div>
       </div>
     </div>
   )
@@ -104,10 +125,12 @@ function HeaderLogo({
   title,
   subtitle,
   compact,
+  hideLogoOnMobile,
 }: {
   title: string
   subtitle?: string
   compact?: boolean
+  hideLogoOnMobile?: boolean
 }) {
   return (
     <div className={cn('flex flex-col items-center', compact ? 'mb-6' : 'mb-8')}>
@@ -116,13 +139,12 @@ function HeaderLogo({
         alt="bold."
         className={cn(
           'w-auto mb-5 drop-shadow-[0_4px_20px_rgba(255,215,18,0.3)] select-none',
-          compact ? 'h-10' : 'h-12'
+          compact ? 'h-10' : 'h-12',
+          hideLogoOnMobile && 'hidden md:block'
         )}
         draggable={false}
       />
-      <h1 className={cn('font-extrabold tracking-tight', compact ? 'text-xl' : 'text-2xl')}>
-        {title}
-      </h1>
+      <h1 className={cn('font-extrabold tracking-tight', compact ? 'text-xl' : 'text-2xl')}>{title}</h1>
       {subtitle && <p className="mt-1 text-sm text-bold-white/60 text-center">{subtitle}</p>}
     </div>
   )
@@ -133,43 +155,6 @@ function VersionTag() {
     <p className="mt-6 text-center text-[10px] text-bold-white/30 uppercase tracking-widest">
       bold. v{APP_VERSION}
     </p>
-  )
-}
-
-/* ============== SWITCHER (canto inferior direito) ============== */
-function LayoutSwitcher({ current }: { current: LoginLayout }) {
-  const [, setParams] = useSearchParams()
-
-  const items: { id: LoginLayout; label: string }[] = [
-    { id: 'center', label: 'Centro' },
-    { id: 'split', label: 'Split' },
-    { id: 'full-video', label: 'Video BG' },
-  ]
-
-  return (
-    <div
-      className="fixed bottom-4 right-4 z-[100] flex gap-0.5 p-1 rounded-full bg-bold-black/85 backdrop-blur-md border border-bold-white/15 shadow-lg"
-      data-cursor-hover
-    >
-      <span className="px-2 py-1 text-[9px] uppercase tracking-widest text-bold-yellow font-bold self-center">
-        layout
-      </span>
-      {items.map((it) => (
-        <button
-          key={it.id}
-          type="button"
-          onClick={() => setParams({ style: it.id })}
-          className={cn(
-            'px-3 py-1.5 rounded-full text-[11px] font-semibold transition',
-            current === it.id
-              ? 'bg-bold-yellow text-bold-black'
-              : 'text-bold-white/60 hover:text-bold-white hover:bg-bold-white/5'
-          )}
-        >
-          {it.label}
-        </button>
-      ))}
-    </div>
   )
 }
 

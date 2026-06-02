@@ -5,11 +5,12 @@ import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { AuthShell } from '@/components/AuthShell'
 import { is2faVerified, set2faVerified } from '@/lib/twoFactor'
+import { homeForRole } from '@/lib/area'
 
 type Channel = 'email' | 'sms' | 'whatsapp'
 
 export function TwoFactorPage() {
-  const { session, loading, signOut } = useAuth()
+  const { session, loading, profile, signOut } = useAuth()
   const navigate = useNavigate()
   const [channel, setChannel] = useState<Channel>('email')
   const [sentTo, setSentTo] = useState<string | null>(null)
@@ -20,7 +21,7 @@ export function TwoFactorPage() {
   const [info, setInfo] = useState<string | null>(null)
 
   if (!loading && !session) return <Navigate to="/login" replace />
-  if (is2faVerified()) return <Navigate to="/dashboard" replace />
+  if (is2faVerified()) return <Navigate to={homeForRole(profile?.role)} replace />
 
   async function handleVerify(e: FormEvent) {
     e.preventDefault()
@@ -43,7 +44,7 @@ export function TwoFactorPage() {
       return
     }
     set2faVerified()
-    navigate('/dashboard', { replace: true })
+    navigate(homeForRole(profile?.role), { replace: true })
   }
 
   // Troca o canal e dispara o envio do codigo
