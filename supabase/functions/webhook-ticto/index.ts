@@ -64,14 +64,21 @@ Deno.serve(async (req) => {
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE)
 
+  // Campos da Ticto v2.0 (com fallbacks)
   const status = mapStatus(pick(payload, ['status', 'order_status', 'transaction_status', 'order.status']))
-  const email = pick(payload, ['customer.email', 'email', 'buyer.email', 'client.email']).toLowerCase()
-  const name = pick(payload, ['customer.name', 'name', 'buyer.name', 'client.name'])
-  const phone = pick(payload, ['customer.phone', 'phone', 'buyer.phone', 'customer.cellphone'])
-  const txId = pick(payload, ['order.id', 'transaction.id', 'order_id', 'transaction_hash', 'id']) || `ticto-${Date.now()}`
-  const amountRaw = pick(payload, ['amount', 'order.amount', 'value', 'order.paid_amount', 'transaction.amount'])
-  const amountCents = Math.round(Number(String(amountRaw).replace(',', '.')) * 100) || 0
-  const product = pick(payload, ['product.name', 'item.product_name', 'product_name', 'items.0.product_name'])
+  const email = pick(payload, ['customer.email', 'email', 'buyer.email']).toLowerCase()
+  const name = pick(payload, ['customer.name', 'name', 'buyer.name'])
+  const phone = pick(payload, ['customer.phone', 'phone', 'buyer.phone'])
+  const txId =
+    pick(payload, ['order.transaction_hash', 'order.id', 'order.hash', 'transaction.id', 'order_id', 'id']) ||
+    `ticto-${Date.now()}`
+  // order.paid_amount da Ticto normalmente vem em centavos; se vier com decimal, converte.
+  const amountRaw = pick(payload, ['order.paid_amount', 'item.amount', 'amount', 'order.amount', 'value'])
+  const amountNum = Number(String(amountRaw).replace(',', '.'))
+  const amountCents = amountRaw.includes('.') || amountRaw.includes(',')
+    ? Math.round(amountNum * 100)
+    : Math.round(amountNum) || 0
+  const product = pick(payload, ['item.product_name', 'item.offer_name', 'product.name', 'product_name'])
 
   // Sem email nao da pra liberar acesso. Loga em error_log pra debug e retorna 200.
   if (!email) {
