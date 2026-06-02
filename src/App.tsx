@@ -11,6 +11,7 @@ import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
 import { RedefinirSenhaPage } from '@/pages/RedefinirSenhaPage'
 import { TwoFactorPage } from '@/pages/TwoFactorPage'
+import { TermosPage, PrivacidadePage, CookiesPage, SuportePage } from '@/pages/LegalPages'
 import { CheckoutPage } from '@/pages/CheckoutPage'
 import { SucessoPage } from '@/pages/SucessoPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -55,6 +56,10 @@ function App() {
           <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
           <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
           <Route path="/2fa" element={<TwoFactorPage />} />
+          <Route path="/termos" element={<TermosPage />} />
+          <Route path="/privacidade" element={<PrivacidadePage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/suporte" element={<SuportePage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/sucesso" element={<SucessoPage />} />
 

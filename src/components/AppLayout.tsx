@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { LogOut, User as UserIcon, Clapperboard, GraduationCap, Route, Package, Trophy, TrendingUp } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { SplashScreen } from '@/components/SplashScreen'
+import { Footer } from '@/components/Footer'
 import { cn } from '@/lib/utils'
 
 const APP_SPLASH_KEY = 'bold:app-splash-shown'
@@ -65,9 +66,11 @@ export function AppLayout() {
         </nav>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8" key={location.pathname}>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 min-h-[calc(100vh-12rem)]" key={location.pathname}>
         <Outlet />
       </main>
+
+      <Footer />
     </div>
   )
 }
