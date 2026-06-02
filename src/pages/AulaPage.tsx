@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Download, Film } from 'lucide-reac
 import { useLesson, useLessons } from '@/hooks/useLessons'
 import { useLessonProgress } from '@/hooks/useLessonProgress'
 import { Loader } from '@/components/Loader'
+import { NavButtons3D } from '@/components/NavButtons3D'
 import { cn } from '@/lib/utils'
 
 export function AulaPage() {
@@ -117,26 +118,18 @@ export function AulaPage() {
         </section>
       )}
 
-      <nav className="flex items-center justify-between pt-4 border-t border-bold-white/10 text-sm">
-        {prev ? (
-          <Link
-            to={`/aula/${prev.id}`}
-            className="inline-flex items-center gap-1 text-bold-white/60 hover:text-bold-yellow"
-          >
-            <ArrowLeft size={14} /> {prev.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next && (
-          <Link
-            to={`/aula/${next.id}`}
-            className="inline-flex items-center gap-1 text-bold-white/60 hover:text-bold-yellow text-right"
-          >
-            {next.title} <ArrowRight size={14} />
-          </Link>
-        )}
-      </nav>
+      <div className="pt-5 border-t border-bold-white/10 space-y-2">
+        <NavButtons3D
+          onPrev={() => prev && navigate(`/aula/${prev.id}`)}
+          onNext={() => next && navigate(`/aula/${next.id}`)}
+          prevDisabled={!prev}
+          nextDisabled={!next}
+        />
+        <div className="flex items-center justify-between text-xs text-bold-white/40">
+          <span className="truncate max-w-[45%]">{prev ? `← ${prev.title}` : ''}</span>
+          <span className="truncate max-w-[45%] text-right">{next ? `${next.title} →` : 'Última aula'}</span>
+        </div>
+      </div>
     </div>
   )
 }

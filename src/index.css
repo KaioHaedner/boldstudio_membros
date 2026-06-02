@@ -201,6 +201,75 @@ textarea {
 }
 .animate-toast-bar { animation: toast-bar 4.5s linear forwards; }
 
+/* ============== Botoes 3D (navegacao aulas/modulos) - cores Bold ============== */
+.btn3d {
+  appearance: none;
+  position: relative;
+  border: 0;
+  padding: 0 8px;
+  min-width: 3.5em;
+  min-height: 3.5em;
+  box-sizing: border-box;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 16px;
+}
+.btn3d:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.btn3d-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 8px 16px;
+  transform: translateY(0);
+  color: #000;
+  background-image: linear-gradient(145deg, #FFE54B, #E5BE10);
+  text-shadow: 0 -1px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  transition: transform 0.25s, border-radius 0.25s, background 0.4s;
+}
+.btn3d:not(:disabled):active .btn3d-top {
+  border-radius: 10px 10px 8px 8px / 8px;
+  transform: translateY(2px);
+  background-image: linear-gradient(145deg, #E5BE10, #FFE54B);
+}
+.btn3d-bottom {
+  position: absolute;
+  z-index: 1;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 16px;
+  padding-top: 6px;
+  width: calc(100% - 8px);
+  height: calc(100% - 10px);
+  background-image: linear-gradient(145deg, #E5BE10, #C9A45B);
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+  transition: border-radius 0.2s, padding-top 0.2s;
+}
+.btn3d-base {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  left: 0;
+  border-radius: 16px;
+  width: 100%;
+  height: calc(100% - 4px);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.18), inset 0 2px 2px rgba(0, 0, 0, 0.3);
+  transition: border-radius 0.2s, padding-top 0.2s;
+}
+.btn3d:not(:disabled):active .btn3d-bottom {
+  border-radius: 10px 10px 8px 8px / 8px;
+  padding-top: 0;
+}
+.btn3d:not(:disabled):active .btn3d-base {
+  border-radius: 10px 10px 8px 8px / 8px;
+}
+
 /* ============== Glassmorphism util ============== */
 .glass-card {
   background: rgba(40, 40, 40, 0.55);
