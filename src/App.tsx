@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppLayout } from '@/components/AppLayout'
 import { AdminLayout } from '@/components/AdminLayout'
 import { LandingPage } from '@/pages/LandingPage'
+import { ComingSoon } from '@/pages/ComingSoon'
 import { LoginPage } from '@/pages/LoginPage'
 import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
@@ -40,7 +41,9 @@ import { AdminLinksPage } from '@/pages/admin/AdminLinksPage'
 // Porteiro da raiz: o dominio principal mostra a landing/portfolio;
 // os subdominios de area (academy/admin/crew) vao direto pro login tematico.
 function RootGate() {
-  return getArea() === 'public' ? <LandingPage /> : <Navigate to="/login" replace />
+  // Enquanto o site oficial está em construção, o domínio raiz exibe a página "Em Breve".
+  // Os subdomínios de área (academy/admin/crew) seguem direto pro login temático.
+  return getArea() === 'public' ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
 }
 
 function App() {
@@ -51,6 +54,8 @@ function App() {
         <Routes>
           {/* publicas */}
           <Route path="/" element={<RootGate />} />
+          <Route path="/home" element={<ComingSoon />} />
+          <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/cadastro" element={<CadastroPage />} />
           <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
