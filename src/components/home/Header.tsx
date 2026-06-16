@@ -37,7 +37,7 @@ export function Header() {
         )}
       >
         <a href="#home" onClick={(e) => { e.preventDefault(); scrollToAnchor('#home') }} className="flex items-center gap-2">
-          <img src="/brand/logo-on-dark.png" alt="BoldStudio" className="h-8 w-auto" />
+          <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" className="h-7 w-auto object-contain" />
         </a>
 
         <ul className="hidden items-center gap-7 text-sm font-medium text-bold-white/85 md:flex">
