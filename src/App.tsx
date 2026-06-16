@@ -7,6 +7,7 @@ import { AppLayout } from '@/components/AppLayout'
 import { AdminLayout } from '@/components/AdminLayout'
 import { LandingPage } from '@/pages/LandingPage'
 import { ComingSoon } from '@/pages/ComingSoon'
+import { HomeInstitucionalPage } from '@/pages/HomeInstitucionalPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
@@ -32,6 +33,7 @@ import { AdminModuloEditPage } from '@/pages/admin/AdminModuloEditPage'
 import { AdminAulaEditPage } from '@/pages/admin/AdminAulaEditPage'
 import { AdminAlunosPage } from '@/pages/admin/AdminAlunosPage'
 import { AdminComentariosPage } from '@/pages/admin/AdminComentariosPage'
+import { AdminReciaFormsPage } from '@/pages/admin/AdminReciaFormsPage'
 import { AdminDispositivosPage } from '@/pages/admin/AdminDispositivosPage'
 import { AdminAcessosPage } from '@/pages/admin/AdminAcessosPage'
 import { AdminLgpdPage } from '@/pages/admin/AdminLgpdPage'
@@ -55,6 +57,7 @@ function App() {
           {/* publicas */}
           <Route path="/" element={<RootGate />} />
           <Route path="/home" element={<ComingSoon />} />
+          <Route path="/home-bold-studio-sinop-brasil" element={<HomeInstitucionalPage />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/cadastro" element={<CadastroPage />} />
@@ -102,6 +105,7 @@ function App() {
             <Route path="/admin/aulas/:id" element={<AdminAulaEditPage />} />
             <Route path="/admin/alunos" element={<AdminAlunosPage />} />
             <Route path="/admin/comentarios" element={<AdminComentariosPage />} />
+            <Route path="/admin/recia" element={<AdminReciaFormsPage />} />
             <Route path="/admin/dispositivos" element={<AdminDispositivosPage />} />
             <Route path="/admin/acessos" element={<AdminAcessosPage />} />
             <Route path="/admin/lgpd" element={<AdminLgpdPage />} />
