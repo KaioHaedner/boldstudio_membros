@@ -50,6 +50,8 @@ export function StarfieldBackground() {
     let offsetX = 0
     let offsetY = 0
     let rafId = 0
+    let animTime = 0
+    let lastTime = 0
 
     function resize() {
       width = window.innerWidth
@@ -90,6 +92,13 @@ export function StarfieldBackground() {
     }
 
     function draw(time: number) {
+      // Tempo de animacao com delta limitado: se houver frame drop (jank de
+      // scroll nos extremos), o twinkle nao "salta"/acelera de uma vez.
+      if (lastTime === 0) lastTime = time
+      const dt = Math.min(time - lastTime, 50)
+      lastTime = time
+      animTime += dt
+
       offsetX += (targetOffsetX - offsetX) * 0.04
       offsetY += (targetOffsetY - offsetY) * 0.04
 
@@ -118,7 +127,7 @@ export function StarfieldBackground() {
       for (const star of stars) {
         const parallaxX = offsetX * star.depth * -28
         const parallaxY = offsetY * star.depth * -28
-        const twinkle = 0.6 + 0.4 * Math.sin(time * 0.001 * star.twinkleSpeed + star.twinklePhase)
+        const twinkle = 0.6 + 0.4 * Math.sin(animTime * 0.001 * star.twinkleSpeed + star.twinklePhase)
         // Estrelas maiores (camada proxima) ganham um leve halo amarelado.
         ctx!.shadowBlur = star.radius > 2 ? 6 : 0
         ctx!.shadowColor = 'rgba(255, 215, 18, 0.6)'
@@ -137,6 +146,7 @@ export function StarfieldBackground() {
         cancelAnimationFrame(rafId)
         rafId = 0
       } else if (!rafId) {
+        lastTime = 0
         rafId = requestAnimationFrame(draw)
       }
     }

@@ -46,6 +46,7 @@ export function CrewSticky() {
       pin: true,
       pinSpacing: true,
       scrub: 1,
+      anticipatePin: 1,
       onUpdate: (self) => {
         const progress = self.progress
 

@@ -240,15 +240,24 @@ export function ReelsEspiral() {
       camera.position.z = isMobile ? 15 : CONFIG.cameraZ
       camera.updateProjectionMatrix()
       renderer.setSize(mount.clientWidth, mount.clientHeight)
+      measure()
     }
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('resize', onResize)
 
-    function sectionProgress(): number {
+    // Mede a posicao da secao so quando precisa (setup/resize), em vez de chamar
+    // getBoundingClientRect() a cada frame (que forcava reflow e causava jank).
+    let sectionTop = 0
+    let sectionHeight = 0
+    function measure() {
       const rect = section!.getBoundingClientRect()
-      const total = section!.offsetHeight - window.innerHeight
+      sectionTop = rect.top + window.scrollY
+      sectionHeight = section!.offsetHeight
+    }
+    function sectionProgress(): number {
+      const total = sectionHeight - window.innerHeight
       if (total <= 0) return 0
-      const scrolled = Math.min(Math.max(-rect.top, 0), total)
+      const scrolled = Math.min(Math.max(window.scrollY - sectionTop, 0), total)
       return scrolled / total
     }
 
@@ -305,6 +314,7 @@ export function ReelsEspiral() {
     )
     observer.observe(section)
 
+    measure()
     lastScroll = window.scrollY
     rafId = requestAnimationFrame(frame)
 
