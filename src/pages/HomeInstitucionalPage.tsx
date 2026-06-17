@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { IntroBold } from '@/components/IntroBold'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
@@ -38,6 +39,7 @@ export function HomeInstitucionalPage() {
 
   return (
     <div ref={rootRef} className="relative isolate min-h-screen text-bold-white">
+      <IntroBold />
       <StarfieldBackground />
       <Header />
 
