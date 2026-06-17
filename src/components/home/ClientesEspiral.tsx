@@ -292,10 +292,10 @@ export function ClientesEspiral() {
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         <div ref={mountRef} className="absolute inset-0" aria-hidden="true" />
         <div className="pointer-events-none relative z-10 px-6 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/50">
-            Demoreels e cases reais entram aqui em breve.
+          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes & Cases</p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem já soltou o Rec com a Bold</h2>
+          <p className="mx-auto mt-4 max-w-md text-sm text-bold-white/60">
+            Role e dê uma volta pela nossa órbita de cases — cada quadro é uma marca que confiou no nosso estúdio.
           </p>
         </div>
       </div>
