@@ -18,7 +18,7 @@ const CONFIG = {
   tileOverlap: 0.005,
   cameraZ: 12,
   cameraSmoothing: 0.075,
-  baseRotationSpeed: 0.001,
+  baseRotationSpeed: 0.0025,
   scrollRotationMultiplier: 0.0035,
   rotationDecay: 0.9,
   cameraYMultiplier: 0.2,
@@ -288,14 +288,14 @@ export function ReelsEspiral() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="reels" className="relative scroll-mt-24" style={{ height: '180vh' }}>
-      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+    <section ref={sectionRef} id="reels" className="relative scroll-mt-24" style={{ height: '140vh' }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
         <div ref={mountRef} className="absolute inset-0" aria-hidden="true" />
-        <div className="pointer-events-none relative z-10 px-6 text-center">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-bold-black via-bold-black/85 to-transparent px-6 pb-24 pt-24 text-center">
           <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Demoreel</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
-          <p className="mx-auto mt-4 max-w-md text-sm text-bold-white/60">
-            Role e atravesse a nossa galeria — em breve, com os demoreels e cases reais rodando em cada quadro.
+          <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/65">
+            Role e atravesse a nossa galeria — em breve, com os demoreels e cases reais.
           </p>
         </div>
       </div>
