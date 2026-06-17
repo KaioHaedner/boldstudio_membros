@@ -797,3 +797,91 @@ textarea {
     opacity: 1 !important;
   }
 }
+
+/* ============== Crew — Sticky Cards (equipe) ============== */
+.crew-cards {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  perspective: 1000px;
+}
+.crew-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(65%, 60rem);
+  height: 60%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.5rem;
+  border-radius: 1.25rem;
+  background: #000000;
+  border: 1px solid rgba(255, 215, 18, 0.15);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
+  transform-origin: center bottom;
+  will-change: transform;
+}
+.crew-card__info {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+}
+/* divisor "travessao vertical" amarelo luminoso */
+.crew-card__bar {
+  width: 2px;
+  align-self: stretch;
+  flex-shrink: 0;
+  background: #ffd712;
+  border-radius: 2px;
+  box-shadow: 0 0 12px 1px rgba(255, 215, 18, 0.75);
+}
+.crew-card__name {
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.05;
+}
+.crew-card__roles {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.crew-card__role {
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+  font-weight: 600;
+  color: #ffd712;
+  line-height: 1.45;
+}
+/* foto com borda amarela 2px + efeito luminoso */
+.crew-card__photo {
+  flex: 1;
+  height: 100%;
+  border-radius: 0.9rem;
+  border: 2px solid #ffd712;
+  box-shadow: 0 0 18px 1px rgba(255, 215, 18, 0.55), inset 0 0 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #141414;
+}
+.crew-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (max-width: 1000px) {
+  .crew-card {
+    width: calc(100% - 2rem);
+    height: 74%;
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
+  .crew-card__photo {
+    width: 100%;
+  }
+}

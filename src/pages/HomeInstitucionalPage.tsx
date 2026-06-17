@@ -4,6 +4,7 @@ import { IntroBold } from '@/components/IntroBold'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
+import { CrewSticky } from '@/components/home/CrewSticky'
 import { ReelsEspiral } from '@/components/home/ReelsEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
@@ -88,13 +89,7 @@ export function HomeInstitucionalPage() {
           </p>
         </section>
 
-        <section id="crew" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">Crew</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem faz a BoldStudio acontecer</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-bold-white/60">
-            Aqui entra a galeria com efeito de hover/reveal por cima das imagens (depende de fotos reais da equipe).
-          </p>
-        </section>
+        <CrewSticky />
 
         <section id="clientes" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
           <p className="text-xs font-bold tracking-wider text-bold-yellow">Clientes</p>
