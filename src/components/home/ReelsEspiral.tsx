@@ -19,7 +19,7 @@ const CONFIG = {
   cameraZ: 12,
   cameraSmoothing: 0.075,
   baseRotationSpeed: 0.0025,
-  scrollRotationMultiplier: 0.0035,
+  scrollRotationMultiplier: 0.00175,
   rotationDecay: 0.9,
   cameraYMultiplier: 0.2,
   parallaxStrength: 0.1,
