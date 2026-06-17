@@ -50,15 +50,15 @@ export function IntroBold() {
       return () => timers.forEach(clearTimeout)
     }
 
-    // Timeline (~6s): 3 -> 2 -> 1 -> frase -> carregando -> sai
-    timers.push(window.setTimeout(() => setDigito(2), 1000))
-    timers.push(window.setTimeout(() => setDigito(1), 2000))
-    timers.push(window.setTimeout(() => setPhase('frase'), 3000))
-    timers.push(window.setTimeout(() => setPhase('carregando'), 4200))
-    timers.push(window.setTimeout(() => setPhase('saindo'), 5700))
-    timers.push(window.setTimeout(finish, 6300))
+    // Timeline (~10s): 3 -> 2 -> 1 -> frase (Solta/O/Rec um a um) -> carregando -> sai
+    timers.push(window.setTimeout(() => setDigito(2), 1200))
+    timers.push(window.setTimeout(() => setDigito(1), 2400))
+    timers.push(window.setTimeout(() => setPhase('frase'), 3600))
+    timers.push(window.setTimeout(() => setPhase('carregando'), 7600))
+    timers.push(window.setTimeout(() => setPhase('saindo'), 9400))
+    timers.push(window.setTimeout(finish, 10000))
     // Timeout de seguranca: nunca deixar o usuario preso na intro.
-    timers.push(window.setTimeout(finish, 8000))
+    timers.push(window.setTimeout(finish, 12000))
 
     return () => timers.forEach(clearTimeout)
   }, [show])
@@ -85,10 +85,10 @@ export function IntroBold() {
       )}
 
       {phase === 'frase' && (
-        <div className="intro-frase frase-entrando">
-          <span>SOLTA</span>
-          <span className="intro-frase-o">O</span>
-          <span>REC</span>
+        <div className="intro-frase">
+          <span style={{ animationDelay: '0s' }}>SOLTA</span>
+          <span className="intro-frase-o" style={{ animationDelay: '0.9s' }}>O</span>
+          <span style={{ animationDelay: '1.8s' }}>REC</span>
         </div>
       )}
 
