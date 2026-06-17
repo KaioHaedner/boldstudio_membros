@@ -9,6 +9,7 @@ import { ClientesWave } from '@/components/home/ClientesWave'
 import { ReelsEspiral } from '@/components/home/ReelsEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
+import { QuickNav } from '@/components/home/QuickNav'
 
 export function HomeInstitucionalPage() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -107,6 +108,7 @@ export function HomeInstitucionalPage() {
 
       <Footer />
       <RecIAWidget />
+      <QuickNav />
     </div>
   )
 }
