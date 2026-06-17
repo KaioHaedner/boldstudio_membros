@@ -93,7 +93,10 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
         <div className="intro-frase">
           <span style={{ animationDelay: '0s' }}>SOLTA</span>
           <span className="intro-frase-o" style={{ animationDelay: '0.9s' }}>O</span>
-          <span style={{ animationDelay: '1.8s' }}>REC</span>
+          <span className="intro-rec-line" style={{ animationDelay: '1.8s' }}>
+            <span className="intro-rec-led" aria-hidden="true" />
+            REC
+          </span>
         </div>
       )}
 

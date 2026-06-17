@@ -700,6 +700,31 @@ textarea {
   color: #ffd712;
 }
 
+/* Linha "REC" com LED vermelho piscando, estilo luz de camera gravando */
+.intro-rec-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+.intro-rec-led {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: #ff2d2d;
+  animation: intro-rec-blink 1.1s ease-in-out infinite;
+}
+@keyframes intro-rec-blink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0.7em 0.15em rgba(255, 45, 45, 0.95);
+  }
+  50% {
+    opacity: 0.25;
+    box-shadow: 0 0 0.25em 0.04em rgba(255, 45, 45, 0.4);
+  }
+}
+
 .intro-carregando {
   display: flex;
   flex-direction: column;
@@ -739,6 +764,7 @@ textarea {
   .intro-cube,
   .intro-grid.cubos-saindo,
   .intro-frase span,
+  .intro-rec-led,
   .intro-carregando,
   .intro-eq span {
     animation: none !important;
