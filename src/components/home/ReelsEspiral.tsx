@@ -253,13 +253,18 @@ export function ReelsEspiral() {
     }
 
     let rafId = 0
-    let running = false
+    let visible = false
 
+    // O loop roda continuamente: a camera fica SEMPRE sincronizada com o scroll,
+    // entao nao ha salto/zoom na transicao de entrada e saida da secao. So o
+    // render WebGL (e o spin do scroll) e pulado quando a secao nao esta visivel.
     function frame() {
       const progress = sectionProgress()
 
       const curScroll = window.scrollY
-      spinVelocity += (curScroll - lastScroll) * CONFIG.scrollRotationMultiplier
+      if (visible) {
+        spinVelocity += (curScroll - lastScroll) * CONFIG.scrollRotationMultiplier
+      }
       lastScroll = curScroll
 
       camera.position.y +=
@@ -275,9 +280,6 @@ export function ReelsEspiral() {
 
       cameraPositionUniform.value.copy(camera.position)
 
-      // Giro: base automatica (gira sozinho mesmo parado) + arraste do usuario
-      // com inercia ao soltar. prefers-reduced-motion desliga so o giro automatico,
-      // mas o arraste continua funcionando.
       let rotY = reduce ? 0 : CONFIG.baseRotationSpeed
       if (isDragging) {
         rotY += dragDelta
@@ -289,33 +291,25 @@ export function ReelsEspiral() {
       spiral.rotation.y += rotY
       spinVelocity *= CONFIG.rotationDecay
 
-      renderer.render(scene, camera)
+      if (visible) {
+        renderer.render(scene, camera)
+      }
       rafId = requestAnimationFrame(frame)
     }
 
-    function start() {
-      if (running) return
-      running = true
-      lastScroll = window.scrollY
-      rafId = requestAnimationFrame(frame)
-    }
-    function stop() {
-      running = false
-      cancelAnimationFrame(rafId)
-    }
-
-    // So roda o WebGL quando a secao esta visivel.
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) start()
-        else stop()
+        visible = entries[0].isIntersecting
       },
-      { threshold: 0 }
+      { threshold: 0, rootMargin: '200px' }
     )
     observer.observe(section)
 
+    lastScroll = window.scrollY
+    rafId = requestAnimationFrame(frame)
+
     return () => {
-      stop()
+      cancelAnimationFrame(rafId)
       observer.disconnect()
       canvas.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
