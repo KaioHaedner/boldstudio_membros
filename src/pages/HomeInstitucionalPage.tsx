@@ -5,6 +5,7 @@ import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
 import { CrewSticky } from '@/components/home/CrewSticky'
+import { ClientesWave } from '@/components/home/ClientesWave'
 import { ReelsEspiral } from '@/components/home/ReelsEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
@@ -91,23 +92,7 @@ export function HomeInstitucionalPage() {
 
         <CrewSticky />
 
-        <section id="clientes" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">Clientes</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
-          <p className="mx-auto mt-4 max-w-xl text-bold-white/60">
-            Empresas e parceiros que já confiaram no nosso estúdio.
-          </p>
-          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex aspect-[3/2] items-center justify-center rounded-xl border border-white/10 bg-bold-gray/30 text-xs font-medium uppercase tracking-wider text-bold-white/30"
-              >
-                Logo
-              </div>
-            ))}
-          </div>
-        </section>
+        <ClientesWave />
 
         <ReelsEspiral />
 

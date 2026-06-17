@@ -904,3 +904,37 @@ textarea {
     width: 100%;
   }
 }
+
+/* ============== Clientes — Galeria Scroll Wave ============== */
+.clientes-wave {
+  position: relative;
+  overflow-x: clip;
+}
+.spotlight-images {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
+  padding: 2rem 0 5rem;
+}
+.spotlight-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  clip-path: inset(0 20% 0 20%);
+  will-change: transform, clip-path;
+  cursor: pointer;
+  background: #141414;
+  border: 1px solid rgba(255, 215, 18, 0.18);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.spotlight-image:hover {
+  border-color: rgba(255, 215, 18, 0.6);
+  box-shadow: 0 0 24px -4px rgba(255, 215, 18, 0.4);
+}
+.spotlight-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1.75rem;
+}
