@@ -43,9 +43,10 @@ import { AdminLinksPage } from '@/pages/admin/AdminLinksPage'
 // Porteiro da raiz: o dominio principal mostra a landing/portfolio;
 // os subdominios de area (academy/admin/crew) vao direto pro login tematico.
 function RootGate() {
-  // Enquanto o site oficial está em construção, o domínio raiz exibe a página "Em Breve".
+  // O domínio raiz exibe a página "Em Breve". A home institucional vive em
+  // /home-bold-studio-sinop-brasil (acessível via /home, que redireciona pra ela).
   // Os subdomínios de área (academy/admin/crew) seguem direto pro login temático.
-  return getArea() === 'public' ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
+  return getArea() === 'public' ? <ComingSoon /> : <Navigate to="/login" replace />
 }
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
         <Routes>
           {/* publicas */}
           <Route path="/" element={<RootGate />} />
-          <Route path="/home" element={<ComingSoon />} />
+          <Route path="/home" element={<Navigate to="/home-bold-studio-sinop-brasil" replace />} />
           <Route path="/home-bold-studio-sinop-brasil" element={<HomeInstitucionalPage />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />

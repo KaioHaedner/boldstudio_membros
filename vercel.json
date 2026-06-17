@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/home-bold-studio-sinop-brasil",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!api/|brand/|assets/|.*\\..*).*)",
