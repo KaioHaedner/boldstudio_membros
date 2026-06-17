@@ -4,6 +4,7 @@ import { IntroBold } from '@/components/IntroBold'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
+import { ClientesEspiral } from '@/components/home/ClientesEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
 
@@ -95,13 +96,7 @@ export function HomeInstitucionalPage() {
           </p>
         </section>
 
-        <section id="clientes" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-bold-white/60">
-            Aqui entra o efeito 3D em colmeia/cone com Three.js (depende dos vídeos/cases reais).
-          </p>
-        </section>
+        <ClientesEspiral />
 
         <section id="contato" data-reveal className="flex scroll-mt-24 flex-col items-center px-6 py-32">
           <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Contato</p>
