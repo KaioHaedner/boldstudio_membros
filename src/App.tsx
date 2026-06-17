@@ -3,6 +3,7 @@ import { getArea } from '@/lib/area'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ToastProvider } from '@/components/Toast'
 import PulsatingLoader from '@/components/PulsatingLoader'
+import { CookieBar } from '@/components/CookieBar'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppLayout } from '@/components/AppLayout'
 import { AdminLayout } from '@/components/AdminLayout'
@@ -14,7 +15,7 @@ import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
 import { RedefinirSenhaPage } from '@/pages/RedefinirSenhaPage'
 import { TwoFactorPage } from '@/pages/TwoFactorPage'
-import { TermosPage, PrivacidadePage, CookiesPage, SuportePage } from '@/pages/LegalPages'
+import { TermosPage, PrivacidadePage, CookiesPage, SuportePage, UsoIAPage } from '@/pages/LegalPages'
 import { CheckoutPage } from '@/pages/CheckoutPage'
 import { SucessoPage } from '@/pages/SucessoPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -56,6 +57,7 @@ function App() {
       <AuthProvider>
         <ToastProvider>
         <PulsatingLoader />
+        <CookieBar />
         <Routes>
           {/* publicas */}
           <Route path="/" element={<RootGate />} />
@@ -70,6 +72,7 @@ function App() {
           <Route path="/termos" element={<TermosPage />} />
           <Route path="/privacidade" element={<PrivacidadePage />} />
           <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/uso-da-ia" element={<UsoIAPage />} />
           <Route path="/suporte" element={<SuportePage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/sucesso" element={<SucessoPage />} />

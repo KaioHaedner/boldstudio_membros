@@ -32,6 +32,15 @@ async function saveReciaLead(lead: LeadInfo) {
     user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
   })
   if (error) console.error('RecIA: falha ao salvar lead', error.message)
+
+  // Email de confirmacao (Resend via edge function). Best-effort.
+  try {
+    await supabase.functions.invoke('send-lead-email', {
+      body: { nome: lead.nome, email: lead.email },
+    })
+  } catch {
+    /* email opcional */
+  }
   return lead
 }
 

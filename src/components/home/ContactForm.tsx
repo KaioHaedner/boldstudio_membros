@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { cn } from '@/lib/utils'
 import { ShinyButton } from '@/components/ShinyButton'
+import { supabase } from '@/lib/supabase'
 
 type FormState = {
   nome: string
@@ -14,9 +15,27 @@ const INITIAL_STATE: FormState = { nome: '', email: '', whatsapp: '', mensagem: 
 const INPUT_CLASS =
   'rounded-xl border border-white/10 bg-bold-black/30 px-4 py-3 text-sm text-bold-white outline-none transition-colors placeholder:text-bold-white/35 focus:border-bold-yellow/70 focus:bg-bold-black/40'
 
-// TODO (fase backend): enviar pra Supabase (tabela leads) + Resend (email) + admin.boldstudiobrasil.com/leads
 async function submitLead(data: FormState) {
-  await new Promise((resolve) => setTimeout(resolve, 600))
+  // Salva o lead no painel admin (RecIA Forms, source contact_form).
+  const { error } = await supabase.from('recia_leads').insert({
+    nome: data.nome,
+    whatsapp: data.whatsapp,
+    email: data.email,
+    messages: data.mensagem ? [{ role: 'user', text: data.mensagem }] : [],
+    source: 'contact_form',
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+  })
+  if (error) throw new Error(error.message)
+
+  // Dispara o email de confirmacao (Resend via edge function). Best-effort:
+  // se o email falhar, o lead ja foi salvo e o form segue como enviado.
+  try {
+    await supabase.functions.invoke('send-lead-email', {
+      body: { nome: data.nome, email: data.email },
+    })
+  } catch {
+    /* email opcional */
+  }
   return data
 }
 
