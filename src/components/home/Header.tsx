@@ -46,7 +46,7 @@ export function Header() {
               <a
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); scrollToAnchor(link.href) }}
-                className="transition-colors hover:text-bold-yellow"
+                className="inline-block origin-center transition-all duration-200 hover:scale-110 hover:text-bold-yellow"
               >
                 {link.label}
               </a>

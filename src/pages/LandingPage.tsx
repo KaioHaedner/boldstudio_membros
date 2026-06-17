@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom'
-import { SplashScreen } from '@/components/SplashScreen'
-
-const LANDING_SPLASH_KEY = 'bold:landing-splash-shown'
 
 export function LandingPage() {
   return (
-    <>
-      <SplashScreen storageKey={LANDING_SPLASH_KEY} durationMs={5000} />
       <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 text-center bg-bold-black text-bold-white">
         <img
           src="/brand/logo-primary.png"
@@ -42,6 +37,5 @@ export function LandingPage() {
           Em construção. Versão prévia
         </p>
       </main>
-    </>
   )
 }

@@ -1,11 +1,8 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { LogOut, User as UserIcon, Clapperboard, GraduationCap, Route, Package, Trophy, TrendingUp } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { SplashScreen } from '@/components/SplashScreen'
 import { Footer } from '@/components/Footer'
 import { cn } from '@/lib/utils'
-
-const APP_SPLASH_KEY = 'bold:app-splash-shown'
 
 const NAV = [
   { to: '/dashboard', label: 'Set', icon: Clapperboard },
@@ -20,12 +17,9 @@ const NAV = [
 export function AppLayout() {
   const { profile, signOut, user } = useAuth()
   const location = useLocation()
-  const splashShownThisSession = typeof window !== 'undefined' && sessionStorage.getItem(APP_SPLASH_KEY) === '1'
 
   return (
     <div className="min-h-screen bg-bold-black text-bold-white">
-      {!splashShownThisSession && <SplashScreen storageKey={APP_SPLASH_KEY} durationMs={5000} />}
-
       <header className="sticky top-0 z-30 border-b border-bold-white/10 bg-bold-black/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <Link to="/dashboard" className="flex items-center gap-2 shrink-0">

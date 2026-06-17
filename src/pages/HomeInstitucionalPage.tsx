@@ -87,7 +87,7 @@ export function HomeInstitucionalPage() {
         <section id="contato" data-reveal className="flex scroll-mt-24 flex-col items-center px-6 py-32">
           <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Contato</p>
           <h2 className="mt-3 text-center text-3xl font-bold md:text-4xl">Vamos gravar algo bold?</h2>
-          <div className="mt-10">
+          <div className="mt-10 w-full max-w-2xl">
             <ContactForm />
           </div>
         </section>

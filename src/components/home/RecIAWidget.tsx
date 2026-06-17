@@ -89,7 +89,7 @@ export function RecIAWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
       {/* Balao de chamada (apenas com o widget fechado) */}
       {stage === 'closed' && (
         <div

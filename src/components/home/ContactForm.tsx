@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { cn } from '@/lib/utils'
+import { ShinyButton } from '@/components/ShinyButton'
 
 type FormState = {
   nome: string
@@ -44,7 +45,7 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="liquid-glass flex w-full max-w-2xl flex-col gap-5 rounded-[28px] p-7 md:p-10"
+      className="liquid-glass relative z-20 flex w-full max-w-2xl flex-col gap-5 rounded-[28px] p-6 sm:p-8 md:p-10"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
@@ -97,16 +98,13 @@ export function ContactForm() {
         />
       </div>
 
-      <button
+      <ShinyButton
         type="submit"
         disabled={status === 'sending'}
-        className={cn(
-          'mt-1 rounded-full bg-bold-yellow px-6 py-3.5 text-sm font-bold text-bold-black shadow-[0_8px_30px_-8px_rgba(255,215,18,0.5)] transition-transform',
-          status === 'sending' ? 'opacity-60' : 'hover:scale-[1.02]'
-        )}
+        className={cn('mt-1 w-full', status === 'sending' && 'pointer-events-none opacity-60')}
       >
         {status === 'sending' ? 'Enviando...' : 'Enviar mensagem'}
-      </button>
+      </ShinyButton>
 
       {status === 'sent' && (
         <p className="text-sm text-bold-yellow">Recebido! A gente te chama no WhatsApp em breve.</p>
