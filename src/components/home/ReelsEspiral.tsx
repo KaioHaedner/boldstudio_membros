@@ -197,6 +197,38 @@ export function ReelsEspiral() {
     let lastScroll = window.scrollY
     let isMobile = window.innerWidth < 1000
 
+    // Giro por arrastar (mouse + touch). touch-action pan-y deixa o scroll
+    // vertical livre e captura o arraste horizontal pra girar o espiral.
+    const DRAG_SENSITIVITY = 0.008
+    let isDragging = false
+    let lastPointerX = 0
+    let dragDelta = 0
+    const canvas = renderer.domElement
+    canvas.style.touchAction = 'pan-y'
+    canvas.style.cursor = 'grab'
+
+    function onPointerDown(e: PointerEvent) {
+      isDragging = true
+      lastPointerX = e.clientX
+      dragDelta = 0
+      canvas.style.cursor = 'grabbing'
+    }
+    function onPointerMove(e: PointerEvent) {
+      if (!isDragging) return
+      const dx = e.clientX - lastPointerX
+      lastPointerX = e.clientX
+      dragDelta += dx * DRAG_SENSITIVITY
+    }
+    function onPointerUp() {
+      if (!isDragging) return
+      isDragging = false
+      canvas.style.cursor = 'grab'
+    }
+    canvas.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointercancel', onPointerUp)
+
     function onMouseMove(e: MouseEvent) {
       mouseX = (e.clientX / window.innerWidth - 0.5) * 2
       mouseY = (e.clientY / window.innerHeight - 0.5) * 2
@@ -242,9 +274,19 @@ export function ReelsEspiral() {
       }
 
       cameraPositionUniform.value.copy(camera.position)
-      if (!reduce) {
-        spiral.rotation.y += CONFIG.baseRotationSpeed + spinVelocity
+
+      // Giro: base automatica (gira sozinho mesmo parado) + arraste do usuario
+      // com inercia ao soltar. prefers-reduced-motion desliga so o giro automatico,
+      // mas o arraste continua funcionando.
+      let rotY = reduce ? 0 : CONFIG.baseRotationSpeed
+      if (isDragging) {
+        rotY += dragDelta
+        spinVelocity = dragDelta // ultima velocidade do arraste vira inercia ao soltar
+        dragDelta = 0
+      } else {
+        rotY += spinVelocity
       }
+      spiral.rotation.y += rotY
       spinVelocity *= CONFIG.rotationDecay
 
       renderer.render(scene, camera)
@@ -275,6 +317,10 @@ export function ReelsEspiral() {
     return () => {
       stop()
       observer.disconnect()
+      canvas.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
       geometries.forEach((g) => g.dispose())
