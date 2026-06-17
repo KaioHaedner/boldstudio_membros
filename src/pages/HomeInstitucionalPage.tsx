@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Play } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { IntroBold } from '@/components/IntroBold'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
-import { ClientesEspiral } from '@/components/home/ClientesEspiral'
+import { ReelsEspiral } from '@/components/home/ReelsEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
 
@@ -97,34 +96,25 @@ export function HomeInstitucionalPage() {
           </p>
         </section>
 
-        <ClientesEspiral />
-
-        <section id="reels" data-reveal className="mx-auto max-w-6xl scroll-mt-24 px-6 py-32">
-          <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Demoreel</p>
-            <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
-            <p className="mx-auto mt-4 max-w-xl text-bold-white/60">
-              Um gostinho do que sai do nosso estúdio. Em breve, os demoreels e cases completos rodando aqui.
-            </p>
-          </div>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
+        <section id="clientes" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
+          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes</p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
+          <p className="mx-auto mt-4 max-w-xl text-bold-white/60">
+            Empresas e parceiros que já confiaram no nosso estúdio.
+          </p>
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="group relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-bold-gray/40"
+                className="flex aspect-[3/2] items-center justify-center rounded-xl border border-white/10 bg-bold-gray/30 text-xs font-medium uppercase tracking-wider text-bold-white/30"
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-bold-yellow/90 text-bold-black transition-transform group-hover:scale-110">
-                    <Play size={22} className="ml-0.5" fill="currentColor" />
-                  </span>
-                </div>
-                <span className="absolute bottom-3 left-3 text-xs font-medium text-bold-white/50">
-                  Em breve
-                </span>
+                Logo
               </div>
             ))}
           </div>
         </section>
+
+        <ReelsEspiral />
 
         <section id="contato" data-reveal className="flex scroll-mt-24 flex-col items-center px-6 py-32">
           <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Contato</p>

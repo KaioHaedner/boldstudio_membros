@@ -83,7 +83,7 @@ function logoTexture(): THREE.CanvasTexture {
   return tex
 }
 
-export function ClientesEspiral() {
+export function ReelsEspiral() {
   const sectionRef = useRef<HTMLElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
 
@@ -288,14 +288,14 @@ export function ClientesEspiral() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="clientes" className="relative scroll-mt-24" style={{ height: '180vh' }}>
+    <section ref={sectionRef} id="reels" className="relative scroll-mt-24" style={{ height: '180vh' }}>
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         <div ref={mountRef} className="absolute inset-0" aria-hidden="true" />
         <div className="pointer-events-none relative z-10 px-6 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes & Cases</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem já soltou o Rec com a Bold</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Demoreel</p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
           <p className="mx-auto mt-4 max-w-md text-sm text-bold-white/60">
-            Role e dê uma volta pela nossa órbita de cases — cada quadro é uma marca que confiou no nosso estúdio.
+            Role e atravesse a nossa galeria — em breve, com os demoreels e cases reais rodando em cada quadro.
           </p>
         </div>
       </div>
