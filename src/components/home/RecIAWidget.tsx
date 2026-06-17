@@ -198,7 +198,7 @@ export function RecIAWidget() {
                 required
                 value={lead.cidade}
                 onChange={(e) => setLead((p) => ({ ...p, cidade: e.target.value }))}
-                placeholder="Cidade e estado (ex.: Sinop - MT)"
+                placeholder="Cidade e estado (ex.: Sinop, MT)"
                 className="rounded-xl border border-white/10 bg-bold-black/40 px-3 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
               />
               <button type="submit" className="mt-auto rounded-full bg-bold-yellow px-4 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]">

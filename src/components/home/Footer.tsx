@@ -79,7 +79,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">SiteMap</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">SiteMap</p>
           <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
@@ -96,7 +96,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Páginas Essenciais</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Páginas Essenciais</p>
           <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>

@@ -63,7 +63,7 @@ export function HomeInstitucionalPage() {
 
       <main className={mainClass}>
         <section id="home" className="flex min-h-screen scroll-mt-24 flex-col items-center justify-center px-6 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-bold-yellow">Sinop, MT</p>
+          <p className="text-sm tracking-[0.3em] text-bold-yellow">Sinop, MT</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight md:text-6xl">
             Hero em construção: intro 3-2-1 + loadbar entram na próxima etapa
           </h1>
@@ -73,7 +73,7 @@ export function HomeInstitucionalPage() {
         </section>
 
         <section id="sobre" data-reveal className="mx-auto max-w-4xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Sobre o estúdio</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Sobre o estúdio</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem é a BoldStudio</h2>
           <p className="mx-auto mt-5 max-w-2xl text-bold-white/60">
             Espaço reservado pro texto institucional real do estúdio (equipamento, história, diferencial em Sinop).
@@ -81,7 +81,7 @@ export function HomeInstitucionalPage() {
         </section>
 
         <section id="servicos" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Serviços</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Serviços</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">O que o estúdio oferece</h2>
           <p className="mx-auto mt-5 max-w-2xl text-bold-white/60">
             Aqui entra o scroll horizontal com demo reel e logos de empresas/clientes (fase seguinte).
@@ -89,7 +89,7 @@ export function HomeInstitucionalPage() {
         </section>
 
         <section id="crew" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Crew</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Crew</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem faz a BoldStudio acontecer</h2>
           <p className="mx-auto mt-5 max-w-2xl text-bold-white/60">
             Aqui entra a galeria com efeito de hover/reveal por cima das imagens (depende de fotos reais da equipe).
@@ -97,7 +97,7 @@ export function HomeInstitucionalPage() {
         </section>
 
         <section id="clientes" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Clientes</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Clientes</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
           <p className="mx-auto mt-4 max-w-xl text-bold-white/60">
             Empresas e parceiros que já confiaram no nosso estúdio.
@@ -117,7 +117,7 @@ export function HomeInstitucionalPage() {
         <ReelsEspiral />
 
         <section id="contato" data-reveal className="flex scroll-mt-24 flex-col items-center px-6 py-32">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Contato</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Contato</p>
           <h2 className="mt-3 text-center text-3xl font-bold md:text-4xl">Vamos gravar algo bold?</h2>
           <div className="mt-10 w-full max-w-2xl">
             <ContactForm />

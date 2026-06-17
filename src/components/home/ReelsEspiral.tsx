@@ -337,11 +337,11 @@ export function ReelsEspiral() {
     <section ref={sectionRef} id="reels" className="relative scroll-mt-24" style={{ height: '140vh' }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         <div ref={mountRef} className="absolute inset-0" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-bold-black via-bold-black/85 to-transparent px-6 pb-24 pt-24 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">Demoreel</p>
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 px-6 pb-24 pt-24 text-center [text-shadow:0_2px_14px_rgba(0,0,0,0.85)]">
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">Demoreel</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/65">
-            Role e atravesse a nossa galeria — em breve, com os demoreels e cases reais.
+            Role e atravesse a nossa galeria. Em breve, os demoreels e cases reais rodam por aqui.
           </p>
         </div>
       </div>
