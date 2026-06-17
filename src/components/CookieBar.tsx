@@ -72,7 +72,7 @@ export function CookieBar() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-[90] p-3 sm:p-4">
-      <div className="liquid-glass mx-auto max-w-3xl rounded-2xl p-5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)]">
+      <div className="mx-auto max-w-3xl rounded-2xl border border-bold-yellow/15 bg-bold-gray p-5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)]">
         <div className="flex items-start gap-3">
           <Cookie className="mt-0.5 shrink-0 text-bold-yellow" size={22} />
           <div className="flex-1">

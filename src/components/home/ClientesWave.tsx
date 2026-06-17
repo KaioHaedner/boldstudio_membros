@@ -148,14 +148,14 @@ export function ClientesWave() {
       {selected && (
         <div
           role="presentation"
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setSelected(null)}
         >
           <div
             role="dialog"
             aria-modal="true"
             aria-label={`Detalhes de ${selected.nome}`}
-            className="liquid-glass relative w-full max-w-md rounded-3xl p-6 text-center"
+            className="relative w-full max-w-md rounded-3xl border border-bold-yellow/20 bg-bold-gray p-6 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
