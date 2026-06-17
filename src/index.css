@@ -643,21 +643,21 @@ textarea {
   transform: rotateX(0deg);
 }
 .intro-cube.off {
-  transform: rotateX(-90deg);
+  transform: rotateX(180deg);
 }
 .intro-cube .face {
   position: absolute;
   inset: 0;
   border-radius: 6px;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .intro-cube .face-on {
   background: #ffd712;
-  transform: translateZ(calc(var(--intro-box) / 2));
 }
 .intro-cube .face-off {
   background: #282828;
-  transform: rotateX(90deg) translateZ(calc(var(--intro-box) / 2));
+  transform: rotateX(180deg);
 }
 
 @keyframes intro-slide-out-left {
