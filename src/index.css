@@ -921,7 +921,7 @@ textarea {
   position: relative;
   overflow: hidden;
   border-radius: 0.9rem;
-  clip-path: inset(0 20% 0 20%);
+  clip-path: inset(0 20% 0 20% round 0.9rem);
   will-change: transform, clip-path;
   cursor: pointer;
   background: #141414;

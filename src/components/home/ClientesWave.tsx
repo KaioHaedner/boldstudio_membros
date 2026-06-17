@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapPin, Phone, Video, X } from 'lucide-react'
 import { ScrollTrigger } from '@/lib/gsap'
+import { ShinyButton } from '@/components/ShinyButton'
 
 // Galeria "Scroll Wave" (GSAP) portada para a secao Clientes. Cada logo ondula
 // horizontalmente conforme o scroll; clicar abre um popup com os dados da empresa.
@@ -84,7 +85,7 @@ export function ClientesWave() {
           const clipAmount = Math.pow(centerOffset, CLIP_POWER) * CLIP_MAX
 
           item.style.translate = `${translateX}px`
-          item.style.clipPath = `inset(0 ${clipAmount}% 0 ${clipAmount}%)`
+          item.style.clipPath = `inset(0 ${clipAmount}% 0 ${clipAmount}% round 0.9rem)`
         },
       })
     })
@@ -131,6 +132,17 @@ export function ClientesWave() {
             <img src="/brand/logo-boldstudio.webp" alt={c.nome} />
           </div>
         ))}
+      </div>
+
+      <div className="flex flex-col items-center gap-5 px-6 pb-24 pt-2 text-center">
+        <p className="text-xl font-bold text-bold-white md:text-2xl">Quer ser a próxima marca por aqui?</p>
+        <ShinyButton
+          onClick={() =>
+            document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+        >
+          Bora gravar com a Bold
+        </ShinyButton>
       </div>
 
       {selected && (
