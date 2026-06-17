@@ -90,7 +90,13 @@ export function ClientesWave() {
       })
     })
 
+    // So recalcula quando a LARGURA muda. No mobile, rolar nos extremos faz a
+    // barra de endereco aparecer/sumir (muda so a altura) e disparava um
+    // ScrollTrigger.refresh() pesado a cada vez — causando a travadinha.
+    let lastWidth = window.innerWidth
     function onResize() {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
       updateSizes()
       ScrollTrigger.refresh()
     }

@@ -39,6 +39,8 @@ html, body, #root {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Evita o "bounce"/overscroll que encavala com os efeitos de scroll nos extremos */
+  overscroll-behavior: none;
 }
 
 /* Reset basico para o template antigo do Vite */
