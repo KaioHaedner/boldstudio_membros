@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { IntroBold } from '@/components/IntroBold'
 import { Header } from '@/components/home/Header'
@@ -9,6 +9,23 @@ import { RecIAWidget } from '@/components/home/RecIAWidget'
 
 export function HomeInstitucionalPage() {
   const rootRef = useRef<HTMLDivElement>(null)
+  // A intro toca na primeira visita da sessao. So nesse caso o conteudo entra
+  // com slide-up ao final dela; em navegacoes seguintes a home aparece direto.
+  const [introAtiva] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      return !sessionStorage.getItem('bold_intro_exibida')
+    } catch {
+      return false
+    }
+  })
+  const [revelar, setRevelar] = useState(!introAtiva)
+
+  const mainClass = !introAtiva
+    ? 'relative z-10'
+    : revelar
+      ? 'relative z-10 home-revelar'
+      : 'relative z-10 home-oculto'
 
   useEffect(() => {
     const sections = rootRef.current?.querySelectorAll<HTMLElement>('[data-reveal]')
@@ -39,11 +56,11 @@ export function HomeInstitucionalPage() {
 
   return (
     <div ref={rootRef} className="relative isolate min-h-screen text-bold-white">
-      <IntroBold />
+      <IntroBold onFinish={() => setRevelar(true)} />
       <StarfieldBackground />
       <Header />
 
-      <main className="relative z-10">
+      <main className={mainClass}>
         <section id="home" className="flex min-h-screen scroll-mt-24 flex-col items-center justify-center px-6 text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-bold-yellow">Sinop, MT</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight md:text-6xl">

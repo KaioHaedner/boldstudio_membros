@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Quais cubos (indices 0..14, grade 3x5) ficam ACESOS em cada digito.
 const DIGIT_MAPS: Record<number, number[]> = {
@@ -19,7 +19,7 @@ const prefersReduce =
 // Intro/abertura da home institucional: contador 3-2-1 com cubos 3D,
 // transicao "Solta o Rec", logo + carregando, e some revelando a home.
 // Roda 1x por sessao (sessionStorage). Sempre termina (timeout de seguranca).
-export function IntroBold() {
+export function IntroBold({ onFinish }: { onFinish?: () => void }) {
   const [show, setShow] = useState(() => {
     if (typeof window === 'undefined') return false
     try {
@@ -30,6 +30,10 @@ export function IntroBold() {
   })
   const [phase, setPhase] = useState<Phase>(prefersReduce ? 'carregando' : 'contando')
   const [digito, setDigito] = useState(3)
+  const onFinishRef = useRef(onFinish)
+  useEffect(() => {
+    onFinishRef.current = onFinish
+  }, [onFinish])
 
   useEffect(() => {
     if (!show) return
@@ -41,6 +45,7 @@ export function IntroBold() {
       } catch {
         /* ignora */
       }
+      onFinishRef.current?.()
       setShow(false)
     }
 
