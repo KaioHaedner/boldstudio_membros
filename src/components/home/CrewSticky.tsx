@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { User } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { ShinyButton } from '@/components/ShinyButton'
 
 // Efeito "Sticky Cards" (GSAP ScrollTrigger) portado para a secao Crew.
 // Cards empilhados que saem um a um conforme o scroll. Fotos sao placeholder
@@ -15,9 +16,11 @@ const CREW: Integrante[] = [
 
 export function CrewSticky() {
   const cardsRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const wrap = cardsRef.current
+    const cta = ctaRef.current
     if (!wrap) return
 
     const cards = Array.from(wrap.querySelectorAll<HTMLElement>('.crew-card'))
@@ -39,12 +42,20 @@ export function CrewSticky() {
     const st = ScrollTrigger.create({
       trigger: wrap,
       start: 'top top',
-      end: `+=${window.innerHeight * (totalCards + 0.5)}`,
+      end: `+=${window.innerHeight * (totalCards * 0.85)}`,
       pin: true,
       pinSpacing: true,
       scrub: 1,
       onUpdate: (self) => {
         const progress = self.progress
+
+        // CTA "Falar com a Bold Studio" aparece nos ultimos ~20% (quando o
+        // ultimo card esta saindo), preenchendo o fim do efeito sem espaco morto.
+        if (cta) {
+          const o = Math.max(0, Math.min(1, (progress - 0.78) / 0.18))
+          gsap.set(cta, { opacity: o, pointerEvents: o > 0.5 ? 'auto' : 'none' })
+        }
+
         const activeIndex = Math.min(Math.floor(progress / segmentSize), totalCards - 1)
         const segProgress = (progress - activeIndex * segmentSize) / segmentSize
 
@@ -84,6 +95,16 @@ export function CrewSticky() {
       </div>
 
       <div ref={cardsRef} className="crew-cards">
+        <div ref={ctaRef} className="crew-cta">
+          <p>Vamos gravar algo bold?</p>
+          <ShinyButton
+            onClick={() =>
+              document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          >
+            Falar com a Bold Studio
+          </ShinyButton>
+        </div>
         {CREW.map((m, i) => (
           <article key={m.nome} className="crew-card" style={{ zIndex: 10 - i }}>
             <div className="crew-card__info">

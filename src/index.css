@@ -873,6 +873,25 @@ textarea {
   height: 100%;
   object-fit: cover;
 }
+/* CTA revelado no fim, quando os cards saem (atras deles, z menor) */
+.crew-cta {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  text-align: center;
+  opacity: 0;
+}
+.crew-cta p {
+  font-size: clamp(1.4rem, 3.4vw, 2.4rem);
+  font-weight: 800;
+  color: #ffffff;
+}
 @media (max-width: 1000px) {
   .crew-card {
     width: calc(100% - 2rem);
