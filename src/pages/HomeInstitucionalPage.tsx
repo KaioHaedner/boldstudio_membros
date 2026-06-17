@@ -37,7 +37,7 @@ export function HomeInstitucionalPage() {
   }, [])
 
   return (
-    <div ref={rootRef} className="relative min-h-screen text-bold-white">
+    <div ref={rootRef} className="relative isolate min-h-screen text-bold-white">
       <StarfieldBackground />
       <Header />
 

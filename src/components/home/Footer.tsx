@@ -49,7 +49,7 @@ function scrollToAnchor(href: string) {
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/10 bg-bold-black px-6 py-14 text-bold-white">
+    <footer className="relative z-10 border-t border-white/10 bg-bold-black px-6 py-14 text-bold-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-10 md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
           <img

@@ -164,7 +164,7 @@ export function StarfieldBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 -z-10 bg-bold-black"
+      className="pointer-events-none fixed inset-0 z-0 bg-bold-black"
       aria-hidden="true"
     />
   )
