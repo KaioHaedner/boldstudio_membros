@@ -4,8 +4,13 @@ import { motion, useReducedMotion } from 'framer-motion'
 const STORAGE_KEY = 'bold_loader_exibido'
 const DURATION_MS = 5000
 
-// Loader de "pulsing dots" exibido em tela cheia por 5s APENAS no primeiro
-// acesso da sessao. Navegacao interna nao reexibe (sessionStorage).
+// 5 barras de equalizer com delays diferentes pra parecer visualizacao de audio.
+const BARS = [0, 0.18, 0.36, 0.12, 0.28]
+// alturas fixas pro modo sem animacao (perfil estatico de equalizer)
+const ESTATICAS = [0.6, 0.95, 0.5, 1, 0.7]
+
+// Loader de "equalizer" (barras de audio) exibido em tela cheia por 5s APENAS
+// no primeiro acesso da sessao. Navegacao interna nao reexibe (sessionStorage).
 export default function PulsatingLoader() {
   const [visivel, setVisivel] = useState(() => {
     if (typeof window === 'undefined') return false
@@ -24,8 +29,6 @@ export default function PulsatingLoader() {
 
   if (!visivel) return null
 
-  const dots = [0, 0.3, 0.6]
-
   return (
     <div
       role="status"
@@ -37,17 +40,21 @@ export default function PulsatingLoader() {
         alt="Bold Studio Brasil"
         className="mb-10 h-9 w-auto object-contain"
       />
-      <div className="flex space-x-3">
-        {dots.map((delay, i) =>
+      <div className="flex h-14 items-end gap-1.5">
+        {BARS.map((delay, i) =>
           reduzirMovimento ? (
-            <div key={i} className="h-3 w-3 rounded-full" style={{ backgroundColor: '#FFD712' }} />
+            <div
+              key={i}
+              className="w-2.5 rounded-full bg-bold-yellow"
+              style={{ height: `${ESTATICAS[i] * 100}%` }}
+            />
           ) : (
             <motion.div
               key={i}
-              className="h-3 w-3 rounded-full"
-              style={{ backgroundColor: '#FFD712' }}
-              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1, ease: 'easeInOut', repeat: Infinity, delay }}
+              className="w-2.5 rounded-full bg-bold-yellow"
+              style={{ height: '100%', transformOrigin: 'bottom' }}
+              animate={{ scaleY: [0.3, 1, 0.45, 0.85, 0.3] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut', delay }}
             />
           )
         )}
