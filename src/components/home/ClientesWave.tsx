@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { MapPin, Phone, Video, X } from 'lucide-react'
+import { MapPin, Phone, Play, Video, X } from 'lucide-react'
 import { ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
 
@@ -7,7 +7,7 @@ import { ShinyButton } from '@/components/ShinyButton'
 // horizontalmente conforme o scroll; clicar abre um popup com os dados da empresa.
 // Dados e logos sao placeholder ate ter os clientes reais (depois: tabela clientes
 // no Supabase com nome/area/telefone/video).
-type Cliente = { nome: string; area: string; telefone: string; video: string }
+type Cliente = { nome: string; area: string; telefone: string; video: string; preview?: string }
 
 const CLIENTES: Cliente[] = [
   { nome: 'Empresa Exemplo 01', area: 'Varejo', telefone: '(66) 99999-0001', video: '#' },
@@ -155,26 +155,44 @@ export function ClientesWave() {
             role="dialog"
             aria-modal="true"
             aria-label={`Detalhes de ${selected.nome}`}
-            className="liquid-glass w-full max-w-md rounded-3xl p-7"
+            className="liquid-glass relative w-full max-w-md rounded-3xl p-6 text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4">
-              <h3 className="text-xl font-bold text-bold-white">{selected.nome}</h3>
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
-                aria-label="Fechar"
-                className="shrink-0 text-bold-white/60 transition-colors hover:text-bold-white"
-              >
-                <X size={20} />
-              </button>
+            <button
+              type="button"
+              onClick={() => setSelected(null)}
+              aria-label="Fechar"
+              className="absolute right-4 top-4 z-10 text-bold-white/60 transition-colors hover:text-bold-white"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Preview animado (GIF/video em loop). Placeholder ate ter o real. */}
+            <div className="aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-bold-black/50">
+              {selected.preview ? (
+                <video
+                  src={selected.preview}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-bold-white/40">
+                  <Play size={30} className="text-bold-yellow/70" />
+                  <span className="text-xs">Preview em breve</span>
+                </div>
+              )}
             </div>
 
-            <div className="mt-5 space-y-3 text-sm text-bold-white/80">
-              <p className="flex items-center gap-2">
+            <h3 className="mt-5 text-xl font-bold text-bold-white">{selected.nome}</h3>
+
+            <div className="mt-3 flex flex-col items-center gap-2 text-sm text-bold-white/80">
+              <p className="flex items-center justify-center gap-2">
                 <MapPin size={16} className="shrink-0 text-bold-yellow" /> {selected.area}
               </p>
-              <p className="flex items-center gap-2">
+              <p className="flex items-center justify-center gap-2">
                 <Phone size={16} className="shrink-0 text-bold-yellow" /> {selected.telefone}
               </p>
             </div>
@@ -183,7 +201,7 @@ export function ClientesWave() {
               href={selected.video}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
             >
               <Video size={16} /> Ver vídeo do case
             </a>
