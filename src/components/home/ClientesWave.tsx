@@ -1,36 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { MapPin, Phone, Play, Video, X } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, MapPin, Phone, Play, Video, X } from 'lucide-react'
 import { ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
+import { CLIENTES, type Cliente } from '@/data/clientes'
 
 // Galeria "Scroll Wave" (GSAP) portada para a secao Clientes. Cada logo ondula
-// horizontalmente conforme o scroll; clicar abre um popup com os dados da empresa.
-// Dados e logos sao placeholder ate ter os clientes reais (depois: tabela clientes
-// no Supabase com nome/area/telefone/video).
-// slug -> futura pagina /projeto-:slug (Etapa 2). area/telefone ficam opcionais:
-// so renderizamos quando o dado real existir (sem inventar info em cliente real).
-type Cliente = { nome: string; slug: string; logo: string; area?: string; telefone?: string; video?: string; preview?: string }
-
-const LOGO = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER/'
-const VID = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER_PREVIA_VD/'
-
-const CLIENTES: Cliente[] = [
-  { nome: 'Shopping Sinop', slug: 'shopping-sinop', logo: `${LOGO}SHOPPING_SINOP_LOGO_CLIENTES.png`, area: 'Shopping Center' },
-  { nome: 'Frialto', slug: 'frialto', logo: `${LOGO}FRIALTO_LOGO_CLIENTES.png`, area: 'Frigorífico' },
-  { nome: 'Forteza', slug: 'forteza', logo: `${LOGO}FORTEZA_LOGO_CLIENTES.png`, video: `${VID}FORTEZA_.mp4`, preview: `${VID}FORTEZA_.mp4` },
-  { nome: 'JMD Urbanismo', slug: 'jmd-urbanismo', logo: `${LOGO}JMD_LOGO_CLIENTES.png`, area: 'Urbanismo' },
-  { nome: 'Fobel', slug: 'fobel', logo: `${LOGO}FOBEL_LOGO_CLIENTES.png` },
-  { nome: 'Biancon', slug: 'biancon', logo: `${LOGO}BIANCON_LOGO_CLIENTES.png` },
-  { nome: 'Embrapa', slug: 'embrapa', logo: `${LOGO}EMBRAPA_LOGO_CLEINTES.png`, area: 'Pesquisa Agropecuária' },
-  { nome: 'Machado Supermercados', slug: 'machado-supermercados', logo: `${LOGO}GRUPOMACHADO_LOGO_CLEINTES.png`, area: 'Supermercados', video: `${VID}MACHADO_.mp4`, preview: `${VID}MACHADO_.mp4` },
-  { nome: 'Madô Burguer', slug: 'mado-burguer', logo: `${LOGO}MADO%20BURGUER_CLEINTES.png`, area: 'Hamburgueria', video: `${VID}MADO_BURGUER_.mp4`, preview: `${VID}MADO_BURGUER_.mp4` },
-  { nome: 'John Deere · Agro Baggio', slug: 'agro-baggio-john-deere', logo: `${LOGO}AGROBAGGIO_JHONDEERE_LOGO_CLIENTES.png`, area: 'Máquinas Agrícolas', video: `${VID}AGRO_BAGGIO_JHON_DEERE_.mp4`, preview: `${VID}AGRO_BAGGIO_JHON_DEERE_.mp4` },
-  { nome: 'Parrilla do Campo', slug: 'parrilla-do-campo', logo: `${LOGO}PARRILHA_DO_CAMPO_LOGO_CLIENTES.png`, area: 'Gastronomia' },
-  { nome: 'Exponorte', slug: 'exponorte', logo: `${LOGO}EXPORNORTE_LOGO_CLIENTES.png`, area: 'Feira · Agronegócio', video: `${VID}EXPORNORTE_.mp4`, preview: `${VID}EXPORNORTE_.mp4` },
-  { nome: 'Grupo Sinop', slug: 'grupo-sinop', logo: `${LOGO}GRUPOSINOP_LOGO_CLIENTES.png`, area: 'Agronegócio', video: `${VID}GRUPOSINOP_.mp4`, preview: `${VID}GRUPOSINOP_.mp4` },
-  { nome: 'Paiol Agrícola', slug: 'paiol-agricola', logo: `${LOGO}PAIOL_LOGO_CLIENTES.png`, area: 'Agronegócio', video: `${VID}PAIOL_AGRICOLA_.mp4`, preview: `${VID}PAIOL_AGRICOLA_.mp4` },
-]
+// horizontalmente conforme o scroll; clicar abre um popup com preview + link
+// para a pagina completa do projeto (/projeto-:slug). Dados vem de @/data/clientes.
 
 const WAVES = {
   base: { amp: 0.1, freq: 1.0, speed: 1.0, phase: 5.0 },
@@ -180,11 +158,11 @@ export function ClientesWave() {
               <X size={20} />
             </button>
 
-            {/* Preview animado (GIF/video em loop). Placeholder ate ter o real. */}
+            {/* Preview animado em loop cortado em 10s. Placeholder ate ter o real. */}
             <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-bold-black/50">
-              {selected.preview ? (
+              {selected.videos[0] ? (
                 <video
-                  src={selected.preview}
+                  src={selected.videos[0]}
                   autoPlay
                   loop
                   muted
@@ -220,16 +198,24 @@ export function ClientesWave() {
               </div>
             )}
 
-            {selected.video && (
-              <a
-                href={selected.video}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
+            <div className="mt-6 flex flex-col items-stretch gap-2.5">
+              <Link
+                to={`/projeto-${selected.slug}`}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
               >
-                <Video size={16} /> {t.clientes.watchCase}
-              </a>
-            )}
+                {t.clientes.viewProject} <ArrowRight size={16} />
+              </Link>
+              {selected.videos[0] && (
+                <a
+                  href={selected.videos[0]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-5 py-2.5 text-sm font-bold text-bold-white transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
+                >
+                  <Video size={16} /> {t.clientes.watchCase}
+                </a>
+              )}
+            </div>
           </div>
         </div>
       )}

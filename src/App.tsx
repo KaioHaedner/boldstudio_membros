@@ -9,6 +9,7 @@ import { AdminLayout } from '@/components/AdminLayout'
 import { LandingPage } from '@/pages/LandingPage'
 import { ComingSoon } from '@/pages/ComingSoon'
 import { HomeInstitucionalPage } from '@/pages/HomeInstitucionalPage'
+import { ProjetoClientePage } from '@/pages/ProjetoClientePage'
 import { LoginPage } from '@/pages/LoginPage'
 import { CadastroPage } from '@/pages/CadastroPage'
 import { RecuperarSenhaPage } from '@/pages/RecuperarSenhaPage'
@@ -118,6 +119,9 @@ function App() {
           </Route>
 
           <Route path="/app" element={<Navigate to="/dashboard" replace />} />
+
+          {/* paginas por cliente: /projeto-grupo-machado etc (valida o prefixo) */}
+          <Route path="/:projetoSlug" element={<ProjetoClientePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </ToastProvider>
