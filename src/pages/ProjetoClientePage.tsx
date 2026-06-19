@@ -6,22 +6,36 @@ import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
 import { getClienteBySlug, type Cliente } from '@/data/clientes'
 
-// Mockup de celular com um reel rodando em loop cortado em 10s.
-function PhoneReel({ src }: { src: string }) {
+const MIN_PHONES = 3
+
+// Mockup de iPhone com um reel rodando em loop cortado em 10s. Sem src, mostra
+// placeholder (logo da Bold) — assim todo cliente exibe pelo menos 3 celulares.
+function PhoneReel({ src, index }: { src?: string; index: number }) {
   return (
-    <div className="relative aspect-[9/19] w-[160px] shrink-0 overflow-hidden rounded-[1.8rem] border-[5px] border-bold-gray bg-black shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)] sm:w-[180px]">
-      <div className="absolute left-1/2 top-2 z-10 h-3.5 w-16 -translate-x-1/2 rounded-full bg-bold-gray" aria-hidden="true" />
-      <video
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-        onTimeUpdate={(e) => {
-          if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
-        }}
-        className="h-full w-full object-cover"
-      />
+    <div className="relative aspect-[9/19] w-[150px] shrink-0 overflow-hidden rounded-[2rem] border-[6px] border-[#1c1c1c] bg-black shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] sm:w-[172px]">
+      {/* dynamic island */}
+      <div className="absolute left-1/2 top-2.5 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-black ring-1 ring-white/10" aria-hidden="true" />
+      {src ? (
+        <video
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onLoadedMetadata={(e) => {
+            // start desencontrado pra videos repetidos nao ficarem sincronizados
+            e.currentTarget.currentTime = (index * 3) % 10
+          }}
+          onTimeUpdate={(e) => {
+            if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
+          }}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-bold-black">
+          <img src="/brand/logo-boldstudio.webp" alt="" aria-hidden="true" className="w-20 opacity-15" />
+        </div>
+      )}
     </div>
   )
 }
@@ -94,20 +108,22 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           </section>
         )}
 
-        {/* reels do projeto em mockups de celular */}
+        {/* reels do projeto em mockups de iPhone (sempre >= 3) */}
         <section className="mt-20">
           <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">{t.projeto.reelsTitle}</p>
-          {cliente.videos.length > 0 ? (
-            <div className="mt-6 flex flex-wrap justify-center gap-6">
-              {cliente.videos.map((v) => (
-                <PhoneReel key={v} src={v} />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 bg-white/[0.02] py-16 text-bold-white/40">
-              <Play size={28} className="text-bold-yellow/60" />
-              <span className="text-sm">{t.projeto.reelsSoon}</span>
-            </div>
+          <div className="mt-6 flex flex-wrap justify-center gap-5 sm:gap-7">
+            {Array.from({ length: Math.max(MIN_PHONES, cliente.videos.length) }, (_, i) => (
+              <PhoneReel
+                key={i}
+                index={i}
+                src={cliente.videos.length > 0 ? cliente.videos[i % cliente.videos.length] : undefined}
+              />
+            ))}
+          </div>
+          {cliente.videos.length === 0 && (
+            <p className="mt-6 flex items-center justify-center gap-2 text-sm text-bold-white/40">
+              <Play size={16} className="text-bold-yellow/60" /> {t.projeto.reelsSoon}
+            </p>
           )}
         </section>
 
