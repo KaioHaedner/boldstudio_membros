@@ -965,6 +965,12 @@ textarea {
     rgba(0, 0, 0, 0.25) 75%,
     transparent 100%
   );
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+/* some ao chegar no footer pra nao apagar o rodape */
+.bottom-blur--hidden {
+  opacity: 0;
 }
 @media (max-width: 768px) {
   .bottom-blur {
