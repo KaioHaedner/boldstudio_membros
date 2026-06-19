@@ -3,11 +3,21 @@ import * as THREE from 'three'
 
 // Galeria espiral 3D (Three.js) — portado do efeito "Galeria Espiral 3D" da
 // Imperio WEB Codes Store para componente React/Vite.
-// Placeholder: alterna logo da Bold e card branco (totalImages = 2) ao longo
-// dos 75 quadros (15 por volta x 5 voltas). Trocar pelas imagens/demoreels reais
-// ajustando o array `textures` e CONFIG.totalImages.
+// Os 75 quadros (15 por volta x 5 voltas) ciclam por um array de texturas:
+// logo da Bold + card branco intercalados com os previews dos cases (VideoTexture).
+// Cada video roda mudo, em loop CORTADO em PREVIEW_SECONDS, e pausa fora da tela.
+const PREVIEW_SECONDS = 10
+const VID = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER_PREVIA_VD/'
+const VIDEO_URLS = [
+  `${VID}FORTEZA_.mp4`,
+  `${VID}MACHADO_.mp4`,
+  `${VID}MADO_BURGUER_.mp4`,
+  `${VID}AGRO_BAGGIO_JHON_DEERE_.mp4`,
+  `${VID}EXPORNORTE_.mp4`,
+  `${VID}GRUPOSINOP_.mp4`,
+  `${VID}PAIOL_AGRICOLA_.mp4`,
+]
 const CONFIG = {
-  totalImages: 2,
   tilesPerRevolution: 15,
   revolutions: 5,
   startRadius: 5,
@@ -108,7 +118,30 @@ export function ReelsEspiral() {
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     mount.appendChild(renderer.domElement)
 
-    const textures: THREE.Texture[] = [logoTexture(), whiteTexture()]
+    // Videos dos cases como textura WebGL. Mudos + playsInline pra autoplay no
+    // mobile; guardados em videoEls pra pausar fora da tela e cortar em 10s.
+    const videoEls: HTMLVideoElement[] = []
+    function videoTexture(url: string): THREE.VideoTexture {
+      const v = document.createElement('video')
+      v.src = url
+      v.crossOrigin = 'anonymous'
+      v.muted = true
+      v.loop = true
+      v.playsInline = true
+      v.preload = 'auto'
+      v.play().catch(() => {})
+      videoEls.push(v)
+      const tex = new THREE.VideoTexture(v)
+      tex.colorSpace = THREE.SRGBColorSpace
+      return tex
+    }
+
+    // logo da Bold + card branco intercalados com os previews dos cases.
+    const textures: THREE.Texture[] = [
+      logoTexture(),
+      whiteTexture(),
+      ...VIDEO_URLS.map(videoTexture),
+    ]
     const cameraPositionUniform = { value: new THREE.Vector3(0, 0, CONFIG.cameraZ) }
 
     // Alturas acumuladas de cada tile ao longo da espiral
@@ -171,7 +204,7 @@ export function ReelsEspiral() {
         vertexShader,
         fragmentShader,
         uniforms: {
-          uMap: { value: textures[i % CONFIG.totalImages] },
+          uMap: { value: textures[i % textures.length] },
           uCameraPosition: cameraPositionUniform,
         },
         side: THREE.DoubleSide,
@@ -273,6 +306,10 @@ export function ReelsEspiral() {
       const curScroll = window.scrollY
       if (visible) {
         spinVelocity += (curScroll - lastScroll) * CONFIG.scrollRotationMultiplier
+        // corta cada preview nos primeiros PREVIEW_SECONDS, em loop
+        for (const v of videoEls) {
+          if (v.currentTime >= PREVIEW_SECONDS) v.currentTime = 0
+        }
       }
       lastScroll = curScroll
 
@@ -309,6 +346,11 @@ export function ReelsEspiral() {
     const observer = new IntersectionObserver(
       (entries) => {
         visible = entries[0].isIntersecting
+        // pausa os videos fora da tela pra nao gastar CPU/bateria atoa
+        for (const v of videoEls) {
+          if (visible) v.play().catch(() => {})
+          else v.pause()
+        }
       },
       { threshold: 0, rootMargin: '200px' }
     )
@@ -327,6 +369,11 @@ export function ReelsEspiral() {
       window.removeEventListener('pointercancel', onPointerUp)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
+      videoEls.forEach((v) => {
+        v.pause()
+        v.removeAttribute('src')
+        v.load()
+      })
       geometries.forEach((g) => g.dispose())
       materials.forEach((m) => m.dispose())
       textures.forEach((t) => t.dispose())
@@ -345,7 +392,7 @@ export function ReelsEspiral() {
           <p className="text-xs font-bold tracking-wider text-bold-yellow">Demoreel</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/65">
-            Role e atravesse a nossa galeria. Em breve, os demoreels e cases reais rodam por aqui.
+            Role e atravesse a nossa galeria de cases. Arraste pra girar o espiral.
           </p>
         </div>
       </div>

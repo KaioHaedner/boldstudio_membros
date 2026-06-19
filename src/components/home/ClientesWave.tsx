@@ -189,6 +189,10 @@ export function ClientesWave() {
                   loop
                   muted
                   playsInline
+                  onTimeUpdate={(e) => {
+                    // corta o preview nos primeiros 10s, em loop
+                    if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
+                  }}
                   className="h-full w-full object-cover"
                 />
               ) : (
