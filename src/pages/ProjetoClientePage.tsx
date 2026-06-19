@@ -8,34 +8,42 @@ import { getClienteBySlug, type Cliente } from '@/data/clientes'
 
 const MIN_PHONES = 3
 
-// Mockup de iPhone com um reel rodando em loop cortado em 10s. Sem src, mostra
-// placeholder (logo da Bold) — assim todo cliente exibe pelo menos 3 celulares.
+// Mockup de iPhone (devices.css, frame iphone-x escalado + Dynamic Island via
+// override no index.css). Reel roda em loop cortado em 10s. Sem src, mostra a
+// logo da Bold — assim todo cliente exibe pelo menos 3 celulares.
 function PhoneReel({ src, index }: { src?: string; index: number }) {
   return (
-    <div className="relative aspect-[9/19] w-[150px] shrink-0 overflow-hidden rounded-[2rem] border-[6px] border-[#1c1c1c] bg-black shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] sm:w-[172px]">
-      {/* dynamic island */}
-      <div className="absolute left-1/2 top-2.5 z-10 h-4 w-14 -translate-x-1/2 rounded-full bg-black ring-1 ring-white/10" aria-hidden="true" />
-      {src ? (
-        <video
-          src={src}
-          autoPlay
-          loop
-          muted
-          playsInline
-          onLoadedMetadata={(e) => {
-            // start desencontrado pra videos repetidos nao ficarem sincronizados
-            e.currentTarget.currentTime = (index * 3) % 10
-          }}
-          onTimeUpdate={(e) => {
-            if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
-          }}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-bold-black">
-          <img src="/brand/logo-boldstudio.webp" alt="" aria-hidden="true" className="w-20 opacity-15" />
+    <div className="bold-iphone-wrap">
+      <div className="device device-iphone-x bold-iphone">
+        <div className="device-frame">
+          {src ? (
+            <video
+              className="device-screen"
+              src={src}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onLoadedMetadata={(e) => {
+                // start desencontrado pra videos repetidos nao ficarem sincronizados
+                e.currentTarget.currentTime = (index * 3) % 10
+              }}
+              onTimeUpdate={(e) => {
+                if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
+              }}
+            />
+          ) : (
+            <div className="device-screen flex items-center justify-center bg-bold-black">
+              <img src="/brand/logo-boldstudio.webp" alt="" aria-hidden="true" className="w-24 opacity-15" />
+            </div>
+          )}
         </div>
-      )}
+        <div className="device-stripe" />
+        <div className="device-header" />
+        <div className="device-sensors" />
+        <div className="device-btns" />
+        <div className="device-power" />
+      </div>
     </div>
   )
 }

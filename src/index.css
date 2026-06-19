@@ -949,6 +949,42 @@ textarea {
   padding: 1.75rem;
 }
 
+/* ============== iPhone mockup (devices.css) — escala + Dynamic Island ============== */
+/* Frame real do iphone-x da devices.css = 428x868. Escalamos pra caber 3 lado a
+   lado e trocamos o notch por uma Dynamic Island (cara de iPhone Pro atual). */
+.bold-iphone-wrap {
+  --iphone-scale: 0.42;
+  width: calc(428px * var(--iphone-scale));
+  height: calc(868px * var(--iphone-scale));
+  flex: 0 0 auto;
+}
+.bold-iphone-wrap .device-iphone-x {
+  transform: scale(var(--iphone-scale));
+  transform-origin: top left;
+}
+@media (max-width: 640px) {
+  .bold-iphone-wrap {
+    --iphone-scale: 0.34;
+  }
+}
+/* notch -> Dynamic Island (pilula flutuante) */
+.device-iphone-x.bold-iphone .device-header {
+  width: 100px;
+  height: 28px;
+  top: 36px;
+  margin-left: -50px;
+  border-radius: 18px;
+}
+.device-iphone-x.bold-iphone .device-sensors,
+.device-iphone-x.bold-iphone .device-sensors::after,
+.device-iphone-x.bold-iphone .device-sensors::before {
+  display: none;
+}
+/* video preenche a tela do device */
+.device-iphone-x.bold-iphone .device-screen {
+  object-fit: cover;
+}
+
 /* ============== Blur progressivo fixo na margem inferior ============== */
 /* Ofusca o conteudo que esta por vir conforme o usuario rola, gerando
    curiosidade. O blur e mais forte embaixo e some pra cima (via mask). */
