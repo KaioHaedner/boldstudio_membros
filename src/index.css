@@ -940,3 +940,39 @@ textarea {
   object-fit: contain;
   padding: 1.75rem;
 }
+
+/* ============== Blur progressivo fixo na margem inferior ============== */
+/* Ofusca o conteudo que esta por vir conforme o usuario rola, gerando
+   curiosidade. O blur e mais forte embaixo e some pra cima (via mask). */
+.bottom-blur {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18vh;
+  z-index: 80;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 10, 0.92) 0%,
+    rgba(10, 10, 10, 0.45) 45%,
+    transparent 100%
+  );
+}
+@media (max-width: 768px) {
+  .bottom-blur {
+    height: 14vh;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bottom-blur {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
