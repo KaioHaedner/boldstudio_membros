@@ -1,0 +1,320 @@
+// Dicionario de traducoes do site institucional (PT-BR / EN / ES).
+// O objeto `pt` define o formato; `en` e `es` precisam ter a MESMA estrutura
+// (garantido pelo tipo Dict). Para adicionar texto novo: coloque em pt e o TS
+// vai cobrar a traducao nos outros idiomas.
+
+export type Lang = 'pt' | 'en' | 'es'
+
+// code = chave interna | label = sigla no botao | flag = codigo flagcdn | name = nome no menu
+export const LANGS = [
+  { code: 'pt', label: 'PT', flag: 'br', name: 'Português' },
+  { code: 'en', label: 'EN', flag: 'us', name: 'English' },
+  { code: 'es', label: 'ES', flag: 'es', name: 'Español' },
+] as const
+
+const pt = {
+  nav: {
+    home: 'Home',
+    sobre: 'Sobre',
+    servicos: 'Serviços',
+    crew: 'Crew',
+    clientes: 'Clientes',
+    reels: 'Reels',
+    contato: 'Contato',
+    cta: 'Fale com a gente',
+  },
+  hero: {
+    eyebrow: 'SINOP, MT · PRODUTORA AUDIOVISUAL',
+    titleA: 'Entregamos ',
+    titleHighlight: 'resultados',
+    titleB: ', não vídeos.',
+    subtitle:
+      'Soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Atuamos no Agro, na indústria, em produtos e eventos, sempre com foco em resultado e alto padrão visual.',
+    ctaPrimary: 'Bora gravar com a Bold',
+    ctaSecondary: 'Ver nossos cases',
+  },
+  sobre: {
+    eyebrow: 'Sobre o estúdio',
+    title: 'Quem é a BoldStudio',
+    body: 'Somos uma produtora audiovisual especializada em soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Seja no Agro, indústrias, produtos ou eventos, atuamos sempre com foco em resultado, eficiência de produção e alto padrão visual.',
+    diffs: [
+      'Processos claros do briefing à entrega final',
+      'Equipe experiente e estrutura própria',
+      'Linguagem visual alinhada à sua marca',
+      'Compromisso com prazo, qualidade e previsibilidade',
+    ],
+  },
+  servicos: {
+    eyebrow: 'O que fazemos',
+    title: 'Soluções de ponta a ponta',
+    items: [
+      'Vídeos publicitários',
+      'Vídeos institucionais e corporativos',
+      'Vídeos e fotos de produtos e food',
+      'Cobertura de eventos',
+      'Conteúdo para marketing e redes sociais',
+    ],
+  },
+  crew: {
+    eyebrow: 'Crew',
+    title: 'Quem faz a BoldStudio acontecer',
+    ctaText: 'Vamos gravar algo bold?',
+    ctaButton: 'Falar com a Bold Studio',
+    members: {
+      'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera a visão e a direção geral do estúdio, da estratégia ao padrão de entrega que carrega a marca Bold.' },
+      miguel: { role: 'Diretor de Produção', desc: 'Comanda toda a produção, do briefing à entrega final, garantindo execução afiada em cada projeto.' },
+      bruno: { role: 'Diretor de Negócios', desc: 'À frente dos negócios e das parcerias, conecta a Bold às marcas que querem crescer com audiovisual de verdade.' },
+      william: { role: 'Diretor Criativo', desc: 'Transforma briefing em conceito: é dele a direção criativa e a assinatura visual das campanhas.' },
+      rafaela: { role: 'Diretora de Fotografia', desc: 'No comando da luz, do enquadramento e da estética que define o olhar Bold.' },
+      nathalia: { role: 'Produtora Executiva', desc: 'Orquestra cronograma, equipe e recursos pra que cada captação aconteça no prazo e no padrão.' },
+      caroline: { role: 'Coordenadora de Produção', desc: 'Coordena a logística e os bastidores, mantendo cada set rodando como um relógio.' },
+      germano: { role: 'Filmmaker / Editor', desc: 'Da captação à montagem, dá ritmo e emoção à narrativa que prende do início ao fim.' },
+      'pedro-neto': { role: 'Fotógrafo', desc: 'Fotografia still que registra a essência de cada projeto com força e identidade.' },
+    },
+  },
+  clientes: {
+    eyebrow: 'Clientes',
+    title: 'Marcas que a BoldStudio já atendeu',
+    helper: 'Clique numa logo para ver os detalhes da empresa.',
+    ctaText: 'Quer ser a próxima marca por aqui?',
+    ctaButton: 'Bora gravar com a Bold',
+    previewSoon: 'Preview em breve',
+    watchCase: 'Ver vídeo do case',
+  },
+  reels: {
+    eyebrow: 'Demoreel',
+    title: 'Veja uma prévia dos vídeos por aqui',
+    subtitle: 'Role e atravesse a nossa galeria de cases. Arraste pra girar o espiral.',
+  },
+  contato: {
+    eyebrow: 'Contato',
+    title: 'Vamos gravar algo bold?',
+  },
+  form: {
+    nome: 'Nome',
+    nomePh: 'Seu nome',
+    email: 'E-mail',
+    emailPh: 'seu@email.com',
+    whatsapp: 'WhatsApp',
+    whatsappPh: '(66) 99999-9999',
+    mensagem: 'Mensagem',
+    mensagemPh: 'Conta um pouco do que você precisa',
+    send: 'Enviar mensagem',
+    sending: 'Enviando...',
+    sent: 'Recebido! A gente te chama no WhatsApp em breve.',
+    error: 'Algo deu errado, tenta de novo em alguns minutos.',
+  },
+  footer: {
+    tagline: 'Estúdio audiovisual em Sinop, MT. Captação, produto e curso pra quem quer profissionalizar audiovisual do zero.',
+    sitemap: 'SiteMap',
+    essential: 'Páginas Essenciais',
+    rights: 'Todos os direitos reservados.',
+    legal: { termos: 'Termos de uso', privacidade: 'Privacidade', cookies: 'Cookies', ia: 'Uso da IA (RecIA)' },
+  },
+}
+
+export type Dict = typeof pt
+
+const en: Dict = {
+  nav: {
+    home: 'Home',
+    sobre: 'About',
+    servicos: 'Services',
+    crew: 'Crew',
+    clientes: 'Clients',
+    reels: 'Reels',
+    contato: 'Contact',
+    cta: 'Get in touch',
+  },
+  hero: {
+    eyebrow: 'SINOP, MT · AUDIOVISUAL STUDIO',
+    titleA: 'We deliver ',
+    titleHighlight: 'results',
+    titleB: ', not videos.',
+    subtitle:
+      'Strategic photo and video solutions for companies, events and brands. We work in Agribusiness, industry, products and events, always focused on results and high visual standards.',
+    ctaPrimary: "Let's shoot something bold",
+    ctaSecondary: 'See our work',
+  },
+  sobre: {
+    eyebrow: 'About the studio',
+    title: 'Who is BoldStudio',
+    body: "We're an audiovisual studio specialized in strategic photo and video solutions for companies, events and brands. Whether in Agribusiness, industry, products or events, we always work focused on results, production efficiency and high visual standards.",
+    diffs: [
+      'Clear processes from briefing to final delivery',
+      'Experienced team and our own structure',
+      'Visual language aligned with your brand',
+      'Commitment to deadlines, quality and predictability',
+    ],
+  },
+  servicos: {
+    eyebrow: 'What we do',
+    title: 'End-to-end solutions',
+    items: [
+      'Advertising videos',
+      'Institutional and corporate videos',
+      'Product and food videos & photos',
+      'Event coverage',
+      'Content for marketing and social media',
+    ],
+  },
+  crew: {
+    eyebrow: 'Crew',
+    title: 'The people behind BoldStudio',
+    ctaText: "Let's shoot something bold?",
+    ctaButton: 'Talk to Bold Studio',
+    members: {
+      'pedro-garcia': { role: 'Founder & CEO', desc: "Leads the studio's vision and overall direction, from strategy to the delivery standard that carries the Bold brand." },
+      miguel: { role: 'Head of Production', desc: 'Runs the entire production, from briefing to final delivery, keeping execution sharp on every project.' },
+      bruno: { role: 'Head of Business', desc: 'Driving business and partnerships, he connects Bold to brands that want to grow with real audiovisual.' },
+      william: { role: 'Creative Director', desc: 'Turns briefing into concept: the creative direction and visual signature of every campaign are his.' },
+      rafaela: { role: 'Head of Photography', desc: 'In command of light, framing and the aesthetic that defines the Bold look.' },
+      nathalia: { role: 'Executive Producer', desc: 'Orchestrates schedule, team and resources so every shoot happens on time and on standard.' },
+      caroline: { role: 'Production Coordinator', desc: 'Coordinates logistics and behind-the-scenes, keeping every set running like clockwork.' },
+      germano: { role: 'Filmmaker / Editor', desc: 'From filming to editing, he brings rhythm and emotion to a story that grips from start to finish.' },
+      'pedro-neto': { role: 'Photographer', desc: 'Still photography that captures the essence of each project with strength and identity.' },
+    },
+  },
+  clientes: {
+    eyebrow: 'Clients',
+    title: 'Brands BoldStudio has worked with',
+    helper: 'Click a logo to see the company details.',
+    ctaText: 'Want to be the next brand here?',
+    ctaButton: "Let's shoot with Bold",
+    previewSoon: 'Preview coming soon',
+    watchCase: 'Watch the case video',
+  },
+  reels: {
+    eyebrow: 'Demoreel',
+    title: 'Get a preview of our videos here',
+    subtitle: 'Scroll and dive through our case gallery. Drag to spin the spiral.',
+  },
+  contato: {
+    eyebrow: 'Contact',
+    title: "Let's shoot something bold?",
+  },
+  form: {
+    nome: 'Name',
+    nomePh: 'Your name',
+    email: 'Email',
+    emailPh: 'you@email.com',
+    whatsapp: 'WhatsApp',
+    whatsappPh: '+55 66 99999-9999',
+    mensagem: 'Message',
+    mensagemPh: 'Tell us a bit about what you need',
+    send: 'Send message',
+    sending: 'Sending...',
+    sent: "Got it! We'll reach out on WhatsApp soon.",
+    error: 'Something went wrong, try again in a few minutes.',
+  },
+  footer: {
+    tagline: 'Audiovisual studio in Sinop, MT. Filming, product and a course for anyone who wants to go pro in audiovisual from scratch.',
+    sitemap: 'Sitemap',
+    essential: 'Essential Pages',
+    rights: 'All rights reserved.',
+    legal: { termos: 'Terms of use', privacidade: 'Privacy', cookies: 'Cookies', ia: 'AI use (RecIA)' },
+  },
+}
+
+const es: Dict = {
+  nav: {
+    home: 'Inicio',
+    sobre: 'Nosotros',
+    servicos: 'Servicios',
+    crew: 'Crew',
+    clientes: 'Clientes',
+    reels: 'Reels',
+    contato: 'Contacto',
+    cta: 'Habla con nosotros',
+  },
+  hero: {
+    eyebrow: 'SINOP, MT · PRODUCTORA AUDIOVISUAL',
+    titleA: 'Entregamos ',
+    titleHighlight: 'resultados',
+    titleB: ', no videos.',
+    subtitle:
+      'Soluciones estratégicas de foto y video para empresas, eventos y marcas. Actuamos en el Agro, la industria, productos y eventos, siempre con foco en resultados y alto estándar visual.',
+    ctaPrimary: 'Vamos a grabar algo bold',
+    ctaSecondary: 'Ver nuestros cases',
+  },
+  sobre: {
+    eyebrow: 'Sobre el estudio',
+    title: 'Quién es BoldStudio',
+    body: 'Somos un estudio audiovisual especializado en soluciones estratégicas de foto y video para empresas, eventos y marcas. Sea en el Agro, industrias, productos o eventos, actuamos siempre con foco en resultados, eficiencia de producción y alto estándar visual.',
+    diffs: [
+      'Procesos claros del briefing a la entrega final',
+      'Equipo experimentado y estructura propia',
+      'Lenguaje visual alineado a tu marca',
+      'Compromiso con plazos, calidad y previsibilidad',
+    ],
+  },
+  servicos: {
+    eyebrow: 'Lo que hacemos',
+    title: 'Soluciones de punta a punta',
+    items: [
+      'Videos publicitarios',
+      'Videos institucionales y corporativos',
+      'Videos y fotos de productos y food',
+      'Cobertura de eventos',
+      'Contenido para marketing y redes sociales',
+    ],
+  },
+  crew: {
+    eyebrow: 'Crew',
+    title: 'Quiénes hacen que BoldStudio suceda',
+    ctaText: '¿Vamos a grabar algo bold?',
+    ctaButton: 'Hablar con Bold Studio',
+    members: {
+      'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera la visión y la dirección general del estudio, de la estrategia al estándar de entrega que lleva la marca Bold.' },
+      miguel: { role: 'Director de Producción', desc: 'Comanda toda la producción, del briefing a la entrega final, garantizando una ejecución afilada en cada proyecto.' },
+      bruno: { role: 'Director de Negocios', desc: 'Al frente de los negocios y las alianzas, conecta a Bold con las marcas que quieren crecer con audiovisual de verdad.' },
+      william: { role: 'Director Creativo', desc: 'Transforma el briefing en concepto: suya es la dirección creativa y la firma visual de las campañas.' },
+      rafaela: { role: 'Directora de Fotografía', desc: 'Al mando de la luz, el encuadre y la estética que define la mirada Bold.' },
+      nathalia: { role: 'Productora Ejecutiva', desc: 'Orquesta cronograma, equipo y recursos para que cada captación ocurra en plazo y en estándar.' },
+      caroline: { role: 'Coordinadora de Producción', desc: 'Coordina la logística y el detrás de cámaras, manteniendo cada set funcionando como un reloj.' },
+      germano: { role: 'Filmmaker / Editor', desc: 'De la captación al montaje, da ritmo y emoción a la narrativa que atrapa de principio a fin.' },
+      'pedro-neto': { role: 'Fotógrafo', desc: 'Fotografía still que registra la esencia de cada proyecto con fuerza e identidad.' },
+    },
+  },
+  clientes: {
+    eyebrow: 'Clientes',
+    title: 'Marcas que BoldStudio ya atendió',
+    helper: 'Haz clic en un logo para ver los detalles de la empresa.',
+    ctaText: '¿Quieres ser la próxima marca aquí?',
+    ctaButton: 'Vamos a grabar con Bold',
+    previewSoon: 'Preview en breve',
+    watchCase: 'Ver el video del case',
+  },
+  reels: {
+    eyebrow: 'Demoreel',
+    title: 'Mira una vista previa de nuestros videos',
+    subtitle: 'Desplázate y atraviesa nuestra galería de cases. Arrastra para girar la espiral.',
+  },
+  contato: {
+    eyebrow: 'Contacto',
+    title: '¿Vamos a grabar algo bold?',
+  },
+  form: {
+    nome: 'Nombre',
+    nomePh: 'Tu nombre',
+    email: 'Email',
+    emailPh: 'tu@email.com',
+    whatsapp: 'WhatsApp',
+    whatsappPh: '+55 66 99999-9999',
+    mensagem: 'Mensaje',
+    mensagemPh: 'Cuéntanos un poco de lo que necesitas',
+    send: 'Enviar mensaje',
+    sending: 'Enviando...',
+    sent: '¡Recibido! Te contactamos por WhatsApp pronto.',
+    error: 'Algo salió mal, inténtalo de nuevo en unos minutos.',
+  },
+  footer: {
+    tagline: 'Estudio audiovisual en Sinop, MT. Captación, producto y un curso para quien quiere profesionalizar el audiovisual desde cero.',
+    sitemap: 'Mapa del sitio',
+    essential: 'Páginas esenciales',
+    rights: 'Todos los derechos reservados.',
+    legal: { termos: 'Términos de uso', privacidade: 'Privacidad', cookies: 'Cookies', ia: 'Uso de la IA (RecIA)' },
+  },
+}
+
+export const translations: Record<Lang, Dict> = { pt, en, es }

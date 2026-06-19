@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { cn } from '@/lib/utils'
 import { ShinyButton } from '@/components/ShinyButton'
 import { supabase } from '@/lib/supabase'
+import { useI18n } from '@/i18n/I18nContext'
 
 type FormState = {
   nome: string
@@ -40,6 +41,7 @@ async function submitLead(data: FormState) {
 }
 
 export function ContactForm() {
+  const { t } = useI18n()
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
@@ -68,19 +70,19 @@ export function ContactForm() {
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="nome" className="text-sm font-medium text-bold-white/80">Nome</label>
+          <label htmlFor="nome" className="text-sm font-medium text-bold-white/80">{t.form.nome}</label>
           <input
             id="nome"
             required
             value={form.nome}
             onChange={(e) => update('nome', e.target.value)}
             className={INPUT_CLASS}
-            placeholder="Seu nome"
+            placeholder={t.form.nomePh}
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-sm font-medium text-bold-white/80">E-mail</label>
+          <label htmlFor="email" className="text-sm font-medium text-bold-white/80">{t.form.email}</label>
           <input
             id="email"
             type="email"
@@ -88,32 +90,32 @@ export function ContactForm() {
             value={form.email}
             onChange={(e) => update('email', e.target.value)}
             className={INPUT_CLASS}
-            placeholder="seu@email.com"
+            placeholder={t.form.emailPh}
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="whatsapp" className="text-sm font-medium text-bold-white/80">WhatsApp</label>
+        <label htmlFor="whatsapp" className="text-sm font-medium text-bold-white/80">{t.form.whatsapp}</label>
         <input
           id="whatsapp"
           required
           value={form.whatsapp}
           onChange={(e) => update('whatsapp', e.target.value)}
           className={INPUT_CLASS}
-          placeholder="(66) 99999-9999"
+          placeholder={t.form.whatsappPh}
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="mensagem" className="text-sm font-medium text-bold-white/80">Mensagem</label>
+        <label htmlFor="mensagem" className="text-sm font-medium text-bold-white/80">{t.form.mensagem}</label>
         <textarea
           id="mensagem"
           rows={5}
           value={form.mensagem}
           onChange={(e) => update('mensagem', e.target.value)}
           className={cn(INPUT_CLASS, 'resize-none')}
-          placeholder="Conta um pouco do que você precisa"
+          placeholder={t.form.mensagemPh}
         />
       </div>
 
@@ -122,15 +124,11 @@ export function ContactForm() {
         disabled={status === 'sending'}
         className={cn('mt-1 w-full', status === 'sending' && 'pointer-events-none opacity-60')}
       >
-        {status === 'sending' ? 'Enviando...' : 'Enviar mensagem'}
+        {status === 'sending' ? t.form.sending : t.form.send}
       </ShinyButton>
 
-      {status === 'sent' && (
-        <p className="text-sm text-bold-yellow">Recebido! A gente te chama no WhatsApp em breve.</p>
-      )}
-      {status === 'error' && (
-        <p className="text-sm text-red-400">Algo deu errado, tenta de novo em alguns minutos.</p>
-      )}
+      {status === 'sent' && <p className="text-sm text-bold-yellow">{t.form.sent}</p>}
+      {status === 'error' && <p className="text-sm text-red-400">{t.form.error}</p>}
     </form>
   )
 }

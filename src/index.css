@@ -857,6 +857,14 @@ textarea {
   color: #ffd712;
   line-height: 1.45;
 }
+.crew-card__desc {
+  margin-top: 0.9rem;
+  max-width: 34ch;
+  font-size: clamp(0.8rem, 1.25vw, 0.95rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
 /* foto com borda amarela 2px + efeito luminoso */
 .crew-card__photo {
   flex: 1;

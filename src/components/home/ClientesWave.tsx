@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { MapPin, Phone, Play, Video, X } from 'lucide-react'
 import { ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
+import { useI18n } from '@/i18n/I18nContext'
 
 // Galeria "Scroll Wave" (GSAP) portada para a secao Clientes. Cada logo ondula
 // horizontalmente conforme o scroll; clicar abre um popup com os dados da empresa.
@@ -42,6 +43,7 @@ const IMAGE_BASE_HEIGHT = 375
 const ASPECT_RATIOS = ['3/2', '4/3', '5/4', '7/5']
 
 export function ClientesWave() {
+  const { t } = useI18n()
   const wrapRef = useRef<HTMLDivElement>(null)
   const [selected, setSelected] = useState<Cliente | null>(null)
 
@@ -118,11 +120,9 @@ export function ClientesWave() {
   return (
     <section id="clientes" className="clientes-wave scroll-mt-24">
       <div className="px-6 pt-24 pb-4 text-center">
-        <p className="text-xs font-bold tracking-wider text-bold-yellow">Clientes</p>
-        <h2 className="mt-3 text-3xl font-bold md:text-4xl">Marcas que a BoldStudio já atendeu</h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/60">
-          Clique numa logo para ver os detalhes da empresa.
-        </p>
+        <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.clientes.eyebrow}</p>
+        <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.clientes.title}</h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/60">{t.clientes.helper}</p>
       </div>
 
       <div ref={wrapRef} className="spotlight-images">
@@ -148,13 +148,13 @@ export function ClientesWave() {
       </div>
 
       <div className="flex flex-col items-center gap-5 px-6 pb-24 pt-2 text-center">
-        <p className="text-xl font-bold text-bold-white md:text-2xl">Quer ser a próxima marca por aqui?</p>
+        <p className="text-xl font-bold text-bold-white md:text-2xl">{t.clientes.ctaText}</p>
         <ShinyButton
           onClick={() =>
             document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }
         >
-          Bora gravar com a Bold
+          {t.clientes.ctaButton}
         </ShinyButton>
       </div>
 
@@ -198,7 +198,7 @@ export function ClientesWave() {
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-bold-white/40">
                   <Play size={30} className="text-bold-yellow/70" />
-                  <span className="text-xs">Preview em breve</span>
+                  <span className="text-xs">{t.clientes.previewSoon}</span>
                 </div>
               )}
             </div>
@@ -227,7 +227,7 @@ export function ClientesWave() {
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
               >
-                <Video size={16} /> Ver vídeo do case
+                <Video size={16} /> {t.clientes.watchCase}
               </a>
             )}
           </div>

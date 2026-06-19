@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { useI18n } from '@/i18n/I18nContext'
 
 // Galeria espiral 3D (Three.js) — portado do efeito "Galeria Espiral 3D" da
 // Imperio WEB Codes Store para componente React/Vite.
@@ -94,6 +95,7 @@ function logoTexture(): THREE.CanvasTexture {
 }
 
 export function ReelsEspiral() {
+  const { t } = useI18n()
   const sectionRef = useRef<HTMLElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
 
@@ -389,11 +391,9 @@ export function ReelsEspiral() {
       <div className="sticky top-0 h-screen overflow-hidden">
         <div ref={mountRef} className="absolute inset-0" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 px-6 pb-24 pt-24 text-center [text-shadow:0_2px_14px_rgba(0,0,0,0.85)]">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">Demoreel</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Veja uma prévia dos vídeos por aqui</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/65">
-            Role e atravesse a nossa galeria de cases. Arraste pra girar o espiral.
-          </p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.reels.eyebrow}</p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.reels.title}</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/65">{t.reels.subtitle}</p>
         </div>
       </div>
     </section>

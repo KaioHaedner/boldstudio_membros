@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/I18nContext'
+import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 
 const NAV_LINKS = [
-  { href: '#home', label: 'Home' },
-  { href: '#sobre', label: 'Sobre' },
-  { href: '#servicos', label: 'Serviços' },
-  { href: '#crew', label: 'Crew' },
-  { href: '#clientes', label: 'Clientes' },
-  { href: '#reels', label: 'Reels' },
-  { href: '#contato', label: 'Contato' },
-]
+  { href: '#home', key: 'home' },
+  { href: '#sobre', key: 'sobre' },
+  { href: '#servicos', key: 'servicos' },
+  { href: '#crew', key: 'crew' },
+  { href: '#clientes', key: 'clientes' },
+  { href: '#reels', key: 'reels' },
+  { href: '#contato', key: 'contato' },
+] as const
 
 function scrollToAnchor(href: string) {
   document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 export function Header() {
+  const { t } = useI18n()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -49,30 +52,33 @@ export function Header() {
                 onClick={(e) => { e.preventDefault(); scrollToAnchor(link.href) }}
                 className="inline-block origin-center transition-all duration-200 hover:scale-110 hover:text-bold-yellow"
               >
-                {link.label}
+                {t.nav[link.key]}
               </a>
             </li>
           ))}
         </ul>
 
-        <a
-          href="#contato"
-          onClick={(e) => { e.preventDefault(); scrollToAnchor('#contato') }}
-          className="hidden rounded-lg bg-bold-yellow px-5 py-2 text-sm font-bold text-bold-black transition-transform hover:scale-105 md:inline-block"
-        >
-          Fale com a gente
-        </a>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <a
+            href="#contato"
+            onClick={(e) => { e.preventDefault(); scrollToAnchor('#contato') }}
+            className="hidden rounded-lg bg-bold-yellow px-5 py-2 text-sm font-bold text-bold-black transition-transform hover:scale-105 md:inline-block"
+          >
+            {t.nav.cta}
+          </a>
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen((open) => !open)}
-          className="text-bold-white md:hidden"
-          aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
-          aria-expanded={mobileOpen}
-          aria-controls="home-mobile-menu"
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="text-bold-white md:hidden"
+            aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="home-mobile-menu"
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {mobileOpen && (
@@ -89,7 +95,7 @@ export function Header() {
                   }}
                   className="block py-1 transition-colors hover:text-bold-yellow"
                 >
-                  {link.label}
+                  {t.nav[link.key]}
                 </a>
               </li>
             ))}

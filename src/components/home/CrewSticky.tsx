@@ -2,25 +2,27 @@ import { useEffect, useRef } from 'react'
 import { User } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
+import { useI18n } from '@/i18n/I18nContext'
 
 // Efeito "Sticky Cards" (GSAP ScrollTrigger) portado para a secao Crew.
-// Cards empilhados que saem um a um conforme o scroll. Fotos sao placeholder
-// (icone) ate ter as imagens reais da equipe.
-type Integrante = { nome: string; cargos: string[]; foto?: string }
+// Cards empilhados que saem um a um conforme o scroll. Cargo e descricao vem
+// das traducoes (t.crew.members[id]); aqui ficam so nome e foto (idiomaagnostico).
+const CREW_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CREW/'
 
-const CREW: Integrante[] = [
-  { nome: 'Pedro Garcia Jr.', cargos: ['Founder & CEO'] },
-  { nome: 'Miguel Souza', cargos: ['Head of Production'] },
-  { nome: 'Bruno Cavedon', cargos: ['Head of Business'] },
-  { nome: 'William Ferruda', cargos: ['Creative Director'] },
-  { nome: 'Rafaela Souza', cargos: ['Head of Photography'] },
-  { nome: 'Nathalia Umburanas', cargos: ['Executive Producer'] },
-  { nome: 'Caroline Ventura', cargos: ['Production Coordinator'] },
-  { nome: 'Germano Pagliari', cargos: ['Filmmaker / Editor'] },
-  { nome: 'Pedro Garcia Neto', cargos: ['Photographer'] },
-]
+const CREW = [
+  { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.', foto: `${CREW_BASE}PEDRO_GARCIa_CEO.jpeg` },
+  { id: 'miguel', nome: 'Miguel Souza' },
+  { id: 'bruno', nome: 'Bruno Cavedon' },
+  { id: 'william', nome: 'William Ferruda', foto: `${CREW_BASE}WIllian%20Ferruda.jpeg` },
+  { id: 'rafaela', nome: 'Rafaela Souza' },
+  { id: 'nathalia', nome: 'Nathalia Umburanas' },
+  { id: 'caroline', nome: 'Caroline Ventura' },
+  { id: 'germano', nome: 'Germano Pagliari', foto: `${CREW_BASE}GERMANO_PAGLIARI_.jpeg` },
+  { id: 'pedro-neto', nome: 'Pedro Garcia Neto', foto: `${CREW_BASE}PEDRO%20GARCIA%20JR_FOTO.jpeg` },
+] as const
 
 export function CrewSticky() {
+  const { t } = useI18n()
   const cardsRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
 
@@ -97,45 +99,46 @@ export function CrewSticky() {
   return (
     <section id="crew" className="scroll-mt-24">
       <div className="px-6 pt-24 pb-8 text-center">
-        <p className="text-xs font-bold tracking-wider text-bold-yellow">Crew</p>
-        <h2 className="mt-3 text-3xl font-bold md:text-4xl">Quem faz a BoldStudio acontecer</h2>
+        <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.crew.eyebrow}</p>
+        <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.crew.title}</h2>
       </div>
 
       <div ref={cardsRef} className="crew-cards">
         <div ref={ctaRef} className="crew-cta">
-          <p>Vamos gravar algo bold?</p>
+          <p>{t.crew.ctaText}</p>
           <ShinyButton
             onClick={() =>
               document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }
           >
-            Falar com a Bold Studio
+            {t.crew.ctaButton}
           </ShinyButton>
         </div>
-        {CREW.map((m, i) => (
-          <article key={m.nome} className="crew-card" style={{ zIndex: 10 - i }}>
-            <div className="crew-card__info">
-              <span className="crew-card__bar" aria-hidden="true" />
-              <div>
-                <h3 className="crew-card__name">{m.nome}</h3>
-                <div className="crew-card__roles">
-                  {m.cargos.map((c) => (
-                    <p key={c} className="crew-card__role">
-                      {c}
-                    </p>
-                  ))}
+        {CREW.map((m, i) => {
+          const info = t.crew.members[m.id]
+          const foto = 'foto' in m ? m.foto : undefined
+          return (
+            <article key={m.id} className="crew-card" style={{ zIndex: 10 - i }}>
+              <div className="crew-card__info">
+                <span className="crew-card__bar" aria-hidden="true" />
+                <div>
+                  <h3 className="crew-card__name">{m.nome}</h3>
+                  <div className="crew-card__roles">
+                    <p className="crew-card__role">{info.role}</p>
+                  </div>
+                  <p className="crew-card__desc">{info.desc}</p>
                 </div>
               </div>
-            </div>
-            <div className="crew-card__photo">
-              {m.foto ? (
-                <img src={m.foto} alt={m.nome} />
-              ) : (
-                <User size={64} className="text-bold-white/20" aria-hidden="true" />
-              )}
-            </div>
-          </article>
-        ))}
+              <div className="crew-card__photo">
+                {foto ? (
+                  <img src={foto} alt={m.nome} loading="lazy" />
+                ) : (
+                  <User size={64} className="text-bold-white/20" aria-hidden="true" />
+                )}
+              </div>
+            </article>
+          )
+        })}
       </div>
     </section>
   )

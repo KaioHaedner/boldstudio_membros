@@ -1,19 +1,21 @@
+import { useI18n } from '@/i18n/I18nContext'
+
 const NAV_LINKS = [
-  { href: '#home', label: 'Home' },
-  { href: '#sobre', label: 'Sobre' },
-  { href: '#servicos', label: 'Serviços' },
-  { href: '#crew', label: 'Crew' },
-  { href: '#clientes', label: 'Clientes' },
-  { href: '#reels', label: 'Reels' },
-  { href: '#contato', label: 'Contato' },
-]
+  { href: '#home', key: 'home' },
+  { href: '#sobre', key: 'sobre' },
+  { href: '#servicos', key: 'servicos' },
+  { href: '#crew', key: 'crew' },
+  { href: '#clientes', key: 'clientes' },
+  { href: '#reels', key: 'reels' },
+  { href: '#contato', key: 'contato' },
+] as const
 
 const LEGAL_LINKS = [
-  { href: '/termos', label: 'Termos de uso' },
-  { href: '/privacidade', label: 'Privacidade' },
-  { href: '/cookies', label: 'Cookies' },
-  { href: '/uso-da-ia', label: 'Uso da IA (RecIA)' },
-]
+  { href: '/termos', key: 'termos' },
+  { href: '/privacidade', key: 'privacidade' },
+  { href: '/cookies', key: 'cookies' },
+  { href: '/uso-da-ia', key: 'ia' },
+] as const
 
 // Icones de marca reais (mesmos SVGs usados na pagina ComingSoon).
 // Facebook e WhatsApp ficam como placeholder ate ter as URLs/numero reais.
@@ -49,6 +51,7 @@ function scrollToAnchor(href: string) {
 }
 
 export function Footer() {
+  const { t } = useI18n()
   return (
     <footer className="relative z-10 border-t border-white/10 bg-bold-black px-6 py-14 text-bold-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-10 md:flex-row md:justify-between">
@@ -58,9 +61,7 @@ export function Footer() {
             alt="Bold Studio Brasil"
             className="h-7 w-auto max-w-[150px] object-contain object-left"
           />
-          <p className="max-w-xs text-sm text-bold-white/60">
-            Estúdio audiovisual em Sinop, MT. Captação, produto e curso pra quem quer profissionalizar audiovisual do zero.
-          </p>
+          <p className="max-w-xs text-sm text-bold-white/60">{t.footer.tagline}</p>
           <div className="flex items-center gap-3 text-bold-white/70">
             {SOCIALS.map((social) => (
               <a
@@ -79,7 +80,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">SiteMap</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.footer.sitemap}</p>
           <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
@@ -88,7 +89,7 @@ export function Footer() {
                   onClick={(e) => { e.preventDefault(); scrollToAnchor(link.href) }}
                   className="transition-colors hover:text-bold-yellow"
                 >
-                  {link.label}
+                  {t.nav[link.key]}
                 </a>
               </li>
             ))}
@@ -96,11 +97,11 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">Páginas Essenciais</p>
+          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.footer.essential}</p>
           <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="transition-colors hover:text-bold-yellow">{link.label}</a>
+                <a href={link.href} className="transition-colors hover:text-bold-yellow">{t.footer.legal[link.key]}</a>
               </li>
             ))}
           </ul>
@@ -108,7 +109,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto mt-12 flex max-w-5xl flex-col gap-2 border-t border-white/5 pt-6 text-xs text-bold-white/40 md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p>
+        <p>© {new Date().getFullYear()} Bold Studio Brasil. {t.footer.rights}</p>
         <p>
           Powered by <span className="font-semibold text-bold-white/70">Kaio H</span>
           <span className="px-1 text-bold-yellow">&</span>
