@@ -58,7 +58,7 @@ export function Header() {
         <a
           href="#contato"
           onClick={(e) => { e.preventDefault(); scrollToAnchor('#contato') }}
-          className="hidden rounded-full bg-bold-yellow px-5 py-2 text-sm font-bold text-bold-black transition-transform hover:scale-105 md:inline-block"
+          className="hidden rounded-lg bg-bold-yellow px-5 py-2 text-sm font-bold text-bold-black transition-transform hover:scale-105 md:inline-block"
         >
           Fale com a gente
         </a>
@@ -76,7 +76,7 @@ export function Header() {
       </nav>
 
       {mobileOpen && (
-        <div id="home-mobile-menu" className="absolute left-4 right-4 top-[calc(100%+0.5rem)] rounded-3xl border border-white/10 bg-bold-gray/90 p-4 backdrop-blur-2xl md:hidden">
+        <div id="home-mobile-menu" className="absolute left-4 right-4 top-[calc(100%+0.5rem)] rounded-xl border border-white/10 bg-bold-gray/90 p-4 backdrop-blur-2xl md:hidden">
           <ul className="flex flex-col gap-3 text-sm font-medium text-bold-white/85">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>

@@ -487,7 +487,7 @@ textarea {
   line-height: 1.2;
   font-weight: 700;
   border: 1px solid transparent;
-  border-radius: 360px;
+  border-radius: 10px;
   color: var(--shiny-cta-fg);
   background: linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
     conic-gradient(
@@ -817,7 +817,7 @@ textarea {
   align-items: center;
   gap: 2rem;
   padding: 2.5rem;
-  border-radius: 1.25rem;
+  border-radius: 0.75rem;
   background: #000000;
   border: 1px solid rgba(255, 215, 18, 0.15);
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
@@ -861,7 +861,7 @@ textarea {
 .crew-card__photo {
   flex: 1;
   height: 100%;
-  border-radius: 0.9rem;
+  border-radius: 0.5rem;
   border: 2px solid #ffd712;
   box-shadow: 0 0 18px 1px rgba(255, 215, 18, 0.55), inset 0 0 40px rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -922,8 +922,8 @@ textarea {
 .spotlight-image {
   position: relative;
   overflow: hidden;
-  border-radius: 0.9rem;
-  clip-path: inset(0 20% 0 20% round 0.9rem);
+  border-radius: 0.5rem;
+  clip-path: inset(0 20% 0 20% round 0.5rem);
   will-change: transform, clip-path;
   cursor: pointer;
   background: #141414;

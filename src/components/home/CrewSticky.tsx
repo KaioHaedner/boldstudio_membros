@@ -9,9 +9,15 @@ import { ShinyButton } from '@/components/ShinyButton'
 type Integrante = { nome: string; cargos: string[]; foto?: string }
 
 const CREW: Integrante[] = [
-  { nome: 'Pedro Garcia', cargos: ['CEO e Founder', 'Diretor de Produção'] },
-  { nome: 'Miguel Souza', cargos: ['Co-Founder', 'Diretor de Fotografia'] },
-  { nome: 'Bruno Cavedon', cargos: ['Co-Founder', 'Diretor de Vendas'] },
+  { nome: 'Pedro Garcia Jr.', cargos: ['Founder & CEO'] },
+  { nome: 'Miguel Souza', cargos: ['Head of Production'] },
+  { nome: 'Bruno Cavedon', cargos: ['Head of Business'] },
+  { nome: 'William Ferruda', cargos: ['Creative Director'] },
+  { nome: 'Rafaela Souza', cargos: ['Head of Photography'] },
+  { nome: 'Nathalia Umburanas', cargos: ['Executive Producer'] },
+  { nome: 'Caroline Ventura', cargos: ['Production Coordinator'] },
+  { nome: 'Germano Pagliari', cargos: ['Filmmaker / Editor'] },
+  { nome: 'Pedro Garcia Neto', cargos: ['Photographer'] },
 ]
 
 export function CrewSticky() {

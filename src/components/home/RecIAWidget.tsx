@@ -160,7 +160,7 @@ export function RecIAWidget() {
               <button
                 type="button"
                 onClick={() => setStage('lead')}
-                className="rounded-full bg-bold-yellow px-6 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-[1.03]"
+                className="rounded-lg bg-bold-yellow px-6 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-[1.03]"
               >
                 Iniciar conversa
               </button>
@@ -201,7 +201,7 @@ export function RecIAWidget() {
                 placeholder="Cidade e estado (ex.: Sinop, MT)"
                 className="rounded-xl border border-white/10 bg-bold-black/40 px-3 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
               />
-              <button type="submit" className="mt-auto rounded-full bg-bold-yellow px-4 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]">
+              <button type="submit" className="mt-auto rounded-lg bg-bold-yellow px-4 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]">
                 Começar
               </button>
             </form>
@@ -230,9 +230,9 @@ export function RecIAWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Escreva sua mensagem..."
-                  className="flex-1 rounded-full border border-white/10 bg-bold-black/40 px-4 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
+                  className="flex-1 rounded-lg border border-white/10 bg-bold-black/40 px-4 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
                 />
-                <button type="submit" aria-label="Enviar" className="rounded-full bg-bold-yellow p-2.5 text-bold-black">
+                <button type="submit" aria-label="Enviar" className="rounded-lg bg-bold-yellow p-2.5 text-bold-black">
                   <Send size={16} />
                 </button>
               </form>

@@ -7,21 +7,28 @@ import { ShinyButton } from '@/components/ShinyButton'
 // horizontalmente conforme o scroll; clicar abre um popup com os dados da empresa.
 // Dados e logos sao placeholder ate ter os clientes reais (depois: tabela clientes
 // no Supabase com nome/area/telefone/video).
-type Cliente = { nome: string; area: string; telefone: string; video: string; preview?: string }
+// slug -> futura pagina /projeto-:slug (Etapa 2). area/telefone ficam opcionais:
+// so renderizamos quando o dado real existir (sem inventar info em cliente real).
+type Cliente = { nome: string; slug: string; logo: string; area?: string; telefone?: string; video?: string; preview?: string }
+
+const LOGO = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER/'
+const VID = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER_PREVIA_VD/'
 
 const CLIENTES: Cliente[] = [
-  { nome: 'Empresa Exemplo 01', area: 'Varejo', telefone: '(66) 99999-0001', video: '#' },
-  { nome: 'Empresa Exemplo 02', area: 'Imobiliária', telefone: '(66) 99999-0002', video: '#' },
-  { nome: 'Empresa Exemplo 03', area: 'Agronegócio', telefone: '(66) 99999-0003', video: '#' },
-  { nome: 'Empresa Exemplo 04', area: 'Moda', telefone: '(66) 99999-0004', video: '#' },
-  { nome: 'Empresa Exemplo 05', area: 'Gastronomia', telefone: '(66) 99999-0005', video: '#' },
-  { nome: 'Empresa Exemplo 06', area: 'Academia', telefone: '(66) 99999-0006', video: '#' },
-  { nome: 'Empresa Exemplo 07', area: 'Saúde', telefone: '(66) 99999-0007', video: '#' },
-  { nome: 'Empresa Exemplo 08', area: 'Educação', telefone: '(66) 99999-0008', video: '#' },
-  { nome: 'Empresa Exemplo 09', area: 'Construção', telefone: '(66) 99999-0009', video: '#' },
-  { nome: 'Empresa Exemplo 10', area: 'Automotivo', telefone: '(66) 99999-0010', video: '#' },
-  { nome: 'Empresa Exemplo 11', area: 'Tecnologia', telefone: '(66) 99999-0011', video: '#' },
-  { nome: 'Empresa Exemplo 12', area: 'Eventos', telefone: '(66) 99999-0012', video: '#' },
+  { nome: 'Shopping Sinop', slug: 'shopping-sinop', logo: `${LOGO}SHOPPING_SINOP_LOGO_CLIENTES.png`, area: 'Shopping Center' },
+  { nome: 'Frialto', slug: 'frialto', logo: `${LOGO}FRIALTO_LOGO_CLIENTES.png`, area: 'Frigorífico' },
+  { nome: 'Forteza', slug: 'forteza', logo: `${LOGO}FORTEZA_LOGO_CLIENTES.png`, video: `${VID}FORTEZA_.mp4`, preview: `${VID}FORTEZA_.mp4` },
+  { nome: 'JMD', slug: 'jmd', logo: `${LOGO}JMD_LOGO_CLIENTES.png` },
+  { nome: 'Fobel', slug: 'fobel', logo: `${LOGO}FOBEL_LOGO_CLIENTES.png` },
+  { nome: 'Biancon', slug: 'biancon', logo: `${LOGO}BIANCON_LOGO_CLIENTES.png` },
+  { nome: 'Embrapa', slug: 'embrapa', logo: `${LOGO}EMBRAPA_LOGO_CLEINTES.png`, area: 'Pesquisa Agropecuária' },
+  { nome: 'Grupo Machado', slug: 'grupo-machado', logo: `${LOGO}GRUPOMACHADO_LOGO_CLEINTES.png`, video: `${VID}MACHADO_.mp4`, preview: `${VID}MACHADO_.mp4` },
+  { nome: 'Madô Burguer', slug: 'mado-burguer', logo: `${LOGO}MADO%20BURGUER_CLEINTES.png`, area: 'Hamburgueria', video: `${VID}MADO_BURGUER_.mp4`, preview: `${VID}MADO_BURGUER_.mp4` },
+  { nome: 'John Deere · Agro Baggio', slug: 'agro-baggio-john-deere', logo: `${LOGO}AGROBAGGIO_JHONDEERE_LOGO_CLIENTES.png`, area: 'Máquinas Agrícolas', video: `${VID}AGRO_BAGGIO_JHON_DEERE_.mp4`, preview: `${VID}AGRO_BAGGIO_JHON_DEERE_.mp4` },
+  { nome: 'Parrilha do Campo', slug: 'parrilha-do-campo', logo: `${LOGO}PARRILHA_DO_CAMPO_LOGO_CLIENTES.png`, area: 'Gastronomia' },
+  { nome: 'Exponorte', slug: 'exponorte', logo: `${LOGO}EXPORNORTE_LOGO_CLIENTES.png`, area: 'Feira · Agronegócio', video: `${VID}EXPORNORTE_.mp4`, preview: `${VID}EXPORNORTE_.mp4` },
+  { nome: 'Grupo Sinop', slug: 'grupo-sinop', logo: `${LOGO}GRUPOSINOP_LOGO_CLIENTES.png`, area: 'Agronegócio', video: `${VID}GRUPOSINOP_.mp4`, preview: `${VID}GRUPOSINOP_.mp4` },
+  { nome: 'Paiol Agrícola', slug: 'paiol-agricola', logo: `${LOGO}PAIOL_LOGO_CLIENTES.png`, area: 'Agronegócio', video: `${VID}PAIOL_AGRICOLA_.mp4`, preview: `${VID}PAIOL_AGRICOLA_.mp4` },
 ]
 
 const WAVES = {
@@ -85,7 +92,7 @@ export function ClientesWave() {
           const clipAmount = Math.pow(centerOffset, CLIP_POWER) * CLIP_MAX
 
           item.style.translate = `${translateX}px`
-          item.style.clipPath = `inset(0 ${clipAmount}% 0 ${clipAmount}% round 0.9rem)`
+          item.style.clipPath = `inset(0 ${clipAmount}% 0 ${clipAmount}% round 0.5rem)`
         },
       })
     })
@@ -135,7 +142,7 @@ export function ClientesWave() {
               }
             }}
           >
-            <img src="/brand/logo-boldstudio.webp" alt={c.nome} />
+            <img src={c.logo} alt={c.nome} loading="lazy" />
           </div>
         ))}
       </div>
@@ -161,7 +168,7 @@ export function ClientesWave() {
             role="dialog"
             aria-modal="true"
             aria-label={`Detalhes de ${selected.nome}`}
-            className="relative w-full max-w-md rounded-3xl border border-bold-yellow/20 bg-bold-gray p-6 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]"
+            className="relative w-full max-w-md rounded-xl border border-bold-yellow/20 bg-bold-gray p-6 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -174,7 +181,7 @@ export function ClientesWave() {
             </button>
 
             {/* Preview animado (GIF/video em loop). Placeholder ate ter o real. */}
-            <div className="aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-bold-black/50">
+            <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-bold-black/50">
               {selected.preview ? (
                 <video
                   src={selected.preview}
@@ -194,23 +201,31 @@ export function ClientesWave() {
 
             <h3 className="mt-5 text-xl font-bold text-bold-white">{selected.nome}</h3>
 
-            <div className="mt-3 flex flex-col items-center gap-2 text-sm text-bold-white/80">
-              <p className="flex items-center justify-center gap-2">
-                <MapPin size={16} className="shrink-0 text-bold-yellow" /> {selected.area}
-              </p>
-              <p className="flex items-center justify-center gap-2">
-                <Phone size={16} className="shrink-0 text-bold-yellow" /> {selected.telefone}
-              </p>
-            </div>
+            {(selected.area || selected.telefone) && (
+              <div className="mt-3 flex flex-col items-center gap-2 text-sm text-bold-white/80">
+                {selected.area && (
+                  <p className="flex items-center justify-center gap-2">
+                    <MapPin size={16} className="shrink-0 text-bold-yellow" /> {selected.area}
+                  </p>
+                )}
+                {selected.telefone && (
+                  <p className="flex items-center justify-center gap-2">
+                    <Phone size={16} className="shrink-0 text-bold-yellow" /> {selected.telefone}
+                  </p>
+                )}
+              </div>
+            )}
 
-            <a
-              href={selected.video}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
-            >
-              <Video size={16} /> Ver vídeo do case
-            </a>
+            {selected.video && (
+              <a
+                href={selected.video}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-bold-yellow px-5 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]"
+              >
+                <Video size={16} /> Ver vídeo do case
+              </a>
+            )}
           </div>
         </div>
       )}
