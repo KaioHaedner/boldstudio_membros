@@ -73,8 +73,8 @@ export function HomeInstitucionalPage() {
             <br className="hidden sm:block" /> não vídeos.
           </h1>
           <p className="mt-7 max-w-xl text-base text-bold-white/65 md:text-lg">
-            Soluções estratégicas de foto e vídeo para empresas, eventos e marcas — no Agro,
-            na indústria, em produtos e eventos. Sempre com foco em resultado e alto padrão visual.
+            Soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Atuamos no Agro,
+            na indústria, em produtos e eventos, sempre com foco em resultado e alto padrão visual.
           </p>
           <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
             <button

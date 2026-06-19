@@ -949,25 +949,28 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 18vh;
+  height: 22vh;
   z-index: 80;
   pointer-events: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, #000 40%, transparent 100%);
+  /* gradiente vai a PRETO PURO (mais escuro que o fundo #0a0a0a), entao a faixa
+     fica visivel mesmo sobre area escura, criando a vinheta de curiosidade. */
   background: linear-gradient(
     to top,
-    rgba(10, 10, 10, 0.92) 0%,
-    rgba(10, 10, 10, 0.45) 45%,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.25) 75%,
     transparent 100%
   );
 }
 @media (max-width: 768px) {
   .bottom-blur {
-    height: 14vh;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    height: 16vh;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
