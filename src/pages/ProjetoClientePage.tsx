@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Globe, Phone, Play } from 'lucide-react'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 import { StarfieldBackground } from '@/components/home/StarfieldBackground'
+import { Footer } from '@/components/Footer'
 import { getClienteBySlug, type Cliente } from '@/data/clientes'
 
 const MIN_PHONES = 3
@@ -186,6 +187,10 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           </Link>
         </section>
       </main>
+
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </div>
   )
 }
@@ -203,6 +208,9 @@ function ProjetoNotFound() {
       >
         <ArrowLeft size={16} /> {t.projeto.notFoundBack}
       </Link>
+      <div className="absolute inset-x-0 bottom-0 z-10">
+        <Footer />
+      </div>
     </div>
   )
 }

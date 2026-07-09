@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
+import { Footer } from '@/components/Footer'
 
 export function NotFoundPage() {
   return (
+    <>
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-bold-black text-bold-white px-6">
       <p className="text-7xl font-extrabold text-bold-yellow">404</p>
       <h1 className="mt-4 text-2xl font-bold">Página não encontrada</h1>
@@ -15,5 +17,7 @@ export function NotFoundPage() {
         Voltar ao início
       </Link>
     </div>
+    <Footer />
+    </>
   )
 }

@@ -1,30 +1,43 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { User } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
+import { cn } from '@/lib/utils'
 
 // Efeito "Sticky Cards" (GSAP ScrollTrigger) portado para a secao Crew.
 // Cards empilhados que saem um a um conforme o scroll. Cargo e descricao vem
 // das traducoes (t.crew.members[id]); aqui ficam so nome e foto (idiomaagnostico).
-const CREW_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CREW/'
+// Cada membro tem duas fotos: preto&branco (padrao, estatica) e colorida (aparece
+// no hover e trava no clique, com transicao suave de 0.5s).
+const BW_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/FOTOS_CREW_PR_BR/'
+const COLOR_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/Fotos_CREW_COLORIDAS/'
 
 const CREW = [
-  { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.', foto: `${CREW_BASE}PEDRO_GARCIa_CEO.jpeg` },
-  { id: 'miguel', nome: 'Miguel Souza' },
-  { id: 'bruno', nome: 'Bruno Cavedon' },
-  { id: 'william', nome: 'William Ferruda', foto: `${CREW_BASE}WIllian%20Ferruda.jpeg` },
-  { id: 'rafaela', nome: 'Rafaela Souza' },
+  { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.', bw: `${BW_BASE}PEDRAO_BOLD_IMG_CREW_PR.png`, color: `${COLOR_BASE}PEDRAO_BOLD_IMG_CREW.png` },
+  { id: 'miguel', nome: 'Miguel Souza', bw: `${BW_BASE}MIGUEL_BOLD_IMG_CREW_v2_PR.png`, color: `${COLOR_BASE}MIGUEL_BOLD_IMG_CREW.png` },
+  { id: 'bruno', nome: 'Bruno Cavedon', bw: `${BW_BASE}CAVEDON_PR_BR.png`, color: `${COLOR_BASE}CAVEDON_BOLD_IMG_CREW.png` },
+  { id: 'william', nome: 'William Ferruda', bw: `${BW_BASE}IMG_1088.JPG%202_PR.png`, color: `${COLOR_BASE}IMG_1088.JPG%201.png` },
+  { id: 'rafaela', nome: 'Rafaela Souza', bw: `${BW_BASE}RAFAELA_BOLD_IMG_CREW_PR.png`, color: `${COLOR_BASE}RAFAELA_BOLD_IMG_CREW.png` },
   { id: 'nathalia', nome: 'Nathalia Umburanas' },
-  { id: 'caroline', nome: 'Caroline Ventura' },
-  { id: 'germano', nome: 'Germano Pagliari', foto: `${CREW_BASE}GERMANO_PAGLIARI_.jpeg` },
-  { id: 'pedro-neto', nome: 'Pedro Garcia Neto', foto: `${CREW_BASE}PEDRO%20GARCIA%20JR_FOTO.jpeg` },
+  { id: 'caroline', nome: 'Caroline Ventura', bw: `${BW_BASE}MULHER_MIGUEL_BOLD_IMG_CREW_PR.png`, color: `${COLOR_BASE}MULHER_MIGUEL_BOLD_IMG_CREW.png` },
+  { id: 'germano', nome: 'Germano Pagliari', bw: `${BW_BASE}GERMANO_BOLD_IMG_CREW_PR.png`, color: `${COLOR_BASE}GERMANO_BOLD_IMG_CREW.png` },
+  { id: 'pedro-neto', nome: 'Pedro Garcia Neto', bw: `${BW_BASE}juninho_BOLD_IMG_CREW_PR.png`, color: `${COLOR_BASE}juninho_BOLD_IMG_CREW.png` },
 ] as const
 
 export function CrewSticky() {
   const { t } = useI18n()
   const cardsRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
+  // membros com a foto colorida "travada" pelo clique
+  const [colorLocked, setColorLocked] = useState<Set<string>>(new Set())
+  const toggleColor = (id: string) =>
+    setColorLocked((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
 
   useEffect(() => {
     const wrap = cardsRef.current
@@ -116,7 +129,7 @@ export function CrewSticky() {
         </div>
         {CREW.map((m, i) => {
           const info = t.crew.members[m.id]
-          const foto = 'foto' in m ? m.foto : undefined
+          const hasPhoto = 'bw' in m
           return (
             <article key={m.id} className="crew-card" style={{ zIndex: 10 - i }}>
               <div className="crew-card__info">
@@ -129,13 +142,22 @@ export function CrewSticky() {
                   <p className="crew-card__desc">{info.desc}</p>
                 </div>
               </div>
-              <div className="crew-card__photo">
-                {foto ? (
-                  <img src={foto} alt={m.nome} loading="lazy" />
-                ) : (
+              {hasPhoto ? (
+                <button
+                  type="button"
+                  onClick={() => toggleColor(m.id)}
+                  className={cn('crew-card__photo', colorLocked.has(m.id) && 'is-color')}
+                  aria-label={m.nome}
+                  aria-pressed={colorLocked.has(m.id)}
+                >
+                  <img className="crew-photo crew-photo--bw" src={m.bw} alt={m.nome} loading="lazy" />
+                  <img className="crew-photo crew-photo--color" src={m.color} alt="" aria-hidden="true" loading="lazy" />
+                </button>
+              ) : (
+                <div className="crew-card__photo crew-card__photo--empty">
                   <User size={64} className="text-bold-white/20" aria-hidden="true" />
-                )}
-              </div>
+                </div>
+              )}
             </article>
           )
         })}

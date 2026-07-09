@@ -14,6 +14,7 @@ import {
   Bot,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { Footer } from '@/components/Footer'
 import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
 
@@ -103,6 +104,11 @@ export function AdminLayout() {
       <main className="flex-1 min-w-0 md:pt-0 pt-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 md:py-10" key={location.pathname}>
           <Outlet />
+        </div>
+
+        {/* rodape (padding extra no mobile pra nao ficar sob a bottom nav) */}
+        <div className="pb-20 md:pb-0">
+          <Footer />
         </div>
 
         {/* MOBILE BOTTOM NAV */}

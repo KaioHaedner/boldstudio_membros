@@ -1,11 +1,12 @@
 // Página "Em Breve" do domínio raiz (boldstudiobrasil.com) enquanto o site oficial
 // está em construção. Todo o estilo fica escopado sob .cs-root e o <style> só existe
 // enquanto este componente está montado, então não vaza para o resto do app.
+import { Footer } from '@/components/Footer'
 
 const HTML = `
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap');
-.cs-root{--gold:#FFD712;--gold-soft:#FFE970;--amber:#FFB300;--warm:#FFF6D0;font-family:'Inter',-apple-system,sans-serif;background:#050505;color:#fff;position:fixed;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;z-index:0}
+.cs-root{--gold:#FFD712;--gold-soft:#FFE970;--amber:#FFB300;--warm:#FFF6D0;font-family:'Inter',-apple-system,sans-serif;background:#050505;color:#fff;position:relative;min-height:100vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;z-index:0}
 .cs-root *{margin:0;padding:0;box-sizing:border-box}
 .cs-root .bg{position:fixed;inset:0;z-index:0;overflow:hidden}
 .cs-root .bg .radial{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 45%, rgba(255,215,18,.10) 0%, rgba(255,179,0,.04) 35%, transparent 70%)}
@@ -13,7 +14,7 @@ const HTML = `
 @keyframes csAurora{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.15)}}
 .cs-root .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,215,18,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,215,18,.04) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse 60% 60% at 50% 45%, #000 30%, transparent 75%);-webkit-mask-image:radial-gradient(ellipse 60% 60% at 50% 45%, #000 30%, transparent 75%)}
 .cs-root .bg .vignette{position:absolute;inset:0;background:radial-gradient(ellipse 90% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.85) 100%)}
-.cs-root .waves{position:fixed;left:0;right:0;bottom:0;z-index:1;width:100%;height:30vh;min-height:150px;pointer-events:none}
+.cs-root .waves{position:absolute;left:0;right:0;bottom:0;z-index:1;width:100%;height:30vh;min-height:150px;pointer-events:none}
 .cs-root .waves svg{width:200%;height:100%;display:block}
 .cs-root .wave-move{animation:csWave linear infinite}
 .cs-root .w1{animation-duration:18s;opacity:.10}
@@ -46,7 +47,7 @@ const HTML = `
 .cs-root .social-btn::after{content:attr(data-name);position:absolute;bottom:-25px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.04em;color:#cfcfcf;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
 .cs-root .social-btn:hover{transform:translateY(-7px) scale(1.08);box-shadow:0 10px 26px rgba(255,215,18,.35);border-color:transparent;background:var(--gold);fill:#0a0a0a}
 .cs-root .social-btn:hover::after{opacity:1}
-.cs-root .powered{position:fixed;left:0;right:0;bottom:0;z-index:5;text-align:center;font-size:13.5px;letter-spacing:.02em;color:#a8a8a8;font-weight:400;padding:26px 16px 16px;background:linear-gradient(to top, #050505 50%, rgba(5,5,5,.9) 78%, transparent 100%)}
+.cs-root .powered{position:absolute;left:0;right:0;bottom:0;z-index:5;text-align:center;font-size:13.5px;letter-spacing:.02em;color:#a8a8a8;font-weight:400;padding:26px 16px 16px;background:linear-gradient(to top, #050505 50%, rgba(5,5,5,.9) 78%, transparent 100%)}
 .cs-root .powered b{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .cs-root .powered .sep{color:#5a5a5a;margin:0 8px}
 @media (max-height:860px){.cs-root .loader{max-width:624px;margin-top:4px}.cs-root .title{font-size:clamp(36px,7vw,64px);margin-top:6px}.cs-root .subtitle{margin-top:8px}.cs-root .brandbar{margin-bottom:2px}.cs-root .waves{height:28vh}}
@@ -164,5 +165,10 @@ const HTML = `
 `
 
 export function ComingSoon() {
-  return <div className="cs-root" dangerouslySetInnerHTML={{ __html: HTML }} />
+  return (
+    <>
+      <div className="cs-root" dangerouslySetInnerHTML={{ __html: HTML }} />
+      <Footer />
+    </>
+  )
 }

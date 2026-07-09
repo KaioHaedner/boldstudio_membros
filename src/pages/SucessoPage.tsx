@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { CheckCircle2, Mail } from 'lucide-react'
 import { LoginBackground } from '@/components/LoginBackground'
+import { Footer } from '@/components/Footer'
 
 export function SucessoPage() {
   return (
@@ -47,6 +48,7 @@ export function SucessoPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

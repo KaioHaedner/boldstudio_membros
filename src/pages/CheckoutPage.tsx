@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Clock, ShoppingCart } from 'lucide-react'
 import { LoginBackground } from '@/components/LoginBackground'
+import { Footer } from '@/components/Footer'
 import { APP_VERSION } from '@/lib/version'
 
 export function CheckoutPage() {
@@ -61,6 +62,7 @@ export function CheckoutPage() {
           </p>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

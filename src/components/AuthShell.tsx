@@ -1,5 +1,6 @@
 import { StudioVideoBg } from '@/components/StudioVideoBg'
 import { PoweredByBold } from '@/components/PoweredByBold'
+import { Footer } from '@/components/Footer'
 import { getArea } from '@/lib/area'
 import { APP_VERSION } from '@/lib/version'
 import { cn } from '@/lib/utils'
@@ -10,12 +11,17 @@ interface AuthShellProps {
   children: React.ReactNode
 }
 
-// Cada subdominio tem um tema de entrada proprio.
+// Cada subdominio tem um tema de entrada proprio. Footer padrao abaixo em todas.
 export function AuthShell(props: AuthShellProps) {
   const area = getArea()
-  if (area === 'admin') return <AdminAuthLayout {...props} />
-  if (area === 'crew') return <CrewAuthLayout {...props} />
-  return <AcademyAuthLayout {...props} />
+  const layout =
+    area === 'admin' ? <AdminAuthLayout {...props} /> : area === 'crew' ? <CrewAuthLayout {...props} /> : <AcademyAuthLayout {...props} />
+  return (
+    <>
+      {layout}
+      <Footer />
+    </>
+  )
 }
 
 /* ============== ACADEMY — video de fundo + paineis de vidro ============== */
