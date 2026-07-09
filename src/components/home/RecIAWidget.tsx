@@ -114,7 +114,7 @@ export function RecIAWidget() {
       )}
 
       {stage !== 'closed' && (
-        <div className="liquid-glass flex h-[30rem] w-[21rem] flex-col overflow-hidden rounded-[26px]">
+        <div className="liquid-glass recia-solid flex h-[30rem] w-[21rem] flex-col overflow-hidden rounded-[26px]">
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
             <div className="flex items-center gap-2.5">
               <img src={RECIA_ICON} alt="RecIA" className="h-8 w-8 object-contain" />

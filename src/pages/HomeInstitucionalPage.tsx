@@ -61,6 +61,16 @@ function HomeContent() {
     }
   }, [])
 
+  // Quando a intro termina e o conteudo e revelado (slide-up de 900ms), o layout
+  // final so fica estavel ao fim da animacao. Recalcula todos os ScrollTriggers
+  // (pin do Crew etc.) pra nao ficarem com medidas antigas — era o bug que
+  // exigia refresh manual na primeira carga.
+  useEffect(() => {
+    if (!revelar) return
+    const id = window.setTimeout(() => ScrollTrigger.refresh(), 1000)
+    return () => window.clearTimeout(id)
+  }, [revelar])
+
   return (
     <div ref={rootRef} className="relative isolate min-h-screen text-bold-white">
       <IntroBold onFinish={() => setRevelar(true)} />

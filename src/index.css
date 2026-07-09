@@ -432,6 +432,13 @@ textarea {
   position: relative;
   z-index: 1;
 }
+/* RecIA: painel de chat com fundo 100% solido (sem transparencia/blur), mesmas
+   cores do gradiente do liquid-glass porem opacas. Vem depois pra sobrescrever. */
+.recia-solid {
+  background: linear-gradient(135deg, #1c1c1c, #0a0a0a);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
 
 /* Balao de chamada que sobe sobre o botao da RecIA */
 @keyframes recia-bubble-in {

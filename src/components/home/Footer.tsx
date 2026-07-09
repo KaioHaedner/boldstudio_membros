@@ -80,8 +80,8 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.footer.sitemap}</p>
-          <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
+          <p className="text-[1.75rem] font-bold leading-tight tracking-wider text-bold-yellow">{t.footer.sitemap}</p>
+          <ul className="flex flex-col gap-2 text-sm font-light text-bold-white/70">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
@@ -97,8 +97,8 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.footer.essential}</p>
-          <ul className="flex flex-col gap-2 text-sm text-bold-white/70">
+          <p className="text-[1.75rem] font-bold leading-tight tracking-wider text-bold-yellow">{t.footer.essential}</p>
+          <ul className="flex flex-col gap-2 text-sm font-light text-bold-white/70">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
                 <a href={link.href} className="transition-colors hover:text-bold-yellow">{t.footer.legal[link.key]}</a>

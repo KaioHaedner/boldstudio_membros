@@ -63,11 +63,12 @@ export function CrewSticky() {
     const st = ScrollTrigger.create({
       trigger: wrap,
       start: 'top top',
-      end: `+=${window.innerHeight * (totalCards * 0.85)}`,
+      end: () => '+=' + window.innerHeight * (totalCards * 0.85),
       pin: true,
       pinSpacing: true,
       scrub: 1,
       anticipatePin: 1,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
         const progress = self.progress
 
@@ -104,7 +105,18 @@ export function CrewSticky() {
       },
     })
 
+    // As secoes acima (reels/clientes/fontes) e a intro que revela a home so
+    // assentam DEPOIS do pin ja ter sido medido, deslocando a posicao real da
+    // secao — era isso que "bugava" os cards ate um refresh manual. Recalcula os
+    // ScrollTriggers quando a pagina/fontes terminam de carregar.
+    const refresh = () => ScrollTrigger.refresh()
+    const raf = requestAnimationFrame(refresh)
+    window.addEventListener('load', refresh)
+    if (document.fonts?.ready) document.fonts.ready.then(refresh).catch(() => {})
+
     return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('load', refresh)
       st.kill()
     }
   }, [])
