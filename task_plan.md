@@ -1,10 +1,10 @@
 # Plano: Home institucional BoldStudio
 
 ## Objetivo
-Finalizar a composição editorial da home institucional com Crew realmente full-screen, clientes em duas linhas horizontais retas, header aberto e hero com o GIF existente do Academy.
+Finalizar a composição editorial da home institucional e reconstruir a cena do Crew com assinatura estática, manifesto vertical e fundo interativo.
 
 ## Fase atual
-Fase 9
+Fase 14
 
 ## Fases
 
@@ -66,6 +66,31 @@ Fase 9
 - [x] Confirmar que o deploy anterior não continha o commit local
 - **Status:** pendente
 
+### Fase 11: Releitura visual do Crew
+- [x] Comparar referência Sand, título atual e mockup desejado
+- [x] Registrar remoções e áreas seguras
+- **Status:** concluída
+
+### Fase 12: Reconstrução da cena Crew
+- [x] Remover título e subtítulo externos
+- [x] Remover marquee horizontal
+- [x] Adicionar assinatura estática `BoldCrew`
+- [x] Criar manifesto vertical em loop com fonte ampliada
+- [x] Reservar áreas seguras para header e RecIA
+- [x] Revelar o shader interativo atrás da composição
+- **Status:** concluída
+
+### Fase 13: Validação e documentação
+- [x] Lint focado, typecheck, build e diff check
+- [x] Atualizar story, SAVE, findings e progress
+- **Status:** concluída
+
+### Fase 14: Publicação da nova cena
+- [x] Criar commit scoped
+- [x] Handoff ao `@devops`
+- [ ] Confirmar bundle em produção
+- **Status:** em andamento
+
 ## Decisões
 
 | Decisão | Motivo |
@@ -77,6 +102,9 @@ Fase 9
 | Clientes com duas pistas opostas | Mantém todos os clientes clicáveis e transforma o scroll vertical em deslocamento horizontal sem uma fila única |
 | Header sem cápsula | Requisito explícito do usuário a partir da captura real |
 | Reutilizar asset do Academy | Requisito explícito; não criar nem baixar mídia substituta |
+| Marquee vertical dentro da cena | Traduz a referência sem copiar o layout e atende ao mockup fornecido pelo usuário |
+| Áreas seguras superior e inferior | Evita conflito visual com Menu e RecIA |
+| Assinatura `BoldCrew` estática | Substitui o título externo e ancora a identidade da seção |
 
 ## Erros
 

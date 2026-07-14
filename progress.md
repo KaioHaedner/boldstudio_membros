@@ -95,6 +95,36 @@
   - SAVE-197 preparado.
   - Commit local criado sem incluir arquivos Supabase.
 
+### Fase 11: Releitura visual do Crew
+- **Status:** concluída
+- Ações:
+  - Três capturas comparadas: referência Sand, título atual e mockup desejado.
+  - Definida remoção do título externo e da faixa horizontal.
+  - Definida assinatura estática `BoldCrew` no canto inferior esquerdo.
+  - Definido manifesto vertical com áreas seguras para header e RecIA.
+
+### Fase 12: Reconstrução da cena Crew
+- **Status:** concluída
+- Ações:
+  - Título externo e faixa horizontal removidos.
+  - Assinatura `BoldCrew` adicionada no canto inferior esquerdo.
+  - Manifesto reconstruído como rail vertical amarelo em loop.
+  - Rail limitado entre áreas seguras superior e inferior.
+  - Cards passaram a reservar a largura do rail.
+  - Fundo preto individual removido; overlay único translúcido mantém o shader visível.
+- Arquivos alterados:
+  - `src/components/home/CrewSticky.tsx`
+  - `src/index.css`
+
+### Fase 13: Validação e documentação
+- **Status:** concluída
+- Resultados:
+  - Lint focado aprovado.
+  - Typecheck aprovado.
+  - Build aprovado.
+  - Diff check aprovado.
+  - Story e SAVE-202 atualizados.
+
 ## Validações
 
 | Validação | Resultado |

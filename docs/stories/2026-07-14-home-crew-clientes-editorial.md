@@ -31,7 +31,10 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - [x] Centralizar e elevar a composição da hero no mobile, preservando o desktop.
 - [x] Crew ocupar `100vw × 100svh`.
 - [x] Clientes sem offsets verticais, formando duas linhas horizontais retas.
-- [x] Adicionar faixa amarela full-width com manifesto do Crew em loop contínuo.
+- [x] Remover título externo do Crew e iniciar diretamente na cena full-screen.
+- [x] Manter `BoldCrew` estático no canto inferior esquerdo.
+- [x] Apresentar o manifesto em rail vertical amarelo com loop contínuo e fonte preta ampliada.
+- [x] Manter áreas seguras para Header e RecIA e revelar o shader interativo no fundo.
 
 ## Checklist técnico
 
@@ -67,3 +70,4 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - `docs/saves/SAVE-198_2026-07-14_boldstudio-header-pills-isoladas.md`
 - `docs/saves/SAVE-200_2026-07-14_boldstudio-hero-mobile-centralizada.md`
 - `docs/saves/SAVE-201_2026-07-14_boldstudio-marquee-crew.md`
+- `docs/saves/SAVE-202_2026-07-14_boldstudio-crew-rail-vertical.md`

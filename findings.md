@@ -14,6 +14,12 @@
 - Desktop: logo no canto superior esquerdo, idioma e texto `Menu +`.
 - Mobile: logo no canto superior esquerdo e toggle no canto superior direito.
 - Usar como background da hero o mesmo arquivo GIF já presente no projeto do Academy.
+- Remover o eyebrow `Crew` e o título `Quem faz a BoldStudio acontecer`.
+- Remover a faixa amarela horizontal criada no SAVE-201.
+- Inserir `BoldCrew` estático em amarelo dentro da cena full-screen.
+- Transformar o manifesto em carrossel vertical com fonte preta muito maior.
+- Limitar a coluna vertical à altura útil do container, sem cobrir Menu ou RecIA.
+- Permitir que o shader interativo apareça atrás do conteúdo do Crew.
 
 ## Achados visuais
 
@@ -23,6 +29,10 @@
 - A captura 122401 mostra o efeito antigo dos clientes: cards isolados distribuídos verticalmente, não duas linhas horizontais.
 - As duas capturas mostram o header antigo em cápsula centralizada.
 - O commit `9f25291` ainda não foi publicado, portanto as capturas não representam o código local mais recente.
+- A referência Sand usa uma faixa vertical de grande escala como eixo editorial do elenco.
+- A captura atual do projeto mostra que o título externo cria uma introdução redundante antes da cena full-screen.
+- O mockup desejado posiciona `BoldCrew` no canto inferior esquerdo e a faixa vertical na lateral direita.
+- No mockup, a faixa começa abaixo do header e termina antes da RecIA, formando uma área segura clara.
 
 ## Achados técnicos
 
@@ -49,6 +59,9 @@
 | Reutilizar `StudioVideoBg` | É exatamente o componente e o arquivo usados pelo Academy; evita divergência e mídia duplicada |
 | Crew com `100vw × 100svh` | Remove definitivamente o container central estreito apontado pelo usuário |
 | Remover offsets verticais das logos | Produz duas linhas horizontais retas, conforme a correção visual do usuário |
+| Rail com `top` e `bottom` responsivos | Mantém o manifesto dentro da altura útil da viewport |
+| Rail com z-index inferior ao Header e RecIA | Garante que os controles globais nunca sejam cobertos |
+| Fundo único sem preto opaco em cada card | Evita bloquear completamente o ShaderGradient atrás da seção |
 
 ## Recursos
 
