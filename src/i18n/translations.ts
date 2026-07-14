@@ -128,7 +128,7 @@ const pt = {
     legal: { termos: 'Termos de uso', privacidade: 'Privacidade', cookies: 'Cookies', ia: 'Uso da IA (RecIA)' },
   },
   recia: {
-    teasers: ['Fale com a gente', 'Vídeo cinematográfico é aqui!', 'Que tal um vídeo para sua empresa?'],
+    teasers: ['Fale com a Bold', 'Seu próximo vídeo começa aqui', 'Vamos gravar algo bold?'],
     online: 'Online agora',
     welcomeTitle: 'Conheça a BoldStudio mais ainda!',
     welcomeText: 'Bate um papo rápido com a RecIA e descubra como a gente pode gravar algo bold pra você.',
@@ -267,7 +267,7 @@ const en: Dict = {
     legal: { termos: 'Terms of use', privacidade: 'Privacy', cookies: 'Cookies', ia: 'AI use (RecIA)' },
   },
   recia: {
-    teasers: ['Talk to us', 'Cinematic video is here!', 'How about a video for your company?'],
+    teasers: ['Talk to Bold', 'Your next video starts here', "Let's shoot something bold?"],
     online: 'Online now',
     welcomeTitle: 'Get to know BoldStudio even more!',
     welcomeText: 'Have a quick chat with RecIA and find out how we can shoot something bold for you.',
@@ -404,7 +404,7 @@ const es: Dict = {
     legal: { termos: 'Términos de uso', privacidade: 'Privacidad', cookies: 'Cookies', ia: 'Uso de la IA (RecIA)' },
   },
   recia: {
-    teasers: ['Habla con nosotros', '¡El video cinematográfico está aquí!', '¿Qué tal un video para tu empresa?'],
+    teasers: ['Habla con Bold', 'Tu próximo video empieza aquí', '¿Grabamos algo bold?'],
     online: 'En línea ahora',
     welcomeTitle: '¡Conoce aún más a BoldStudio!',
     welcomeText: 'Chatea un momento con RecIA y descubre cómo podemos grabar algo bold para ti.',

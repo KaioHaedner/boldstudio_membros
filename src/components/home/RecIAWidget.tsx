@@ -84,12 +84,17 @@ export function RecIAWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+    <div
+      className={cn(
+        'fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6',
+        stage === 'closed' ? 'flex items-end gap-2.5' : 'flex flex-col items-end'
+      )}
+    >
       {/* Balao de chamada (apenas com o widget fechado) */}
       {stage === 'closed' && (
         <div
           key={teaser}
-          className="recia-bubble mb-3 max-w-[15rem] rounded-2xl rounded-br-sm bg-bold-white px-4 py-2.5 text-sm font-medium text-bold-black shadow-[0_10px_30px_-8px_rgba(0,0,0,0.6)]"
+          className="recia-bubble relative flex h-12 max-w-[11.5rem] items-center rounded-xl border border-bold-yellow/35 bg-[#161616]/90 px-3 py-2 text-[12px] font-semibold leading-[1.25] text-bold-white shadow-[0_12px_30px_-10px_rgba(0,0,0,0.85)] backdrop-blur-xl"
         >
           {t.recia.teasers[teaser]}
         </div>
@@ -100,9 +105,9 @@ export function RecIAWidget() {
           type="button"
           onClick={() => setStage('welcome')}
           aria-label={t.recia.openAria}
-          className="relative flex h-16 w-16 items-center justify-center rounded-full drop-shadow-[0_8px_25px_rgba(255,215,18,0.45)] transition-transform hover:scale-105"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full drop-shadow-[0_8px_25px_rgba(255,215,18,0.45)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
         >
-          <img src={RECIA_ICON} alt="RecIA" className="h-16 w-16 object-contain" />
+          <img src={RECIA_ICON} alt="RecIA" className="h-14 w-14 object-contain sm:h-16 sm:w-16" />
           {/* Sinal vermelho de "nova mensagem" (notificacao) */}
           <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />

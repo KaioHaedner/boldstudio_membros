@@ -440,15 +440,32 @@ textarea {
   -webkit-backdrop-filter: none;
 }
 
-/* Balao de chamada que sobe sobre o botao da RecIA */
+/* Pill lateral de chamada da RecIA */
 @keyframes recia-bubble-in {
-  0% { opacity: 0; transform: translateY(14px) scale(0.94); }
-  14% { opacity: 1; transform: translateY(0) scale(1); }
-  82% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  0% { opacity: 0; transform: translateX(12px) scale(0.96); }
+  14% { opacity: 1; transform: translateX(0) scale(1); }
+  82% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-6px) scale(0.98); }
 }
 .recia-bubble {
   animation: recia-bubble-in 3.6s ease-in-out forwards;
+}
+.recia-bubble::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: 12px;
+  width: 9px;
+  height: 9px;
+  background: rgba(22, 22, 22, 0.92);
+  border-top: 1px solid rgba(255, 215, 18, 0.35);
+  border-right: 1px solid rgba(255, 215, 18, 0.35);
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .recia-bubble {
+    animation: none;
+  }
 }
 
 /* ============== ShinyButton (CTA com borda conica animada) ============== */
