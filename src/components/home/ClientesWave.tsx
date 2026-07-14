@@ -1,24 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, MapPin, Phone, Play, Video, X } from 'lucide-react'
-import { ScrollTrigger } from '@/lib/gsap'
+import { gsap } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/data/clientes'
 
-// Galeria "Scroll Wave" (GSAP) portada para a secao Clientes. Cada logo ondula
-// horizontalmente conforme o scroll; clicar abre um popup com preview + link
-// para a pagina completa do projeto (/projeto-:slug). Dados vem de @/data/clientes.
+// Duas pistas editoriais movidas em sentidos opostos pelo scroll. A lista e
+// duplicada apenas para continuidade visual; a segunda copia fica fora da
+// arvore de acessibilidade. Modal e paginas de projeto permanecem os mesmos.
 
-const WAVES = {
-  base: { amp: 0.1, freq: 1.0, speed: 1.0, phase: 5.0 },
-  flow: { amp: 0.15, freq: 5.0, speed: 5.0, phase: 10.0 },
-  detail: { amp: 0.025, freq: 5.0, speed: 1.5, phase: 2.5 },
-}
-const CLIP_MAX = 20
-const CLIP_POWER = 2
-const IMAGE_BASE_HEIGHT = 375
-const ASPECT_RATIOS = ['3/2', '4/3', '5/4', '7/5']
+const CLIENT_ROWS = [
+  CLIENTES.filter((_, index) => index % 2 === 0),
+  CLIENTES.filter((_, index) => index % 2 !== 0),
+] as const
 
 export function ClientesWave() {
   const { t } = useI18n()
@@ -29,69 +24,35 @@ export function ClientesWave() {
     const wrap = wrapRef.current
     if (!wrap) return
 
-    const items = Array.from(wrap.querySelectorAll<HTMLElement>('.spotlight-image'))
-    const total = items.length
-    if (total === 0) return
-    const shrinkStart = Math.floor(total * 0.75)
+    const topTrack = wrap.querySelector<HTMLElement>('.clients-track--top')
+    const bottomTrack = wrap.querySelector<HTMLElement>('.clients-track--bottom')
+    if (!topTrack || !bottomTrack) return
 
-    function updateSizes() {
-      const sizeFactor = Math.min(window.innerWidth / 750, 1)
-      items.forEach((item, i) => {
-        const shrink = i >= shrinkStart ? (i - shrinkStart + 1) / (total - shrinkStart) : 0
-        const h = IMAGE_BASE_HEIGHT * sizeFactor * (1 - shrink * 0.5)
-        item.style.height = `${Math.round(h)}px`
-      })
-    }
-    updateSizes()
-
-    const triggers = items.map((item, index) => {
-      const normalizedIndex = index / (total - 1)
-      return ScrollTrigger.create({
-        trigger: item,
-        start: 'top bottom',
-        end: 'bottom top',
-        onUpdate: ({ progress }) => {
-          const vw = window.innerWidth
-          const baseWave = Math.sin(
-            normalizedIndex * WAVES.base.freq + (1 - progress) * WAVES.base.speed + WAVES.base.phase
-          )
-          const flowWave =
-            0.5 + Math.sin(normalizedIndex * WAVES.flow.freq + WAVES.flow.phase + progress * WAVES.flow.speed)
-          const detailWave =
-            0.5 +
-            Math.sin(normalizedIndex * WAVES.detail.freq + WAVES.detail.phase + progress * WAVES.detail.speed)
-
-          const translateX =
-            (vw - item.offsetWidth) / 2 -
-            vw * 0.1 +
-            baseWave * vw * WAVES.base.amp +
-            flowWave * vw * WAVES.flow.amp +
-            detailWave * vw * WAVES.detail.amp
-
-          const centerOffset = Math.abs(progress - 0.5) * 2
-          const clipAmount = Math.pow(centerOffset, CLIP_POWER) * CLIP_MAX
-
-          item.style.translate = `${translateX}px`
-          item.style.clipPath = `inset(0 ${clipAmount}% 0 ${clipAmount}% round 0.5rem)`
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap,
+          start: 'top top',
+          end: () => `+=${Math.max(window.innerHeight * 1.8, 1200)}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       })
+
+      timeline.to(topTrack, { x: () => -topTrack.scrollWidth / 2, ease: 'none' }, 0)
+      timeline.fromTo(
+        bottomTrack,
+        { x: () => -bottomTrack.scrollWidth / 2 },
+        { x: 0, ease: 'none' },
+        0
+      )
     })
 
-    // So recalcula quando a LARGURA muda. No mobile, rolar nos extremos faz a
-    // barra de endereco aparecer/sumir (muda so a altura) e disparava um
-    // ScrollTrigger.refresh() pesado a cada vez — causando a travadinha.
-    let lastWidth = window.innerWidth
-    function onResize() {
-      if (window.innerWidth === lastWidth) return
-      lastWidth = window.innerWidth
-      updateSizes()
-      ScrollTrigger.refresh()
-    }
-    window.addEventListener('resize', onResize)
-
     return () => {
-      triggers.forEach((t) => t.kill())
-      window.removeEventListener('resize', onResize)
+      media.revert()
     }
   }, [])
 
@@ -103,24 +64,36 @@ export function ClientesWave() {
         <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/60">{t.clientes.helper}</p>
       </div>
 
-      <div ref={wrapRef} className="spotlight-images">
-        {CLIENTES.map((c, i) => (
-          <div
-            key={c.nome}
-            className="spotlight-image"
-            style={{ aspectRatio: ASPECT_RATIOS[i % ASPECT_RATIOS.length] }}
-            role="button"
-            tabIndex={0}
-            aria-label={`Ver detalhes de ${c.nome}`}
-            onClick={() => setSelected(c)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                setSelected(c)
-              }
-            }}
-          >
-            <img src={c.logo} alt={c.nome} loading="lazy" />
+      <div ref={wrapRef} className="clients-stage">
+        {CLIENT_ROWS.map((row, rowIndex) => (
+          <div key={rowIndex} className="clients-rail">
+            <div className={`clients-track clients-track--${rowIndex === 0 ? 'top' : 'bottom'}`}>
+              {[0, 1].map((copyIndex) =>
+                row.map((client, itemIndex) => {
+                  const isCopy = copyIndex === 1
+                  return (
+                    <div
+                      key={`${client.slug}-${copyIndex}`}
+                      className="client-logo-card"
+                      style={{ '--client-lift': (itemIndex % 3) - 1 } as CSSProperties}
+                      role={isCopy ? undefined : 'button'}
+                      tabIndex={isCopy ? -1 : 0}
+                      aria-hidden={isCopy || undefined}
+                      aria-label={isCopy ? undefined : `Ver detalhes de ${client.nome}`}
+                      onClick={() => setSelected(client)}
+                      onKeyDown={(event) => {
+                        if (!isCopy && (event.key === 'Enter' || event.key === ' ')) {
+                          event.preventDefault()
+                          setSelected(client)
+                        }
+                      }}
+                    >
+                      <img src={client.logo} alt={isCopy ? '' : client.nome} loading="lazy" decoding="async" />
+                    </div>
+                  )
+                })
+              )}
+            </div>
           </div>
         ))}
       </div>

@@ -818,8 +818,8 @@ textarea {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(65%, 60rem);
-  height: 60%;
+  width: min(calc(100vw - clamp(2rem, 6vw, 7rem)), 90rem);
+  height: min(82svh, 54rem);
   display: flex;
   align-items: center;
   gap: 0;
@@ -833,11 +833,11 @@ textarea {
   overflow: hidden;
 }
 .crew-card__info {
-  flex: 1;
+  flex: 0 0 42%;
   display: flex;
   align-items: stretch;
   gap: 1.25rem;
-  padding: 2.5rem;
+  padding: clamp(2rem, 4vw, 5rem);
 }
 /* divisor "travessao vertical" amarelo luminoso */
 .crew-card__bar {
@@ -849,8 +849,8 @@ textarea {
   box-shadow: 0 0 12px 1px rgba(255, 215, 18, 0.75);
 }
 .crew-card__name {
-  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
-  font-weight: 800;
+  font-size: clamp(2.4rem, 5.6vw, 6rem);
+  font-weight: 900;
   color: #ffffff;
   line-height: 1.05;
 }
@@ -861,7 +861,7 @@ textarea {
   gap: 0.15rem;
 }
 .crew-card__role {
-  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+  font-size: clamp(0.9rem, 1.4vw, 1.2rem);
   font-weight: 600;
   color: #ffd712;
   line-height: 1.45;
@@ -869,7 +869,7 @@ textarea {
 .crew-card__desc {
   margin-top: 0.9rem;
   max-width: 34ch;
-  font-size: clamp(0.8rem, 1.25vw, 0.95rem);
+  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
@@ -920,14 +920,15 @@ textarea {
 }
 @media (max-width: 1000px) {
   .crew-card {
-    width: calc(100% - 2rem);
-    height: 74%;
+    width: calc(100% - 1rem);
+    height: 88svh;
     flex-direction: column;
     padding: 0;
     gap: 0;
   }
   .crew-card__info {
     width: 100%;
+    flex: 0 0 43%;
     padding: 1.5rem;
   }
   .crew-card__photo {
@@ -936,38 +937,78 @@ textarea {
   }
 }
 
-/* ============== Clientes — Galeria Scroll Wave ============== */
+/* ============== Clientes — duas pistas horizontais ============== */
 .clientes-wave {
   position: relative;
   overflow-x: clip;
 }
-.spotlight-images {
+.clients-stage {
+  min-height: 62svh;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 2.5rem;
-  padding: 2rem 0 5rem;
+  justify-content: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  padding: clamp(2rem, 5vw, 4rem) 0;
 }
-.spotlight-image {
-  position: relative;
+.clients-rail {
+  width: 100%;
   overflow: hidden;
-  border-radius: 0.5rem;
-  clip-path: inset(0 20% 0 20% round 0.5rem);
-  will-change: transform, clip-path;
-  cursor: pointer;
-  background: #141414;
-  border: 1px solid rgba(255, 215, 18, 0.18);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  padding-block: 1rem;
 }
-.spotlight-image:hover {
+.clients-track {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.8rem, 1.8vw, 1.5rem);
+  padding-inline: clamp(0.8rem, 2vw, 2rem);
+  will-change: transform;
+}
+.client-logo-card {
+  --client-lift: 0;
+  position: relative;
+  width: clamp(11rem, 20vw, 18rem);
+  height: clamp(7rem, 12vw, 10.5rem);
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  translate: 0 calc(var(--client-lift) * clamp(0.35rem, 0.8vw, 0.8rem));
+  cursor: pointer;
+  background: rgba(20, 20, 20, 0.88);
+  border: 1px solid rgba(255, 215, 18, 0.18);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.client-logo-card:hover,
+.client-logo-card:focus-visible {
   border-color: rgba(255, 215, 18, 0.6);
   box-shadow: 0 0 24px -4px rgba(255, 215, 18, 0.4);
+  outline: none;
+  transform: scale(1.025);
 }
-.spotlight-image img {
+.client-logo-card img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 1.75rem;
+  padding: clamp(1rem, 2vw, 1.75rem);
+}
+@media (max-width: 640px) {
+  .clients-stage {
+    min-height: 54svh;
+  }
+  .client-logo-card {
+    width: 10.5rem;
+    height: 6.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clients-stage {
+    min-height: auto;
+  }
+  .clients-rail {
+    overflow-x: auto;
+  }
+  .clients-track {
+    transform: none !important;
+  }
 }
 
 /* ============== iPhone mockup (devices.css) — escala + Dynamic Island ============== */
