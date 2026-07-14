@@ -884,7 +884,6 @@ textarea {
   border-radius: 0;
   overflow: hidden;
   background: #141414;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -892,21 +891,13 @@ textarea {
 .crew-card__photo--empty {
   cursor: default;
 }
-/* duas camadas empilhadas: p&b embaixo, colorida por cima (fade 0.5s) */
+/* uma unica imagem colorida por card, carregada sob demanda */
 .crew-card__photo .crew-photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.crew-card__photo .crew-photo--color {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.crew-card__photo:hover .crew-photo--color,
-.crew-card__photo.is-color .crew-photo--color {
-  opacity: 1;
 }
 /* CTA revelado no fim, quando os cards saem (atras deles, z menor) */
 .crew-cta {
