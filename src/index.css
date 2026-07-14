@@ -942,6 +942,12 @@ textarea {
   transform-origin: center bottom;
   will-change: transform;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+}
+.crew-card:first-of-type {
+  opacity: 1;
+  visibility: visible;
 }
 .crew-card__info {
   flex: 0 0 42%;

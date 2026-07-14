@@ -116,3 +116,13 @@ Fase 14
 | Lint global: 22 erros e 2 avisos preexistentes fora do escopo | 1 | Validar isoladamente o arquivo TypeScript alterado e registrar dívida existente |
 | Leitura inicial usou caminho inexistente `src/components/Header.tsx` | 1 | Corrigido para `src/components/home/Header.tsx` |
 | Usuário chamou o asset do Academy de GIF, mas não existe GIF no projeto | 1 | Reutilizar o componente real, que aponta para `VD_BOLD_01.mp4` |
+| Cards do Crew ficaram todos visíveis após remover o fundo opaco | 1 | Ocultar cards inativos via CSS e GSAP `autoAlpha`, mantendo apenas um crossfade curto |
+
+## Fase 15: Hotfix da pilha visual do Crew
+
+- [x] Reproduzir a causa pela captura e pelo modelo de empilhamento
+- [x] Ocultar cards inativos antes da hidratação
+- [x] Sincronizar visibilidade com o ScrollTrigger
+- [x] Validar lint focado, typecheck, build e diff-check
+- [x] Registrar SAVE-203
+- **Status:** concluída

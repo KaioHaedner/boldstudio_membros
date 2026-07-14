@@ -73,3 +73,9 @@
 - `src/components/StudioVideoBg.tsx`
 - `src/data/clientes.ts`
 - Screenshot local fornecido pelo usuário.
+
+## Hotfix Crew sem sobreposição
+
+- O fundo transparente revelou todos os cards futuros, pois a animação controlava apenas transformações.
+- A correção precisa ocultar os cards inativos antes do primeiro frame e durante todo o ScrollTrigger.
+- Um crossfade curto entre o card atual e o próximo preserva fluidez sem criar uma pilha legível de textos.

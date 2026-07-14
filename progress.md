@@ -149,3 +149,10 @@
 | 2026-07-14 | `npm test` falhou por script ausente | 1 | Registrado como gate indisponível |
 | 2026-07-14 | Lint global retornou 22 erros e 2 avisos preexistentes | 1 | Executar lint focado no arquivo alterado |
 | 2026-07-14 | Caminho inicial do Header não existia | 1 | Usado `src/components/home/Header.tsx` |
+
+## SAVE-203 | Hotfix de sobreposição do Crew
+
+- Causa confirmada: cards absolutos e transparentes permaneciam visíveis simultaneamente.
+- CSS agora oculta todos os cards antes da inicialização, exceto o primeiro.
+- GSAP controla `opacity` e `visibility` com `autoAlpha`; somente o ativo e, no fim da transição, o próximo podem aparecer.
+- Lint focado, typecheck, build e `git diff --check`: aprovados.
