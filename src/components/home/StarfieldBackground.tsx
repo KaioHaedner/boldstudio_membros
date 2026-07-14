@@ -70,7 +70,7 @@ export function StarfieldBackground() {
           <BoldShaderGradientScene />
         </Suspense>
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.52)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_44%,rgba(0,0,0,0.22)_100%)]" />
     </div>
   )
 }
