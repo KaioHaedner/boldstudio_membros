@@ -79,20 +79,20 @@ function HomeContent() {
       <Header />
 
       <main className={mainClass}>
-        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-end overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
+        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:items-end lg:px-12 lg:pb-20">
           <StudioVideoBg className="home-hero__video" />
           <div className="home-hero__overlay absolute inset-0" aria-hidden="true" />
 
-          <div className="relative z-10 w-full">
+          <div className="relative z-10 w-full -translate-y-[5svh] text-center md:translate-y-0 md:text-left">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow md:text-sm">{t.hero.eyebrow}</p>
-            <h1 className="mt-4 max-w-6xl text-[clamp(3.2rem,8.5vw,9rem)] font-black uppercase leading-[0.82] tracking-[-0.055em]">
+            <h1 className="mx-auto mt-4 max-w-6xl text-[clamp(3.2rem,8.5vw,9rem)] font-black uppercase leading-[0.82] tracking-[-0.055em] md:mx-0">
               {t.hero.titleA}
               <span className="text-bold-yellow">{t.hero.titleHighlight}</span>
               {t.hero.titleB}
             </h1>
-            <div className="mt-7 flex flex-col items-start justify-between gap-6 border-t border-white/20 pt-5 md:flex-row md:items-end">
+            <div className="mt-7 flex flex-col items-center justify-between gap-6 border-t border-white/20 pt-5 md:flex-row md:items-end md:text-left">
               <p className="max-w-xl text-sm text-bold-white/75 sm:text-base md:text-lg">{t.hero.subtitle}</p>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
                 <button
                   type="button"
                   onClick={() => document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}

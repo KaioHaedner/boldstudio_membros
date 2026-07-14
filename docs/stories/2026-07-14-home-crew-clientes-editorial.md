@@ -28,6 +28,7 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - [x] Mobile com logo à esquerda e toggle à direita.
 - [x] Menu principal em overlay full-screen.
 - [x] Reutilizar na hero o mesmo asset de fundo do Academy.
+- [x] Centralizar e elevar a composição da hero no mobile, preservando o desktop.
 - [x] Crew ocupar `100vw × 100svh`.
 - [x] Clientes sem offsets verticais, formando duas linhas horizontais retas.
 
@@ -63,3 +64,4 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - `docs/saves/SAVE-196_2026-07-14_boldstudio-crew-fullscreen-clientes-duas-pistas.md`
 - `docs/saves/SAVE-197_2026-07-14_boldstudio-header-hero-academy-fullscreen.md`
 - `docs/saves/SAVE-198_2026-07-14_boldstudio-header-pills-isoladas.md`
+- `docs/saves/SAVE-200_2026-07-14_boldstudio-hero-mobile-centralizada.md`
