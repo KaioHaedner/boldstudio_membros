@@ -58,6 +58,7 @@ const pt = {
   crew: {
     eyebrow: 'Crew',
     title: 'Quem faz a BoldStudio acontecer',
+    marquee: 'O último time audiovisual que você terá',
     ctaText: 'Vamos gravar algo bold?',
     ctaButton: 'Falar com a Bold Studio',
     members: {
@@ -197,6 +198,7 @@ const en: Dict = {
   crew: {
     eyebrow: 'Crew',
     title: 'The people behind BoldStudio',
+    marquee: 'The last audiovisual team you will ever need',
     ctaText: "Let's shoot something bold?",
     ctaButton: 'Talk to Bold Studio',
     members: {
@@ -334,6 +336,7 @@ const es: Dict = {
   crew: {
     eyebrow: 'Crew',
     title: 'Quiénes hacen que BoldStudio suceda',
+    marquee: 'El último equipo audiovisual que necesitarás',
     ctaText: '¿Vamos a grabar algo bold?',
     ctaButton: 'Hablar con Bold Studio',
     members: {

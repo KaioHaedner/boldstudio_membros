@@ -116,6 +116,22 @@ export function CrewSticky() {
         <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.crew.title}</h2>
       </div>
 
+      <div className="crew-marquee" role="region" aria-label={t.crew.marquee}>
+        <span className="sr-only">{t.crew.marquee}</span>
+        <div className="crew-marquee__track" aria-hidden="true">
+          {[0, 1].map((group) => (
+            <div key={group} className="crew-marquee__group">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <span key={index} className="crew-marquee__item">
+                  {t.crew.marquee}
+                  <span className="crew-marquee__mark">✦</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div ref={cardsRef} className="crew-cards">
         <div ref={ctaRef} className="crew-cta">
           <p>{t.crew.ctaText}</p>
