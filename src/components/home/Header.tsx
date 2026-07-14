@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 
@@ -20,15 +19,7 @@ function scrollToAnchor(href: string) {
 
 export function Header() {
   const { t } = useI18n()
-  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -54,12 +45,7 @@ export function Header() {
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed inset-x-0 top-0 z-[110] transition-colors duration-500',
-          scrolled || menuOpen ? 'bg-black/70 backdrop-blur-xl' : 'bg-transparent'
-        )}
-      >
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-[110] bg-transparent">
         <nav
           aria-label="Navegação principal"
           className="flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
@@ -70,7 +56,7 @@ export function Header() {
               event.preventDefault()
               navigate('#home')
             }}
-            className="relative z-10 inline-flex items-center"
+            className="pointer-events-auto relative z-10 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-5 py-3 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 transition-colors hover:border-bold-yellow/40"
           >
             <img
               src="/brand/logo-boldstudio.webp"
@@ -79,7 +65,7 @@ export function Header() {
             />
           </a>
 
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="pointer-events-auto flex items-center gap-1 rounded-full border border-white/15 bg-black/35 p-1.5 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150">
             <div className="hidden md:block">
               <LanguageSwitcher />
             </div>
@@ -87,7 +73,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
-              className="group inline-flex min-h-11 items-center justify-center gap-2 text-bold-white transition-colors hover:text-bold-yellow"
+              className="group inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-full px-2 text-bold-white transition-colors hover:bg-white/10 hover:text-bold-yellow md:px-4"
               aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
               aria-expanded={menuOpen}
               aria-controls="home-fullscreen-menu"

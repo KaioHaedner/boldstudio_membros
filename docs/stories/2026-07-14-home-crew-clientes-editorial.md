@@ -23,6 +23,7 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - [x] Respeitar `prefers-reduced-motion`.
 - [x] Validar lint, typecheck e build; registrar ausência de testes se aplicável.
 - [x] Remover o container em cápsula do header.
+- [x] Manter o header transparente entre as extremidades, com blur somente nas pills da logo e dos controles.
 - [x] Desktop com logo à esquerda, idioma e `Menu +` à direita.
 - [x] Mobile com logo à esquerda e toggle à direita.
 - [x] Menu principal em overlay full-screen.
@@ -61,3 +62,4 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - `progress.md`
 - `docs/saves/SAVE-196_2026-07-14_boldstudio-crew-fullscreen-clientes-duas-pistas.md`
 - `docs/saves/SAVE-197_2026-07-14_boldstudio-header-hero-academy-fullscreen.md`
+- `docs/saves/SAVE-198_2026-07-14_boldstudio-header-pills-isoladas.md`
