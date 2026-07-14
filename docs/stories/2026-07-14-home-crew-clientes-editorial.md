@@ -8,7 +8,7 @@ Requisitos fornecidos diretamente pelo usuário em 2026-07-14, usando o screensh
 
 ## Objetivo
 
-Atualizar duas cenas da home institucional sem descaracterizar a BoldStudio.
+Atualizar as cenas principais da home institucional sem descaracterizar a BoldStudio.
 
 ## Critérios de aceitação
 
@@ -22,6 +22,13 @@ Atualizar duas cenas da home institucional sem descaracterizar a BoldStudio.
 - [x] Manter parallax e ScrollTrigger existentes.
 - [x] Respeitar `prefers-reduced-motion`.
 - [x] Validar lint, typecheck e build; registrar ausência de testes se aplicável.
+- [x] Remover o container em cápsula do header.
+- [x] Desktop com logo à esquerda, idioma e `Menu +` à direita.
+- [x] Mobile com logo à esquerda e toggle à direita.
+- [x] Menu principal em overlay full-screen.
+- [x] Reutilizar na hero o mesmo asset de fundo do Academy.
+- [x] Crew ocupar `100vw × 100svh`.
+- [x] Clientes sem offsets verticais, formando duas linhas horizontais retas.
 
 ## Checklist técnico
 
@@ -33,19 +40,24 @@ Atualizar duas cenas da home institucional sem descaracterizar a BoldStudio.
 
 ## Validação
 
-- Lint focado em `ClientesWave.tsx`: aprovado.
+- Lint focado em `Header.tsx`, `ClientesWave.tsx` e `HomeInstitucionalPage.tsx`: aprovado.
 - Typecheck: aprovado.
 - Build de produção: aprovado.
 - Lint global: bloqueado por 22 erros e 2 avisos preexistentes fora do escopo.
 - Testes: indisponíveis porque o projeto não possui script `test`.
 - Revisão visual no navegador real: pendente de conferência do usuário.
+- As capturas recebidas ainda são do deploy anterior e não representam os commits locais.
+- O asset do Academy é `VD_BOLD_01.mp4`, embora tenha sido chamado de GIF no pedido.
 
 ## File List
 
 - `docs/stories/2026-07-14-home-crew-clientes-editorial.md`
 - `src/components/home/ClientesWave.tsx`
+- `src/components/home/Header.tsx`
+- `src/pages/HomeInstitucionalPage.tsx`
 - `src/index.css`
 - `task_plan.md`
 - `findings.md`
 - `progress.md`
 - `docs/saves/SAVE-196_2026-07-14_boldstudio-crew-fullscreen-clientes-duas-pistas.md`
+- `docs/saves/SAVE-197_2026-07-14_boldstudio-header-hero-academy-fullscreen.md`

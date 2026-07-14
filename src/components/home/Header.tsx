@@ -21,7 +21,7 @@ function scrollToAnchor(href: string) {
 export function Header() {
   const { t } = useI18n()
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -30,78 +30,116 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [menuOpen])
+
+  const navigate = (href: string) => {
+    setMenuOpen(false)
+    window.requestAnimationFrame(() => scrollToAnchor(href))
+  }
+
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
-      <nav
-        aria-label="Navegacao principal"
+    <>
+      <header
         className={cn(
-          'flex w-full max-w-4xl items-center justify-between gap-6 rounded-[70px] border border-white/10 px-5 py-2.5 transition-all duration-500',
-          'backdrop-blur-2xl backdrop-saturate-150',
-          scrolled ? 'bg-bold-gray/55 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.6)]' : 'bg-bold-gray/25'
+          'fixed inset-x-0 top-0 z-[110] transition-colors duration-500',
+          scrolled || menuOpen ? 'bg-black/70 backdrop-blur-xl' : 'bg-transparent'
         )}
       >
-        <a href="#home" onClick={(e) => { e.preventDefault(); scrollToAnchor('#home') }} className="flex items-center gap-2">
-          <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" className="h-7 w-auto object-contain" />
-        </a>
-
-        <ul className="hidden items-center gap-7 text-sm font-medium text-bold-white/85 md:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={(e) => { e.preventDefault(); scrollToAnchor(link.href) }}
-                className="inline-block origin-center transition-all duration-200 hover:scale-110 hover:text-bold-yellow"
-              >
-                {t.nav[link.key]}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center gap-3">
-          <LanguageSwitcher />
+        <nav
+          aria-label="Navegação principal"
+          className="flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
+        >
           <a
-            href="#contato"
-            onClick={(e) => { e.preventDefault(); scrollToAnchor('#contato') }}
-            className="hidden rounded-lg bg-bold-yellow px-5 py-2 text-sm font-bold text-bold-black transition-transform hover:scale-105 md:inline-block"
+            href="#home"
+            onClick={(event) => {
+              event.preventDefault()
+              navigate('#home')
+            }}
+            className="relative z-10 inline-flex items-center"
           >
-            {t.nav.cta}
+            <img
+              src="/brand/logo-boldstudio.webp"
+              alt="Bold Studio Brasil"
+              className="h-8 w-auto object-contain sm:h-9"
+            />
           </a>
 
-          <button
-            type="button"
-            onClick={() => setMobileOpen((open) => !open)}
-            className="text-bold-white md:hidden"
-            aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
-            aria-expanded={mobileOpen}
-            aria-controls="home-mobile-menu"
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-      </nav>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
 
-      {mobileOpen && (
-        <div id="home-mobile-menu" className="absolute left-4 right-4 top-[calc(100%+0.5rem)] rounded-xl border border-white/10 bg-bold-gray/90 p-4 backdrop-blur-2xl md:hidden">
-          <ul className="flex flex-col gap-3 text-sm font-medium text-bold-white/85">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToAnchor(link.href)
-                    setMobileOpen(false)
-                  }}
-                  className="block py-1 transition-colors hover:text-bold-yellow"
-                >
-                  {t.nav[link.key]}
-                </a>
-              </li>
-            ))}
-          </ul>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="group inline-flex min-h-11 items-center justify-center gap-2 text-bold-white transition-colors hover:text-bold-yellow"
+              aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+              aria-expanded={menuOpen}
+              aria-controls="home-fullscreen-menu"
+            >
+              <span className="hidden text-sm font-bold uppercase tracking-[0.16em] md:inline">
+                {menuOpen ? 'Fechar' : 'Menu +'}
+              </span>
+              <span className="md:hidden">{menuOpen ? <X size={27} /> : <Menu size={27} />}</span>
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {menuOpen && (
+        <div
+          id="home-fullscreen-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu principal"
+          className="home-fullscreen-menu fixed inset-0 z-[100] overflow-y-auto bg-bold-black px-5 pb-10 pt-28 sm:px-8 lg:px-12"
+        >
+          <div className="mx-auto flex min-h-[calc(100svh-9rem)] max-w-[110rem] flex-col justify-between">
+            <ul className="grid gap-1">
+              {NAV_LINKS.map((link, index) => (
+                <li key={link.href} className="border-b border-white/10">
+                  <a
+                    href={link.href}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      navigate(link.href)
+                    }}
+                    className="group flex items-center justify-between py-3 text-[clamp(2.2rem,7vw,7.5rem)] font-black uppercase leading-[0.9] tracking-[-0.05em] text-bold-white transition-colors hover:text-bold-yellow"
+                  >
+                    <span>{t.nav[link.key]}</span>
+                    <span className="text-xs font-bold tracking-[0.2em] text-bold-yellow/70">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex items-end justify-between border-t border-white/10 pt-5 text-xs uppercase tracking-[0.2em] text-bold-white/50">
+              <span>Sinop · Mato Grosso</span>
+              <div className="md:hidden">
+                <LanguageSwitcher />
+              </div>
+              <span className="hidden md:inline">BoldStudio © 2026</span>
+            </div>
+          </div>
         </div>
       )}
-    </header>
+    </>
   )
 }

@@ -799,9 +799,33 @@ textarea {
 .home-oculto {
   opacity: 0;
 }
+
+/* ============== Hero institucional — vídeo do Academy ============== */
+.home-hero__video video {
+  filter: saturate(0.92) contrast(1.06);
+}
+.home-hero__overlay {
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.38) 52%, rgba(0, 0, 0, 0.48) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent 68%);
+}
+@keyframes home-menu-enter {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+.home-fullscreen-menu {
+  animation: home-menu-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 @media (prefers-reduced-motion: reduce) {
   .home-revelar,
-  .home-oculto {
+  .home-oculto,
+  .home-fullscreen-menu {
     animation: none !important;
     opacity: 1 !important;
   }
@@ -818,15 +842,16 @@ textarea {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(calc(100vw - clamp(2rem, 6vw, 7rem)), 90rem);
-  height: min(82svh, 54rem);
+  width: 100vw;
+  height: 100svh;
   display: flex;
   align-items: center;
   gap: 0;
   padding: 0;
-  border-radius: 0.75rem;
+  border-radius: 0;
   background: #000000;
-  border: 1px solid rgba(255, 215, 18, 0.15);
+  border-block: 1px solid rgba(255, 215, 18, 0.15);
+  border-inline: 0;
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
   transform-origin: center bottom;
   will-change: transform;
@@ -920,8 +945,8 @@ textarea {
 }
 @media (max-width: 1000px) {
   .crew-card {
-    width: calc(100% - 1rem);
-    height: 88svh;
+    width: 100vw;
+    height: 100svh;
     flex-direction: column;
     padding: 0;
     gap: 0;
@@ -964,14 +989,12 @@ textarea {
   will-change: transform;
 }
 .client-logo-card {
-  --client-lift: 0;
   position: relative;
   width: clamp(11rem, 20vw, 18rem);
   height: clamp(7rem, 12vw, 10.5rem);
   flex: 0 0 auto;
   overflow: hidden;
   border-radius: 0.75rem;
-  translate: 0 calc(var(--client-lift) * clamp(0.35rem, 0.8vw, 0.8rem));
   cursor: pointer;
   background: rgba(20, 20, 20, 0.88);
   border: 1px solid rgba(255, 215, 18, 0.18);

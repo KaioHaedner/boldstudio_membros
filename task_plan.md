@@ -1,10 +1,10 @@
 # Plano: Home institucional BoldStudio
 
 ## Objetivo
-Adaptar a composição editorial da home institucional preservando a identidade BoldStudio, mantendo os cards atuais do Crew em tela cheia e convertendo clientes atendidos em duas trilhas horizontais sobrepostas.
+Finalizar a composição editorial da home institucional com Crew realmente full-screen, clientes em duas linhas horizontais retas, header aberto e hero com o GIF existente do Academy.
 
 ## Fase atual
-Fase 5
+Fase 9
 
 ## Fases
 
@@ -36,6 +36,36 @@ Fase 5
 - [x] Entregar resumo ao usuário
 - **Status:** concluída
 
+### Fase 6: Descoberta do novo escopo
+- [x] Localizar o GIF usado em `academy.boldstudiobrasil.com`
+- [x] Inspecionar Header, hero e comportamento atual dos componentes
+- [x] Registrar os problemas mostrados nas capturas
+- **Status:** concluída
+
+### Fase 7: Implementação visual
+- [x] Crew ocupar a viewport sem container central estreito
+- [x] Clientes em duas linhas horizontais retas e opostas
+- [x] Header desktop com logo à esquerda, idioma e `Menu +`
+- [x] Header mobile com logo à esquerda e toggle à direita
+- [x] Hero com o asset real do Academy como background
+- **Status:** concluída
+
+### Fase 8: Validação
+- [x] Lint focado, typecheck e build
+- [x] Revisar desktop, mobile e reduced motion
+- **Status:** concluída
+
+### Fase 9: Story, SAVE e commit
+- [x] Atualizar critérios, checklist e file list
+- [x] Criar SAVE incremental
+- [x] Criar commit scoped
+- **Status:** concluída
+
+### Fase 10: Publicação
+- [x] Registrar handoff para `@devops`
+- [x] Confirmar que o deploy anterior não continha o commit local
+- **Status:** pendente
+
 ## Decisões
 
 | Decisão | Motivo |
@@ -45,6 +75,8 @@ Fase 5
 | Não copiar a identidade da Sand | A referência é composicional, enquanto tipografia e cores devem vir do projeto BoldStudio |
 | Crew com card quase full-screen | O card atual mede 65% × 60%; a nova escala preserva o componente e aproxima o ritmo editorial da referência |
 | Clientes com duas pistas opostas | Mantém todos os clientes clicáveis e transforma o scroll vertical em deslocamento horizontal sem uma fila única |
+| Header sem cápsula | Requisito explícito do usuário a partir da captura real |
+| Reutilizar asset do Academy | Requisito explícito; não criar nem baixar mídia substituta |
 
 ## Erros
 
@@ -54,3 +86,5 @@ Fase 5
 | Patch inicial não encontrou bloco por diferença de codificação | 1 | Reaplicado em blocos menores ancorados no código |
 | `npm test` indisponível | 1 | `package.json` não define script `test`; registrado na story e no handoff |
 | Lint global: 22 erros e 2 avisos preexistentes fora do escopo | 1 | Validar isoladamente o arquivo TypeScript alterado e registrar dívida existente |
+| Leitura inicial usou caminho inexistente `src/components/Header.tsx` | 1 | Corrigido para `src/components/home/Header.tsx` |
+| Usuário chamou o asset do Academy de GIF, mas não existe GIF no projeto | 1 | Reutilizar o componente real, que aponta para `VD_BOLD_01.mp4` |

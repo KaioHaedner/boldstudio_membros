@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, MapPin, Phone, Play, Video, X } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
@@ -69,13 +69,12 @@ export function ClientesWave() {
           <div key={rowIndex} className="clients-rail">
             <div className={`clients-track clients-track--${rowIndex === 0 ? 'top' : 'bottom'}`}>
               {[0, 1].map((copyIndex) =>
-                row.map((client, itemIndex) => {
+                row.map((client) => {
                   const isCopy = copyIndex === 1
                   return (
                     <div
                       key={`${client.slug}-${copyIndex}`}
                       className="client-logo-card"
-                      style={{ '--client-lift': (itemIndex % 3) - 1 } as CSSProperties}
                       role={isCopy ? undefined : 'button'}
                       tabIndex={isCopy ? -1 : 0}
                       aria-hidden={isCopy || undefined}
