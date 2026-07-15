@@ -79,3 +79,20 @@
 - O fundo transparente revelou todos os cards futuros, pois a animação controlava apenas transformações.
 - A correção precisa ocultar os cards inativos antes do primeiro frame e durante todo o ScrollTrigger.
 - Um crossfade curto entre o card atual e o próximo preserva fluidez sem criar uma pilha legível de textos.
+
+## Comparação com `Sticky Cards Scroll GSAP.zip`
+
+- O JavaScript original nunca altera `opacity` ou `visibility`.
+- A pilha depende de `yPercent`, `scale`, `rotationX`, z-index decrescente e `transform-origin: center bottom`.
+- Cards futuros permanecem presentes e aparecem como camadas menores atrás do card ativo.
+- A separação visual funciona porque cada card original possui fundo opaco.
+- A implementação BoldStudio anterior ao SAVE-202 também usava `background: #000000` em `.crew-card`.
+- A regressão nasceu ao trocar esse fundo por `transparent`; o SAVE-203 mascarou o sintoma com `autoAlpha` e removeu a leitura da pilha.
+- A restauração correta é retirar o `autoAlpha` e devolver o fundo preto do card, preservando imagens, textos, rail e integrações atuais.
+
+## Remoção do ShaderGradient
+
+- O usuário decidiu remover integralmente o fundo ShaderGradient e avaliar outro efeito depois.
+- `StarfieldBackground` serve apenas como wrapper do `BoldShaderGradientScene`.
+- `@shadergradient/react`, `@react-three/fiber`, `camera-controls` e `three-stdlib` não possuem outros consumidores em `src`.
+- `three` e `@types/three` devem permanecer porque `ReelsEspiral.tsx` usa Three.js diretamente.

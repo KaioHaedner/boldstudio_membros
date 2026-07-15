@@ -5,7 +5,6 @@ import { IntroBold } from '@/components/IntroBold'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
-import { StarfieldBackground } from '@/components/home/StarfieldBackground'
 import { CrewSticky } from '@/components/home/CrewSticky'
 import { ClientesWave } from '@/components/home/ClientesWave'
 import { ReelsEspiral } from '@/components/home/ReelsEspiral'
@@ -73,9 +72,8 @@ function HomeContent() {
   }, [revelar])
 
   return (
-    <div ref={rootRef} className="relative isolate min-h-screen text-bold-white">
+    <div ref={rootRef} className="relative isolate min-h-screen bg-bold-black text-bold-white">
       <IntroBold onFinish={() => setRevelar(true)} />
-      <StarfieldBackground />
       <Header />
 
       <main className={mainClass}>

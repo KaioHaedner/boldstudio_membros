@@ -45,7 +45,6 @@ export function CrewSticky() {
         xPercent: -50,
         yPercent: -50 + i * cardYOffset,
         scale: 1 - i * cardScaleStep,
-        autoAlpha: i === 0 ? 1 : 0,
       })
     })
 
@@ -70,17 +69,15 @@ export function CrewSticky() {
 
         const activeIndex = Math.min(Math.floor(progress / segmentSize), totalCards - 1)
         const segProgress = (progress - activeIndex * segmentSize) / segmentSize
-        const transitionProgress = gsap.utils.clamp(0, 1, (segProgress - 0.78) / 0.22)
 
         cards.forEach((card, i) => {
           if (i < activeIndex) {
-            gsap.set(card, { yPercent: -250, rotationX: 35, autoAlpha: 0 })
+            gsap.set(card, { yPercent: -250, rotationX: 35 })
           } else if (i === activeIndex) {
             gsap.set(card, {
               yPercent: gsap.utils.interpolate(-50, -200, segProgress),
               rotationX: gsap.utils.interpolate(0, 35, segProgress),
               scale: 1,
-              autoAlpha: activeIndex === totalCards - 1 ? 1 : 1 - transitionProgress,
             })
           } else {
             const behindIndex = i - activeIndex
@@ -90,7 +87,6 @@ export function CrewSticky() {
               yPercent: -50 + currentYOffset,
               rotationX: 0,
               scale: currentScale,
-              autoAlpha: behindIndex === 1 ? transitionProgress : 0,
             })
           }
         })

@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Globe, Phone, Play } from 'lucide-react'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
-import { StarfieldBackground } from '@/components/home/StarfieldBackground'
 import { Footer } from '@/components/Footer'
 import { getClienteBySlug, type Cliente } from '@/data/clientes'
 
@@ -53,8 +52,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
   const { t } = useI18n()
 
   return (
-    <div className="relative isolate min-h-screen text-bold-white">
-      <StarfieldBackground />
+    <div className="relative isolate min-h-screen bg-bold-black text-bold-white">
 
       {/* topo: voltar + seletor de idioma */}
       <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-5xl items-center justify-between px-4">
@@ -198,8 +196,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
 function ProjetoNotFound() {
   const { t } = useI18n()
   return (
-    <div className="relative isolate flex min-h-screen flex-col items-center justify-center px-6 text-center text-bold-white">
-      <StarfieldBackground />
+    <div className="relative isolate flex min-h-screen flex-col items-center justify-center bg-bold-black px-6 text-center text-bold-white">
       <h1 className="relative z-10 text-3xl font-black uppercase md:text-5xl">{t.projeto.notFoundTitle}</h1>
       <p className="relative z-10 mt-4 text-bold-white/60">{t.projeto.notFoundText}</p>
       <Link

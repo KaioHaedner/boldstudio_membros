@@ -156,3 +156,20 @@
 - CSS agora oculta todos os cards antes da inicialização, exceto o primeiro.
 - GSAP controla `opacity` e `visibility` com `autoAlpha`; somente o ativo e, no fim da transição, o próximo podem aparecer.
 - Lint focado, typecheck, build e `git diff --check`: aprovados.
+
+## Análise do ZIP original
+
+- Todos os arquivos textuais do ZIP foram lidos diretamente, sem extração ou alteração.
+- `efeito.js` confirmado como fonte do algoritmo já portado para `CrewSticky.tsx`.
+- `efeito.css` confirmou que cada card precisa de fundo opaco.
+- A tentativa com `autoAlpha` foi classificada como regressão do efeito e será revertida.
+- Edge headless não gerou a captura local; validação alternativa pelo Chrome foi selecionada.
+- A primeira captura do Chrome abriu a raiz `ComingSoon`; a chamada seguinte reutilizou esse processo. Será feita uma última tentativa isolada.
+- A terceira captura headless falhou; automação visual encerrada após três tentativas.
+- Algoritmo GSAP original restaurado sem `autoAlpha`; fundo preto individual restaurado.
+- Lint focado, typecheck, build, diff-check e verificação dos parâmetros originais: aprovados.
+- Após corrigir o seletor CSS, a repetição paralela dos gates expirou; nova rodada sequencial será a validação final.
+- Por decisão do usuário, o wrapper e a cena ShaderGradient foram removidos da home; dependências exclusivas serão desinstaladas.
+- Dependências exclusivas foram removidas do package e lock antes do timeout do npm; usos residuais nas páginas de projeto também foram retirados e substituídos por fundo preto.
+- Gates finais da versão definitiva: lint dos três TSX alterados, typecheck, build e diff-check aprovados.
+- O chunk `BoldShaderGradientScene` de aproximadamente 395 KB desapareceu; o bundle JS principal caiu de aproximadamente 1.585 KB para 1.364 KB.

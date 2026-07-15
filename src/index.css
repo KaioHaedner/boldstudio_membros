@@ -935,19 +935,13 @@ textarea {
   gap: 0;
   padding: 0 calc(var(--crew-rail-width) + clamp(1rem, 2vw, 2rem)) 0 0;
   border-radius: 0;
-  background: transparent;
+  background: #000000;
   border-block: 1px solid rgba(255, 215, 18, 0.15);
   border-inline: 0;
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
   transform-origin: center bottom;
   will-change: transform;
   overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-}
-.crew-card:first-of-type {
-  opacity: 1;
-  visibility: visible;
 }
 .crew-card__info {
   flex: 0 0 42%;

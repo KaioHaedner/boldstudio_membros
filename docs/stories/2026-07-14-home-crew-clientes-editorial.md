@@ -34,8 +34,9 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - [x] Remover título externo do Crew e iniciar diretamente na cena full-screen.
 - [x] Manter `BoldCrew` estático no canto inferior esquerdo.
 - [x] Apresentar o manifesto em rail vertical amarelo com loop contínuo e fonte preta ampliada.
-- [x] Manter áreas seguras para Header e RecIA e revelar o shader interativo no fundo.
+- [x] Manter áreas seguras para Header e RecIA e remover integralmente o ShaderGradient da home.
 - [x] Exibir somente o card ativo do Crew, sem sobreposição dos nomes, cargos e descrições.
+- [x] Preservar a pilha visível, escala, deslocamento e rotação 3D do ZIP original, sem crossfade por opacidade.
 
 ## Checklist técnico
 
@@ -56,6 +57,7 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - As capturas recebidas ainda são do deploy anterior e não representam os commits locais.
 - O asset do Academy é `VD_BOLD_01.mp4`, embora tenha sido chamado de GIF no pedido.
 - Hotfix SAVE-203: lint focado, typecheck e build aprovados; cards inativos usam `autoAlpha: 0`.
+- Restauração SAVE-204: `autoAlpha` removido e fundo preto individual restaurado conforme o ZIP original. Captura headless indisponível após três tentativas registradas.
 
 ## File List
 
@@ -63,6 +65,11 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - `src/components/home/ClientesWave.tsx`
 - `src/components/home/Header.tsx`
 - `src/pages/HomeInstitucionalPage.tsx`
+- `src/pages/ProjetoClientePage.tsx`
+- `src/components/home/StarfieldBackground.tsx` (removido)
+- `src/components/home/BoldShaderGradientScene.tsx` (removido)
+- `package.json`
+- `package-lock.json`
 - `src/index.css`
 - `task_plan.md`
 - `findings.md`
@@ -74,3 +81,4 @@ Atualizar as cenas principais da home institucional sem descaracterizar a BoldSt
 - `docs/saves/SAVE-201_2026-07-14_boldstudio-marquee-crew.md`
 - `docs/saves/SAVE-202_2026-07-14_boldstudio-crew-rail-vertical.md`
 - `docs/saves/SAVE-203_2026-07-14_boldstudio-crew-cards-sem-sobreposicao.md`
+- `docs/saves/SAVE-204_2026-07-14_boldstudio-restaura-sticky-cards-original.md`

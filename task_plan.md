@@ -126,3 +126,31 @@ Fase 14
 - [x] Validar lint focado, typecheck, build e diff-check
 - [x] Registrar SAVE-203
 - **Status:** concluída
+
+## Fase 16: Restauração fiel do Sticky Cards GSAP
+
+- [x] Ler integralmente o ZIP original fornecido pelo usuário
+- [x] Comparar CSS e JavaScript originais com a implementação React
+- [x] Identificar a regressão introduzida nos SAVEs 202 e 203
+- [x] Restaurar a matemática original sem `autoAlpha`
+- [x] Restaurar a superfície opaca que separa os cards
+- [x] Validar algoritmo, lint, typecheck e build
+- [x] Registrar novo SAVE
+- [ ] Publicar e validar bundle
+- [x] Remover o ShaderGradient e seu canvas Three.js da home
+- [x] Remover dependências exclusivas do ShaderGradient
+- [x] Remover o mesmo fundo das páginas de projetos e definir base preta explícita
+- **Status:** validação concluída; publicação pendente
+
+## Erros da fase 16
+
+| Erro | Tentativa | Resolução |
+|---|---:|---|
+| Busca por Lenis retornou código 1 por não haver integração no projeto | 1 | Não adicionar Lenis; preservar a infraestrutura GSAP já existente e restaurar apenas o algoritmo do ZIP |
+| Edge headless encerrou com código 1 e não gerou screenshot | 1 | Não repetir; tentar Chrome headless com perfil temporário isolado |
+| Segunda captura manteve a tela anterior por reutilização do processo Chrome | 2 | Última tentativa com novo perfil e novo arquivo; depois encerrar validação headless |
+| Terceira captura headless encerrou com código 1 | 3 | Encerrar automação visual; registrar limitação e usar comparação integral com o ZIP mais gates estruturais |
+| Servidor local atingiu timeout no encerramento | 1 | Processo limitado pelo timeout do executor; não repetir |
+| Patch de fundo atingiu `.btn3d` em vez de `.crew-card` | 1 | Detectado na revisão do diff antes do commit; corrigido com contexto explícito dos seletores |
+| Gates paralelos expiraram após saturação dos processos headless | 1 | Descartar execução incompleta e repetir sequencialmente com saídas curtas |
+| `npm uninstall` das dependências do shader atingiu timeout | 1 | Verificar package e lock antes de tentar outra abordagem; não repetir cegamente |
