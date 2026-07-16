@@ -17,7 +17,7 @@ const CREW = [
   { id: 'bruno', nome: 'Bruno Cavedon', color: `${COLOR_BASE}CAVEDON_BOLD_IMG_CREW.png` },
   { id: 'william', nome: 'William Ferruda', color: `${COLOR_BASE}IMG_1088.JPG%201.png` },
   { id: 'rafaela', nome: 'Rafaela Souza', color: `${COLOR_BASE}RAFAELA_BOLD_IMG_CREW.png` },
-  { id: 'nathalia', nome: 'Nathalia Umburanas' },
+  { id: 'nathalia', nome: 'Nathalia Umburanas', color: `${COLOR_BASE}NATHALIA_BOLD_IMG_CREW.webp` },
   { id: 'caroline', nome: 'Caroline Ventura', color: `${COLOR_BASE}MULHER_MIGUEL_BOLD_IMG_CREW.png` },
   { id: 'germano', nome: 'Germano Pagliari', color: `${COLOR_BASE}GERMANO_BOLD_IMG_CREW.png` },
   { id: 'pedro-neto', nome: 'Pedro Garcia Neto', color: `${COLOR_BASE}juninho_BOLD_IMG_CREW.png` },
@@ -128,8 +128,13 @@ export function CrewSticky() {
         </div>
 
         <div ref={ctaRef} className="crew-cta">
-          <p>{t.crew.ctaText}</p>
+          <p className="crew-cta__title">
+            {t.crew.ctaTextA}
+            <span className="crew-cta__highlight">{t.crew.ctaTextHighlight}</span>
+            {t.crew.ctaTextB}
+          </p>
           <ShinyButton
+            className="crew-cta__button"
             onClick={() =>
               document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }

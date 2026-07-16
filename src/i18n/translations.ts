@@ -59,7 +59,9 @@ const pt = {
     eyebrow: 'Crew',
     title: 'Quem faz a BoldStudio acontecer',
     marquee: 'O último time audiovisual que você terá',
-    ctaText: 'Vamos gravar algo bold?',
+    ctaTextA: 'Vamos gravar algo ',
+    ctaTextHighlight: 'bold',
+    ctaTextB: '?',
     ctaButton: 'Falar com a Bold Studio',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera a visão e a direção geral do estúdio, da estratégia ao padrão de entrega que carrega a marca Bold.' },
@@ -199,7 +201,9 @@ const en: Dict = {
     eyebrow: 'Crew',
     title: 'The people behind BoldStudio',
     marquee: 'The last audiovisual team you will ever need',
-    ctaText: "Let's shoot something bold?",
+    ctaTextA: "Let's shoot something ",
+    ctaTextHighlight: 'bold',
+    ctaTextB: '?',
     ctaButton: 'Talk to Bold Studio',
     members: {
       'pedro-garcia': { role: 'Founder & CEO', desc: "Leads the studio's vision and overall direction, from strategy to the delivery standard that carries the Bold brand." },
@@ -337,7 +341,9 @@ const es: Dict = {
     eyebrow: 'Crew',
     title: 'Quiénes hacen que BoldStudio suceda',
     marquee: 'El último equipo audiovisual que necesitarás',
-    ctaText: '¿Vamos a grabar algo bold?',
+    ctaTextA: '¿Vamos a grabar algo ',
+    ctaTextHighlight: 'bold',
+    ctaTextB: '?',
     ctaButton: 'Hablar con Bold Studio',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera la visión y la dirección general del estudio, de la estrategia al estándar de entrega que lleva la marca Bold.' },
