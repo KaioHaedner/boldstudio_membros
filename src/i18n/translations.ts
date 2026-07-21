@@ -27,7 +27,7 @@ const pt = {
     eyebrow: 'SINOP, MT · PRODUTORA AUDIOVISUAL',
     titleA: 'Entregamos ',
     titleHighlight: 'resultados',
-    titleB: ', não vídeos.',
+    titleB: 'não vídeos!',
     subtitle:
       'Soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Atuamos no Agro, na indústria, em produtos e eventos, sempre com foco em resultado e alto padrão visual.',
     ctaPrimary: 'Bora gravar com a Bold',
@@ -169,7 +169,7 @@ const en: Dict = {
     eyebrow: 'SINOP, MT · AUDIOVISUAL STUDIO',
     titleA: 'We deliver ',
     titleHighlight: 'results',
-    titleB: ', not videos.',
+    titleB: 'not videos!',
     subtitle:
       'Strategic photo and video solutions for companies, events and brands. We work in Agribusiness, industry, products and events, always focused on results and high visual standards.',
     ctaPrimary: "Let's shoot something bold",
@@ -309,7 +309,7 @@ const es: Dict = {
     eyebrow: 'SINOP, MT · PRODUCTORA AUDIOVISUAL',
     titleA: 'Entregamos ',
     titleHighlight: 'resultados',
-    titleB: ', no videos.',
+    titleB: 'no videos!',
     subtitle:
       'Soluciones estratégicas de foto y video para empresas, eventos y marcas. Actuamos en el Agro, la industria, productos y eventos, siempre con foco en resultados y alto estándar visual.',
     ctaPrimary: 'Vamos a grabar algo bold',

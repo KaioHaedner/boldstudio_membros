@@ -3,6 +3,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 import { IntroBold } from '@/components/IntroBold'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
+import { ShinyButton } from '@/components/ShinyButton'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { CrewSticky } from '@/components/home/CrewSticky'
@@ -11,7 +12,6 @@ import { ReelsEspiral } from '@/components/home/ReelsEspiral'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
 import { QuickNav } from '@/components/home/QuickNav'
-import { BottomBlur } from '@/components/home/BottomBlur'
 
 function HomeContent() {
   const { t } = useI18n()
@@ -77,36 +77,39 @@ function HomeContent() {
       <Header />
 
       <main className={mainClass}>
-        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:items-end lg:px-12 lg:pb-20">
+        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:items-stretch md:pb-40 lg:px-12">
           <StudioVideoBg className="home-hero__video" />
           <div className="home-hero__overlay absolute inset-0" aria-hidden="true" />
 
-          <div className="relative z-10 w-full -translate-y-[5svh] text-center md:translate-y-0 md:text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow md:text-sm">{t.hero.eyebrow}</p>
-            <h1 className="mx-auto mt-4 max-w-6xl text-[clamp(3.2rem,8.5vw,9rem)] font-black uppercase leading-[0.82] tracking-[-0.055em] md:mx-0">
-              {t.hero.titleA}
-              <span className="text-bold-yellow">{t.hero.titleHighlight}</span>
-              {t.hero.titleB}
-            </h1>
-            <div className="mt-7 flex flex-col items-center justify-between gap-6 border-t border-white/20 pt-5 md:flex-row md:items-end md:text-left">
-              <p className="max-w-xl text-sm text-bold-white/75 sm:text-base md:text-lg">{t.hero.subtitle}</p>
-              <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
-                <button
-                  type="button"
-                  onClick={() => document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  className="rounded-lg bg-bold-yellow px-7 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-105"
-                >
-                  {t.hero.ctaPrimary}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => document.querySelector('#clientes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  className="rounded-lg border border-bold-white/30 bg-black/20 px-7 py-3 text-sm font-bold text-bold-white backdrop-blur-md transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
-                >
-                  {t.hero.ctaSecondary}
-                </button>
-              </div>
+          <div className="relative z-10 flex w-full flex-col -translate-y-[5svh] text-center md:translate-y-0 md:text-right">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow md:text-sm">{t.hero.eyebrow}</p>
+              <h1 className="mx-auto mt-4 max-w-6xl text-[clamp(2rem,4.2vw,4.2rem)] font-black uppercase leading-[0.9] tracking-[-0.03em] md:mr-0">
+                {t.hero.titleA}
+                <br />
+                <span className="text-bold-yellow">{t.hero.titleHighlight}</span>
+                <br />
+                {t.hero.titleB}
+              </h1>
             </div>
+            <div className="mt-7 flex justify-center md:mt-auto md:justify-end">
+              <p className="max-w-md rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-xs font-medium text-bold-white backdrop-blur-md sm:text-sm">{t.hero.subtitle}</p>
+            </div>
+          </div>
+
+          {/* CTAs colados na base, canto inferior esquerdo */}
+          <div className="absolute bottom-7 left-5 z-[90] flex flex-wrap items-center gap-x-7 gap-y-4 sm:left-8 lg:left-12">
+            <ShinyButton onClick={() => document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+              {t.hero.ctaPrimary}
+            </ShinyButton>
+            <button
+              type="button"
+              onClick={() => document.querySelector('#clientes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-bold-white transition-colors hover:text-bold-yellow"
+            >
+              {t.hero.ctaSecondary}
+              <span className="text-bold-yellow transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+            </button>
           </div>
         </section>
 
@@ -152,7 +155,6 @@ function HomeContent() {
       </main>
 
       <Footer />
-      <BottomBlur />
       <RecIAWidget />
       <QuickNav />
     </div>

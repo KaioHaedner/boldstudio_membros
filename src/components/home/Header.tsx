@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
+import { HeaderStatus } from '@/components/home/HeaderStatus'
 
 const NAV_LINKS = [
   { href: '#home', key: 'home' },
@@ -48,8 +49,9 @@ export function Header() {
       <header className="pointer-events-none fixed inset-x-0 top-0 z-[110] bg-transparent">
         <nav
           aria-label="Navegação principal"
-          className="flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
+          className="relative flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
         >
+          <HeaderStatus />
           <a
             href="#home"
             onClick={(event) => {
