@@ -2,11 +2,11 @@
 
 Redesign pesado da home institucional (`/home-bold-studio-sinop-brasil`), seção por seção, seguindo referências da produtora **Sand**. Repo `KaioHaedner/boldstudio_membros`, branch `main`.
 
-## Commits publicados (deploy Vercel automático via GitHub)
+## Commits publicados (deploy Vercel automático via GitHub) — TODOS no ar
 - `2a7a668` feat(home): reformula hero + status de localizacao no header
 - `27cc8ed` feat(home): secao Sobre estilo Sand + coin da marca espalhado
 - `623f2f5` feat(home): secao Solucoes (placeholder + pill sticky) e amarelo vivo animado
-- **PENDENTE de commit/deploy:** todo o bloco de **Cases** (abertura + carrossel blur reveal + marquee de marcas + remoção da espiral). Estava aprovado, faltou o "deploy" final (usuário pediu "save daily" antes).
+- `3868c42` feat(home): bloco de Cases (abertura + carrossel blur reveal + marquee) + remoção da espiral. **Confirmado em produção** (`boldstudiobrasil.com`).
 
 ## Hero (`HomeInstitucionalPage.tsx`)
 - Título realocado pro **topo direito**, 3 linhas: `ENTREGAMOS / RESULTADOS (amarelo) / NÃO VÍDEOS!` (translations `hero.titleA/titleHighlight/titleB` + `<br>` entre os spans). Tamanho reduzido pra não tampar o vídeo BG.
@@ -39,7 +39,7 @@ Redesign pesado da home institucional (`/home-bold-studio-sinop-brasil`), seçã
 ## Coin da marca espalhado (`CoinDecor.tsx`, novo)
 - Símbolo `BOLDSTUDIO_COIN.webp` como elemento decorativo flutuante (`@keyframes coin-bob`, float sutil). Espalhado na hero, Sobre, Serviços, Clientes e Contato (opacidades/rotações/tamanhos variados).
 
-## CASES (bloco novo, PENDENTE de deploy)
+## CASES (bloco novo — no ar via `3868c42`)
 Ordem: `CasesAbertura` → `CasesCarrossel` → `ClientesWave` (marquee). **Removida a `ReelsEspiral`** (espiral do demoreel) do fluxo.
 
 ### Abertura (`CasesAbertura.tsx`)
@@ -62,8 +62,7 @@ Ordem: `CasesAbertura` → `CasesCarrossel` → `ClientesWave` (marquee). **Remo
 - **Bucket novo `brand`** (público) → `brand/BOLDSTUDIO_COIN.webp` (símbolo)
 - Vídeos demoreel já existiam em `CLIENTES_CONTEINER_PREVIA_VD`; logos em `CLIENTES_CONTEINER` (fonte: `src/data/clientes.ts`, 14 marcas, 7 com vídeo).
 
-## Pendências
-- **Fazer o deploy** do bloco de Cases (não commitado ainda).
+## Pendências (tudo já está no ar; estas ficam pra próximas sessões)
 - **Parrilla do Campo**: logo claro/transparente some no card branco do marquee (usuário: "deixa comigo depois" — versão com contraste ou fundo diferente só nesse card).
 - **Produtos da seção Soluções**: colocar imagens quando existirem (hoje é placeholder).
 - Segurança git (fora deste repo): revogar colaborador Rogério Carpowiske + 1 access token — ver [[project_boldstudio_acessos_git_pendente]].
