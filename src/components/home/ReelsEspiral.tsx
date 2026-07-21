@@ -108,6 +108,20 @@ export function ReelsEspiral() {
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+    // WebGL pode estar indisponivel (aceleracao de hardware desligada, VM,
+    // driver na blocklist do Chrome). Sem contexto, o Three.js lanca e o erro
+    // sobe pela arvore React derrubando a home inteira. Tentamos criar o
+    // renderer primeiro e, se falhar, caimos pra um fundo estatico escuro sem
+    // montar o 3D — o titulo/subtitulo por cima continuam legiveis.
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    } catch {
+      mount.style.background =
+        'radial-gradient(ellipse at 50% 40%, #1a1a1a 0%, #0a0a0a 70%)'
+      return
+    }
+
     const totalTiles = Math.floor(CONFIG.tilesPerRevolution * CONFIG.revolutions)
     const angleStep = (Math.PI * 2) / CONFIG.tilesPerRevolution
 
@@ -115,7 +129,6 @@ export function ReelsEspiral() {
     const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000)
     camera.position.z = window.innerWidth < 1000 ? 15 : CONFIG.cameraZ
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(mount.clientWidth, mount.clientHeight)
     mount.appendChild(renderer.domElement)
