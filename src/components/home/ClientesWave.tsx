@@ -1,106 +1,59 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, MapPin, Phone, Play, Video, X } from 'lucide-react'
-import { gsap } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
 import { CoinDecor } from '@/components/home/CoinDecor'
 import { useI18n } from '@/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/data/clientes'
 
-// Duas pistas editoriais movidas em sentidos opostos pelo scroll. A lista e
-// duplicada apenas para continuidade visual; a segunda copia fica fora da
-// arvore de acessibilidade. Modal e paginas de projeto permanecem os mesmos.
-
-const CLIENT_ROWS = [
-  CLIENTES.filter((_, index) => index % 2 === 0),
-  CLIENTES.filter((_, index) => index % 2 !== 0),
-] as const
-
+// Carrossel contínuo (marquee) com TODAS as marcas atendidas. A lista é
+// duplicada para o loop infinito; a segunda cópia fica fora da acessibilidade.
+// Clicar num logo abre o modal com preview/depoimento e link pro projeto.
 export function ClientesWave() {
   const { t } = useI18n()
-  const wrapRef = useRef<HTMLDivElement>(null)
   const [selected, setSelected] = useState<Cliente | null>(null)
 
-  useEffect(() => {
-    const wrap = wrapRef.current
-    if (!wrap) return
-
-    const topTrack = wrap.querySelector<HTMLElement>('.clients-track--top')
-    const bottomTrack = wrap.querySelector<HTMLElement>('.clients-track--bottom')
-    if (!topTrack || !bottomTrack) return
-
-    const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          start: 'top top',
-          end: () => `+=${Math.max(window.innerHeight * 1.8, 1200)}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      })
-
-      timeline.to(topTrack, { x: () => -topTrack.scrollWidth / 2, ease: 'none' }, 0)
-      timeline.fromTo(
-        bottomTrack,
-        { x: () => -bottomTrack.scrollWidth / 2 },
-        { x: 0, ease: 'none' },
-        0
-      )
-    })
-
-    return () => {
-      media.revert()
-    }
-  }, [])
-
   return (
-    <section id="clientes" className="clientes-wave relative scroll-mt-24 overflow-hidden">
-      <CoinDecor className="right-8 top-24 w-16 opacity-15 sm:w-24" rotate={18} floatDuration={7} />
-      <CoinDecor className="left-4 bottom-32 hidden w-14 opacity-[0.12] lg:block" rotate={-20} floatDuration={9} />
-      <div className="px-6 pt-24 pb-4 text-center">
-        <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.clientes.eyebrow}</p>
+    <section id="clientes" className="relative scroll-mt-24 overflow-hidden py-20 md:py-28">
+      <CoinDecor className="right-8 top-10 w-16 opacity-15 sm:w-24" rotate={18} floatDuration={7} />
+      <CoinDecor className="left-4 bottom-10 hidden w-14 opacity-[0.12] lg:block" rotate={-20} floatDuration={9} />
+
+      <div className="px-6 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow">{t.clientes.eyebrow}</p>
         <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.clientes.title}</h2>
         <p className="mx-auto mt-3 max-w-md text-sm text-bold-white/60">{t.clientes.helper}</p>
       </div>
 
-      <div ref={wrapRef} className="clients-stage">
-        {CLIENT_ROWS.map((row, rowIndex) => (
-          <div key={rowIndex} className="clients-rail">
-            <div className={`clients-track clients-track--${rowIndex === 0 ? 'top' : 'bottom'}`}>
-              {[0, 1].map((copyIndex) =>
-                row.map((client) => {
-                  const isCopy = copyIndex === 1
-                  return (
-                    <div
-                      key={`${client.slug}-${copyIndex}`}
-                      className="client-logo-card"
-                      role={isCopy ? undefined : 'button'}
-                      tabIndex={isCopy ? -1 : 0}
-                      aria-hidden={isCopy || undefined}
-                      aria-label={isCopy ? undefined : `Ver detalhes de ${client.nome}`}
-                      onClick={() => setSelected(client)}
-                      onKeyDown={(event) => {
-                        if (!isCopy && (event.key === 'Enter' || event.key === ' ')) {
-                          event.preventDefault()
-                          setSelected(client)
-                        }
-                      }}
-                    >
-                      <img src={client.logo} alt={isCopy ? '' : client.nome} loading="lazy" decoding="async" />
-                    </div>
-                  )
-                })
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="marcas-marquee-mask mt-12 flex overflow-hidden">
+        <div className="marcas-marquee flex shrink-0">
+          {[0, 1].map((copyIndex) =>
+            CLIENTES.map((client) => {
+              const isCopy = copyIndex === 1
+              return (
+                <button
+                  key={`${client.slug}-${copyIndex}`}
+                  type="button"
+                  tabIndex={isCopy ? -1 : 0}
+                  aria-hidden={isCopy || undefined}
+                  aria-label={isCopy ? undefined : `Ver detalhes de ${client.nome}`}
+                  onClick={() => setSelected(client)}
+                  className="group mx-3 flex h-28 w-52 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white p-6 transition-transform hover:scale-[1.03] hover:border-bold-yellow/50 sm:h-32 sm:w-60"
+                >
+                  <img
+                    src={client.logo}
+                    alt={isCopy ? '' : client.nome}
+                    loading="eager"
+                    decoding="async"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </button>
+              )
+            })
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-col items-center gap-5 px-6 pb-24 pt-2 text-center">
+      <div className="mt-14 flex flex-col items-center gap-5 px-6 text-center">
         <p className="text-xl font-bold text-bold-white md:text-2xl">{t.clientes.ctaText}</p>
         <ShinyButton
           onClick={() =>
@@ -133,7 +86,6 @@ export function ClientesWave() {
               <X size={20} />
             </button>
 
-            {/* Preview animado em loop cortado em 10s. Placeholder ate ter o real. */}
             <div className="aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-bold-black/50">
               {selected.videos[0] ? (
                 <video
@@ -143,7 +95,6 @@ export function ClientesWave() {
                   muted
                   playsInline
                   onTimeUpdate={(e) => {
-                    // corta o preview nos primeiros 10s, em loop
                     if (e.currentTarget.currentTime >= 10) e.currentTarget.currentTime = 0
                   }}
                   className="h-full w-full object-cover"

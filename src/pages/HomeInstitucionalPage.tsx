@@ -11,7 +11,8 @@ import { CoinDecor } from '@/components/home/CoinDecor'
 import { Footer } from '@/components/home/Footer'
 import { CrewSticky } from '@/components/home/CrewSticky'
 import { ClientesWave } from '@/components/home/ClientesWave'
-import { ReelsEspiral } from '@/components/home/ReelsEspiral'
+import { CasesAbertura } from '@/components/home/CasesAbertura'
+import { CasesCarrossel } from '@/components/home/CasesCarrossel'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
 import { QuickNav } from '@/components/home/QuickNav'
@@ -123,9 +124,11 @@ function HomeContent() {
 
         <CrewSticky />
 
-        <ClientesWave />
+        <CasesAbertura />
 
-        <ReelsEspiral />
+        <CasesCarrossel />
+
+        <ClientesWave />
 
         <section id="contato" data-reveal className="relative flex scroll-mt-24 flex-col items-center overflow-hidden px-6 py-32">
           <CoinDecor className="right-4 top-16 w-20 opacity-15 sm:right-16 sm:w-28" rotate={16} floatDuration={8} />

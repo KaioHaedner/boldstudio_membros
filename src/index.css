@@ -857,6 +857,25 @@ textarea {
   .live-yellow::before { animation: none; }
 }
 
+/* ============== Marquee de marcas (carrossel contínuo de logos) ============== */
+@keyframes marcas-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marcas-marquee {
+  animation: marcas-scroll 50s linear infinite;
+}
+.marcas-marquee:hover {
+  animation-play-state: paused;
+}
+.marcas-marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .marcas-marquee { animation: none; }
+}
+
 /* ============== Coin decorativo (símbolo Bold espalhado) ============== */
 @keyframes coin-bob {
   0%, 100% { translate: 0 0; }

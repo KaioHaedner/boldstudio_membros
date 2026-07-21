@@ -81,6 +81,13 @@ const pt = {
       'pedro-neto': { role: 'Fotógrafo', desc: 'Fotografia still que registra a essência de cada projeto com força e identidade.' },
     },
   },
+  cases: {
+    label: 'Cases',
+    lineA: 'Eles confiaram na',
+    lineB: 'e suas marcas estão',
+    highlight: 'eternizadas',
+    typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
+  },
   clientes: {
     eyebrow: 'Clientes',
     title: 'Marcas que a BoldStudio já atendeu',
@@ -229,6 +236,13 @@ const en: Dict = {
       'pedro-neto': { role: 'Photographer', desc: 'Still photography that captures the essence of each project with strength and identity.' },
     },
   },
+  cases: {
+    label: 'Cases',
+    lineA: 'They trusted',
+    lineB: 'and their brands are',
+    highlight: 'eternalized',
+    typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
+  },
   clientes: {
     eyebrow: 'Clients',
     title: 'Brands BoldStudio has worked with',
@@ -374,6 +388,13 @@ const es: Dict = {
       germano: { role: 'Filmmaker / Editor', desc: 'De la captación al montaje, da ritmo y emoción a la narrativa que atrapa de principio a fin.' },
       'pedro-neto': { role: 'Fotógrafo', desc: 'Fotografía still que registra la esencia de cada proyecto con fuerza e identidad.' },
     },
+  },
+  cases: {
+    label: 'Cases',
+    lineA: 'Confiaron en',
+    lineB: 'y sus marcas están',
+    highlight: 'eternizadas',
+    typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
   },
   clientes: {
     eyebrow: 'Clientes',
