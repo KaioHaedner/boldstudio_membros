@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, MapPin, Phone, Play, Video, X } from 'lucide-react'
 import { gsap } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
+import { CoinDecor } from '@/components/home/CoinDecor'
 import { useI18n } from '@/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/data/clientes'
 
@@ -57,7 +58,9 @@ export function ClientesWave() {
   }, [])
 
   return (
-    <section id="clientes" className="clientes-wave scroll-mt-24">
+    <section id="clientes" className="clientes-wave relative scroll-mt-24 overflow-hidden">
+      <CoinDecor className="right-8 top-24 w-16 opacity-15 sm:w-24" rotate={18} floatDuration={7} />
+      <CoinDecor className="left-4 bottom-32 hidden w-14 opacity-[0.12] lg:block" rotate={-20} floatDuration={9} />
       <div className="px-6 pt-24 pb-4 text-center">
         <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.clientes.eyebrow}</p>
         <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.clientes.title}</h2>

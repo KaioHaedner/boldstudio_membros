@@ -37,6 +37,11 @@ const pt = {
     eyebrow: 'Sobre o estúdio',
     title: 'Quem é a BoldStudio',
     body: 'Somos uma produtora audiovisual especializada em soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Seja no Agro, indústrias, produtos ou eventos, atuamos sempre com foco em resultado, eficiência de produção e alto padrão visual.',
+    paragraphs: [
+      'A BoldStudio é a produtora que o **resultado** construiu. Nascemos no **Agro**, na **indústria** e nos eventos mais exigentes do país — forjando uma linguagem audiovisual **nativa, real e orientada a performance**.',
+      'Hoje é exatamente isso que **marcas e empresas** precisam: no lançamento de um produto, numa **ativação de marca** ou numa **campanha digital** de alto padrão visual.',
+      'Não entregamos **vídeo**. Entregamos a **certeza** de que o resultado vem junto.',
+    ],
     diffs: [
       'Processos claros do briefing à entrega final',
       'Equipe experiente e estrutura própria',
@@ -179,6 +184,11 @@ const en: Dict = {
     eyebrow: 'About the studio',
     title: 'Who is BoldStudio',
     body: "We're an audiovisual studio specialized in strategic photo and video solutions for companies, events and brands. Whether in Agribusiness, industry, products or events, we always work focused on results, production efficiency and high visual standards.",
+    paragraphs: [
+      "BoldStudio is the studio that **results** built. We were born in **Agribusiness**, **industry** and the country's most demanding events — forging an audiovisual language that is **native, real and performance-driven**.",
+      'Today this is exactly what **brands and companies** need: in a product launch, a **brand activation** or a **high-end digital campaign**.',
+      "We don't deliver **video**. We deliver the **certainty** that results come with it.",
+    ],
     diffs: [
       'Clear processes from briefing to final delivery',
       'Experienced team and our own structure',
@@ -319,6 +329,11 @@ const es: Dict = {
     eyebrow: 'Sobre el estudio',
     title: 'Quién es BoldStudio',
     body: 'Somos un estudio audiovisual especializado en soluciones estratégicas de foto y video para empresas, eventos y marcas. Sea en el Agro, industrias, productos o eventos, actuamos siempre con foco en resultados, eficiencia de producción y alto estándar visual.',
+    paragraphs: [
+      'BoldStudio es la productora que el **resultado** construyó. Nacimos en el **Agro**, la **industria** y los eventos más exigentes del país — forjando un lenguaje audiovisual **nativo, real y orientado al rendimiento**.',
+      'Hoy es exactamente eso lo que **marcas y empresas** necesitan: en el lanzamiento de un producto, una **activación de marca** o una **campaña digital** de alto estándar visual.',
+      'No entregamos **video**. Entregamos la **certeza** de que el resultado viene junto.',
+    ],
     diffs: [
       'Procesos claros del briefing a la entrega final',
       'Equipo experimentado y estructura propia',

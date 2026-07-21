@@ -5,6 +5,8 @@ import { IntroBold } from '@/components/IntroBold'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
 import { ShinyButton } from '@/components/ShinyButton'
 import { Header } from '@/components/home/Header'
+import { SobreAboutUs } from '@/components/home/SobreAboutUs'
+import { CoinDecor } from '@/components/home/CoinDecor'
 import { Footer } from '@/components/home/Footer'
 import { CrewSticky } from '@/components/home/CrewSticky'
 import { ClientesWave } from '@/components/home/ClientesWave'
@@ -80,6 +82,7 @@ function HomeContent() {
         <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:items-stretch md:pb-40 lg:px-12">
           <StudioVideoBg className="home-hero__video" />
           <div className="home-hero__overlay absolute inset-0" aria-hidden="true" />
+          <CoinDecor className="left-6 top-1/3 z-[1] w-20 opacity-15 sm:left-12 sm:w-28" rotate={-14} floatDuration={8} />
 
           <div className="relative z-10 flex w-full flex-col -translate-y-[5svh] text-center md:translate-y-0 md:text-right">
             <div>
@@ -113,21 +116,11 @@ function HomeContent() {
           </div>
         </section>
 
-        <section id="sobre" data-reveal className="mx-auto max-w-4xl scroll-mt-24 px-6 py-32 text-center">
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.sobre.eyebrow}</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.sobre.title}</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-bold-white/65">{t.sobre.body}</p>
-          <div className="mx-auto mt-10 grid max-w-3xl gap-4 text-left sm:grid-cols-2">
-            {t.sobre.diffs.map((item) => (
-              <div key={item} className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-4">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-bold-yellow" aria-hidden="true" />
-                <span className="text-sm text-bold-white/80">{item}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+        <SobreAboutUs />
 
-        <section id="servicos" data-reveal className="mx-auto max-w-5xl scroll-mt-24 px-6 py-32 text-center">
+        <section id="servicos" data-reveal className="relative mx-auto max-w-5xl scroll-mt-24 overflow-hidden px-6 py-32 text-center">
+          <CoinDecor className="-left-10 top-10 w-28 opacity-[0.07] sm:w-40" rotate={-18} floatDuration={9} />
+          <CoinDecor className="-right-6 bottom-16 w-16 opacity-20 sm:w-20" rotate={24} floatDuration={6} />
           <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.servicos.eyebrow}</p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">{t.servicos.title}</h2>
           <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -145,7 +138,9 @@ function HomeContent() {
 
         <ReelsEspiral />
 
-        <section id="contato" data-reveal className="flex scroll-mt-24 flex-col items-center px-6 py-32">
+        <section id="contato" data-reveal className="relative flex scroll-mt-24 flex-col items-center overflow-hidden px-6 py-32">
+          <CoinDecor className="right-4 top-16 w-20 opacity-15 sm:right-16 sm:w-28" rotate={16} floatDuration={8} />
+          <CoinDecor className="left-6 bottom-24 hidden w-14 opacity-20 sm:block" rotate={-12} floatDuration={6} />
           <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.contato.eyebrow}</p>
           <h2 className="mt-3 text-center text-3xl font-bold md:text-4xl">{t.contato.title}</h2>
           <div className="mt-10 w-full max-w-2xl">
