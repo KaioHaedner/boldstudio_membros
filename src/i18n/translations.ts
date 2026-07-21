@@ -52,6 +52,7 @@ const pt = {
   servicos: {
     eyebrow: 'O que fazemos',
     title: 'Soluções de ponta a ponta',
+    label: 'Soluções',
     items: [
       'Vídeos publicitários',
       'Vídeos institucionais e corporativos',
@@ -199,6 +200,7 @@ const en: Dict = {
   servicos: {
     eyebrow: 'What we do',
     title: 'End-to-end solutions',
+    label: 'Solutions',
     items: [
       'Advertising videos',
       'Institutional and corporate videos',
@@ -344,6 +346,7 @@ const es: Dict = {
   servicos: {
     eyebrow: 'Lo que hacemos',
     title: 'Soluciones de punta a punta',
+    label: 'Soluciones',
     items: [
       'Videos publicitarios',
       'Videos institucionales y corporativos',

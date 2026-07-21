@@ -112,7 +112,7 @@ export function CrewSticky() {
   return (
     <section id="crew" className="scroll-mt-24">
       <div ref={cardsRef} className="crew-cards">
-        <div className="crew-signature" aria-label="BoldCrew">
+        <div className="crew-signature live-yellow" aria-label="BoldCrew">
           BoldCrew
         </div>
 

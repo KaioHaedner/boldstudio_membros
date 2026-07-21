@@ -823,6 +823,40 @@ textarea {
   opacity: 0;
 }
 
+/* ============== Amarelo vivo (gradiente deslizando via GPU) ==============
+   Anima por transform num ::before — funciona mesmo dentro de seções que o
+   GSAP promove a camada de composição (onde background-position nao repinta).
+   O gradiente tem 2 ciclos identicos ao longo de 200% de largura, e o translate
+   de -50% desloca exatamente 1 ciclo -> loop perfeito. */
+.live-yellow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #ffd712;
+}
+.live-yellow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 200%;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    #E5BE10 0%, #FFE866 8.333%, #FFD712 16.666%, #FFF3B0 25%, #F5C816 33.333%, #FFD712 41.666%,
+    #E5BE10 50%, #FFE866 58.333%, #FFD712 66.666%, #FFF3B0 75%, #F5C816 83.333%, #FFD712 91.666%,
+    #E5BE10 100%
+  );
+  animation: live-yellow-slide 7s linear infinite;
+  will-change: transform;
+}
+@keyframes live-yellow-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-yellow::before { animation: none; }
+}
+
 /* ============== Coin decorativo (símbolo Bold espalhado) ============== */
 @keyframes coin-bob {
   0%, 100% { translate: 0 0; }
