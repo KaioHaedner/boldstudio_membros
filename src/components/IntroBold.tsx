@@ -76,6 +76,11 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
           />
           <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" />
           <p>Carregando sua experiência Bold</p>
+          <div className="intro-dots" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
       )}
 

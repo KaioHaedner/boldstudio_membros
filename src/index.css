@@ -777,6 +777,37 @@ textarea {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
 }
+.intro-dots {
+  display: flex;
+  gap: 8px;
+  height: 10px;
+  align-items: center;
+}
+.intro-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ffd712;
+  animation: intro-dot-blink 1.2s ease-in-out infinite;
+}
+.intro-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.intro-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes intro-dot-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 .intro-eq {
   display: flex;
   align-items: flex-end;
@@ -802,7 +833,8 @@ textarea {
   .intro-frase span,
   .intro-rec-led,
   .intro-carregando,
-  .intro-eq span {
+  .intro-eq span,
+  .intro-dots span {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
