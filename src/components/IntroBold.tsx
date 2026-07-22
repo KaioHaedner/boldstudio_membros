@@ -1,23 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 
-// Quais cubos (indices 0..14, grade 3x5) ficam ACESOS em cada digito.
-const DIGIT_MAPS: Record<number, number[]> = {
-  3: [0, 1, 2, 5, 6, 7, 8, 11, 12, 13, 14],
-  2: [0, 1, 2, 5, 6, 7, 8, 9, 12, 13, 14],
-  1: [1, 3, 4, 7, 10, 12, 13, 14],
-}
-
-const EQ_DELAYS = [0, 0.18, 0.36, 0.12, 0.28]
-
-type Phase = 'contando' | 'frase' | 'carregando' | 'saindo'
+type Phase = 'carregando' | 'frase' | 'saindo'
 
 const prefersReduce =
   typeof window !== 'undefined' &&
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// Intro/abertura da home institucional: contador 3-2-1 com cubos 3D,
-// transicao "Solta o Rec", logo + carregando, e some revelando a home.
+// Intro/abertura da home institucional:
+// 1) efeito 3D "carregando" (moeda girando) por ~3s
+// 2) frase "Solta o Rec"
+// 3) some revelando a home.
 // Roda 1x por sessao (sessionStorage). Sempre termina (timeout de seguranca).
 export function IntroBold({ onFinish }: { onFinish?: () => void }) {
   const [show, setShow] = useState(() => {
@@ -28,8 +21,7 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
       return false
     }
   })
-  const [phase, setPhase] = useState<Phase>(prefersReduce ? 'carregando' : 'contando')
-  const [digito, setDigito] = useState(3)
+  const [phase, setPhase] = useState<Phase>('carregando')
   const onFinishRef = useRef(onFinish)
   useEffect(() => {
     onFinishRef.current = onFinish
@@ -50,27 +42,22 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
     }
 
     if (prefersReduce) {
-      // Versao curta e estatica: mostra logo/carregando e abre a home.
+      // Versao curta e estatica: mostra o carregando e abre a home.
       timers.push(window.setTimeout(finish, 1400))
       return () => timers.forEach(clearTimeout)
     }
 
-    // Timeline (~10s): 3 -> 2 -> 1 -> frase (Solta/O/Rec um a um) -> carregando -> sai
-    timers.push(window.setTimeout(() => setDigito(2), 1200))
-    timers.push(window.setTimeout(() => setDigito(1), 2400))
-    timers.push(window.setTimeout(() => setPhase('frase'), 3600))
-    timers.push(window.setTimeout(() => setPhase('carregando'), 7600))
-    timers.push(window.setTimeout(() => setPhase('saindo'), 9400))
-    timers.push(window.setTimeout(finish, 10000))
+    // Timeline (~6.3s): carregando (efeito 3D, 3s) -> frase (Solta/O/Rec) -> sai
+    timers.push(window.setTimeout(() => setPhase('frase'), 3000))
+    timers.push(window.setTimeout(() => setPhase('saindo'), 5800))
+    timers.push(window.setTimeout(finish, 6300))
     // Timeout de seguranca: nunca deixar o usuario preso na intro.
-    timers.push(window.setTimeout(finish, 12000))
+    timers.push(window.setTimeout(finish, 8000))
 
     return () => timers.forEach(clearTimeout)
   }, [show])
 
   if (!show) return null
-
-  const acesos = new Set(DIGIT_MAPS[digito] ?? [])
 
   return (
     <div
@@ -78,14 +65,17 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
       aria-label="Carregando"
       className={`intro-overlay ${phase === 'saindo' ? 'intro-saindo' : ''}`}
     >
-      {(phase === 'contando' || phase === 'frase') && (
-        <div className={`intro-grid ${phase === 'frase' ? 'cubos-saindo' : ''}`}>
-          {Array.from({ length: 15 }, (_, i) => (
-            <div key={i} className={`intro-cube ${acesos.has(i) ? 'on' : 'off'}`}>
-              <div className="face face-on" />
-              <div className="face face-off" />
-            </div>
-          ))}
+      {phase === 'carregando' && (
+        <div className="intro-carregando">
+          <img
+            className="intro-coin"
+            src="/brand/moeda-3d.webp"
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+          />
+          <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" />
+          <p>Carregando sua experiência Bold</p>
         </div>
       )}
 
@@ -97,25 +87,6 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
             <span className="intro-rec-led" aria-hidden="true" />
             REC
           </span>
-        </div>
-      )}
-
-      {phase === 'carregando' && (
-        <div className="intro-carregando">
-          <img
-            className="intro-coin"
-            src="/brand/moeda-3d.webp"
-            alt=""
-            aria-hidden="true"
-            draggable={false}
-          />
-          <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" />
-          <div className="intro-eq" aria-hidden="true">
-            {EQ_DELAYS.map((d, i) => (
-              <span key={i} style={{ animationDelay: `${d}s` }} />
-            ))}
-          </div>
-          <p>Carregando sua experiência Bold</p>
         </div>
       )}
     </div>
