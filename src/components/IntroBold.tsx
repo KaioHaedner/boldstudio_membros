@@ -102,6 +102,13 @@ export function IntroBold({ onFinish }: { onFinish?: () => void }) {
 
       {phase === 'carregando' && (
         <div className="intro-carregando">
+          <img
+            className="intro-coin"
+            src="/brand/moeda-3d.webp"
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+          />
           <img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" />
           <div className="intro-eq" aria-hidden="true">
             {EQ_DELAYS.map((d, i) => (
