@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { MapPin } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 import { IntroBold } from '@/components/IntroBold'
@@ -13,6 +14,7 @@ import { Footer } from '@/components/home/Footer'
 import { CrewSticky } from '@/components/home/CrewSticky'
 import { ClientesWave } from '@/components/home/ClientesWave'
 import { CasesAbertura } from '@/components/home/CasesAbertura'
+import { AcademySection } from '@/components/home/AcademySection'
 import { CasesCarrossel } from '@/components/home/CasesCarrossel'
 import { ContactForm } from '@/components/home/ContactForm'
 import { RecIAWidget } from '@/components/home/RecIAWidget'
@@ -129,17 +131,60 @@ function HomeContent() {
 
         <CasesCarrossel />
 
-        <ProcessoTimeline />
-
         <ClientesWave />
 
-        <section id="contato" data-reveal className="relative flex scroll-mt-24 flex-col items-center overflow-hidden px-6 py-32">
-          <CoinDecor className="right-4 top-16 w-20 opacity-15 sm:right-16 sm:w-28" rotate={16} floatDuration={8} />
-          <CoinDecor className="left-6 bottom-24 hidden w-14 opacity-20 sm:block" rotate={-12} floatDuration={6} />
-          <p className="text-xs font-bold tracking-wider text-bold-yellow">{t.contato.eyebrow}</p>
-          <h2 className="mt-3 text-center text-3xl font-bold md:text-4xl">{t.contato.title}</h2>
-          <div className="mt-10 w-full max-w-2xl">
-            <ContactForm />
+        <ProcessoTimeline />
+
+        <AcademySection />
+
+        <section id="contato" data-reveal className="relative scroll-mt-24 px-6">
+          {/* Fundo: foto de bastidor + overlay pra legibilidade */}
+          <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
+            <img
+              src="/brand/boldstudio-bg.webp"
+              alt=""
+              className="h-full w-full object-cover object-center"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-bold-black via-bold-black/85 to-bold-black/45" />
+            <div className="absolute inset-0 bg-bold-black/40 md:hidden" />
+          </div>
+
+          {/* Coins da marca */}
+          <CoinDecor className="right-6 top-12 z-[1] w-20 opacity-25 sm:right-16 sm:w-28" rotate={16} floatDuration={8} />
+          <CoinDecor className="left-6 bottom-16 z-[1] hidden w-16 opacity-20 sm:block sm:w-24" rotate={-12} floatDuration={6} />
+
+          {/* Área de conteúdo (altura da tela) */}
+          <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 pb-24 pt-32 lg:grid-cols-2 lg:gap-16">
+            {/* Esquerda: chamada + apoio */}
+            <div className="text-center lg:text-left">
+              <h2 className="text-5xl font-bold leading-[1] md:text-6xl">
+                Sua marca merece <span className="text-bold-yellow">resultado</span>.
+              </h2>
+              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-bold-white/75 lg:mx-0">
+                Toda marca carrega uma história pronta pra virar resultado e o audiovisual
+                certo é o que faz isso acontecer, então preenche seus dados{' '}
+                <span className="lg:hidden">aqui embaixo</span>
+                <span className="hidden lg:inline">aqui do lado</span> e se quiser manda um
+                áudio contando seu projeto que a nossa IA transcreve pra você
+              </p>
+              <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-bold-white/60">
+                <MapPin size={16} className="text-bold-yellow" /> Sinop, MT · Produtora Audiovisual
+              </p>
+            </div>
+
+            {/* Direita: formulário em glass */}
+            <div className="flex justify-center lg:justify-end">
+              <ContactForm />
+            </div>
+          </div>
+
+          {/* Etiqueta amarela sticky com gradiente vivo (estilo BoldCrew/Soluções) */}
+          <div className="pointer-events-none sticky bottom-6 z-10 -ml-6">
+            <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
+              {t.contato.eyebrow}
+            </span>
           </div>
         </section>
       </main>

@@ -122,6 +122,7 @@ const pt = {
   contato: {
     eyebrow: 'Contato',
     title: 'Vamos gravar algo bold?',
+    helper: 'Conta o desafio. Devolvemos um plano e a câmera na mão.',
   },
   form: {
     nome: 'Nome',
@@ -278,6 +279,7 @@ const en: Dict = {
   contato: {
     eyebrow: 'Contact',
     title: "Let's shoot something bold?",
+    helper: 'Tell us the challenge. We bring back a plan — and the camera ready.',
   },
   form: {
     nome: 'Name',
@@ -432,6 +434,7 @@ const es: Dict = {
   contato: {
     eyebrow: 'Contacto',
     title: '¿Vamos a grabar algo bold?',
+    helper: 'Cuéntanos el desafío. Te devolvemos un plan y la cámara lista.',
   },
   form: {
     nome: 'Nombre',

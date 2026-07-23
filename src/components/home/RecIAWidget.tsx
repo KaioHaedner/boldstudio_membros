@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Send, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
@@ -45,16 +45,6 @@ export function RecIAWidget() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
-  const [teaser, setTeaser] = useState(0)
-
-  // Cicla as frases dos baloes enquanto o widget esta fechado.
-  useEffect(() => {
-    if (stage !== 'closed') return
-    const id = window.setInterval(() => {
-      setTeaser((prev) => (prev + 1) % t.recia.teasers.length)
-    }, 3600)
-    return () => window.clearInterval(id)
-  }, [stage, t.recia.teasers.length])
 
   async function startChat(e: FormEvent) {
     e.preventDefault()
@@ -87,19 +77,9 @@ export function RecIAWidget() {
     <div
       className={cn(
         'fixed bottom-4 right-4 z-[100] sm:bottom-6 sm:right-6',
-        stage === 'closed' ? 'flex items-end gap-2.5' : 'flex flex-col items-end'
+        stage === 'closed' ? 'flex items-end' : 'flex flex-col items-end'
       )}
     >
-      {/* Balao de chamada (apenas com o widget fechado) */}
-      {stage === 'closed' && (
-        <div
-          key={teaser}
-          className="recia-bubble relative flex h-12 max-w-[11.5rem] items-center rounded-xl border border-bold-yellow/35 bg-[#161616]/90 px-3 py-2 text-[12px] font-semibold leading-[1.25] text-bold-white shadow-[0_12px_30px_-10px_rgba(0,0,0,0.85)] backdrop-blur-xl"
-        >
-          {t.recia.teasers[teaser]}
-        </div>
-      )}
-
       {stage === 'closed' && (
         <button
           type="button"
@@ -107,6 +87,19 @@ export function RecIAWidget() {
           aria-label={t.recia.openAria}
           className="relative flex h-14 w-14 items-center justify-center rounded-full drop-shadow-[0_8px_25px_rgba(255,215,18,0.45)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
         >
+          {/* "Olhinhos" espiando (SVG estilo Apple, consistente em qualquer device) */}
+          <svg
+            viewBox="0 0 48 34"
+            className="pointer-events-none absolute -top-9 left-1/2 h-7 w-10 -translate-x-1/2 animate-bounce drop-shadow-[0_4px_10px_rgba(0,0,0,0.45)]"
+            aria-hidden
+          >
+            <ellipse cx="14.5" cy="17" rx="11.5" ry="15" fill="#fff" stroke="#0f0f14" strokeWidth="1.2" />
+            <ellipse cx="33.5" cy="17" rx="11.5" ry="15" fill="#fff" stroke="#0f0f14" strokeWidth="1.2" />
+            <circle cx="14.5" cy="23.5" r="6" fill="#15151f" />
+            <circle cx="33.5" cy="23.5" r="6" fill="#15151f" />
+            <circle cx="12.4" cy="21.4" r="1.7" fill="#fff" />
+            <circle cx="31.4" cy="21.4" r="1.7" fill="#fff" />
+          </svg>
           <img src={RECIA_ICON} alt="RecIA" className="h-14 w-14 object-contain sm:h-16 sm:w-16" />
           {/* Sinal vermelho de "nova mensagem" (notificacao) */}
           <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5">

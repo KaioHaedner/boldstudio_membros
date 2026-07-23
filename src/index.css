@@ -1516,3 +1516,58 @@ textarea {
     text-align: center;
   }
 }
+
+/* =====================================================================
+   Academy — seção clara (única do site no branco da marca).
+   Fundo branco + shaders amarelos 15% + ícones "vindo do fundo pro perto"
+   + marquee de texto "ACADEMY •" ao fundo.
+   ===================================================================== */
+
+/* Texto gigante "ACADEMY •" rolando em loop atrás do conteúdo */
+@keyframes academy-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.academy-marquee {
+  animation: academy-marquee 40s linear infinite;
+}
+
+/* Ícone surgindo do fundo (scale 0) e crescendo até o "perto", some ao chegar.
+   O tamanho final é controlado pela largura do próprio ícone (var --acad-size). */
+@keyframes academy-approach {
+  0%   { transform: scale(0);    opacity: 0; filter: blur(6px); }
+  18%  { opacity: 0.85; }
+  70%  { opacity: 0.85; filter: blur(0); }
+  100% { transform: scale(1);    opacity: 0; filter: blur(0); }
+}
+.academy-icon {
+  position: absolute;
+  width: var(--acad-size, clamp(24px, 3vw, 46px));
+  height: var(--acad-size, clamp(24px, 3vw, 46px));
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: academy-approach var(--acad-dur, 6s) ease-in var(--acad-delay, 0s) infinite;
+}
+.academy-icon svg { width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .academy-marquee { animation: none; }
+  .academy-icon { animation: none; opacity: 0; }
+}
+
+/* "SOLTA / O / REC" — UMA palavra por vez no mesmo slot: desliza da esquerda,
+   fica ~1/3 do ciclo, sai pra direita; as 3 se revezam via animation-delay. */
+@keyframes rec-word {
+  0%   { transform: translateX(-140%); opacity: 0; }
+  8%   { transform: translateX(0);     opacity: 1; }
+  25%  { transform: translateX(0);     opacity: 1; }
+  33%  { transform: translateX(140%);  opacity: 0; }
+  100% { transform: translateX(-140%); opacity: 0; }
+}
+.animate-rec-word {
+  animation: rec-word 3.6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-rec-word { animation: none; opacity: 1; transform: none; }
+}
