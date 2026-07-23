@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowUp, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -7,8 +7,9 @@ const LINKS = [
   { href: '#sobre', label: 'Sobre' },
   { href: '#servicos', label: 'Serviços' },
   { href: '#crew', label: 'Crew' },
+  { href: '#cases', label: 'Reels' },
+  { href: '#processo', label: 'Processo' },
   { href: '#clientes', label: 'Clientes' },
-  { href: '#reels', label: 'Reels' },
   { href: '#contato', label: 'Contato' },
 ]
 
@@ -16,6 +17,19 @@ const LINKS = [
 // secoes da home + "Ir ao Topo".
 export function QuickNav() {
   const [open, setOpen] = useState(false)
+  // So aparece depois que o usuario rola (o header, agora nao-fixo, ja saiu do topo).
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const active = window.scrollY > window.innerHeight * 0.6
+      setScrolled(active)
+      if (!active) setOpen(false)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   function go(href: string) {
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -27,7 +41,12 @@ export function QuickNav() {
   }
 
   return (
-    <div className="fixed left-0 top-1/2 z-[90] flex -translate-y-1/2 items-center">
+    <div
+      className={cn(
+        'fixed left-0 top-1/2 z-[90] flex -translate-y-1/2 items-center transition-all duration-300 ease-out',
+        scrolled ? 'opacity-100' : 'pointer-events-none -translate-x-12 opacity-0'
+      )}
+    >
       <div
         className={cn(
           'overflow-hidden transition-all duration-300 ease-out',
@@ -61,7 +80,10 @@ export function QuickNav() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? 'Fechar acesso rápido' : 'Abrir acesso rápido'}
         aria-expanded={open}
-        className="flex h-16 w-7 items-center justify-center rounded-r-lg bg-bold-yellow text-bold-black shadow-[0_8px_25px_-6px_rgba(255,215,18,0.6)] transition-all hover:w-8"
+        className={cn(
+          'flex h-16 w-7 items-center justify-center rounded-r-lg bg-bold-yellow text-bold-black shadow-[0_8px_25px_-6px_rgba(255,215,18,0.6)] transition-all hover:w-8',
+          !open && 'quicknav-tab'
+        )}
       >
         {open ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
       </button>

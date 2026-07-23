@@ -7,6 +7,7 @@ import { ShinyButton } from '@/components/ShinyButton'
 import { Header } from '@/components/home/Header'
 import { SobreAboutUs } from '@/components/home/SobreAboutUs'
 import { SolucoesSticky } from '@/components/home/SolucoesSticky'
+import { ProcessoTimeline } from '@/components/home/ProcessoTimeline'
 import { CoinDecor } from '@/components/home/CoinDecor'
 import { Footer } from '@/components/home/Footer'
 import { CrewSticky } from '@/components/home/CrewSticky'
@@ -127,6 +128,8 @@ function HomeContent() {
         <CasesAbertura />
 
         <CasesCarrossel />
+
+        <ProcessoTimeline />
 
         <ClientesWave />
 

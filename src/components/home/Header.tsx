@@ -9,8 +9,9 @@ const NAV_LINKS = [
   { href: '#sobre', key: 'sobre' },
   { href: '#servicos', key: 'servicos' },
   { href: '#crew', key: 'crew' },
+  { href: '#cases', key: 'reels' },
+  { href: '#processo', key: 'processo' },
   { href: '#clientes', key: 'clientes' },
-  { href: '#reels', key: 'reels' },
   { href: '#contato', key: 'contato' },
 ] as const
 
@@ -46,7 +47,7 @@ export function Header() {
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-[110] bg-transparent">
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-[110] bg-transparent">
         <nav
           aria-label="Navegação principal"
           className="relative flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
