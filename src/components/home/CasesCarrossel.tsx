@@ -106,13 +106,8 @@ export function CasesCarrossel() {
             </ShinyButton>
           </div>
 
-          <div className="case-caption absolute inset-x-5 bottom-[9%] sm:inset-x-12">
-            {client.area && (
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow sm:text-sm">
-                {client.area}
-              </span>
-            )}
-            <div className="mt-3 flex items-center gap-4 sm:gap-5">
+          <div className="case-caption absolute inset-x-5 bottom-[22%] sm:inset-x-12">
+            <div className="flex items-center gap-4 sm:gap-5">
               <span className="flex h-14 shrink-0 items-center justify-center rounded-lg bg-white px-3 sm:h-20">
                 <img
                   src={client.logo}
@@ -128,6 +123,13 @@ export function CasesCarrossel() {
           </div>
         </article>
       ))}
+
+      {/* Etiqueta "Cases" — fixa no rodapé durante todo o efeito (seção pinada) */}
+      <div className="pointer-events-none absolute bottom-8 left-0 z-30">
+        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
+          {t.cases.label}
+        </span>
+      </div>
     </section>
   )
 }

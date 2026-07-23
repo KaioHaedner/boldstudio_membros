@@ -101,7 +101,7 @@ export function AcademySection() {
       <section
         id="academy"
         data-reveal
-        className="relative scroll-mt-24 overflow-hidden border-t-2 border-bold-yellow bg-bold-white pb-24 pt-24 md:pb-32 md:pt-28"
+        className="relative scroll-mt-24 border-t-2 border-bold-yellow bg-bold-white pb-24 pt-24 md:pb-32 md:pt-28"
       >
       {/* Shaders amarelos (opacidade ~15%), só neste container */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -176,6 +176,13 @@ export function AcademySection() {
         <div className="mt-10">
           <ShinyButton onClick={() => navigate('/academy')}>Conhecer Academy</ShinyButton>
         </div>
+      </div>
+
+      {/* Etiqueta amarela sticky com gradiente vivo (estilo Soluções/Contato) */}
+      <div className="pointer-events-none sticky bottom-6 z-20 mt-16">
+        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black shadow-[0_12px_30px_-8px_rgba(0,0,0,0.45)] sm:pr-10">
+          Academy
+        </span>
       </div>
       </section>
     </div>

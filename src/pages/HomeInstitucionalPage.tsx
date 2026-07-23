@@ -135,6 +135,23 @@ function HomeContent() {
 
         <ProcessoTimeline />
 
+        {/* Statement — "Nascida para ganhar o Brasil" em seção própria */}
+        <section
+          id="nascida-brasil"
+          data-reveal
+          className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-bold-black px-6 pb-44 pt-24 text-center"
+        >
+          <CoinDecor className="left-8 top-16 z-[1] w-20 opacity-15 sm:w-28" rotate={-14} floatDuration={8} />
+          <CoinDecor className="right-8 bottom-20 z-[1] hidden w-16 opacity-15 sm:block sm:w-24" rotate={16} floatDuration={6} />
+
+          <h2 className="relative z-10 text-[45px] font-extrabold leading-[0.95] text-bold-white sm:text-[54px] md:text-[72px] lg:text-[96px]">
+            Nascida para ganhar o
+          </h2>
+          <span className="live-yellow relative z-10 mt-4 inline-block rounded-xl px-5 py-1.5 text-6xl font-black italic tracking-[-0.03em] text-bold-black sm:text-7xl md:text-8xl lg:text-9xl">
+            Brasil
+          </span>
+        </section>
+
         <AcademySection />
 
         <section id="contato" data-reveal className="relative scroll-mt-24 px-6">

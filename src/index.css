@@ -1364,7 +1364,7 @@ textarea {
   background: var(--color-bold-black);
 }
 .processo__intro {
-  max-width: 60rem;
+  max-width: 82rem;
   margin: 0 auto clamp(2.5rem, 6vw, 4.5rem);
   text-align: center;
 }
@@ -1372,10 +1372,11 @@ textarea {
   font-family: var(--font-sans);
   font-weight: 800;
   font-style: italic;
-  font-size: clamp(2rem, 4.6vw, 3.75rem);
+  font-size: clamp(2.5rem, 5.75vw, 4.7rem);
   line-height: 1.14;
   letter-spacing: -0.02em;
   color: var(--color-bold-white);
+  white-space: nowrap;
 }
 .processo__logo {
   display: inline-block;
@@ -1440,11 +1441,12 @@ textarea {
 
 /* ---- Frase ---- */
 .processo__frase {
+  max-width: 72rem;
   margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
-  text-align: center;
+  text-align: left;
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(1.25rem, 3vw, 2.25rem);
+  font-size: clamp(1.758rem, 4.23vw, 3.164rem);
   color: var(--color-bold-white);
 }
 .processo__frase-hi {
@@ -1477,13 +1479,13 @@ textarea {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: clamp(2rem, 5vw, 3.5rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--color-bold-white);
+  border-left: 1px solid var(--color-bold-white);
 }
 .processo-counter {
   padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 2.5vw, 1.75rem);
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 1px solid var(--color-bold-white);
+  border-bottom: 1px solid var(--color-bold-white);
 }
 .processo-counter__value {
   font-weight: 900;
@@ -1496,14 +1498,14 @@ textarea {
   margin-top: 0.5rem;
   font-size: clamp(0.7rem, 1.2vw, 0.85rem);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--color-bold-yellow);
 }
 .processo-counters__note {
   margin-top: clamp(2rem, 5vw, 3rem);
   text-align: right;
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(0.95rem, 2vw, 1.35rem);
+  font-size: clamp(1.758rem, 4.23vw, 3.164rem);
   color: var(--color-bold-white);
 }
 
@@ -1570,4 +1572,100 @@ textarea {
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-rec-word { animation: none; opacity: 1; transform: none; }
+}
+
+/* ==== Botoes de contato do Kaio no footer (efeito hover + card/tooltip) ==== */
+.kaio-socials {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  animation: kaio-reveal .28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes kaio-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kaio-social {
+  position: relative;
+  /* cor da marca por botao; --ink = cor do icone sobre a marca */
+  --brand: #E1306C;
+  --ink: #ffffff;
+}
+.kaio-social--ig   { --brand: #E1306C; --ink: #ffffff; }
+.kaio-social--wa   { --brand: #25D366; --ink: #ffffff; }
+.kaio-social--site { --brand: #FFD712; --ink: #0a0a0a; }
+
+.kaio-social__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--brand);
+  transition: transform .35s ease, background .35s ease, color .35s ease, box-shadow .35s ease;
+}
+.kaio-social__btn svg { width: 20px; height: 20px; display: block; }
+.kaio-social:hover .kaio-social__btn {
+  background: var(--brand);
+  color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px -8px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+/* Instagram ganha o gradiente real no hover */
+.kaio-social--ig:hover .kaio-social__btn {
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+
+.kaio-social__tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .7rem);
+  width: 8rem;
+  padding: .9rem;
+  border-radius: .75rem;
+  background: var(--color-bold-gray, #1a1a1a);
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, .9);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(.5rem);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 20;
+}
+.kaio-social:hover .kaio-social__tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.kaio-social__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto .65rem;
+  border-radius: .6rem;
+  background: var(--brand);
+  color: var(--ink);
+}
+.kaio-social--ig .kaio-social__card {
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+.kaio-social__card svg { width: 26px; height: 26px; display: block; }
+.kaio-social__handle {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  word-break: break-word;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kaio-social__btn,
+  .kaio-social__tip { transition: none; }
+  .kaio-social:hover .kaio-social__btn { transform: none; }
 }

@@ -34,7 +34,7 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
       src={path}
       alt=""
       aria-hidden="true"
-      loading="lazy"
+      loading="eager"
       decoding="async"
     />
   )
@@ -44,7 +44,7 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
 function Frame({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="processo-frame">
-      <img src={src} alt={alt} className="processo-frame__img" loading="lazy" decoding="async" />
+      <img src={src} alt={alt} className="processo-frame__img" loading="eager" decoding="async" />
       <span className="processo-frame__overlay" aria-hidden="true" />
     </div>
   )
@@ -56,35 +56,43 @@ function Counters() {
     const grid = gridRef.current
     if (!grid) return
     const nums = Array.from(grid.querySelectorAll<HTMLElement>('[data-count]'))
-    const st = ScrollTrigger.create({
-      trigger: grid,
-      start: 'top 75%',
-      once: true,
-      onEnter: () => {
-        nums.forEach((el) => {
-          const target = Number(el.dataset.count)
-          const obj = { v: 0 }
-          gsap.to(obj, {
-            v: target,
-            duration: 1.6,
-            ease: 'power2.out',
-            onUpdate: () => {
-              el.textContent = Math.round(obj.v).toLocaleString('pt-BR')
-            },
-          })
+    // Garante que começam zerados até a grade entrar na tela.
+    nums.forEach((el) => (el.textContent = '0'))
+
+    let started = false
+    const run = () => {
+      if (started) return
+      started = true
+      nums.forEach((el) => {
+        const target = Number(el.dataset.count)
+        const obj = { v: 0 }
+        gsap.to(obj, {
+          v: target,
+          duration: 1.8,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = Math.round(obj.v).toLocaleString('pt-BR')
+          },
         })
+      })
+    }
+
+    // IntersectionObserver é imune ao recálculo dos pins do ScrollTrigger.
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect()
+          run()
+        }
       },
-    })
-    return () => st.kill()
+      { threshold: 0.35 }
+    )
+    io.observe(grid)
+    return () => io.disconnect()
   }, [])
 
   return (
     <div className="processo-counters" data-reveal>
-      <h3 className="processo-counters__title">
-        Nascida para ganhar o<br />
-        <span className="processo-counters__brasil live-yellow">Brasil</span>
-      </h3>
-
       <div ref={gridRef} className="processo-counters__grid">
         {COUNTERS.map((c) => (
           <div key={c.label} className="processo-counter">
@@ -98,7 +106,11 @@ function Counters() {
         ))}
       </div>
 
-      <p className="processo-counters__note">Com números que ninguém no Mato Grosso tem!</p>
+      <p className="processo-counters__note">
+        Com números que ninguém
+        <br />
+        no Mato Grosso tem!
+      </p>
     </div>
   )
 }
@@ -170,7 +182,7 @@ export function ProcessoTimeline() {
         <h2 className="processo__title">
           O processo bem feito muda o jogo
           <br />e nisso a{' '}
-          <img className="processo__logo" src="/brand/logo-white.png" alt="bold." />{' '}
+          <img className="processo__logo" src="/brand/logo-boldstudio.webp" alt="bold." />{' '}
           é especialista
         </h2>
       </div>
