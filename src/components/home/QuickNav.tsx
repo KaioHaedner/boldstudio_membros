@@ -26,7 +26,8 @@ export function QuickNav() {
     const onScroll = () => {
       // No mobile so ativa a partir da 2a secao (#sobre) — no hero ele cobria
       // outros elementos. No desktop mantem o gatilho por rolagem da 1a tela.
-      const isMobile = window.innerWidth <= 1000
+      // 1024 = breakpoint lg do Tailwind (mesmo corte do posicionamento).
+      const isMobile = window.innerWidth < 1024
       let active: boolean
       if (isMobile) {
         const sobre = document.querySelector('#sobre')
@@ -58,10 +59,15 @@ export function QuickNav() {
   }
 
   return (
+    // Posicionamento 100% via utilities responsivas (mobile: canto superior
+    // direito; lg+: lateral esquerda centrada). NAO usar CSS custom com
+    // `translate: none` aqui: o minificador de producao fundia
+    // transform/translate e descartava a regra, jogando o botao pra fora da
+    // tela (so em prod — no dev funcionava).
     <div
       className={cn(
-        'quicknav-root fixed left-0 top-1/2 z-[90] flex -translate-y-1/2 items-center transition-all duration-300 ease-out',
-        scrolled ? 'opacity-100' : 'pointer-events-none -translate-x-12 opacity-0'
+        'fixed right-0 top-4 z-[90] flex flex-row-reverse items-start transition-all duration-300 ease-out lg:left-0 lg:right-auto lg:top-1/2 lg:flex-row lg:items-center lg:-translate-y-1/2',
+        scrolled ? 'opacity-100' : 'pointer-events-none opacity-0 lg:-translate-x-12'
       )}
     >
       <div
@@ -70,7 +76,7 @@ export function QuickNav() {
           open ? 'w-44 opacity-100' : 'w-0 opacity-0'
         )}
       >
-        <nav className="quicknav-panel flex w-44 flex-col gap-1 rounded-r-2xl border border-l-0 border-bold-yellow/20 bg-bold-gray p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)]">
+        <nav className="flex w-44 flex-col gap-1 rounded-l-2xl border border-r-0 border-bold-yellow/20 bg-bold-gray p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] lg:rounded-l-none lg:rounded-r-2xl lg:border-l-0 lg:border-r">
           <button
             type="button"
             onClick={toTop}
@@ -98,7 +104,7 @@ export function QuickNav() {
         aria-label={open ? t.quicknav.close : t.quicknav.open}
         aria-expanded={open}
         className={cn(
-          'quicknav-toggle flex h-16 w-7 items-center justify-center rounded-r-lg bg-bold-yellow text-bold-black shadow-[0_8px_25px_-6px_rgba(255,215,18,0.6)] transition-all hover:w-8',
+          'flex h-16 w-7 items-center justify-center rounded-l-lg bg-bold-yellow text-bold-black shadow-[0_8px_25px_-6px_rgba(255,215,18,0.6)] transition-all hover:w-8 lg:rounded-l-none lg:rounded-r-lg',
           !open && 'quicknav-tab'
         )}
       >

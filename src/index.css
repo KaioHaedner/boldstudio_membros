@@ -1198,25 +1198,9 @@ textarea {
   .crew-marquee-vertical__track {
     animation: crew-marquee-vertical-scroll 20s linear infinite reverse;
   }
-  /* QuickNav no mobile: canto superior direito, abrindo para a esquerda.
-     (Fora de @layer, vence as utilities do Tailwind sem !important.) */
-  .quicknav-root {
-    left: auto;
-    right: 0;
-    top: 1rem;
-    transform: none;
-    translate: none;
-    flex-direction: row-reverse;
-    align-items: flex-start;
-  }
-  .quicknav-toggle {
-    border-radius: 0.5rem 0 0 0.5rem;
-  }
-  .quicknav-panel {
-    border-radius: 1rem 0 0 1rem;
-    border-left-width: 1px;
-    border-right-width: 0;
-  }
+  /* QuickNav mobile: posicionado 100% via utilities responsivas no proprio
+     componente. NAO recriar aqui com `translate: none` — o minificador de
+     producao fundia transform/translate e descartava a regra (bug so em prod). */
 }
 @media (prefers-reduced-motion: reduce) {
   .crew-marquee-vertical__track {
