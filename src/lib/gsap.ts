@@ -28,4 +28,21 @@ if (typeof Node !== 'undefined' && !(Node.prototype as PatchedNode).__stRemoveCh
   ;(Node.prototype as PatchedNode).__stRemoveChildPatched = true
 }
 
+// Defesa em profundidade: antes de cada ciclo de refresh, mata triggers cujos
+// elementos ja sairam do DOM (componente desmontado sem revert, HMR, etc).
+// Um trigger orfao fazia _swapPinIn crashar (insertBefore em parent null) no
+// meio do _refreshAll, corrompendo o layout de TODOS os pins e travando o site.
+ScrollTrigger.addEventListener('refreshInit', () => {
+  ScrollTrigger.getAll().forEach((st) => {
+    const trigger = st.trigger as Element | undefined
+    const pin = (st as unknown as { pin?: Element }).pin
+    if ((trigger && !trigger.isConnected) || (pin && !pin.isConnected)) st.kill()
+  })
+})
+
+// Dev only: expoe pra depurar triggers no console (window.ScrollTrigger.getAll()).
+if (import.meta.env.DEV) {
+  ;(window as unknown as { ScrollTrigger?: typeof ScrollTrigger }).ScrollTrigger = ScrollTrigger
+}
+
 export { gsap, ScrollTrigger }

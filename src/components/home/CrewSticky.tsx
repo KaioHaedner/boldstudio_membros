@@ -105,7 +105,11 @@ export function CrewSticky() {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('load', refresh)
-      st.kill()
+      // kill(true) REVERTE o pin (remove o pin-spacer que o GSAP inseriu no DOM).
+      // Sem o revert, ao navegar home -> projeto o spacer ficava orfao, o React
+      // se perdia ao desmontar (removeChild NotFoundError) e, na volta, o
+      // refresh crashava em _swapPinIn (insertBefore em parent null).
+      st.kill(true)
     }
   }, [])
 

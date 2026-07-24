@@ -69,8 +69,10 @@ export function CasesCarrossel() {
         // tenta ate o ScrollTrigger estar medido.
         const caseSlug = new URLSearchParams(window.location.search).get('case')
         if (caseSlug) {
+          // idx 0 tambem precisa do jump: o React Router NAO scrolla pra hash,
+          // entao sem ele o retorno do primeiro case ficava no topo da home.
           const idx = CASES.findIndex((c) => c.slug === caseSlug)
-          if (idx > 0) {
+          if (idx >= 0) {
             let tries = 0
             const jumpToCase = () => {
               const st = tl.scrollTrigger

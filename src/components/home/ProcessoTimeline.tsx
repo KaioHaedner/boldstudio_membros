@@ -186,7 +186,8 @@ export function ProcessoTimeline() {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('load', refresh)
-      st.kill()
+      // kill(true) reverte o pin-spacer no unmount (ver comentario no CrewSticky).
+      st.kill(true)
     }
   }, [])
 
