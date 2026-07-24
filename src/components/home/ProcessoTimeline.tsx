@@ -27,19 +27,11 @@ const COUNTERS: Counter[] = [
   { value: 90, suffix: '%', label: 'Retenção de clientes' },
 ]
 
-// As imgs do Supabase (peças da timeline + fotos) carregam async e mudam a
-// altura do pin depois do load inicial, deslocando as seções abaixo (Academy).
-// Ao terminar cada img, recalculamos os ScrollTriggers (coalescido num frame)
-// pra pins e reveals se realinharem sem depender de ir ao fim e voltar.
-let _refreshPending = false
-function refreshSoon() {
-  if (_refreshPending) return
-  _refreshPending = true
-  requestAnimationFrame(() => {
-    _refreshPending = false
-    ScrollTrigger.refresh()
-  })
-}
+// NAO chamar ScrollTrigger.refresh() no onLoad das imgs: no mobile elas chegam
+// do Supabase ENQUANTO o usuario ja scrolla dentro do pin, e cada refresh no
+// meio do scroll trava e reposiciona a pagina sozinha. O layout ja e reservado
+// antes do load (aspect-ratio nas pecas, altura fixa nos frames), entao o load
+// nao muda as medidas — o refresh do window 'load'/fonts.ready basta.
 
 function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
   return (
@@ -51,7 +43,6 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
       aria-hidden="true"
       loading="eager"
       decoding="async"
-      onLoad={refreshSoon}
     />
   )
 }
@@ -60,7 +51,7 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
 function Frame({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="processo-frame">
-      <img src={src} alt={alt} className="processo-frame__img" loading="eager" decoding="async" onLoad={refreshSoon} />
+      <img src={src} alt={alt} className="processo-frame__img" loading="eager" decoding="async" />
       <span className="processo-frame__overlay" aria-hidden="true" />
     </div>
   )
