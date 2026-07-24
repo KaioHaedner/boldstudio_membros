@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* iOS Safari da zoom automatico ao focar um input/textarea com fonte < 16px.
+   Forcar 16px nos campos no mobile bloqueia esse zoom (chat do RecIA, forms).
+   So no mobile — no desktop mantem o tamanho do design (text-sm etc). */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Reveal por scroll (fade + slide-up) via CSS transition — NAO depende do ticker
    do GSAP. A classe .reveal-init e adicionada por JS no mount (fail-safe: sem JS,
    a secao fica visivel); .is-revealed entra quando a secao chega na viewport. */
