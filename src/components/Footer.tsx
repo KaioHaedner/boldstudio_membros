@@ -101,7 +101,7 @@ export function Footer() {
   // Sem provider (login, checkout, 404, politicas), cai no fallback PT.
   const t = useI18nOptional()?.t
   const tagline = t?.footer.tagline ??
-    'Estúdio audiovisual em Sinop, MT. Captação, produto e curso pra quem quer profissionalizar audiovisual do zero.'
+    'Produtora audiovisual de Sinop pro Brasil que transforma foto e vídeo em resultado e ainda forma quem quer viver disso de verdade'
   const sitemapTitle = t?.footer.sitemap ?? 'SiteMap'
   const essentialTitle = t?.footer.essential ?? 'Páginas Essenciais'
   const rights = t?.footer.rights ?? 'Todos os direitos reservados.'

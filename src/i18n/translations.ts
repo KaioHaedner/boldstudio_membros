@@ -178,7 +178,7 @@ const pt = {
     error: 'Algo deu errado, tenta de novo em alguns minutos.',
   },
   footer: {
-    tagline: 'Estúdio audiovisual em Sinop, MT. Captação, produto e curso pra quem quer profissionalizar audiovisual do zero.',
+    tagline: 'Produtora audiovisual de Sinop pro Brasil que transforma foto e vídeo em resultado e ainda forma quem quer viver disso de verdade',
     sitemap: 'SiteMap',
     essential: 'Páginas Essenciais',
     rights: 'Todos os direitos reservados.',
@@ -374,7 +374,7 @@ const en: Dict = {
     error: 'Something went wrong, try again in a few minutes.',
   },
   footer: {
-    tagline: 'Audiovisual studio in Sinop, MT. Filming, product and a course for anyone who wants to go pro in audiovisual from scratch.',
+    tagline: 'Audiovisual studio from Sinop to all of Brazil that turns photo and video into results and trains those who truly want to live from it',
     sitemap: 'Sitemap',
     essential: 'Essential Pages',
     rights: 'All rights reserved.',
@@ -568,7 +568,7 @@ const es: Dict = {
     error: 'Algo salió mal, inténtalo de nuevo en unos minutos.',
   },
   footer: {
-    tagline: 'Estudio audiovisual en Sinop, MT. Captación, producto y un curso para quien quiere profesionalizar el audiovisual desde cero.',
+    tagline: 'Productora audiovisual de Sinop para todo Brasil que convierte foto y video en resultado y forma a quien quiere vivir de esto de verdad',
     sitemap: 'Mapa del sitio',
     essential: 'Páginas esenciales',
     rights: 'Todos los derechos reservados.',
