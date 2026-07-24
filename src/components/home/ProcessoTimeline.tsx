@@ -27,6 +27,20 @@ const COUNTERS: Counter[] = [
   { value: 90, suffix: '%', label: 'Retenção de clientes' },
 ]
 
+// As imgs do Supabase (peças da timeline + fotos) carregam async e mudam a
+// altura do pin depois do load inicial, deslocando as seções abaixo (Academy).
+// Ao terminar cada img, recalculamos os ScrollTriggers (coalescido num frame)
+// pra pins e reveals se realinharem sem depender de ir ao fim e voltar.
+let _refreshPending = false
+function refreshSoon() {
+  if (_refreshPending) return
+  _refreshPending = true
+  requestAnimationFrame(() => {
+    _refreshPending = false
+    ScrollTrigger.refresh()
+  })
+}
+
 function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
   return (
     <img
@@ -37,6 +51,7 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
       aria-hidden="true"
       loading="eager"
       decoding="async"
+      onLoad={refreshSoon}
     />
   )
 }
@@ -45,7 +60,7 @@ function TimelinePiece({ path, ratio }: { path: string; ratio: number }) {
 function Frame({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="processo-frame">
-      <img src={src} alt={alt} className="processo-frame__img" loading="eager" decoding="async" />
+      <img src={src} alt={alt} className="processo-frame__img" loading="eager" decoding="async" onLoad={refreshSoon} />
       <span className="processo-frame__overlay" aria-hidden="true" />
     </div>
   )

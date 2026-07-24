@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapPin } from 'lucide-react'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { ScrollTrigger } from '@/lib/gsap'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 import { IntroBold } from '@/components/IntroBold'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
@@ -42,29 +42,40 @@ function HomeContent() {
       : 'relative z-10 home-oculto'
 
   useEffect(() => {
-    const sections = rootRef.current?.querySelectorAll<HTMLElement>('[data-reveal]')
-    if (!sections) return
-
-    const triggers = Array.from(sections).map((section) =>
-      gsap.fromTo(
-        section,
-        { autoAlpha: 0, y: 48 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-          },
-        }
-      )
+    const sections = Array.from(
+      rootRef.current?.querySelectorAll<HTMLElement>('[data-reveal]') ?? []
     )
+    if (sections.length === 0) return
+
+    // Estado inicial: oculto via CSS (.reveal-init). Reveal por scroll +
+    // getBoundingClientRect (posicao REAL). Usa CSS transition (classe
+    // .is-revealed), NAO gsap.to — assim nao depende do ticker do GSAP (que os
+    // pins podiam comprometer) nem de ScrollTrigger (media antes do pin assentar
+    // e prendia a Academy em opacity 0) nem de IntersectionObserver (nao dispara
+    // no simulador de iPhone). Mesmo mecanismo do QuickNav; funciona nos dois.
+    sections.forEach((section) => section.classList.add('reveal-init'))
+
+    const pending = new Set(sections)
+    const reveal = () => {
+      const limit = window.innerHeight * 0.88
+      pending.forEach((section) => {
+        if (section.getBoundingClientRect().top < limit) {
+          section.classList.add('is-revealed')
+          pending.delete(section)
+        }
+      })
+      if (pending.size === 0) {
+        window.removeEventListener('scroll', reveal)
+        window.removeEventListener('resize', reveal)
+      }
+    }
+    reveal()
+    window.addEventListener('scroll', reveal, { passive: true })
+    window.addEventListener('resize', reveal)
 
     return () => {
-      triggers.forEach((tween) => tween.scrollTrigger?.kill())
-      ScrollTrigger.refresh()
+      window.removeEventListener('scroll', reveal)
+      window.removeEventListener('resize', reveal)
     }
   }, [])
 
