@@ -62,6 +62,35 @@ export function CasesCarrossel() {
             index + 0.35
           )
         })
+
+        // Voltou da pagina de projeto (?case=slug): posiciona o carrossel
+        // exatamente nesse case (o scroll do pin controla qual slide aparece)
+        // em vez de cair no inicio. Usa as posicoes reais do pin (start/end) e
+        // tenta ate o ScrollTrigger estar medido.
+        const caseSlug = new URLSearchParams(window.location.search).get('case')
+        if (caseSlug) {
+          const idx = CASES.findIndex((c) => c.slug === caseSlug)
+          if (idx > 0) {
+            let tries = 0
+            const jumpToCase = () => {
+              const st = tl.scrollTrigger
+              if (st && st.end > st.start && tl.duration() > 0) {
+                // Cada slide `idx` fica revelado no tempo `idx+1` da timeline
+                // (a animacao comeca na posicao idx e dura 1). Mapeia esse tempo
+                // pra posicao de scroll do pin.
+                const progress = Math.min(1, (idx + 1) / tl.duration())
+                const target = st.start + progress * (st.end - st.start)
+                window.scrollTo({ top: target, behavior: 'auto' })
+                const url = new URL(window.location.href)
+                url.searchParams.delete('case')
+                window.history.replaceState(null, '', url.pathname + url.hash)
+              } else if (tries++ < 25) {
+                window.setTimeout(jumpToCase, 100)
+              }
+            }
+            window.setTimeout(jumpToCase, 250)
+          }
+        }
       })
     }, section)
 

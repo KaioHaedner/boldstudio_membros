@@ -57,7 +57,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
       {/* topo: voltar + seletor de idioma */}
       <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-5xl items-center justify-between px-4">
         <Link
-          to="/home-bold-studio-sinop-brasil"
+          to={`/home-bold-studio-sinop-brasil?case=${cliente.slug}#cases`}
           className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-bold-gray/40 px-3.5 py-2 text-sm font-medium text-bold-white/85 backdrop-blur-xl transition-colors hover:border-bold-yellow/50 hover:text-bold-yellow"
         >
           <ArrowLeft size={16} /> {t.projeto.back}
