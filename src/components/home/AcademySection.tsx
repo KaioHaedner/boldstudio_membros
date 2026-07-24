@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Camera, Video, GraduationCap, Clapperboard, Aperture, Film, Monitor, Radio } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { ShinyButton } from '@/components/ShinyButton'
+import { useI18n } from '@/i18n/I18nContext'
 
 // =====================================================================
 // Academy — única seção clara do site (branco da marca).
@@ -52,19 +53,20 @@ const ICON_FIELD: IconSpot[] = [
 
 export function AcademySection() {
   const navigate = useNavigate()
+  const { t } = useI18n()
 
   return (
     <div className="relative">
       {/* Pontas: meia-lua (arco). Esquerda faz cúpula pra CIMA (no preto),
           direita faz cúpula pra BAIXO (no branco); lado reto na linha. */}
-      <div className="absolute left-8 top-0 z-30 -translate-y-full sm:left-12">
-        <div className="flex h-[108px] w-[216px] items-end justify-center rounded-t-full border-2 border-b-0 border-bold-yellow bg-bold-black pb-5 shadow-[0_0_24px_rgba(255,215,18,0.3)]">
-          <Camera className="text-bold-yellow" size={30} strokeWidth={2} />
+      <div className="absolute left-2 top-0 z-30 -translate-y-full sm:left-12">
+        <div className="flex h-[46px] w-[92px] items-end justify-center rounded-t-full border-2 border-b-0 border-bold-yellow bg-bold-black pb-2 shadow-[0_0_24px_rgba(255,215,18,0.3)] sm:h-[108px] sm:w-[216px]">
+          <Camera className="text-bold-yellow" size={27} strokeWidth={2} />
         </div>
       </div>
-      <div className="absolute right-8 top-0 z-30 sm:right-12">
-        <div className="flex h-[108px] w-[216px] items-start justify-center rounded-b-full border-2 border-t-0 border-bold-yellow bg-bold-black pt-5 shadow-[0_0_24px_rgba(255,215,18,0.3)]">
-          <Clapperboard className="text-bold-yellow" size={30} strokeWidth={2} />
+      <div className="absolute right-2 top-0 z-30 sm:right-12">
+        <div className="flex h-[46px] w-[92px] items-start justify-center rounded-b-full border-2 border-t-0 border-bold-yellow bg-bold-black pt-2 shadow-[0_0_24px_rgba(255,215,18,0.3)] sm:h-[108px] sm:w-[216px]">
+          <Clapperboard className="text-bold-yellow" size={27} strokeWidth={2} />
         </div>
       </div>
 
@@ -74,12 +76,12 @@ export function AcademySection() {
           <div className="relative h-7 min-w-[104px] overflow-hidden text-[20px] font-black uppercase tracking-[0.15em] text-bold-white">
             <span className="absolute inset-0 flex items-center justify-center">
               <span className="animate-rec-word inline-block" style={{ animationDelay: '0s' }}>
-                Solta
+                {t.academy.recWords[0]}
               </span>
             </span>
             <span className="absolute inset-0 flex items-center justify-center">
               <span className="animate-rec-word inline-block" style={{ animationDelay: '1.2s' }}>
-                O
+                {t.academy.recWords[1]}
               </span>
             </span>
             <span className="absolute inset-0 flex items-center justify-center">
@@ -87,7 +89,7 @@ export function AcademySection() {
                 className="animate-rec-word inline-flex items-center gap-2"
                 style={{ animationDelay: '2.4s' }}
               >
-                Rec
+                {t.academy.recWords[2]}
                 <span className="relative flex h-3 w-3">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-600 opacity-75" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.9)]" />
@@ -121,7 +123,7 @@ export function AcademySection() {
               key={copy}
               className="select-none pr-8 text-[16vw] font-black uppercase leading-none tracking-tight text-bold-black/10"
             >
-              Bold&nbsp;Academy&nbsp;&middot;&nbsp;Bold&nbsp;Academy&nbsp;&middot;&nbsp;
+              {t.academy.marquee}&nbsp;&middot;&nbsp;{t.academy.marquee}&nbsp;&middot;&nbsp;
             </span>
           ))}
         </div>
@@ -159,29 +161,30 @@ export function AcademySection() {
 
         {/* Título — 2 linhas, mescla preto + amarelo da marca */}
         <h2 className="mt-8 text-3xl font-bold leading-[1.15] text-bold-black sm:text-4xl md:text-[2.6rem]">
-          Do <span className="text-bold-yellow">amador</span> ao profissional que
-          <br />
-          vive de <span className="text-bold-yellow">audiovisual</span>
+          {t.academy.titleA}
+          <span className="text-bold-yellow">{t.academy.titleHi1}</span>
+          {t.academy.titleMid}
+          <span className="text-bold-yellow">{t.academy.titleHi2}</span>
         </h2>
 
         {/* Vídeo central — placeholder QUADRADO */}
         <div className="mt-10 aspect-square w-full max-w-md overflow-hidden rounded-xl border border-bold-black/10 bg-bold-black/[0.04] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.35)]">
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-bold-black/35">
             <Video size={40} className="text-bold-yellow" />
-            <span className="text-xs font-semibold uppercase tracking-widest">Vídeo Academy</span>
-            <span className="text-[10px] text-bold-black/30">placeholder 1:1</span>
+            <span className="text-xs font-semibold uppercase tracking-widest">{t.academy.videoLabel}</span>
+            <span className="text-[10px] text-bold-black/30">{t.academy.videoPlaceholder}</span>
           </div>
         </div>
 
         <div className="mt-10">
-          <ShinyButton onClick={() => navigate('/academy')}>Conhecer Academy</ShinyButton>
+          <ShinyButton onClick={() => navigate('/academy')}>{t.academy.cta}</ShinyButton>
         </div>
       </div>
 
       {/* Etiqueta amarela sticky com gradiente vivo (estilo Soluções/Contato) */}
       <div className="pointer-events-none sticky bottom-6 z-20 mt-16">
         <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black shadow-[0_12px_30px_-8px_rgba(0,0,0,0.45)] sm:pr-10">
-          Academy
+          {t.academy.label}
         </span>
       </div>
       </section>

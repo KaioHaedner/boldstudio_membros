@@ -94,7 +94,7 @@ export function CasesCarrossel() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/50" />
 
-          <div className="absolute right-5 top-24 flex flex-col items-end gap-4 sm:right-10">
+          <div className="absolute right-5 top-24 hidden flex-col items-end gap-4 sm:right-10 md:flex">
             <span
               aria-hidden="true"
               className="pointer-events-none text-[clamp(3.5rem,9vw,8rem)] font-black leading-none text-white/15"
@@ -106,7 +106,7 @@ export function CasesCarrossel() {
             </ShinyButton>
           </div>
 
-          <div className="case-caption absolute inset-x-5 bottom-[22%] sm:inset-x-12">
+          <div className="case-caption absolute inset-x-5 bottom-[14%] sm:inset-x-12 md:bottom-[22%]">
             <div className="flex items-center gap-4 sm:gap-5">
               <span className="flex h-14 shrink-0 items-center justify-center rounded-lg bg-white px-3 sm:h-20">
                 <img
@@ -118,7 +118,17 @@ export function CasesCarrossel() {
               </span>
               <h3 className="max-w-3xl text-[clamp(1.8rem,4.5vw,3.8rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] text-bold-white">
                 {client.nome}
+                {/* Numero ao lado do nome (so mobile); no desktop ele fica grande no canto */}
+                <span className="ml-3 text-bold-yellow md:hidden">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
               </h3>
+            </div>
+            {/* Botao "Ver projeto completo" abaixo do nome, entre a marca e a etiqueta Cases (so mobile) */}
+            <div className="mt-5 md:hidden">
+              <ShinyButton onClick={() => navigate(`/projeto-${client.slug}`)}>
+                {t.clientes.viewProject}
+              </ShinyButton>
             </div>
           </div>
         </article>

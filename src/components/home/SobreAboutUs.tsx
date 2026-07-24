@@ -7,7 +7,7 @@ const CREW_IMG =
   'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/Fotos_CREW_COLORIDAS/BOLDSTUDIO_CREW_ABOUTUS.webp'
 
 // Destaca em amarelo os trechos marcados com **...** no texto das traduções.
-function renderHighlighted(text: string) {
+export function renderHighlighted(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (

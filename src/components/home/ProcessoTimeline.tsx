@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { useI18n } from '@/i18n/I18nContext'
 
 const IMG_BASE =
   'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/PROCESSO/'
@@ -51,6 +52,7 @@ function Frame({ src, alt }: { src: string; alt: string }) {
 }
 
 function Counters() {
+  const { t } = useI18n()
   const gridRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const grid = gridRef.current
@@ -94,28 +96,25 @@ function Counters() {
   return (
     <div className="processo-counters" data-reveal>
       <div ref={gridRef} className="processo-counters__grid">
-        {COUNTERS.map((c) => (
-          <div key={c.label} className="processo-counter">
+        {COUNTERS.map((c, i) => (
+          <div key={i} className="processo-counter">
             <div className="processo-counter__value">
               {c.prefix}
               <span data-count={c.value}>0</span>
               {c.suffix}
             </div>
-            <p className="processo-counter__label">{c.label}</p>
+            <p className="processo-counter__label">{t.processo.counters[i]}</p>
           </div>
         ))}
       </div>
 
-      <p className="processo-counters__note">
-        Com números que ninguém
-        <br />
-        no Mato Grosso tem!
-      </p>
+      <p className="processo-counters__note">{t.processo.note}</p>
     </div>
   )
 }
 
 export function ProcessoTimeline() {
+  const { t } = useI18n()
   const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const stackRef = useRef<HTMLDivElement>(null)
@@ -180,10 +179,11 @@ export function ProcessoTimeline() {
     <section ref={sectionRef} id="processo" className="processo scroll-mt-24">
       <div className="processo__intro" data-reveal>
         <h2 className="processo__title">
-          O processo bem feito muda o jogo
-          <br />e nisso a{' '}
+          {t.processo.titleA}
+          <br />
+          {t.processo.titleB}{' '}
           <img className="processo__logo" src="/brand/logo-boldstudio.webp" alt="bold." />{' '}
-          é especialista
+          {t.processo.titleC}
         </h2>
       </div>
 
@@ -191,15 +191,15 @@ export function ProcessoTimeline() {
       <div ref={stageRef} className="processo__stage">
         <div ref={stackRef} className="processo__stack">
           <TimelinePiece path={PARTS[0].path} ratio={PARTS[0].ratio} />
-          <Frame src={REUNIOES[0].src} alt={REUNIOES[0].alt} />
+          <Frame src={REUNIOES[0].src} alt={t.processo.reuniaoAlt1} />
           <TimelinePiece path={PARTS[1].path} ratio={PARTS[1].ratio} />
-          <Frame src={REUNIOES[1].src} alt={REUNIOES[1].alt} />
+          <Frame src={REUNIOES[1].src} alt={t.processo.reuniaoAlt2} />
           <TimelinePiece path={PARTS[2].path} ratio={PARTS[2].ratio} />
         </div>
       </div>
 
       <p className="processo__frase" data-reveal>
-        Processo claro <span className="processo__frase-hi">resultado garantido</span>
+        {t.processo.frase}<span className="processo__frase-hi">{t.processo.fraseHi}</span>
       </p>
 
       <Counters />

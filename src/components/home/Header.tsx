@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ArrowRight } from 'lucide-react'
 import { useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
 import { HeaderStatus } from '@/components/home/HeaderStatus'
@@ -73,6 +73,13 @@ export function Header() {
               <LanguageSwitcher />
             </div>
 
+            {/* No mobile o seletor de idioma aparece ao lado do X, so com o menu aberto */}
+            {menuOpen && (
+              <div className="md:hidden">
+                <LanguageSwitcher />
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
@@ -96,11 +103,11 @@ export function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal"
-          className="home-fullscreen-menu fixed inset-0 z-[100] overflow-y-auto bg-bold-black px-5 pb-10 pt-28 sm:px-8 lg:px-12"
+          className="home-fullscreen-menu fixed inset-0 z-[100] overflow-y-auto bg-bold-black px-5 pb-10 pt-20 sm:px-8 sm:pt-28 lg:px-12"
         >
           <div className="mx-auto flex min-h-[calc(100svh-9rem)] max-w-[110rem] flex-col justify-between">
             <ul className="grid gap-1">
-              {NAV_LINKS.map((link, index) => (
+              {NAV_LINKS.map((link) => (
                 <li key={link.href} className="border-b border-white/10">
                   <a
                     href={link.href}
@@ -111,20 +118,16 @@ export function Header() {
                     className="group flex items-center justify-between py-3 text-[clamp(2.2rem,7vw,7.5rem)] font-black uppercase leading-[0.9] tracking-[-0.05em] text-bold-white transition-colors hover:text-bold-yellow"
                   >
                     <span>{t.nav[link.key]}</span>
-                    <span className="text-xs font-bold tracking-[0.2em] text-bold-yellow/70">
-                      {String(index + 1).padStart(2, '0')}
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-bold-yellow/40 text-bold-yellow transition-all group-hover:bg-bold-yellow group-hover:text-bold-black sm:h-9 sm:w-9">
+                      <ArrowRight size={14} />
                     </span>
                   </a>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-10 flex items-end justify-between border-t border-white/10 pt-5 text-xs uppercase tracking-[0.2em] text-bold-white/50">
-              <span>Sinop · Mato Grosso</span>
-              <div className="md:hidden">
-                <LanguageSwitcher />
-              </div>
-              <span className="hidden md:inline">BoldStudio © 2026</span>
+            <div className="mt-10 flex items-center justify-center pt-5 text-xs font-bold uppercase tracking-[0.2em] text-bold-white">
+              <span>BoldStudio®</span>
             </div>
           </div>
         </div>

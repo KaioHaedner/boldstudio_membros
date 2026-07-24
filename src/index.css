@@ -1168,10 +1168,35 @@ textarea {
     width: 100%;
     flex: 0 0 43%;
     padding: 1.5rem;
+    /* centraliza nome/cargo/descricao no meio do traco amarelo (so mobile) */
+    align-items: center;
   }
   .crew-card__photo {
     width: 100%;
     align-self: stretch;
+  }
+  /* marquee lateral: mais rapido e no sentido contrario (so mobile) */
+  .crew-marquee-vertical__track {
+    animation: crew-marquee-vertical-scroll 20s linear infinite reverse;
+  }
+  /* QuickNav no mobile: canto superior direito, abrindo para a esquerda.
+     (Fora de @layer, vence as utilities do Tailwind sem !important.) */
+  .quicknav-root {
+    left: auto;
+    right: 0;
+    top: 1rem;
+    transform: none;
+    translate: none;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+  .quicknav-toggle {
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+  .quicknav-panel {
+    border-radius: 1rem 0 0 1rem;
+    border-left-width: 1px;
+    border-right-width: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1516,6 +1541,18 @@ textarea {
   }
   .processo-counters__note {
     text-align: center;
+  }
+  /* Titulo nao pode estourar a largura no mobile (6.2vw cabe as 2 linhas com folga) */
+  .processo__title {
+    font-size: clamp(1rem, 6.2vw, 2.8rem);
+  }
+  /* Imagens (linha do tempo + fotos) ocupam a largura toda e ficam maiores */
+  .tl-piece__path {
+    width: 100%;
+  }
+  .processo-frame {
+    width: 100%;
+    height: clamp(230px, 62vw, 340px);
   }
 }
 

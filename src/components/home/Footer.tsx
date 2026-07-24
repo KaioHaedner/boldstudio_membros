@@ -39,13 +39,16 @@ const KAIO_SOCIALS: {
   { name: 'Site', href: KAIO_LINKS.site, mod: 'kaio-social--site', handle: 'site.kaiohaedner.com' },
 ]
 
+// Mesma lista/ordem do menu rapido (QuickNav): inclui Processo e a secao de
+// videos (#cases) rotulada como "Reels".
 const NAV_LINKS = [
   { href: '#home', key: 'home' },
   { href: '#sobre', key: 'sobre' },
   { href: '#servicos', key: 'servicos' },
   { href: '#crew', key: 'crew' },
+  { href: '#cases', key: 'reels' },
+  { href: '#processo', key: 'processo' },
   { href: '#clientes', key: 'clientes' },
-  { href: '#reels', key: 'reels' },
   { href: '#contato', key: 'contato' },
 ] as const
 

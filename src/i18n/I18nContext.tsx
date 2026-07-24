@@ -44,3 +44,11 @@ export function useI18n() {
   if (!ctx) throw new Error('useI18n precisa estar dentro de <I18nProvider>')
   return ctx
 }
+
+// Versao que NAO lanca fora do provider: retorna null. Usada pelo footer padrao,
+// que roda tanto em paginas com idioma (projeto do cliente) quanto sem (login,
+// checkout, 404, etc) — nesse caso cai no texto PT fixo.
+// eslint-disable-next-line react-refresh/only-export-components
+export function useI18nOptional() {
+  return useContext(I18nContext)
+}

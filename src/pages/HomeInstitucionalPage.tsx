@@ -6,7 +6,7 @@ import { IntroBold } from '@/components/IntroBold'
 import { StudioVideoBg } from '@/components/StudioVideoBg'
 import { ShinyButton } from '@/components/ShinyButton'
 import { Header } from '@/components/home/Header'
-import { SobreAboutUs } from '@/components/home/SobreAboutUs'
+import { SobreAboutUs, renderHighlighted } from '@/components/home/SobreAboutUs'
 import { SolucoesSticky } from '@/components/home/SolucoesSticky'
 import { ProcessoTimeline } from '@/components/home/ProcessoTimeline'
 import { CoinDecor } from '@/components/home/CoinDecor'
@@ -84,24 +84,29 @@ function HomeContent() {
       <Header />
 
       <main className={mainClass}>
-        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-center overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:items-stretch md:pb-40 lg:px-12">
+        <section id="home" className="home-hero relative flex min-h-screen scroll-mt-24 items-stretch overflow-hidden px-5 pb-12 pt-28 sm:px-8 sm:pb-16 md:pb-40 lg:px-12">
           <StudioVideoBg className="home-hero__video" />
           <div className="home-hero__overlay absolute inset-0" aria-hidden="true" />
           <CoinDecor className="left-6 top-1/3 z-[1] w-20 opacity-15 sm:left-12 sm:w-28" rotate={-14} floatDuration={8} />
 
-          <div className="relative z-10 flex w-full flex-col -translate-y-[5svh] text-center md:translate-y-0 md:text-right">
+          <div className="relative z-10 flex w-full flex-col text-center md:text-right">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow md:text-sm">{t.hero.eyebrow}</p>
-              <h1 className="mx-auto mt-4 max-w-6xl text-[clamp(2rem,4.2vw,4.2rem)] font-black uppercase leading-[0.9] tracking-[-0.03em] md:mr-0">
+              {/* Eyebrow "SINOP, MT · ..." fica so no desktop (no mobile o titulo vai colado no topo) */}
+              <p className="hidden text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow md:block md:text-sm">{t.hero.eyebrow}</p>
+              <h1 className="mx-auto mt-0 max-w-6xl text-[6.2vw] font-black uppercase leading-[0.9] tracking-[-0.03em] md:mr-0 md:mt-4 md:text-[clamp(2rem,4.2vw,4.2rem)]">
                 {t.hero.titleA}
-                <br />
+                {/* No mobile "Entregamos resultados" fica na mesma linha; no desktop mantem 3 linhas */}
+                <br className="hidden md:block" />
                 <span className="text-bold-yellow">{t.hero.titleHighlight}</span>
                 <br />
                 {t.hero.titleB}
               </h1>
             </div>
-            <div className="mt-7 flex justify-center md:mt-auto md:justify-end">
-              <p className="max-w-md rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-xs font-medium text-bold-white backdrop-blur-md sm:text-sm">{t.hero.subtitle}</p>
+            {/* Texto de apoio: no mobile desce pro fim (mt-auto) perto dos CTAs, com efeito da marca */}
+            <div className="mt-auto mb-20 flex justify-center md:mb-0 md:justify-end">
+              <p className="max-w-md rounded-xl border border-bold-yellow/25 bg-black/50 px-4 py-3 text-[11px] font-medium leading-relaxed text-bold-white shadow-[0_0_25px_-10px_rgba(255,215,18,0.55)] backdrop-blur-md md:text-sm">
+                {renderHighlighted(t.hero.subtitle)}
+              </p>
             </div>
           </div>
 
@@ -113,7 +118,7 @@ function HomeContent() {
             <button
               type="button"
               onClick={() => document.querySelector('#clientes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-bold-white transition-colors hover:text-bold-yellow"
+              className="group hidden items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-bold-white transition-colors hover:text-bold-yellow md:inline-flex"
             >
               {t.hero.ctaSecondary}
               <span className="text-bold-yellow transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
@@ -145,10 +150,10 @@ function HomeContent() {
           <CoinDecor className="right-8 bottom-20 z-[1] hidden w-16 opacity-15 sm:block sm:w-24" rotate={16} floatDuration={6} />
 
           <h2 className="relative z-10 text-[45px] font-extrabold leading-[0.95] text-bold-white sm:text-[54px] md:text-[72px] lg:text-[96px]">
-            Nascida para ganhar o
+            {t.nascida.lineA}
           </h2>
           <span className="live-yellow relative z-10 mt-4 inline-block rounded-xl px-5 py-1.5 text-6xl font-black italic tracking-[-0.03em] text-bold-black sm:text-7xl md:text-8xl lg:text-9xl">
-            Brasil
+            {t.nascida.highlight}
           </span>
         </section>
 
@@ -177,17 +182,16 @@ function HomeContent() {
             {/* Esquerda: chamada + apoio */}
             <div className="text-center lg:text-left">
               <h2 className="text-5xl font-bold leading-[1] md:text-6xl">
-                Sua marca merece <span className="text-bold-yellow">resultado</span>.
+                {t.contato.headlineA}<span className="text-bold-yellow">{t.contato.headlineHi}</span>.
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-bold-white/75 lg:mx-0">
-                Toda marca carrega uma história pronta pra virar resultado e o audiovisual
-                certo é o que faz isso acontecer, então preenche seus dados{' '}
-                <span className="lg:hidden">aqui embaixo</span>
-                <span className="hidden lg:inline">aqui do lado</span> e se quiser manda um
-                áudio contando seu projeto que a nossa IA transcreve pra você
+              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-bold-white lg:mx-0">
+                {t.contato.supportA}
+                <span className="lg:hidden">{t.contato.hereMobile}</span>
+                <span className="hidden lg:inline">{t.contato.hereDesktop}</span>
+                {t.contato.supportB}
               </p>
-              <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-bold-white/60">
-                <MapPin size={16} className="text-bold-yellow" /> Sinop, MT · Produtora Audiovisual
+              <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-bold-white">
+                <MapPin size={16} className="text-bold-yellow" /> {t.contato.location}
               </p>
             </div>
 
