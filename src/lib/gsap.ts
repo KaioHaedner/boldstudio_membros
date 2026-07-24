@@ -8,4 +8,24 @@ gsap.registerPlugin(ScrollTrigger)
 // com pin (Crew, Cases, Processo) "pularem"/travarem ao rolar pra cima.
 ScrollTrigger.config({ ignoreMobileResize: true })
 
+// --- Correcao do crash "removeChild NotFoundError" do ScrollTrigger ---
+// O _refresh100vh (GSAP 3.15) faz body.appendChild/removeChild de um <div> de
+// medicao de 100vh. Quando varios pins (Crew/Cases/Processo) pedem refresh quase
+// ao mesmo tempo no carregamento, esse <div> ja foi removido e o removeChild
+// lanca NotFoundError DENTRO do ticker do GSAP — o que congela TODAS as
+// animacoes: os pins "saem do local"/travam e o QuickNav (que depende de scroll)
+// nao aparece. A arvore React fica intacta, mas o site parece quebrado.
+// Solucao: tornar removeChild idempotente — se o no nao e filho, no-op em vez de
+// lancar. O React (e libs em geral) so removem filhos validos, entao nada muda
+// para eles; apenas o caso ilegal do GSAP deixa de derrubar o ticker.
+type PatchedNode = typeof Node.prototype & { __stRemoveChildPatched?: boolean }
+if (typeof Node !== 'undefined' && !(Node.prototype as PatchedNode).__stRemoveChildPatched) {
+  const originalRemoveChild = Node.prototype.removeChild
+  Node.prototype.removeChild = function removeChild<T extends Node>(child: T): T {
+    if (child && child.parentNode !== this) return child
+    return originalRemoveChild.call(this, child) as T
+  }
+  ;(Node.prototype as PatchedNode).__stRemoveChildPatched = true
+}
+
 export { gsap, ScrollTrigger }
