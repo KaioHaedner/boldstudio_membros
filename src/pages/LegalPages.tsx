@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Mail, MessageCircle, HelpCircle } from 'lucide-react'
 import { Footer } from '@/components/Footer'
+import { whatsappLink } from '@/lib/whatsapp'
 
 const ATUALIZADO = 'Junho de 2026'
 const EMAIL_SUPORTE = 'suporte@boldstudiobrasil.com'
@@ -332,7 +333,7 @@ export function SuportePage() {
           <h3 className="font-semibold text-bold-white">E-mail</h3>
           <p className="text-xs text-bold-white/55 mt-1">{EMAIL_SUPORTE}</p>
         </a>
-        <a href="https://wa.me/5566996402088" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-bold-white/10 bg-bold-gray/40 p-5 hover:border-bold-yellow/40 transition">
+        <a href={whatsappLink('suporte')} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-bold-white/10 bg-bold-gray/40 p-5 hover:border-bold-yellow/40 transition">
           <MessageCircle className="text-bold-yellow mb-2" size={22} />
           <h3 className="font-semibold text-bold-white">WhatsApp</h3>
           <p className="text-xs text-bold-white/55 mt-1">Atendimento em horário comercial</p>

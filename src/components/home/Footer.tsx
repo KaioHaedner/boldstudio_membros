@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Globe } from 'lucide-react'
 import { useI18n } from '@/i18n/I18nContext'
+import { whatsappLink } from '@/lib/whatsapp'
 
 // Paths oficiais dos glifos de marca (o lucide 1.x removeu os icones de marca).
 // Reusados pelo array SOCIALS abaixo e pelo popup "Powered by Kaio".
@@ -76,8 +77,8 @@ const SOCIALS = [
   },
   {
     name: 'WhatsApp',
-    href: '#',
-    external: false,
+    href: whatsappLink('footerHome'),
+    external: true,
     path: WHATSAPP_PATH,
   },
   {

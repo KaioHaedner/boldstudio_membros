@@ -7,6 +7,7 @@
 import { useState } from 'react'
 import { Globe } from 'lucide-react'
 import { useI18nOptional } from '@/i18n/I18nContext'
+import { whatsappLink } from '@/lib/whatsapp'
 
 const HOME = '/home-bold-studio-sinop-brasil'
 
@@ -62,8 +63,8 @@ const SOCIALS = [
   },
   {
     name: 'WhatsApp',
-    href: '#',
-    external: false,
+    href: whatsappLink('footerPlataforma'),
+    external: true,
     path: WHATSAPP_PATH,
   },
   {

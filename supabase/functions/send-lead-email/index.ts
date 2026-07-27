@@ -3,7 +3,21 @@
 // chamada via supabase.functions.invoke com a anon key.
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
 const FROM = 'Bold Studio Brasil <contato@boldstudiobrasil.com>'
-const WHATSAPP = '5566996402088'
+// WhatsApp comercial da Bold Studio (diretor comercial). Mesmo numero do
+// src/lib/whatsapp.ts — se mudar aqui, mude la tambem.
+const WHATSAPP = '5519993605214'
+
+// A origem entra na mensagem pra equipe saber de onde o lead veio.
+const ORIGENS: Record<string, string> = {
+  contact_form: 'pelo formulário de contato do site',
+  recia_widget: 'pelo chat da RecIA no site',
+}
+
+function waLink(origem: string): string {
+  const de = ORIGENS[origem] ?? 'pelo site'
+  const msg = `Olá, Bold Studio! Vim ${de} e quero falar sobre um projeto.`
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`
+}
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -18,7 +32,7 @@ function json(data: unknown, status = 200) {
   })
 }
 
-function emailHtml(nome: string): string {
+function emailHtml(nome: string, origem: string): string {
   const primeiro = nome.trim().split(' ')[0] || nome
   return `<div style="font-family:Arial,Helvetica,sans-serif;background:#000;color:#fff;padding:40px 24px;max-width:480px;margin:0 auto;border-radius:16px">
     <div style="font-size:26px;font-weight:800;color:#fff;margin-bottom:24px;text-align:center">Bold<span style="color:#FFD712">Studio</span></div>
@@ -27,7 +41,7 @@ function emailHtml(nome: string): string {
     <p style="color:#ccc;font-size:15px;line-height:1.6;margin:0 0 12px">Já recebemos suas informações e nossa equipe vai entrar em contato com você em até <strong style="color:#FFD712">24 horas</strong>.</p>
     <p style="color:#ccc;font-size:15px;line-height:1.6;margin:0 0 20px">Quer adiantar a conversa? Fala com a gente agora mesmo no WhatsApp:</p>
     <div style="text-align:center;margin:24px 0">
-      <a href="https://wa.me/${WHATSAPP}" style="display:inline-block;background:#FFD712;color:#000;font-weight:700;font-size:15px;text-decoration:none;padding:14px 28px;border-radius:999px">Chamar no WhatsApp</a>
+      <a href="${waLink(origem)}" style="display:inline-block;background:#FFD712;color:#000;font-weight:700;font-size:15px;text-decoration:none;padding:14px 28px;border-radius:999px">Chamar no WhatsApp</a>
     </div>
     <p style="color:#888;font-size:12px;margin-top:28px;text-align:center">Bold Studio Brasil — Estúdio audiovisual em Sinop, MT</p>
   </div>`
@@ -36,7 +50,7 @@ function emailHtml(nome: string): string {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   try {
-    const { nome, email } = await req.json()
+    const { nome, email, origem } = await req.json()
     if (!email || typeof email !== 'string') return json({ error: 'email obrigatorio' }, 400)
 
     const resp = await fetch('https://api.resend.com/emails', {
@@ -46,7 +60,10 @@ Deno.serve(async (req) => {
         from: FROM,
         to: [email],
         subject: 'Recebemos seu contato — Bold Studio Brasil',
-        html: emailHtml(typeof nome === 'string' ? nome : ''),
+        html: emailHtml(
+          typeof nome === 'string' ? nome : '',
+          typeof origem === 'string' ? origem : ''
+        ),
       }),
     })
     if (!resp.ok) return json({ error: 'email_failed', detail: await resp.text() }, 502)

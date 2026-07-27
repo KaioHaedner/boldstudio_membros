@@ -30,7 +30,7 @@ async function saveReciaLead(lead: LeadInfo) {
   // Email de confirmacao (Resend via edge function). Best-effort.
   try {
     await supabase.functions.invoke('send-lead-email', {
-      body: { nome: lead.nome, email: lead.email },
+      body: { nome: lead.nome, email: lead.email, origem: 'recia_widget' },
     })
   } catch {
     /* email opcional */

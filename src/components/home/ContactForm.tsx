@@ -33,7 +33,7 @@ async function submitLead(data: FormState) {
   // se o email falhar, o lead ja foi salvo e o form segue como enviado.
   try {
     await supabase.functions.invoke('send-lead-email', {
-      body: { nome: data.nome, email: data.email },
+      body: { nome: data.nome, email: data.email, origem: 'contact_form' },
     })
   } catch {
     /* email opcional */
