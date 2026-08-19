@@ -70,6 +70,9 @@ const pt = {
     ctaTextHighlight: 'bold',
     ctaTextB: '?',
     ctaButton: 'Falar com a Bold Studio',
+    gateEyebrow: 'Quer ver mais?',
+    gateTitle: 'Conhece o time inteiro da Bold',
+    gateButton: 'Quero ver',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera a visão e a direção geral do estúdio, da estratégia ao padrão de entrega que carrega a marca Bold.' },
       miguel: { role: 'Diretor de Produção', desc: 'Comanda toda a produção, do briefing à entrega final, garantindo execução afiada em cada projeto.' },
@@ -88,6 +91,9 @@ const pt = {
     lineB: 'e suas marcas estão',
     highlight: 'eternizadas',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
+    gateEyebrow: 'Quer ver mais?',
+    gateTitle: 'Veja todos os cases da Bold',
+    gateButton: 'Quero ver',
   },
   clientes: {
     eyebrow: 'Clientes',
@@ -266,6 +272,9 @@ const en: Dict = {
     ctaTextHighlight: 'bold',
     ctaTextB: '?',
     ctaButton: 'Talk to Bold Studio',
+    gateEyebrow: 'Want to see more?',
+    gateTitle: 'Meet the whole Bold team',
+    gateButton: 'Show me',
     members: {
       'pedro-garcia': { role: 'Founder & CEO', desc: "Leads the studio's vision and overall direction, from strategy to the delivery standard that carries the Bold brand." },
       miguel: { role: 'Head of Production', desc: 'Runs the entire production, from briefing to final delivery, keeping execution sharp on every project.' },
@@ -284,6 +293,9 @@ const en: Dict = {
     lineB: 'and their brands are',
     highlight: 'eternalized',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
+    gateEyebrow: 'Want to see more?',
+    gateTitle: 'See all Bold cases',
+    gateButton: 'Show me',
   },
   clientes: {
     eyebrow: 'Clients',
@@ -460,6 +472,9 @@ const es: Dict = {
     ctaTextHighlight: 'bold',
     ctaTextB: '?',
     ctaButton: 'Hablar con Bold Studio',
+    gateEyebrow: '¿Quieres ver más?',
+    gateTitle: 'Conoce todo el equipo Bold',
+    gateButton: 'Quiero ver',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera la visión y la dirección general del estudio, de la estrategia al estándar de entrega que lleva la marca Bold.' },
       miguel: { role: 'Director de Producción', desc: 'Comanda toda la producción, del briefing a la entrega final, garantizando una ejecución afilada en cada proyecto.' },
@@ -478,6 +493,9 @@ const es: Dict = {
     lineB: 'y sus marcas están',
     highlight: 'eternizadas',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
+    gateEyebrow: '¿Quieres ver más?',
+    gateTitle: 'Mira todos los cases de Bold',
+    gateButton: 'Quiero ver',
   },
   clientes: {
     eyebrow: 'Clientes',

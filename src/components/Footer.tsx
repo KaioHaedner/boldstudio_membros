@@ -107,7 +107,11 @@ export function Footer() {
   const essentialTitle = t?.footer.essential ?? 'Páginas Essenciais'
   const rights = t?.footer.rights ?? 'Todos os direitos reservados.'
   return (
-    <footer className="relative z-10 border-t border-white/10 bg-bold-black px-6 py-14 text-bold-white">
+    <footer className="relative z-10 overflow-hidden border-t border-white/10 bg-[#050505] px-6 py-14 text-bold-white">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="animate-blob-1 absolute -left-[6%] -top-[35%] h-[22vw] w-[22vw] min-h-[180px] min-w-[180px] rounded-full bg-bold-yellow/30 blur-[55px]" />
+        <div className="animate-blob-2 absolute -right-[6%] -bottom-[40%] h-[22vw] w-[22vw] min-h-[180px] min-w-[180px] rounded-full bg-bold-yellow/30 blur-[55px]" />
+      </div>
       <div className="mx-auto flex max-w-5xl flex-col gap-10 md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
           <img

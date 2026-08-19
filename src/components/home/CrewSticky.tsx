@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import { User } from 'lucide-react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
+import { ScrollGatePopup } from '@/components/home/ScrollGatePopup'
+import { useScrollGate } from '@/hooks/useScrollGate'
 import { useI18n } from '@/i18n/I18nContext'
 
 // Efeito "Sticky Cards" (GSAP ScrollTrigger) portado para a secao Crew.
@@ -27,6 +29,8 @@ export function CrewSticky() {
   const { t } = useI18n()
   const cardsRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
+  const gate = useScrollGate(2 / CREW.length)
+
   useEffect(() => {
     const wrap = cardsRef.current
     const cta = ctaRef.current
@@ -93,6 +97,8 @@ export function CrewSticky() {
       },
     })
 
+    gate.attach(st)
+
     // As secoes acima (reels/clientes/fontes) e a intro que revela a home so
     // assentam DEPOIS do pin ja ter sido medido, deslocando a posicao real da
     // secao — era isso que "bugava" os cards ate um refresh manual. Recalcula os
@@ -114,6 +120,7 @@ export function CrewSticky() {
   }, [])
 
   return (
+    <>
     <section id="crew" className="scroll-mt-24">
       <div ref={cardsRef} className="crew-cards">
         <div className="crew-signature live-yellow" aria-label="BoldCrew">
@@ -181,5 +188,15 @@ export function CrewSticky() {
         })}
       </div>
     </section>
+    <ScrollGatePopup
+      open={gate.gateOpen}
+      subtitle={t.crew.gateEyebrow}
+      title={t.crew.gateTitle}
+      buttonLabel={t.crew.gateButton}
+      secondsLeft={gate.secondsLeft}
+      onAccept={gate.accept}
+      onSkip={gate.skip}
+    />
+    </>
   )
 }

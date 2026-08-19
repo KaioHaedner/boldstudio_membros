@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { gsap } from '@/lib/gsap'
 import { CLIENTES } from '@/data/clientes'
 import { ShinyButton } from '@/components/ShinyButton'
+import { ScrollGatePopup } from '@/components/home/ScrollGatePopup'
+import { useScrollGate } from '@/hooks/useScrollGate'
 import { useI18n } from '@/i18n/I18nContext'
 
 // Só as marcas que têm vídeo demoreel entram no carrossel fullscreen.
@@ -15,6 +17,7 @@ export function CasesCarrossel() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const sectionRef = useRef<HTMLElement>(null)
+  const gate = useScrollGate(CASES.length > 1 ? 2 / (CASES.length - 1) : 1)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -37,6 +40,8 @@ export function CasesCarrossel() {
             invalidateOnRefresh: true,
           },
         })
+
+        if (tl.scrollTrigger) gate.attach(tl.scrollTrigger)
 
         slides.forEach((slide, index) => {
           if (index === 0) return
@@ -100,6 +105,7 @@ export function CasesCarrossel() {
   }, [])
 
   return (
+    <>
     <section
       ref={sectionRef}
       id="cases"
@@ -172,5 +178,15 @@ export function CasesCarrossel() {
         </span>
       </div>
     </section>
+    <ScrollGatePopup
+      open={gate.gateOpen}
+      subtitle={t.cases.gateEyebrow}
+      title={t.cases.gateTitle}
+      buttonLabel={t.cases.gateButton}
+      secondsLeft={gate.secondsLeft}
+      onAccept={gate.accept}
+      onSkip={gate.skip}
+    />
+    </>
   )
 }
