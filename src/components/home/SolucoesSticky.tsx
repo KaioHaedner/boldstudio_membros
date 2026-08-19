@@ -96,7 +96,12 @@ export function SolucoesSticky() {
             ))}
           </ul>
 
-          {/* Miniatura flutuante — segue a altura do item ativo, alterna de lado */}
+          {/* Miniatura — no mobile nao ha espaco lateral pra flutuar do lado
+              do item sem sobrepor o texto (a lista ocupa a largura toda), entao
+              fica empilhada abaixo da lista, centralizada, em fluxo normal
+              (position:static ignora o `top` que o framer-motion anima). A
+              partir do sm: vira flutuante ao lado do item ativo, como no
+              desktop. */}
           <AnimatePresence>
             {activeIndex !== null && (
               <motion.div
@@ -106,14 +111,14 @@ export function SolucoesSticky() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
                 className={cn(
-                  'pointer-events-none absolute z-10 h-[110px] w-[110px] -translate-y-1/2 overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:h-[180px] sm:w-[180px] md:h-[260px] md:w-[260px]',
-                  side === 'right' ? 'right-0 sm:right-4 md:right-10' : 'left-0 sm:left-4 md:left-10'
+                  'pointer-events-none z-10 mx-auto mt-6 h-[140px] w-[140px] overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:absolute sm:mt-0 sm:h-[180px] sm:w-[180px] sm:-translate-y-1/2 md:h-[260px] md:w-[260px]',
+                  side === 'right' ? 'sm:right-4 md:right-10' : 'sm:left-4 md:left-10'
                 )}
               >
                 <img
                   src={PLACEHOLDER_IMG}
                   alt=""
-                  className="h-full w-full bg-bold-gray object-contain p-4 sm:p-6 md:p-10"
+                  className="h-full w-full bg-bold-gray object-contain p-6 sm:p-6 md:p-10"
                 />
               </motion.div>
             )}

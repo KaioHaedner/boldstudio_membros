@@ -6,21 +6,31 @@ import type { ScrollTrigger } from '@/lib/gsap'
 // se o usuario quer ver o resto. "Quero ver" -> libera na hora. Nao respondeu
 // ate o tempo acabar (ou fechou no X / clicou fora) -> pula pro fim da secao.
 //
-// Historico: a v1 interceptava o gesto de wheel/touch com
-// event.preventDefault() ANTES do scroll acontecer — fragil em touch (iOS/
-// Android decidem se um gesto vai rolar a pagina logo no primeiro touchmove;
-// bloquear condicionalmente so nos eventos seguintes da mesma gesture fica
-// inconsistente entre navegadores, sentia como trava/lag). A v2 tentou reagir
-// ao evento nativo `scroll` do window, mas isso corre por fora do ScrollTrigger
-// — dependendo da ordem de registro dos listeners, o `self.progress` lido
-// nesse evento podia estar um frame atrasado em relacao ao que o GSAP acabou
-// de calcular, entao o gate as vezes nao disparava.
+// Historico:
+// v1 interceptava o gesto de wheel/touch com event.preventDefault() ANTES do
+// scroll acontecer — fragil em touch (iOS/Android decidem se um gesto vai
+// rolar a pagina logo no primeiro touchmove; bloquear condicionalmente so
+// nos eventos seguintes da mesma gesture fica inconsistente).
 //
-// Essa versao (v3) nao registra nenhum listener proprio: quem chama
-// `checkProgress(self.progress)` e o proprio `onUpdate` do ScrollTrigger da
-// secao (Crew/Cases), que ja roda em sincronia com o scroll de verdade
-// (mouse, touch ou trackpad — GSAP normaliza os tres). Ao cruzar o gate,
-// volta pra posicao exata (snap) e trava com overflow:hidden.
+// v2 trocou pra reagir ao evento nativo `scroll` do window, mas isso corre
+// por fora do ScrollTrigger — dependendo da ordem de registro dos
+// listeners, o `self.progress` lido podia estar um frame atrasado, o gate
+// as vezes nao disparava.
+//
+// v3 passou a reagir ao proprio `onUpdate` do ScrollTrigger da secao
+// (chamado via `checkProgress`), o que resolveu a deteccao — mas ainda
+// travava com overflow:hidden, que NAO e suficiente no iOS Safari: um fling
+// (scroll com inercia) ja em andamento continua sendo aplicado pelo motor de
+// momentum do proprio Safari por varios frames mesmo com overflow:hidden, e
+// so parava depois de "vazar" bastante — foi isso que fez o popup do Crew
+// abrir com a secao de Cases ja visivel atras.
+//
+// v4 (essa): ao cruzar o gate, congela o body com position:fixed exatamente
+// na posicao alvo (tecnica padrao de scroll-lock robusta a iOS — usada por
+// bibliotecas como body-scroll-lock). Isso corta a inercia na hora, porque o
+// body deixa de participar do scroll do documento; a posicao "atual" vira
+// so um `top` negativo, imune a deltas de momentum que ainda estejam
+// chegando.
 export function useScrollGate(gateProgress: number, lockSeconds = 7) {
   const [gateOpen, setGateOpen] = useState(false)
   const [secondsLeft, setSecondsLeft] = useState(lockSeconds)
@@ -30,6 +40,7 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
   const timeoutRef = useRef<number | null>(null)
   const intervalRef = useRef<number | null>(null)
   const lastProgressRef = useRef(0)
+  const lockYRef = useRef(0)
 
   const attach = useCallback((st: ScrollTrigger) => {
     stRef.current = st
@@ -42,48 +53,62 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
     intervalRef.current = null
   }
 
-  // overflow:hidden no html+body bloqueia scroll de forma identica em
-  // wheel/touch/teclado/scrollbar, sem depender de preventDefault por tipo
-  // de gesto.
-  const lockScroll = () => {
+  const lockScrollAt = (y: number) => {
+    lockYRef.current = y
     document.documentElement.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${y}px`
+    document.body.style.left = '0'
+    document.body.style.right = '0'
+    document.body.style.width = '100%'
   }
+
   const unlockScroll = () => {
     document.documentElement.style.overflow = ''
-    document.body.style.overflow = ''
+    document.body.style.position = ''
+    document.body.style.top = ''
+    document.body.style.left = ''
+    document.body.style.right = ''
+    document.body.style.width = ''
   }
 
   const skip = useCallback(() => {
     resolvedRef.current = true
     gateOpenRef.current = false
     clearTimers()
+    const y = lockYRef.current
     unlockScroll()
+    window.scrollTo(0, y)
     setGateOpen(false)
     const st = stRef.current
-    if (st) window.scrollTo({ top: st.end + 1, behavior: 'smooth' })
+    window.scrollTo({ top: st ? st.end + 1 : y, behavior: 'smooth' })
   }, [])
 
   const accept = useCallback(() => {
     resolvedRef.current = true
     gateOpenRef.current = false
     clearTimers()
+    const y = lockYRef.current
     unlockScroll()
+    window.scrollTo(0, y)
     setGateOpen(false)
   }, [])
 
-  const openGate = useCallback(() => {
-    gateOpenRef.current = true
-    setSecondsLeft(lockSeconds)
-    setGateOpen(true)
-    lockScroll()
-    timeoutRef.current = window.setTimeout(() => {
-      if (!resolvedRef.current) skip()
-    }, lockSeconds * 1000)
-    intervalRef.current = window.setInterval(() => {
-      setSecondsLeft((s) => Math.max(0, s - 1))
-    }, 1000)
-  }, [lockSeconds, skip])
+  const openGate = useCallback(
+    (y: number) => {
+      gateOpenRef.current = true
+      setSecondsLeft(lockSeconds)
+      setGateOpen(true)
+      lockScrollAt(y)
+      timeoutRef.current = window.setTimeout(() => {
+        if (!resolvedRef.current) skip()
+      }, lockSeconds * 1000)
+      intervalRef.current = window.setInterval(() => {
+        setSecondsLeft((s) => Math.max(0, s - 1))
+      }, 1000)
+    },
+    [lockSeconds, skip]
+  )
 
   // Chamado a cada onUpdate do ScrollTrigger da secao (self.progress).
   const checkProgress = useCallback(
@@ -93,11 +118,8 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
       if (resolvedRef.current || gateOpenRef.current || !scrollingForward) return
       if (progress < gateProgress) return
       const st = stRef.current
-      if (st) {
-        const target = st.start + gateProgress * (st.end - st.start)
-        window.scrollTo({ top: target })
-      }
-      openGate()
+      const target = st ? st.start + gateProgress * (st.end - st.start) : window.scrollY
+      openGate(target)
     },
     [gateProgress, openGate]
   )
