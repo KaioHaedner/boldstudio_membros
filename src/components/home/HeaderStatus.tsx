@@ -7,8 +7,8 @@ interface Geo {
   timezone: string
 }
 
-// Localização (via IP do visitante) + relógio ao vivo, centralizado no header.
-// Fica só no desktop (lg+); no mobile não há espaço entre logo e menu.
+// Localização (via IP do visitante) + relógio ao vivo, pequeno, embaixo da
+// logo no canto esquerdo do header (a pedido do cliente, 2026-08-18).
 export function HeaderStatus() {
   const [geo, setGeo] = useState<Geo | null>(null)
   const [now, setNow] = useState(() => new Date())
@@ -60,10 +60,10 @@ export function HeaderStatus() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-full border border-bold-yellow/25 bg-black/35 px-5 py-2.5 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-bold-yellow shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 lg:flex"
+      className="pointer-events-none hidden items-center gap-1.5 whitespace-nowrap text-[0.6rem] font-bold uppercase tracking-[0.14em] text-bold-yellow/80 lg:flex"
     >
       <span>{place}</span>
-      <span className="h-3 w-px bg-bold-yellow/30" />
+      <span className="h-2 w-px bg-bold-yellow/30" />
       <span>
         {weekday} {time}
       </span>

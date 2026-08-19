@@ -1516,15 +1516,32 @@ textarea {
 }
 .processo-counters__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
   margin-top: clamp(2rem, 5vw, 3.5rem);
-  border-top: 1px solid var(--color-bold-white);
-  border-left: 1px solid var(--color-bold-white);
 }
 .processo-counter {
+  position: relative;
+  overflow: hidden;
   padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 2.5vw, 1.75rem);
-  border-right: 1px solid var(--color-bold-white);
-  border-bottom: 1px solid var(--color-bold-white);
+  border: 1px solid var(--color-bold-yellow);
+  border-radius: 15px;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    var(--color-bold-black) 0%,
+    rgba(255, 215, 18, 0.3) 50%,
+    var(--color-bold-black) 100%
+  );
+  background-size: 250% 250%;
+  animation: processo-counter-shift 6s ease-in-out infinite;
+}
+@keyframes processo-counter-shift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .processo-counter { animation: none; }
 }
 .processo-counter__value {
   font-weight: 900;
@@ -1550,9 +1567,6 @@ textarea {
 
 /* ---- Ajustes mobile ---- */
 @media (max-width: 640px) {
-  .processo-counters__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .processo-counters__note {
     text-align: center;
   }

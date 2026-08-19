@@ -19,12 +19,10 @@ const REUNIOES = [
 
 type Counter = { prefix?: string; value: number; suffix?: string; label: string }
 const COUNTERS: Counter[] = [
-  { prefix: '+', value: 14, label: 'Marcas atendidas' },
-  { value: 100, label: 'Projetos entregues' },
+  { prefix: '+', value: 120, label: 'Marcas atendidas' },
+  { prefix: '+', value: 500, label: 'Projetos entregues' },
   { value: 19, label: 'Reconhecimentos' },
-  { value: 100, suffix: '%', label: 'Clientes satisfeitos' },
-  { prefix: '+', value: 2000, label: 'Vídeos produzidos' },
-  { value: 90, suffix: '%', label: 'Retenção de clientes' },
+  { value: 95, suffix: '%', label: 'Clientes satisfeitos' },
 ]
 
 // NAO chamar ScrollTrigger.refresh() no onLoad das imgs: no mobile elas chegam

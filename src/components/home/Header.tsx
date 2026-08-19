@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Menu, X, ArrowRight } from 'lucide-react'
 import { useI18n } from '@/i18n/I18nContext'
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher'
@@ -22,6 +23,7 @@ function scrollToAnchor(href: string) {
 export function Header() {
   const { t } = useI18n()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -52,21 +54,51 @@ export function Header() {
           aria-label="Navegação principal"
           className="relative flex h-20 w-full items-center justify-between px-5 sm:px-8 lg:px-12"
         >
-          <HeaderStatus />
-          <a
-            href="#home"
-            onClick={(event) => {
-              event.preventDefault()
-              navigate('#home')
-            }}
-            className="pointer-events-auto relative z-10 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-5 py-3 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 transition-colors hover:border-bold-yellow/40"
+          <div className="flex flex-col items-start gap-1">
+            <a
+              href="#home"
+              onClick={(event) => {
+                event.preventDefault()
+                navigate('#home')
+              }}
+              className="pointer-events-auto relative z-10 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-5 py-3 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 transition-colors hover:border-bold-yellow/40"
+            >
+              <img
+                src="/brand/logo-boldstudio.webp"
+                alt="Bold Studio Brasil"
+                className="h-8 w-auto object-contain sm:h-9"
+              />
+            </a>
+            <HeaderStatus />
+          </div>
+
+          {/* Menu distribuído direto no header (sem esconder atrás de um botão), so no desktop — no mobile nao ha espaço pra 8 itens numa barra fina, entao mantem o botao Menu abrindo a tela cheia */}
+          <ul
+            className="pointer-events-auto hidden items-center gap-1 rounded-full border border-white/15 bg-black/35 p-1.5 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150 lg:flex"
+            onMouseLeave={() => setHoveredLink(null)}
           >
-            <img
-              src="/brand/logo-boldstudio.webp"
-              alt="Bold Studio Brasil"
-              className="h-8 w-auto object-contain sm:h-9"
-            />
-          </a>
+            {NAV_LINKS.map((link) => (
+              <li key={link.href} className="relative" onMouseEnter={() => setHoveredLink(link.href)}>
+                {hoveredLink === link.href && (
+                  <motion.span
+                    layoutId="nav-hover-pill"
+                    className="absolute inset-0 rounded-full bg-bold-yellow/25"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <a
+                  href={link.href}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    navigate(link.href)
+                  }}
+                  className="relative z-10 block whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-bold-white/75 transition-colors hover:text-bold-yellow"
+                >
+                  {t.nav[link.key]}
+                </a>
+              </li>
+            ))}
+          </ul>
 
           <div className="pointer-events-auto flex items-center gap-1 rounded-full border border-white/15 bg-black/35 p-1.5 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150">
             <div className="hidden md:block">
@@ -83,7 +115,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
-              className="group inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-full px-2 text-bold-white transition-colors hover:bg-white/10 hover:text-bold-yellow md:px-4"
+              className="group inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-full px-2 text-bold-white transition-colors hover:bg-white/10 hover:text-bold-yellow md:px-4 lg:hidden"
               aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
               aria-expanded={menuOpen}
               aria-controls="home-fullscreen-menu"
