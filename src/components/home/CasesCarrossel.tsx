@@ -38,6 +38,7 @@ export function CasesCarrossel() {
             scrub: 1,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onUpdate: (self) => gate.checkProgress(self.progress),
           },
         })
 

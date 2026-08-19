@@ -25,11 +25,16 @@ const CREW = [
   { id: 'pedro-neto', nome: 'Pedro Garcia Neto', color: `${COLOR_BASE}juninho_BOLD_IMG_CREW.png` },
 ] as const
 
+// Portao ativa exatamente quando o card do Miguel entra em foco (pedido do
+// cliente) — indice calculado pelo id em vez de fixo, pra nao quebrar se a
+// ordem do CREW mudar.
+const MIGUEL_INDEX = CREW.findIndex((m) => m.id === 'miguel')
+
 export function CrewSticky() {
   const { t } = useI18n()
   const cardsRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
-  const gate = useScrollGate(2 / CREW.length)
+  const gate = useScrollGate(MIGUEL_INDEX / CREW.length)
 
   useEffect(() => {
     const wrap = cardsRef.current
@@ -63,6 +68,7 @@ export function CrewSticky() {
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         const progress = self.progress
+        gate.checkProgress(progress)
 
         // CTA "Falar com a Bold Studio" aparece nos ultimos ~20% (quando o
         // ultimo card esta saindo), preenchendo o fim do efeito sem espaco morto.

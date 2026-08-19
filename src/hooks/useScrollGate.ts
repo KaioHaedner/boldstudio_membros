@@ -1,17 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ScrollTrigger } from '@/lib/gsap'
 
-// "Portao" de scroll pra secoes pinadas muito longas (Crew, Cases): ao tentar
-// rolar pra baixo estando em `gateProgress` ou alem (2o->3o item), bloqueia
-// ESSE gesto de scroll (wheel/touch), trava por `lockSeconds` e mostra um
-// popup perguntando se o usuario quer ver o resto. "Quero ver" -> libera na
-// hora. Nao respondeu ate o tempo acabar (ou fechou no X / clicou fora) ->
-// pula pro fim da secao (proxima secao).
+// "Portao" de scroll pra secoes pinadas muito longas (Crew, Cases): ao cruzar
+// `gateProgress`, trava o scroll (`lockSeconds`) e mostra um popup perguntando
+// se o usuario quer ver o resto. "Quero ver" -> libera na hora. Nao respondeu
+// ate o tempo acabar (ou fechou no X / clicou fora) -> pula pro fim da secao.
 //
-// Importante: NAO reage a onUpdate/refresh do ScrollTrigger (proximo a posicao
-// de scroll DEPOIS dela mudar) — isso disparava o portao sozinho durante
-// remedicoes internas do GSAP, sem o usuario ter rolado de verdade. Em vez
-// disso intercepta o proprio gesto de wheel/touch ANTES do scroll acontecer.
+// Historico: a v1 interceptava o gesto de wheel/touch com
+// event.preventDefault() ANTES do scroll acontecer — fragil em touch (iOS/
+// Android decidem se um gesto vai rolar a pagina logo no primeiro touchmove;
+// bloquear condicionalmente so nos eventos seguintes da mesma gesture fica
+// inconsistente entre navegadores, sentia como trava/lag). A v2 tentou reagir
+// ao evento nativo `scroll` do window, mas isso corre por fora do ScrollTrigger
+// — dependendo da ordem de registro dos listeners, o `self.progress` lido
+// nesse evento podia estar um frame atrasado em relacao ao que o GSAP acabou
+// de calcular, entao o gate as vezes nao disparava.
+//
+// Essa versao (v3) nao registra nenhum listener proprio: quem chama
+// `checkProgress(self.progress)` e o proprio `onUpdate` do ScrollTrigger da
+// secao (Crew/Cases), que ja roda em sincronia com o scroll de verdade
+// (mouse, touch ou trackpad — GSAP normaliza os tres). Ao cruzar o gate,
+// volta pra posicao exata (snap) e trava com overflow:hidden.
 export function useScrollGate(gateProgress: number, lockSeconds = 7) {
   const [gateOpen, setGateOpen] = useState(false)
   const [secondsLeft, setSecondsLeft] = useState(lockSeconds)
@@ -20,6 +29,7 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
   const stRef = useRef<ScrollTrigger | null>(null)
   const timeoutRef = useRef<number | null>(null)
   const intervalRef = useRef<number | null>(null)
+  const lastProgressRef = useRef(0)
 
   const attach = useCallback((st: ScrollTrigger) => {
     stRef.current = st
@@ -32,10 +42,23 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
     intervalRef.current = null
   }
 
+  // overflow:hidden no html+body bloqueia scroll de forma identica em
+  // wheel/touch/teclado/scrollbar, sem depender de preventDefault por tipo
+  // de gesto.
+  const lockScroll = () => {
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+  }
+  const unlockScroll = () => {
+    document.documentElement.style.overflow = ''
+    document.body.style.overflow = ''
+  }
+
   const skip = useCallback(() => {
     resolvedRef.current = true
     gateOpenRef.current = false
     clearTimers()
+    unlockScroll()
     setGateOpen(false)
     const st = stRef.current
     if (st) window.scrollTo({ top: st.end + 1, behavior: 'smooth' })
@@ -45,6 +68,7 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
     resolvedRef.current = true
     gateOpenRef.current = false
     clearTimers()
+    unlockScroll()
     setGateOpen(false)
   }, [])
 
@@ -52,6 +76,7 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
     gateOpenRef.current = true
     setSecondsLeft(lockSeconds)
     setGateOpen(true)
+    lockScroll()
     timeoutRef.current = window.setTimeout(() => {
       if (!resolvedRef.current) skip()
     }, lockSeconds * 1000)
@@ -60,44 +85,27 @@ export function useScrollGate(gateProgress: number, lockSeconds = 7) {
     }, 1000)
   }, [lockSeconds, skip])
 
-  // Intercepta o gesto de scroll ANTES dele mover a pagina.
-  useEffect(() => {
-    const handle = (event: Event, scrollingDown: boolean) => {
-      if (resolvedRef.current) return
-      if (gateOpenRef.current) {
-        event.preventDefault()
-        return
-      }
-      if (!scrollingDown) return
+  // Chamado a cada onUpdate do ScrollTrigger da secao (self.progress).
+  const checkProgress = useCallback(
+    (progress: number) => {
+      const scrollingForward = progress > lastProgressRef.current
+      lastProgressRef.current = progress
+      if (resolvedRef.current || gateOpenRef.current || !scrollingForward) return
+      if (progress < gateProgress) return
       const st = stRef.current
-      if (!st || st.progress < gateProgress) return
-      event.preventDefault()
+      if (st) {
+        const target = st.start + gateProgress * (st.end - st.start)
+        window.scrollTo({ top: target })
+      }
       openGate()
-    }
+    },
+    [gateProgress, openGate]
+  )
 
-    const onWheel = (event: WheelEvent) => handle(event, event.deltaY > 0)
+  useEffect(() => () => {
+    clearTimers()
+    unlockScroll()
+  }, [])
 
-    let touchStartY = 0
-    const onTouchStart = (event: TouchEvent) => {
-      touchStartY = event.touches[0]?.clientY ?? 0
-    }
-    const onTouchMove = (event: TouchEvent) => {
-      const currentY = event.touches[0]?.clientY ?? touchStartY
-      handle(event, touchStartY - currentY > 0)
-    }
-
-    window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchmove', onTouchMove, { passive: false })
-
-    return () => {
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
-    }
-  }, [gateProgress, openGate])
-
-  useEffect(() => () => clearTimers(), [])
-
-  return { gateOpen, secondsLeft, attach, skip, accept }
+  return { gateOpen, secondsLeft, attach, skip, accept, checkProgress }
 }

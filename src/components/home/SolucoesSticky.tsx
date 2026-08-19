@@ -106,15 +106,14 @@ export function SolucoesSticky() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
                 className={cn(
-                  'pointer-events-none absolute z-10 hidden -translate-y-1/2 overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:block',
+                  'pointer-events-none absolute z-10 h-[110px] w-[110px] -translate-y-1/2 overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:h-[180px] sm:w-[180px] md:h-[260px] md:w-[260px]',
                   side === 'right' ? 'right-0 sm:right-4 md:right-10' : 'left-0 sm:left-4 md:left-10'
                 )}
-                style={{ width: 260, height: 260 }}
               >
                 <img
                   src={PLACEHOLDER_IMG}
                   alt=""
-                  className="h-full w-full bg-bold-gray object-contain p-10"
+                  className="h-full w-full bg-bold-gray object-contain p-4 sm:p-6 md:p-10"
                 />
               </motion.div>
             )}
