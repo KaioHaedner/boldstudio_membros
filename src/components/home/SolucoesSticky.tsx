@@ -1,9 +1,52 @@
+import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/I18nContext'
 
-// Seção "Soluções" (produtos). No rodapé, uma etiqueta amarela (mesmo estilo
-// do "BoldCrew") fica sticky e usa um gradiente vivo que se move continuamente.
+// Imagem placeholder por produto — troca quando o Kaio mandar a arte/video real de cada um.
+const PLACEHOLDER_IMG = '/brand/logo-boldstudio.webp'
+
+// Seção "Soluções" (produtos). Lista central: item ativo realça (branco) e os
+// outros ficam opacos, com uma miniatura flutuante acompanhando a altura do
+// item — alterna de lado (par abre pra direita, impar pra esquerda), estilo
+// sand.black. No desktop (mouse de verdade) é hover manual; no mobile/touch
+// (sem hover), cicla sozinho pelos itens em loop. No rodapé, etiqueta amarela
+// sticky (mesmo estilo do "BoldCrew").
 export function SolucoesSticky() {
   const { t } = useI18n()
+  const produtos = t.servicos.produtos
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const listRef = useRef<HTMLUListElement>(null)
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([])
+  const [thumbTop, setThumbTop] = useState(0)
+
+  const activateIndex = (index: number) => {
+    const list = listRef.current
+    const el = itemRefs.current[index]
+    if (!list || !el) return
+    const listRect = list.getBoundingClientRect()
+    const itemRect = el.getBoundingClientRect()
+    setThumbTop(itemRect.top - listRect.top + itemRect.height / 2)
+    setActiveIndex(index)
+  }
+
+  // Mobile/touch (sem hover de verdade): looping automatico pelos itens.
+  useEffect(() => {
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    if (canHover) return
+
+    let i = 0
+    activateIndex(0)
+    const id = window.setInterval(() => {
+      i = (i + 1) % produtos.length
+      activateIndex(i)
+    }, 2200)
+    return () => window.clearInterval(id)
+    // roda so uma vez no mount — activateIndex le refs atuais, nao precisa redeclarar
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const side = activeIndex !== null && activeIndex % 2 === 0 ? 'right' : 'left'
 
   return (
     <section id="servicos" className="relative scroll-mt-24 px-6 py-24 sm:py-32">
@@ -15,24 +58,72 @@ export function SolucoesSticky() {
           {t.servicos.title}
         </h2>
 
-        <div className="mt-14 grid gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {t.servicos.produtos.map((produto, index) => (
-            <div
-              key={produto.nome}
-              className="group relative overflow-hidden rounded-2xl border border-bold-yellow/15 bg-bold-gray/40 p-7 transition-colors duration-300 hover:border-bold-yellow/50"
-            >
-              <span className="text-sm font-black text-bold-yellow/40">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <h3 className="mt-3 text-xl font-extrabold uppercase tracking-tight text-bold-white">
-                {produto.nome}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-bold-white/70">
-                {produto.descricao}
-              </p>
-            </div>
-          ))}
+        <div className="relative mt-16">
+          <ul
+            ref={listRef}
+            onMouseLeave={() => setActiveIndex(null)}
+            className="mx-auto flex max-w-3xl flex-col items-center"
+          >
+            {produtos.map((produto, index) => (
+              <li
+                key={produto.nome}
+                ref={(el) => {
+                  itemRefs.current[index] = el
+                }}
+                onMouseEnter={() => activateIndex(index)}
+                className="flex cursor-default items-baseline gap-4 py-0.5 sm:py-1"
+              >
+                <span
+                  className="font-serif text-base italic transition-colors duration-300 sm:text-xl"
+                  style={{ color: activeIndex === index ? '#FFD712' : 'rgba(255,255,255,0.3)' }}
+                >
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span
+                  className="text-[clamp(1.8rem,6vw,4rem)] font-black uppercase leading-[1.05] tracking-tight transition-all duration-300"
+                  style={{
+                    color:
+                      activeIndex === index
+                        ? '#FFD712'
+                        : activeIndex === null
+                          ? '#FFFFFF'
+                          : 'rgba(255,255,255,0.2)',
+                  }}
+                >
+                  {produto.nome}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Miniatura flutuante — segue a altura do item ativo, alterna de lado */}
+          <AnimatePresence>
+            {activeIndex !== null && (
+              <motion.div
+                key={side}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1, top: thumbTop }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                className={cn(
+                  'pointer-events-none absolute z-10 hidden -translate-y-1/2 overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:block',
+                  side === 'right' ? 'right-0 sm:right-4 md:right-10' : 'left-0 sm:left-4 md:left-10'
+                )}
+                style={{ width: 260, height: 260 }}
+              >
+                <img
+                  src={PLACEHOLDER_IMG}
+                  alt=""
+                  className="h-full w-full bg-bold-gray object-contain p-10"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        <p className="mt-10 max-w-lg mx-auto text-sm leading-relaxed text-bold-white/60">
+          {activeIndex !== null ? produtos[activeIndex].descricao : ''}
+        </p>
       </div>
 
       {/* Etiqueta amarela sticky com gradiente vivo (estilo BoldCrew) */}
