@@ -102,30 +102,40 @@ export function SolucoesSticky() {
               (position:static ignora o `top` que o framer-motion anima). A
               partir do sm: vira flutuante ao lado do item ativo, como no
               desktop. */}
-          <AnimatePresence>
-            {activeIndex !== null && (
-              <motion.div
-                key={side}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1, top: thumbTop }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
-                className={cn(
-                  'pointer-events-none z-10 mx-auto mt-6 h-[140px] w-[140px] overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:absolute sm:mt-0 sm:h-[180px] sm:w-[180px] sm:-translate-y-1/2 md:h-[260px] md:w-[260px]',
-                  side === 'right' ? 'sm:right-4 md:right-10' : 'sm:left-4 md:left-10'
-                )}
-              >
-                <img
-                  src={PLACEHOLDER_IMG}
-                  alt=""
-                  className="h-full w-full bg-bold-gray object-contain p-6 sm:p-6 md:p-10"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Altura reservada no mobile: a miniatura desmonta/remonta a cada
+              troca de lado (key={side}), e sem esse espaço fixo a lista e o
+              texto abaixo pulavam a cada troca do ciclo automático. */}
+          <div className="mt-6 h-[140px] sm:mt-0 sm:h-0">
+            <AnimatePresence>
+              {activeIndex !== null && (
+                <motion.div
+                  key={side}
+                  // `top` também no initial: sem isso a miniatura montava em
+                  // top:0 (topo da lista) e a mola a trazia até o item —
+                  // aquele "abre longe e depois aproxima".
+                  initial={{ opacity: 0, scale: 0.9, top: thumbTop }}
+                  animate={{ opacity: 1, scale: 1, top: thumbTop }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                  className={cn(
+                    'pointer-events-none z-10 mx-auto h-[140px] w-[140px] overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:absolute sm:h-[180px] sm:w-[180px] sm:-translate-y-1/2 md:h-[260px] md:w-[260px]',
+                    side === 'right' ? 'sm:right-4 md:right-10' : 'sm:left-4 md:left-10'
+                  )}
+                >
+                  <img
+                    src={PLACEHOLDER_IMG}
+                    alt=""
+                    className="h-full w-full bg-bold-gray object-contain p-6 sm:p-6 md:p-10"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        <p className="mt-10 max-w-lg mx-auto text-sm leading-relaxed text-bold-white/60">
+        {/* min-h: a descrição só existe com um item ativo; sem altura reservada
+            o bloco crescia do zero e empurrava o resto ao ativar. */}
+        <p className="mx-auto mt-10 min-h-[4rem] max-w-lg text-sm leading-relaxed text-bold-white/60 sm:min-h-[3rem]">
           {activeIndex !== null ? produtos[activeIndex].descricao : ''}
         </p>
       </div>

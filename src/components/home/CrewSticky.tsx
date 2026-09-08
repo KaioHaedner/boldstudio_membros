@@ -1,16 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import { User } from 'lucide-react'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { ShinyButton } from '@/components/ShinyButton'
-import { ScrollGatePopup } from '@/components/home/ScrollGatePopup'
-import { useScrollGate } from '@/hooks/useScrollGate'
+import { useCardSwap } from '@/hooks/useCardSwap'
 import { useI18n } from '@/i18n/I18nContext'
 
-// Efeito "Sticky Cards" (GSAP ScrollTrigger) portado para a secao Crew.
-// Cards empilhados que saem um a um conforme o scroll. Cargo e descricao vem
-// das traducoes (t.crew.members[id]); aqui ficam so nome e foto (idiomaagnostico).
-// Uma unica foto colorida por membro evita baixar duas imagens do Supabase para
-// cada card e reduz o tempo de carregamento da home.
+// Fotos coloridas do crew: uma unica imagem por membro evita baixar duas
+// versoes do Supabase para cada card e reduz o tempo de carregamento da home.
 const COLOR_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/Fotos_CREW_COLORIDAS/'
 
 const CREW = [
@@ -25,184 +20,82 @@ const CREW = [
   { id: 'pedro-neto', nome: 'Pedro Garcia Neto', color: `${COLOR_BASE}juninho_BOLD_IMG_CREW.png` },
 ] as const
 
-// Portao ativa exatamente quando o card do Miguel entra em foco (pedido do
-// cliente) — indice calculado pelo id em vez de fixo, pra nao quebrar se a
-// ordem do CREW mudar.
-const MIGUEL_INDEX = CREW.findIndex((m) => m.id === 'miguel')
-
+// Stack de cards em perspectiva 3D que troca sozinho (efeito "Card Swap"),
+// substituindo o sticky com portao de scroll: o cliente nao queria mais o
+// scroll travado ate acabar de ver o time inteiro, entao aqui a secao fica no
+// fluxo normal da pagina e os cards giram por conta propria (ver useCardSwap).
 export function CrewSticky() {
   const { t } = useI18n()
-  const cardsRef = useRef<HTMLDivElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const gate = useScrollGate(MIGUEL_INDEX / CREW.length)
+  const stageRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const wrap = cardsRef.current
-    const cta = ctaRef.current
-    if (!wrap) return
-
-    const cards = Array.from(wrap.querySelectorAll<HTMLElement>('.crew-card'))
-    const totalCards = cards.length
-    if (totalCards === 0) return
-
-    const segmentSize = 1 / totalCards
-    const cardYOffset = 5
-    const cardScaleStep = 0.075
-
-    cards.forEach((card, i) => {
-      gsap.set(card, {
-        xPercent: -50,
-        yPercent: -50 + i * cardYOffset,
-        scale: 1 - i * cardScaleStep,
-      })
-    })
-
-    const st = ScrollTrigger.create({
-      trigger: wrap,
-      start: 'top top',
-      end: () => '+=' + window.innerHeight * (totalCards * 0.85),
-      pin: true,
-      pinSpacing: true,
-      scrub: 1,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const progress = self.progress
-        gate.checkProgress(progress)
-
-        // CTA "Falar com a Bold Studio" aparece nos ultimos ~20% (quando o
-        // ultimo card esta saindo), preenchendo o fim do efeito sem espaco morto.
-        if (cta) {
-          const o = Math.max(0, Math.min(1, (progress - 0.78) / 0.18))
-          gsap.set(cta, { opacity: o, pointerEvents: o > 0.5 ? 'auto' : 'none' })
-        }
-
-        const activeIndex = Math.min(Math.floor(progress / segmentSize), totalCards - 1)
-        const segProgress = (progress - activeIndex * segmentSize) / segmentSize
-
-        cards.forEach((card, i) => {
-          if (i < activeIndex) {
-            gsap.set(card, { yPercent: -250, rotationX: 35 })
-          } else if (i === activeIndex) {
-            gsap.set(card, {
-              yPercent: gsap.utils.interpolate(-50, -200, segProgress),
-              rotationX: gsap.utils.interpolate(0, 35, segProgress),
-              scale: 1,
-            })
-          } else {
-            const behindIndex = i - activeIndex
-            const currentYOffset = (behindIndex - segProgress) * cardYOffset
-            const currentScale = 1 - (behindIndex - segProgress) * cardScaleStep
-            gsap.set(card, {
-              yPercent: -50 + currentYOffset,
-              rotationX: 0,
-              scale: currentScale,
-            })
-          }
-        })
-      },
-    })
-
-    gate.attach(st)
-
-    // As secoes acima (reels/clientes/fontes) e a intro que revela a home so
-    // assentam DEPOIS do pin ja ter sido medido, deslocando a posicao real da
-    // secao — era isso que "bugava" os cards ate um refresh manual. Recalcula os
-    // ScrollTriggers quando a pagina/fontes terminam de carregar.
-    const refresh = () => ScrollTrigger.refresh()
-    const raf = requestAnimationFrame(refresh)
-    window.addEventListener('load', refresh)
-    if (document.fonts?.ready) document.fonts.ready.then(refresh).catch(() => {})
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('load', refresh)
-      // kill(true) REVERTE o pin (remove o pin-spacer que o GSAP inseriu no DOM).
-      // Sem o revert, ao navegar home -> projeto o spacer ficava orfao, o React
-      // se perdia ao desmontar (removeChild NotFoundError) e, na volta, o
-      // refresh crashava em _swapPinIn (insertBefore em parent null).
-      st.kill(true)
-    }
-  }, [])
+  useCardSwap(stageRef, { delay: 4000, skewAmount: 2 })
 
   return (
-    <>
-    <section id="crew" className="scroll-mt-24">
-      <div ref={cardsRef} className="crew-cards">
-        <div className="crew-signature live-yellow" aria-label="BoldCrew">
-          BoldCrew
-        </div>
+    <section id="crew" className="relative overflow-hidden bg-bold-black py-24 scroll-mt-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="crew-swap-grid">
+          <div className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
+            <p className="max-w-[16ch] text-4xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-bold-white sm:text-6xl">
+              {t.crew.ctaTextA}
+              <span className="text-bold-yellow">{t.crew.ctaTextHighlight}</span>
+              {t.crew.ctaTextB}
+            </p>
+            <ShinyButton
+              onClick={() =>
+                document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }
+            >
+              {t.crew.ctaButton}
+            </ShinyButton>
+          </div>
 
-        <div className="crew-marquee-vertical" role="region" aria-label={t.crew.marquee}>
-          <span className="sr-only">{t.crew.marquee}</span>
-          <div className="crew-marquee-vertical__track" aria-hidden="true">
-            {[0, 1].map((group) => (
-              <div key={group} className="crew-marquee-vertical__group">
-                <span className="crew-marquee-vertical__item">{t.crew.marquee}</span>
-              </div>
-            ))}
+          <div
+            ref={stageRef}
+            className="crew-swap-stage"
+            style={{ '--crew-count': CREW.length } as CSSProperties}
+          >
+            {CREW.map((m, i) => {
+              const info = t.crew.members[m.id]
+              const hasPhoto = 'color' in m
+              return (
+                <article key={m.id} className="crew-card" style={{ zIndex: CREW.length - i }}>
+                  <div className="crew-card__info">
+                    <span className="crew-card__bar" aria-hidden="true" />
+                    <div>
+                      <h3 className="crew-card__name">{m.nome}</h3>
+                      <div className="crew-card__roles">
+                        <p className="crew-card__role">{info.role}</p>
+                      </div>
+                      <p className="crew-card__desc">{info.desc}</p>
+                    </div>
+                  </div>
+                  {hasPhoto ? (
+                    <div className="crew-card__photo">
+                      <img
+                        className="crew-photo"
+                        src={m.color}
+                        alt={m.nome}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <div className="crew-card__photo crew-card__photo--empty">
+                      <User size={64} className="text-bold-white/20" aria-hidden="true" />
+                    </div>
+                  )}
+                </article>
+              )
+            })}
           </div>
         </div>
+      </div>
 
-        <div ref={ctaRef} className="crew-cta">
-          <p className="crew-cta__title">
-            {t.crew.ctaTextA}
-            <span className="crew-cta__highlight">{t.crew.ctaTextHighlight}</span>
-            {t.crew.ctaTextB}
-          </p>
-          <ShinyButton
-            className="crew-cta__button"
-            onClick={() =>
-              document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }
-          >
-            {t.crew.ctaButton}
-          </ShinyButton>
-        </div>
-        {CREW.map((m, i) => {
-          const info = t.crew.members[m.id]
-          const hasPhoto = 'color' in m
-          return (
-            <article key={m.id} className="crew-card" style={{ zIndex: 10 - i }}>
-              <div className="crew-card__info">
-                <span className="crew-card__bar" aria-hidden="true" />
-                <div>
-                  <h3 className="crew-card__name">{m.nome}</h3>
-                  <div className="crew-card__roles">
-                    <p className="crew-card__role">{info.role}</p>
-                  </div>
-                  <p className="crew-card__desc">{info.desc}</p>
-                </div>
-              </div>
-              {hasPhoto ? (
-                <div className="crew-card__photo">
-                  <img
-                    className="crew-photo"
-                    src={m.color}
-                    alt={m.nome}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              ) : (
-                <div className="crew-card__photo crew-card__photo--empty">
-                  <User size={64} className="text-bold-white/20" aria-hidden="true" />
-                </div>
-              )}
-            </article>
-          )
-        })}
+      <div className="absolute bottom-8 left-0">
+        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
+          BoldCrew
+        </span>
       </div>
     </section>
-    <ScrollGatePopup
-      open={gate.gateOpen}
-      subtitle={t.crew.gateEyebrow}
-      title={t.crew.gateTitle}
-      buttonLabel={t.crew.gateButton}
-      secondsLeft={gate.secondsLeft}
-      onAccept={gate.accept}
-      onSkip={gate.skip}
-    />
-    </>
   )
 }

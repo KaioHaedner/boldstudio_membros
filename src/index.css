@@ -991,107 +991,59 @@ textarea {
   }
 }
 
-/* ============== Crew — Sticky Cards (equipe) ============== */
-@keyframes crew-marquee-vertical-scroll {
-  to {
-    transform: translateY(-50%);
-  }
-}
-.crew-cards {
-  --crew-rail-width: clamp(4.75rem, 8vw, 7.5rem);
-  position: relative;
-  height: 100svh;
-  overflow: hidden;
-  perspective: 1000px;
-}
-.crew-cards::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.68);
-}
-.crew-signature {
-  position: absolute;
-  left: 0;
-  bottom: clamp(0.85rem, 2.5svh, 1.75rem);
-  z-index: 40;
-  padding: 0.55rem clamp(1.2rem, 3vw, 2.4rem) 0.65rem clamp(0.9rem, 2vw, 1.6rem);
-  color: #000000;
-  background: #ffd712;
-  border-radius: 0 1rem 1rem 0;
-  font-size: clamp(1.55rem, 4vw, 3rem);
-  font-weight: 900;
-  font-style: italic;
-  line-height: 1;
-  letter-spacing: -0.055em;
-  pointer-events: none;
-}
-.crew-marquee-vertical {
-  position: absolute;
-  top: clamp(5.5rem, 11svh, 7.5rem);
-  right: clamp(0.5rem, 1.5vw, 1.25rem);
-  bottom: clamp(7rem, 15svh, 9.5rem);
-  z-index: 40;
-  width: var(--crew-rail-width);
-  overflow: hidden;
-  color: #000000;
-  background: #ffd712;
-  border: 1px solid rgba(0, 0, 0, 0.45);
-  border-radius: clamp(1rem, 2vw, 1.6rem);
-  box-shadow: 0 24px 70px -24px rgba(255, 215, 18, 0.65);
-  pointer-events: none;
-}
-.crew-marquee-vertical__track {
-  display: flex;
-  height: max-content;
-  flex-direction: column;
-  will-change: transform;
-  animation: crew-marquee-vertical-scroll 20s linear infinite;
-}
-.crew-marquee-vertical__group {
-  display: flex;
-  flex: none;
-  flex-direction: column;
+/* ============== Crew — Card Swap 3D (equipe) ============== */
+.crew-swap-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 35fr) minmax(360px, 65fr);
   align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
 }
-.crew-marquee-vertical__item {
-  padding-block: clamp(1rem, 2svh, 2rem);
-  white-space: nowrap;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: clamp(2.7rem, 7svh, 6.5rem);
-  font-weight: 900;
-  line-height: 0.82;
-  letter-spacing: -0.055em;
-  text-transform: uppercase;
+.crew-swap-stage {
+  /* tamanho do leque — lido tambem pelo useCardSwap (--card-swap-x/y) */
+  --card-swap-x: 11px;
+  --card-swap-y: 13px;
+  /* folga total que o leque ocupa; o card desconta ela pra nao vazar do stage */
+  --card-swap-fan-x: calc(var(--card-swap-x) * (var(--crew-count) - 1));
+  --card-swap-fan-y: calc(var(--card-swap-y) * (var(--crew-count) - 1));
+  position: relative;
+  width: 100%;
+  height: clamp(360px, 40vw, 460px);
+  justify-self: end;
+  perspective: 1400px;
+}
+@media (max-width: 1023px) {
+  .crew-swap-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .crew-swap-stage {
+    justify-self: center;
+  }
 }
 .crew-card {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100vw;
-  height: 100svh;
+  width: calc(100% - var(--card-swap-fan-x));
+  height: calc(100% - var(--card-swap-fan-y));
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0;
-  padding: 0 calc(var(--crew-rail-width) + clamp(1rem, 2vw, 2rem)) 0 0;
-  border-radius: 0;
+  border-radius: 1.5rem;
   background: #000000;
-  border-block: 1px solid rgba(255, 215, 18, 0.15);
-  border-inline: 0;
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
-  transform-origin: center bottom;
+  border: 1px solid rgba(255, 215, 18, 0.15);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
   will-change: transform;
   overflow: hidden;
 }
 .crew-card__info {
-  flex: 0 0 42%;
+  flex: 0 0 44%;
   display: flex;
   align-items: stretch;
-  gap: 1.25rem;
-  padding: clamp(2rem, 4vw, 5rem);
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
 }
 /* divisor "travessao vertical" amarelo luminoso */
 .crew-card__bar {
@@ -1103,27 +1055,27 @@ textarea {
   box-shadow: 0 0 12px 1px rgba(255, 215, 18, 0.75);
 }
 .crew-card__name {
-  font-size: clamp(2.4rem, 5.6vw, 6rem);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
   font-weight: 900;
   color: #ffffff;
-  line-height: 1.05;
+  line-height: 1.1;
 }
 .crew-card__roles {
-  margin-top: 0.7rem;
+  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 .crew-card__role {
-  font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
   font-weight: 600;
   color: #ffd712;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 .crew-card__desc {
-  margin-top: 0.9rem;
-  max-width: 34ch;
-  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+  margin-top: 0.6rem;
+  max-width: 32ch;
+  font-size: clamp(0.75rem, 0.95vw, 0.875rem);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
@@ -1135,7 +1087,6 @@ textarea {
   position: relative;
   padding: 0;
   border: 0;
-  border-radius: 0;
   overflow: hidden;
   background: #141414;
   display: flex;
@@ -1153,68 +1104,170 @@ textarea {
   height: 100%;
   object-fit: cover;
 }
-/* CTA revelado no fim, quando os cards saem (atras deles, z menor) */
-.crew-cta {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1.75rem, 4svh, 3rem);
-  padding: 0 calc(var(--crew-rail-width) + 2rem) 0 1.5rem;
-  text-align: center;
-  opacity: 0;
-}
-/* Escala do hero: o CTA fecha o sticky e precisa do mesmo peso tipografico. */
-.crew-cta__title {
-  max-width: 14ch;
-  font-size: clamp(2.9rem, 7.6vw, 7.5rem);
-  font-weight: 900;
-  line-height: 0.84;
-  letter-spacing: -0.055em;
-  text-transform: uppercase;
-  color: #ffffff;
-  text-wrap: balance;
-}
-.crew-cta__highlight {
-  color: #ffd712;
-}
-/* O botao padrao (1rem) some ao lado do titulo nessa escala. */
-.crew-cta__button {
-  padding: clamp(1rem, 1.6svh, 1.35rem) clamp(2.25rem, 3.5vw, 3.25rem);
-  font-size: clamp(1rem, 1.15vw, 1.25rem);
-}
-@media (max-width: 1000px) {
+@media (max-width: 720px) {
+  .crew-swap-stage {
+    /* leque menor: em tela estreita o deslocamento de desktop jogava os cards
+       de tras pra fora da tela (ficavam cortados na borda) */
+    --card-swap-x: 6px;
+    --card-swap-y: 7px;
+    height: clamp(470px, 128vw, 560px);
+  }
   .crew-card {
-    width: 100vw;
-    height: 100svh;
     flex-direction: column;
-    padding: 0 calc(var(--crew-rail-width) + 0.75rem) 0 0;
-    gap: 0;
   }
   .crew-card__info {
-    width: 100%;
-    flex: 0 0 43%;
+    flex: 0 0 42%;
     padding: 1.5rem;
-    /* centraliza nome/cargo/descricao no meio do traco amarelo (so mobile) */
-    align-items: center;
   }
   .crew-card__photo {
     width: 100%;
-    align-self: stretch;
   }
-  /* marquee lateral: mais rapido e no sentido contrario (so mobile) */
-  .crew-marquee-vertical__track {
-    animation: crew-marquee-vertical-scroll 20s linear infinite reverse;
+  /* Empilhado, a foto vira uma faixa horizontal e o corte central caía no
+     tronco — em quem usa camiseta preta com fundo escuro o card parecia vazio.
+     Sobe o enquadramento pra pegar rosto/ombros. */
+  .crew-card__photo .crew-photo {
+    object-position: 50% 22%;
   }
-  /* QuickNav mobile: posicionado 100% via utilities responsivas no proprio
-     componente. NAO recriar aqui com `translate: none` — o minificador de
-     producao fundia transform/translate e descartava a regra (bug so em prod). */
+}
+
+/* ============== Cases — Accordion Frames Spotlight ==============
+   Laminas verticais lado a lado: a em foco abre, as outras ficam finas. O video
+   mantem SEMPRE a largura aberta e fica centralizado, entao a lamina fina vira
+   um recorte dele (esse deslize do recorte e o efeito). Larguras vem de custom
+   properties pra o mobile so trocar os valores, sem JS medindo nada. */
+.cases-accordion {
+  --case-open: clamp(320px, 42vw, 620px);
+  --case-closed: 26px;
+  --case-gap: 6px;
+  --case-height: clamp(320px, 46svh, 460px);
+  --case-ease: cubic-bezier(0.075, 0.82, 0.165, 1);
+  display: flex;
+  justify-content: center;
+  gap: var(--case-gap);
+  width: 100%;
+  padding-inline: 1rem;
+}
+.cases-accordion__panel {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--case-closed);
+  height: var(--case-height);
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: #141414;
+  overflow: hidden;
+  cursor: pointer;
+  transition: width 0.9s var(--case-ease);
+  will-change: width;
+}
+.cases-accordion__panel[data-open='true'] {
+  width: var(--case-open);
+}
+.cases-accordion__panel video {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--case-open);
+  height: 100%;
+  object-fit: cover;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+/* moldura amarela do case em foco, com os tracos verticais saindo pra cima e
+   pra baixo (assinatura do efeito) — em degrade pra nao brigar com a legenda */
+.cases-accordion__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border: 3px solid #ffd712;
+  pointer-events: none;
+}
+/* vídeo indisponível: logo da marca centralizada, recortada pela lâmina do
+   mesmo jeito que o vídeo seria */
+.cases-accordion__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, #242424, #101010 70%);
+}
+.cases-accordion__fallback img {
+  width: calc(var(--case-open) * 0.45);
+  max-width: none;
+  opacity: 0.55;
+  filter: grayscale(1) brightness(1.6);
+  object-fit: contain;
+}
+.cases-accordion__frame::before,
+.cases-accordion__frame::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 3px;
+  height: 22svh;
+  transform: translateX(-50%);
+}
+.cases-accordion__frame::before {
+  bottom: 100%;
+  background: linear-gradient(to top, #ffd712, transparent);
+}
+.cases-accordion__frame::after {
+  top: 100%;
+  background: linear-gradient(to bottom, #ffd712, transparent);
+}
+/* Etiqueta "Cases": acompanha o scroll e estaciona na divisa com Clientes. */
+.cases-etiqueta {
+  position: sticky;
+  bottom: 1.5rem;
+  z-index: 20;
+  align-self: flex-start;
+  margin-top: 3rem;
+  margin-bottom: -3rem;
+  pointer-events: none;
+}
+@keyframes cases-caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.cases-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-top: clamp(2.5rem, 6svh, 4rem);
+  padding-inline: 1.5rem;
+  text-align: left;
+  animation: cases-caption-in 0.4s ease both;
+}
+@media (max-width: 720px) {
+  .cases-accordion {
+    --case-open: 150px;
+    --case-closed: 12px;
+    --case-gap: 4px;
+    --case-height: clamp(200px, 30svh, 260px);
+  }
+  .cases-caption {
+    flex-direction: column;
+    text-align: center;
+  }
+  /* No mobile a legenda vira coluna e ocupa o rodapé inteiro da seção — a
+     etiqueta grudada no rodapé da tela ficava por cima do nome e do botão.
+     Aqui ela sai do sticky e fica no fluxo, no fim da seção. */
+  .cases-etiqueta {
+    position: static;
+    margin-top: 2.5rem;
+    margin-bottom: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .crew-marquee-vertical__track {
+  .cases-accordion__panel {
+    transition: none;
+  }
+  .cases-caption {
     animation: none;
   }
 }
@@ -1482,13 +1535,17 @@ textarea {
 .processo__frase {
   max-width: 72rem;
   margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
-  text-align: left;
+  text-align: center;
   font-style: italic;
   font-weight: 700;
   font-size: clamp(1.758rem, 4.23vw, 3.164rem);
+  line-height: 1.15;
   color: var(--color-bold-white);
 }
+/* block: o trecho amarelo e sempre a segunda linha (branco em cima, amarelo
+   embaixo). Inline, a frase quebrava em qualquer palavra que coubesse. */
 .processo__frase-hi {
+  display: block;
   color: var(--color-bold-yellow);
 }
 
@@ -1571,8 +1628,27 @@ textarea {
     text-align: center;
   }
   /* Titulo nao pode estourar a largura no mobile (6.2vw cabe as 2 linhas com folga) */
+  /* Sobrava muito preto em volta do titulo: a secao usava o mesmo respiro
+     generoso do desktop numa tela estreita. */
+  .processo {
+    padding-block: 2.5rem;
+  }
+  .processo__intro {
+    margin-bottom: 1.5rem;
+  }
   .processo__title {
-    font-size: clamp(1rem, 6.2vw, 2.8rem);
+    /* O nowrap do desktop obrigava a frase inteira a caber numa linha so: a
+       fonte era encolhida ate ~23px e MESMO ASSIM transbordava a largura.
+       No mobile a frase quebra em mais linhas e a fonte volta a um tamanho
+       legivel. */
+    white-space: normal;
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    text-wrap: balance;
+  }
+  /* 10vh de respiro no topo do palco (~80px) so aumentava o vazio preto entre
+     o titulo e a primeira peca da linha do tempo. */
+  .processo__stack {
+    padding-top: 2rem;
   }
   /* Imagens (linha do tempo + fotos) ocupam a largura toda e ficam maiores */
   .tl-piece__path {

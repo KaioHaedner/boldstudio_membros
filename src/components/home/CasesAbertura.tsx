@@ -42,10 +42,12 @@ export function CasesAbertura() {
   const { t } = useI18n()
   const typed = useTypewriter(t.cases.typeWords)
 
+  // min-h menor no mobile: com 90vh sobravam ~230px de preto embaixo do
+  // chevron, porque o conteúdo fica centralizado numa caixa bem maior que ele.
   return (
     <section
       id="cases-abertura"
-      className="relative flex min-h-[90vh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 text-center"
+      className="relative flex min-h-[55vh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 text-center sm:min-h-[90vh]"
     >
       <div className="max-w-4xl">
         <h2 className="text-[clamp(2rem,5.5vw,4.75rem)] font-black italic leading-[1.15] tracking-tight text-bold-white">
@@ -72,11 +74,6 @@ export function CasesAbertura() {
         strokeWidth={2.5}
       />
 
-      <div className="absolute bottom-8 left-0">
-        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
-          {t.cases.label}
-        </span>
-      </div>
     </section>
   )
 }

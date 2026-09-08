@@ -1,193 +1,180 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { gsap } from '@/lib/gsap'
 import { CLIENTES } from '@/data/clientes'
 import { ShinyButton } from '@/components/ShinyButton'
-import { ScrollGatePopup } from '@/components/home/ScrollGatePopup'
-import { useScrollGate } from '@/hooks/useScrollGate'
 import { useI18n } from '@/i18n/I18nContext'
 
-// Só as marcas que têm vídeo demoreel entram no carrossel fullscreen.
+// Só as marcas que têm vídeo demoreel entram no carrossel.
 const CASES = CLIENTES.filter((c) => c.videos.length > 0)
 
-// Carrossel Blur Reveal: seção pinada onde cada case é um slide fullscreen
-// (vídeo + título). A troca por scroll usa clip-path (recorte de baixo pra
-// cima) + escala + blur progressivo, com o título surgindo desfocado -> nítido.
+const AUTO_ADVANCE_MS = 5000
+
+// "Accordion Frames Spotlight": os cases viram lâminas verticais lado a lado; a
+// lâmina em foco abre e mostra o vídeo, as outras ficam finas (o vídeo mantém a
+// largura aberta, então a lâmina fina funciona como um recorte dele).
+// Substitui o carrossel fullscreen pinado — o cliente não queria mais o scroll
+// travado até acabarem os cases, então a seção fica no fluxo normal (60% da
+// tela) e o foco anda sozinho de 5 em 5 segundos.
 export function CasesCarrossel() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const sectionRef = useRef<HTMLElement>(null)
-  const gate = useScrollGate(CASES.length > 1 ? 2 / (CASES.length - 1) : 1)
+  const videosRef = useRef<(HTMLVideoElement | null)[]>([])
+  // Volta da página do projeto (?case=slug): já monta com a lâmina daquele case
+  // aberta, em vez de piscar o primeiro antes de trocar.
+  const [focused, setFocused] = useState(() => {
+    const slug = new URLSearchParams(window.location.search).get('case')
+    const index = slug ? CASES.findIndex((client) => client.slug === slug) : -1
+    return index < 0 ? 0 : index
+  })
+  const [paused, setPaused] = useState(false)
+  const [failed, setFailed] = useState<Record<string, boolean>>({})
+
+  // Só o case em foco roda o vídeo; os outros ficam no frame parado (a lâmina
+  // fina não justifica manter 10 vídeos decodificando ao mesmo tempo).
+  useEffect(() => {
+    videosRef.current.forEach((video, index) => {
+      if (!video) return
+      if (index === focused) void video.play().catch(() => {})
+      else video.pause()
+    })
+  }, [focused])
 
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const ctx = gsap.context(() => {
-      const slides = gsap.utils.toArray<HTMLElement>('.case-slide')
-      if (slides.length < 2) return
+    let interval: number | null = null
 
-      const media = gsap.matchMedia()
-      media.add('(prefers-reduced-motion: no-preference)', () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: () => `+=${(slides.length - 1) * 100}%`,
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => gate.checkProgress(self.progress),
-          },
-        })
+    const stop = () => {
+      if (interval) window.clearInterval(interval)
+      interval = null
+    }
 
-        if (tl.scrollTrigger) gate.attach(tl.scrollTrigger)
+    const start = () => {
+      if (interval || paused) return
+      interval = window.setInterval(() => {
+        setFocused((current) => (current + 1) % CASES.length)
+      }, AUTO_ADVANCE_MS)
+    }
 
-        slides.forEach((slide, index) => {
-          if (index === 0) return
-          const mediaEl = slide.querySelector('.case-media')
-          const caption = slide.querySelector('.case-caption')
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      { threshold: 0.25 }
+    )
+    io.observe(section)
 
-          tl.fromTo(
-            slide,
-            { clipPath: 'inset(100% 0% 0% 0%)' },
-            { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 1 },
-            index
-          )
-          tl.fromTo(
-            mediaEl,
-            { scale: 1.25, filter: 'blur(26px)' },
-            { scale: 1, filter: 'blur(0px)', ease: 'power2.out', duration: 1 },
-            index
-          )
-          tl.fromTo(
-            caption,
-            { autoAlpha: 0, y: 40, filter: 'blur(16px)' },
-            { autoAlpha: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.6 },
-            index + 0.35
-          )
-        })
+    return () => {
+      io.disconnect()
+      stop()
+    }
+  }, [paused])
 
-        // Voltou da pagina de projeto (?case=slug): posiciona o carrossel
-        // exatamente nesse case (o scroll do pin controla qual slide aparece)
-        // em vez de cair no inicio. Usa as posicoes reais do pin (start/end) e
-        // tenta ate o ScrollTrigger estar medido.
-        const caseSlug = new URLSearchParams(window.location.search).get('case')
-        if (caseSlug) {
-          // idx 0 tambem precisa do jump: o React Router NAO scrolla pra hash,
-          // entao sem ele o retorno do primeiro case ficava no topo da home.
-          const idx = CASES.findIndex((c) => c.slug === caseSlug)
-          if (idx >= 0) {
-            let tries = 0
-            const jumpToCase = () => {
-              const st = tl.scrollTrigger
-              if (st && st.end > st.start && tl.duration() > 0) {
-                // Cada slide `idx` fica revelado no tempo `idx+1` da timeline
-                // (a animacao comeca na posicao idx e dura 1). Mapeia esse tempo
-                // pra posicao de scroll do pin.
-                const progress = Math.min(1, (idx + 1) / tl.duration())
-                const target = st.start + progress * (st.end - st.start)
-                window.scrollTo({ top: target, behavior: 'auto' })
-                const url = new URL(window.location.href)
-                url.searchParams.delete('case')
-                window.history.replaceState(null, '', url.pathname + url.hash)
-              } else if (tries++ < 25) {
-                window.setTimeout(jumpToCase, 100)
-              }
-            }
-            window.setTimeout(jumpToCase, 250)
-          }
-        }
-      })
-    }, section)
+  // Rola até a seção quando veio de ?case=slug. O timeout dá um frame pro
+  // layout assentar antes de medir a posição.
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).get('case')) return
 
-    return () => ctx.revert()
+    const timeout = window.setTimeout(() => {
+      sectionRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
+      const url = new URL(window.location.href)
+      url.searchParams.delete('case')
+      window.history.replaceState(null, '', url.pathname + url.hash)
+    }, 150)
+
+    return () => window.clearTimeout(timeout)
   }, [])
 
+  const active = CASES[focused]
+
   return (
-    <>
     <section
       ref={sectionRef}
       id="cases"
-      className="relative h-screen overflow-hidden bg-bold-black"
+      className="relative flex min-h-[60svh] flex-col items-center justify-center overflow-hidden bg-bold-black pb-16 pt-6 scroll-mt-24 sm:pb-28 sm:pt-16"
     >
-      {CASES.map((client, index) => (
-        <article
-          key={client.slug}
-          className="case-slide absolute inset-0"
-          style={{
-            zIndex: index,
-            clipPath: index === 0 ? undefined : 'inset(100% 0% 0% 0%)',
-          }}
-        >
-          <video
-            className="case-media absolute inset-0 h-full w-full object-cover"
-            src={client.videos[0]}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/50" />
-
-          <div className="absolute right-5 top-24 hidden flex-col items-end gap-4 sm:right-10 md:flex">
-            <span
-              aria-hidden="true"
-              className="pointer-events-none text-[clamp(3.5rem,9vw,8rem)] font-black leading-none text-white/15"
-            >
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <ShinyButton onClick={() => navigate(`/projeto-${client.slug}`)}>
-              {t.clientes.viewProject}
-            </ShinyButton>
-          </div>
-
-          <div className="case-caption absolute inset-x-5 bottom-[14%] sm:inset-x-12 md:bottom-[22%]">
-            <div className="flex items-center gap-4 sm:gap-5">
-              <span className="flex h-14 shrink-0 items-center justify-center rounded-lg bg-white px-3 sm:h-20">
-                <img
-                  src={client.logo}
-                  alt={client.nome}
-                  loading="lazy"
-                  className="h-full max-h-10 w-auto max-w-[110px] object-contain sm:max-h-14"
-                />
+      <div
+        className="cases-accordion"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {CASES.map((client, index) => (
+          <button
+            key={client.slug}
+            type="button"
+            className="cases-accordion__panel"
+            data-open={index === focused}
+            aria-label={client.nome}
+            aria-current={index === focused}
+            onMouseEnter={() => setFocused(index)}
+            onClick={() =>
+              index === focused ? navigate(`/projeto-${client.slug}`) : setFocused(index)
+            }
+          >
+            <video
+              ref={(element) => {
+                videosRef.current[index] = element
+              }}
+              // O fragmento #t garante que a lâmina fechada mostre um frame do
+              // vídeo em vez de um retângulo preto, sem baixar o arquivo todo.
+              src={`${client.videos[0]}#t=0.1`}
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              onError={() => setFailed((current) => ({ ...current, [client.slug]: true }))}
+            />
+            {/* Vídeo fora do ar (hoje: cota do Supabase novo estourada) cai na
+                logo da marca em vez de deixar a lâmina preta. Some sozinho
+                quando o vídeo voltar a carregar. */}
+            {failed[client.slug] && (
+              <span className="cases-accordion__fallback">
+                <img src={client.logo} alt="" loading="lazy" />
               </span>
-              <h3 className="max-w-3xl text-[clamp(1.8rem,4.5vw,3.8rem)] font-black uppercase leading-[0.9] tracking-[-0.02em] text-bold-white">
-                {client.nome}
-                {/* Numero ao lado do nome (so mobile); no desktop ele fica grande no canto */}
-                <span className="ml-3 text-bold-yellow md:hidden">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-              </h3>
-            </div>
-            {/* Botao "Ver projeto completo" abaixo do nome, entre a marca e a etiqueta Cases (so mobile) */}
-            <div className="mt-5 md:hidden">
-              <ShinyButton onClick={() => navigate(`/projeto-${client.slug}`)}>
-                {t.clientes.viewProject}
-              </ShinyButton>
-            </div>
-          </div>
-        </article>
-      ))}
+            )}
+            {index === focused && <span className="cases-accordion__frame" aria-hidden="true" />}
+          </button>
+        ))}
+      </div>
 
-      {/* Etiqueta "Cases" — fixa no rodapé durante todo o efeito (seção pinada) */}
-      <div className="pointer-events-none absolute bottom-8 left-0 z-30">
+      <div key={active.slug} className="cases-caption">
+        <span className="flex h-14 shrink-0 items-center justify-center rounded-lg bg-white px-3 sm:h-20">
+          <img
+            src={active.logo}
+            alt={active.nome}
+            loading="lazy"
+            className="h-full max-h-10 w-auto max-w-[110px] object-contain sm:max-h-14"
+          />
+        </span>
+
+        <div className="min-w-0">
+          <h3 className="text-[clamp(1.5rem,3.4vw,2.75rem)] font-black uppercase leading-[0.95] tracking-[-0.02em] text-bold-white">
+            {active.nome}
+            <span className="ml-3 text-bold-yellow">{String(focused + 1).padStart(2, '0')}</span>
+          </h3>
+          {active.area && (
+            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-bold-white/50 sm:text-sm">
+              {active.area}
+            </p>
+          )}
+        </div>
+
+        <ShinyButton onClick={() => navigate(`/projeto-${active.slug}`)}>
+          {t.clientes.viewProject}
+        </ShinyButton>
+      </div>
+
+      {/* Etiqueta sticky (mesmo mecanismo do Academy/Contato): acompanha o
+          scroll e estaciona na divisa com Clientes. Presa a ESTA seção, não a
+          um wrapper que inclua a abertura — senão ela já apareceria no rodapé
+          enquanto a etiqueta BoldCrew ainda passa pelo mesmo canto, e as duas
+          se sobrepunham. */}
+      <div className="cases-etiqueta">
         <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.cases.label}
         </span>
       </div>
     </section>
-    <ScrollGatePopup
-      open={gate.gateOpen}
-      subtitle={t.cases.gateEyebrow}
-      title={t.cases.gateTitle}
-      buttonLabel={t.cases.gateButton}
-      secondsLeft={gate.secondsLeft}
-      onAccept={gate.accept}
-      onSkip={gate.skip}
-    />
-    </>
   )
 }
