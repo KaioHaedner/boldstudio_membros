@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CLIENTES } from '@/data/clientes'
 import { ShinyButton } from '@/components/ShinyButton'
@@ -29,16 +29,28 @@ export function CasesCarrossel() {
   })
   const [paused, setPaused] = useState(false)
   const [failed, setFailed] = useState<Record<string, boolean>>({})
+  // Um case só ganha `src` depois de entrar em foco pela primeira vez, e o que
+  // já carregou continua carregado. Com os 10 baixando de uma vez (mesmo em
+  // preload=metadata) as conexões ociosas estouravam o timeout do QUIC no
+  // navegador, e ainda gastava egress de vídeo que ninguém chegou a ver.
+  const [carregados, setCarregados] = useState<Set<number>>(() => new Set([focused]))
 
-  // Só o case em foco roda o vídeo; os outros ficam no frame parado (a lâmina
-  // fina não justifica manter 10 vídeos decodificando ao mesmo tempo).
+  // Ref pra o intervalo saber o foco atual sem virar dependência do efeito.
+  const focoAtual = useRef(focused)
+  const focar = useCallback((index: number) => {
+    focoAtual.current = index
+    setFocused(index)
+    setCarregados((atuais) => (atuais.has(index) ? atuais : new Set(atuais).add(index)))
+  }, [])
+
+  // Só o case em foco roda o vídeo; os que já carregaram ficam no frame parado.
   useEffect(() => {
     videosRef.current.forEach((video, index) => {
       if (!video) return
       if (index === focused) void video.play().catch(() => {})
       else video.pause()
     })
-  }, [focused])
+  }, [focused, carregados])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -55,7 +67,7 @@ export function CasesCarrossel() {
     const start = () => {
       if (interval || paused) return
       interval = window.setInterval(() => {
-        setFocused((current) => (current + 1) % CASES.length)
+        focar((focoAtual.current + 1) % CASES.length)
       }, AUTO_ADVANCE_MS)
     }
 
@@ -69,7 +81,7 @@ export function CasesCarrossel() {
       io.disconnect()
       stop()
     }
-  }, [paused])
+  }, [paused, focar])
 
   // Rola até a seção quando veio de ?case=slug. O timeout dá um frame pro
   // layout assentar antes de medir a posição.
@@ -107,28 +119,30 @@ export function CasesCarrossel() {
             data-open={index === focused}
             aria-label={client.nome}
             aria-current={index === focused}
-            onMouseEnter={() => setFocused(index)}
+            onMouseEnter={() => focar(index)}
             onClick={() =>
-              index === focused ? navigate(`/projeto-${client.slug}`) : setFocused(index)
+              index === focused ? navigate(`/projeto-${client.slug}`) : focar(index)
             }
           >
             <video
               ref={(element) => {
                 videosRef.current[index] = element
               }}
-              // O fragmento #t garante que a lâmina fechada mostre um frame do
-              // vídeo em vez de um retângulo preto, sem baixar o arquivo todo.
-              src={`${client.videos[0]}#t=0.1`}
+              src={carregados.has(index) ? client.videos[0] : undefined}
               loop
               muted
               playsInline
-              preload="metadata"
-              onError={() => setFailed((current) => ({ ...current, [client.slug]: true }))}
+              preload="none"
+              onError={() =>
+                setFailed((current) =>
+                  current[client.slug] ? current : { ...current, [client.slug]: true }
+                )
+              }
             />
-            {/* Vídeo fora do ar (hoje: cota do Supabase novo estourada) cai na
-                logo da marca em vez de deixar a lâmina preta. Some sozinho
-                quando o vídeo voltar a carregar. */}
-            {failed[client.slug] && (
+            {/* Logo da marca enquanto a lâmina não tem vídeo, seja porque ainda
+                não entrou em foco ou porque o arquivo está fora do ar (hoje: a
+                cota do Supabase novo estourada). Volta a ser vídeo sozinho. */}
+            {(!carregados.has(index) || failed[client.slug]) && (
               <span className="cases-accordion__fallback">
                 <img src={client.logo} alt="" loading="lazy" />
               </span>
