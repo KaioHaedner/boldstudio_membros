@@ -35,3 +35,5 @@ install*.err.log
 # Sistema operacional
 Thumbs.db
 desktop.ini
+.vercel
+.env*

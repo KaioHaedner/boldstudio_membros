@@ -8,10 +8,11 @@
 // depois os clientes antigos (Madô Burguer, Grupo Sinop) que nao fazem parte
 // dessa leva nova.
 
-const LOGO = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER/'
-const VID = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER_PREVIA_VD/'
-// Novos vídeos de case (2026-08-18), bucket do Supabase novo (infra em migração, ver Bold Studio no vault)
-const VID_NEW = 'https://heriogfvynncvabbwspu.supabase.co/storage/v1/object/public/Videos_Cliente_New/'
+// Servidos via proxy api.boldstudiobrasil.com — esconde qual Supabase (antigo
+// ou novo) está por trás de cada bucket, ver api/media/[...path].ts
+const LOGO = 'https://api.boldstudiobrasil.com/CLIENTES_CONTEINER/'
+const VID = 'https://api.boldstudiobrasil.com/CLIENTES_CONTEINER_PREVIA_VD/'
+const VID_NEW = 'https://api.boldstudiobrasil.com/Videos_Cliente_New/'
 // Placeholder pra clientes novos sem logo ainda — troca quando o Kaio mandar a logo real
 const LOGO_PLACEHOLDER = '/brand/logo-boldstudio.webp'
 

@@ -2,8 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { useI18n } from '@/i18n/I18nContext'
 
-const IMG_BASE =
-  'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/PROCESSO/'
+const IMG_BASE = 'https://api.boldstudiobrasil.com/PROCESSO/'
 
 // Peças de caminho (as imagens já trazem linha, pontos, ícones e rótulos).
 const PARTS = [

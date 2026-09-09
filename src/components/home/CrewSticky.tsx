@@ -6,7 +6,8 @@ import { useI18n } from '@/i18n/I18nContext'
 
 // Fotos coloridas do crew: uma unica imagem por membro evita baixar duas
 // versoes do Supabase para cada card e reduz o tempo de carregamento da home.
-const COLOR_BASE = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/Fotos_CREW_COLORIDAS/'
+// Servido via proxy api.boldstudiobrasil.com (esconde o Supabase de origem).
+const COLOR_BASE = 'https://api.boldstudiobrasil.com/Fotos_CREW_COLORIDAS/'
 
 const CREW = [
   { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.', color: `${COLOR_BASE}PEDRAO_BOLD_IMG_CREW.png` },

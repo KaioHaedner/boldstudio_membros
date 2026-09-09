@@ -8,7 +8,7 @@ import { useI18n } from '@/i18n/I18nContext'
 // logo da Bold + card branco intercalados com os previews dos cases (VideoTexture).
 // Cada video roda mudo, em loop CORTADO em PREVIEW_SECONDS, e pausa fora da tela.
 const PREVIEW_SECONDS = 10
-const VID = 'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/CLIENTES_CONTEINER_PREVIA_VD/'
+const VID = 'https://api.boldstudiobrasil.com/CLIENTES_CONTEINER_PREVIA_VD/'
 const VIDEO_URLS = [
   `${VID}FORTEZA_.mp4`,
   `${VID}MACHADO_.mp4`,

@@ -3,8 +3,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { useI18n } from '@/i18n/I18nContext'
 import { CoinDecor } from '@/components/home/CoinDecor'
 
-const CREW_IMG =
-  'https://erhtqgaxibncpondscna.supabase.co/storage/v1/object/public/Fotos_CREW_COLORIDAS/BOLDSTUDIO_CREW_ABOUTUS.webp'
+const CREW_IMG = 'https://api.boldstudiobrasil.com/Fotos_CREW_COLORIDAS/BOLDSTUDIO_CREW_ABOUTUS.webp'
 
 // Destaca em amarelo os trechos marcados com **...** no texto das traduções.
 export function renderHighlighted(text: string) {
