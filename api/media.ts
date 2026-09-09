@@ -18,6 +18,26 @@ const BUCKET_ORIGIN: Record<string, string> = {
   Videos_Cliente_New: 'https://heriogfvynncvabbwspu.supabase.co',
 }
 
+// O Supabase antigo (erhtqgaxibncpondscna, sem acesso ao dashboard) falha de
+// forma intermitente (timeout/503). Tenta de novo antes de desistir, em vez
+// de propagar a falha transitória pro navegador na primeira tentativa.
+async function fetchWithRetry(target: string, headers: HeadersInit, attempts = 3) {
+  let lastError: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(target, { headers })
+      const retryable = res.status >= 500 || res.status === 429
+      if (!retryable || i === attempts - 1) return res
+      lastError = new Error(`upstream ${res.status}`)
+    } catch (err) {
+      lastError = err
+      if (i === attempts - 1) throw lastError
+    }
+    await new Promise((r) => setTimeout(r, 300 * (i + 1)))
+  }
+  throw lastError
+}
+
 export default async function handler(req: Request) {
   const url = new URL(req.url)
   const bucket = url.searchParams.get('b') ?? ''
@@ -34,7 +54,12 @@ export default async function handler(req: Request) {
   const range = req.headers.get('range')
   if (range) upstreamHeaders['range'] = range
 
-  const upstream = await fetch(target, { headers: upstreamHeaders })
+  let upstream: Response
+  try {
+    upstream = await fetchWithRetry(target, upstreamHeaders)
+  } catch {
+    return new Response('Upstream unavailable', { status: 502 })
+  }
 
   if (!upstream.ok && upstream.status !== 206) {
     return new Response('Upstream error', { status: upstream.status })
@@ -47,7 +72,10 @@ export default async function handler(req: Request) {
   const contentRange = upstream.headers.get('content-range')
   if (contentRange) headers.set('Content-Range', contentRange)
   headers.set('Accept-Ranges', 'bytes')
-  headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  // s-maxage cacheia na borda da Vercel (não só no navegador do visitante) —
+  // depois do primeiro sucesso, visitas seguintes nem chegam a bater no
+  // Supabase instável.
+  headers.set('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable')
   headers.set('Access-Control-Allow-Origin', '*')
 
   return new Response(upstream.body, { status: upstream.status, headers })
