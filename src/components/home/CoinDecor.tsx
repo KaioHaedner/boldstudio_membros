@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-export const COIN_IMG = 'https://api.boldstudiobrasil.com/brand/BOLDSTUDIO_COIN.webp'
+export const COIN_IMG = 'https://api.boldstudiobrasil.com/api/media?b=brand&f=BOLDSTUDIO_COIN.webp'
 
 interface CoinDecorProps {
   /** Posição/tamanho/opacidade via utilitários Tailwind (absolute). */

@@ -10,9 +10,9 @@
 
 // Servidos via proxy api.boldstudiobrasil.com — esconde qual Supabase (antigo
 // ou novo) está por trás de cada bucket, ver api/media/[...path].ts
-const LOGO = 'https://api.boldstudiobrasil.com/CLIENTES_CONTEINER/'
-const VID = 'https://api.boldstudiobrasil.com/CLIENTES_CONTEINER_PREVIA_VD/'
-const VID_NEW = 'https://api.boldstudiobrasil.com/Videos_Cliente_New/'
+const LOGO = 'https://api.boldstudiobrasil.com/api/media?b=CLIENTES_CONTEINER&f='
+const VID = 'https://api.boldstudiobrasil.com/api/media?b=CLIENTES_CONTEINER_PREVIA_VD&f='
+const VID_NEW = 'https://api.boldstudiobrasil.com/api/media?b=Videos_Cliente_New&f='
 // Placeholder pra clientes novos sem logo ainda — troca quando o Kaio mandar a logo real
 const LOGO_PLACEHOLDER = '/brand/logo-boldstudio.webp'
 

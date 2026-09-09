@@ -3,6 +3,11 @@ export const config = { runtime: 'edge' }
 // Mapa bucket -> projeto Supabase de origem (nunca exposto ao cliente: só
 // existe aqui, no servidor). Evita expor o project ref do Supabase (antigo ou
 // novo) no bundle JS ou na aba Rede do navegador.
+//
+// Rota estática (sem segmento dinâmico [...path]) de propósito: o Vercel tem
+// um bug de roteamento com funções catch-all multi-segmento em projetos sem
+// framework Next.js (a conversão automática só cobre 1 segmento e cai em 404
+// pros demais) — bucket/arquivo vêm por query string em vez de path.
 const BUCKET_ORIGIN: Record<string, string> = {
   avatars: 'https://erhtqgaxibncpondscna.supabase.co',
   CLIENTES_CONTEINER: 'https://erhtqgaxibncpondscna.supabase.co',
@@ -15,16 +20,15 @@ const BUCKET_ORIGIN: Record<string, string> = {
 
 export default async function handler(req: Request) {
   const url = new URL(req.url)
-  const parts = url.pathname.replace(/^\/api\/media\//, '').split('/')
-  const bucket = parts[0]
-  const objectPath = parts.slice(1).join('/')
+  const bucket = url.searchParams.get('b') ?? ''
+  const file = url.searchParams.get('f') ?? ''
   const origin = BUCKET_ORIGIN[bucket]
 
-  if (!origin || !objectPath) {
+  if (!origin || !file) {
     return new Response('Not found', { status: 404 })
   }
 
-  const target = `${origin}/storage/v1/object/public/${bucket}/${objectPath}`
+  const target = `${origin}/storage/v1/object/public/${bucket}/${encodeURIComponent(file)}`
 
   const upstreamHeaders: HeadersInit = {}
   const range = req.headers.get('range')

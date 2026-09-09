@@ -9,11 +9,6 @@
   ],
   "rewrites": [
     {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "api.boldstudiobrasil.com" }],
-      "destination": "/api/media/:path*"
-    },
-    {
       "source": "/((?!api/|brand/|assets/|.*\\..*).*)",
       "destination": "/index.html"
     }
