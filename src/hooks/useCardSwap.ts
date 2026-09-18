@@ -36,6 +36,7 @@ export function useCardSwap(
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+    const stageElement = container
 
     const cards = Array.from(container.querySelectorAll<HTMLElement>('.crew-card'))
     const total = cards.length
@@ -68,6 +69,8 @@ export function useCardSwap(
         yPercent: -50,
         skewY: skewAmount,
         rotationX: 0,
+        scale: 1,
+        transformOrigin: '50% 50%',
         zIndex: slot.zIndex,
         force3D: true,
       })
@@ -88,44 +91,41 @@ export function useCardSwap(
       const rest = order.slice(1)
       const frontEl = cards[front]
       const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total)
-      // Sobe acima do leque, com uma folga proporcional ao card. O percurso
-      // usa as mesmas medidas do CSS no desktop e no mobile, sem sair da secao.
-      const liftY = backSlot.y - Math.min(72, Math.max(40, frontEl.offsetHeight * 0.18))
+      const containerRect = stageElement.getBoundingClientRect()
+      const stageCenterX = containerRect.left + containerRect.width / 2
+      // Como x e relativo ao centro do stage, este alvo leva a borda esquerda
+      // do card alem da margem direita da viewport em qualquer breakpoint.
+      const exitX = window.innerWidth - stageCenterX + frontEl.offsetWidth / 2 + 48
 
       timeline = gsap.timeline()
 
-      // O card sai POR CIMA dos demais e continua na frente durante a subida.
-      // So no alto passa para tras; a volta ao ultimo slot tambem e animada.
-      timeline.set(frontEl, { zIndex: total + 1 }, 0)
+      // O primeiro card sai inteiro pela margem direita. So depois de estar
+      // fora da tela ele e colocado no ultimo slot, ja atras dos demais.
+      timeline.set(frontEl, { zIndex: total + 10 }, 0)
       timeline.to(frontEl, {
-        x: backSlot.x,
-        y: liftY,
-        z: 48,
-        rotationX: 8,
-        duration: 0.65,
-        ease: 'power2.inOut',
-      }, 0)
-      timeline.to(frontEl, {
-        z: backSlot.z,
-        rotationX: 0,
-        duration: 0.3,
-        ease: 'power2.inOut',
-      }, 0.65)
-      timeline.set(frontEl, { zIndex: backSlot.zIndex }, 0.95)
-      timeline.to(frontEl, {
+        x: exitX,
         y: backSlot.y,
-        duration: 0.6,
-        ease: 'power2.out',
-      }, 0.95)
+        z: 72,
+        rotationZ: 3,
+        duration: 0.82,
+        ease: 'power3.in',
+      }, 0)
+      timeline.set(frontEl, {
+        x: backSlot.x,
+        y: backSlot.y,
+        z: backSlot.z,
+        rotationZ: 0,
+        zIndex: backSlot.zIndex,
+      }, 0.9)
 
       rest.forEach((cardIndex, i) => {
         const el = cards[cardIndex]
         const slot = makeSlot(i, cardDistance, verticalDistance, total)
-        timeline!.set(el, { zIndex: slot.zIndex }, 0.25)
+        timeline!.set(el, { zIndex: slot.zIndex }, 0)
         timeline!.to(
           el,
-          { x: slot.x, y: slot.y, z: slot.z, duration: 0.65, ease: 'power2.inOut' },
-          0.25 + i * 0.035
+          { x: slot.x, y: slot.y, z: slot.z, duration: 0.58, ease: 'power2.inOut' },
+          i * 0.02
         )
       })
 

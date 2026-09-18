@@ -135,7 +135,7 @@ export function SolucoesSticky() {
 
         {/* min-h: a descrição só existe com um item ativo; sem altura reservada
             o bloco crescia do zero e empurrava o resto ao ativar. */}
-        <p className="mx-auto mt-10 min-h-[4rem] max-w-lg text-sm leading-relaxed text-bold-white/60 sm:min-h-[3rem]">
+        <p className="mx-auto mt-10 min-h-[4rem] max-w-3xl text-[clamp(1rem,3vw,2rem)] font-black uppercase leading-[1.05] tracking-tight text-bold-yellow sm:min-h-[4.5rem]">
           {activeIndex !== null ? produtos[activeIndex].descricao : ''}
         </p>
       </div>
