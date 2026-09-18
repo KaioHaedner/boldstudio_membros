@@ -16,6 +16,7 @@ export function SolucoesSticky() {
   const { t } = useI18n()
   const produtos = t.servicos.produtos
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [autoCycle, setAutoCycle] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
   const itemRefs = useRef<(HTMLLIElement | null)[]>([])
   const [thumbTop, setThumbTop] = useState(0)
@@ -30,10 +31,20 @@ export function SolucoesSticky() {
     setActiveIndex(index)
   }
 
-  // Mobile/touch (sem hover de verdade): looping automatico pelos itens.
+  // Mobile/touch: o destaque que no desktop responde ao hover percorre a lista
+  // sozinho. Incluímos largura, hover e ponteiro na detecção porque alguns
+  // navegadores/emuladores móveis ainda anunciam hover e deixavam a seção vazia.
   useEffect(() => {
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    if (canHover) return
+    const media = window.matchMedia('(max-width: 767px), (hover: none), (pointer: coarse)')
+    const update = () => setAutoCycle(media.matches)
+
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (!autoCycle) return
 
     let i = 0
     activateIndex(0)
@@ -42,14 +53,12 @@ export function SolucoesSticky() {
       activateIndex(i)
     }, 2200)
     return () => window.clearInterval(id)
-    // roda so uma vez no mount — activateIndex le refs atuais, nao precisa redeclarar
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [autoCycle, produtos.length])
 
   const side = activeIndex !== null && activeIndex % 2 === 0 ? 'right' : 'left'
 
   return (
-    <section id="servicos" className="relative scroll-mt-24 px-6 py-24 sm:py-32">
+    <section id="servicos" className="relative scroll-mt-24 px-6 py-16 sm:py-32">
       <div className="mx-auto max-w-6xl text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow">
           {t.servicos.eyebrow}
@@ -58,10 +67,12 @@ export function SolucoesSticky() {
           {t.servicos.title}
         </h2>
 
-        <div className="relative mt-16">
+        <div className="relative mt-10 sm:mt-16">
           <ul
             ref={listRef}
-            onMouseLeave={() => setActiveIndex(null)}
+            onMouseLeave={() => {
+              if (!autoCycle) setActiveIndex(null)
+            }}
             className="mx-auto flex max-w-3xl flex-col items-center"
           >
             {produtos.map((produto, index) => (
@@ -70,7 +81,9 @@ export function SolucoesSticky() {
                 ref={(el) => {
                   itemRefs.current[index] = el
                 }}
-                onMouseEnter={() => activateIndex(index)}
+                onMouseEnter={() => {
+                  if (!autoCycle) activateIndex(index)
+                }}
                 className="flex cursor-default items-baseline gap-4 py-0.5 sm:py-1"
               >
                 <span
@@ -105,7 +118,7 @@ export function SolucoesSticky() {
           {/* Altura reservada no mobile: a miniatura desmonta/remonta a cada
               troca de lado (key={side}), e sem esse espaço fixo a lista e o
               texto abaixo pulavam a cada troca do ciclo automático. */}
-          <div className="mt-6 h-[140px] sm:mt-0 sm:h-0">
+          <div className="relative mt-6 h-[140px] sm:static sm:mt-0 sm:h-0">
             <AnimatePresence>
               {activeIndex !== null && (
                 <motion.div
@@ -118,7 +131,7 @@ export function SolucoesSticky() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ top: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
                   className={cn(
-                    'pointer-events-none z-10 mx-auto h-[140px] w-[140px] overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:absolute sm:h-[180px] sm:w-[180px] sm:-translate-y-1/2 md:h-[260px] md:w-[260px]',
+                    'solucoes-cycle-thumb pointer-events-none absolute inset-x-0 z-10 mx-auto h-[140px] w-[140px] overflow-hidden rounded-2xl border border-bold-yellow/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] sm:inset-x-auto sm:mx-0 sm:h-[180px] sm:w-[180px] sm:-translate-y-1/2 md:h-[260px] md:w-[260px]',
                     side === 'right' ? 'sm:right-4 md:right-10' : 'sm:left-4 md:left-10'
                   )}
                 >

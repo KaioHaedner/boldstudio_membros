@@ -17,8 +17,10 @@ function useTypewriter(words: string[], typeMs = 85, deleteMs = 45, pauseMs = 15
     if (!deleting && text === word) {
       timeout = window.setTimeout(() => setDeleting(true), pauseMs)
     } else if (deleting && text === '') {
-      setDeleting(false)
-      setWordIndex((i) => (i + 1) % words.length)
+      timeout = window.setTimeout(() => {
+        setDeleting(false)
+        setWordIndex((i) => (i + 1) % words.length)
+      }, deleteMs)
     } else {
       timeout = window.setTimeout(
         () =>
@@ -42,12 +44,12 @@ export function CasesAbertura() {
   const { t } = useI18n()
   const typed = useTypewriter(t.cases.typeWords)
 
-  // min-h menor no mobile: com 90vh sobravam ~230px de preto embaixo do
-  // chevron, porque o conteúdo fica centralizado numa caixa bem maior que ele.
+  // No mobile a abertura termina logo depois do chevron para o primeiro case
+  // já aparecer como continuação do gesto, sem um bloco grande de preto.
   return (
     <section
       id="cases-abertura"
-      className="relative flex min-h-[55vh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 text-center sm:min-h-[90vh]"
+      className="relative flex min-h-[44svh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 text-center sm:min-h-[90vh]"
     >
       <div className="max-w-4xl">
         <h2 className="text-[clamp(2rem,5.5vw,4.75rem)] font-black italic leading-[1.15] tracking-tight text-bold-white">
@@ -70,7 +72,7 @@ export function CasesAbertura() {
       <ChevronDown
         aria-hidden="true"
         size={42}
-        className="mt-14 animate-bounce text-bold-yellow"
+        className="mt-8 animate-bounce text-bold-yellow sm:mt-14"
         strokeWidth={2.5}
       />
 

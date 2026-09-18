@@ -104,7 +104,7 @@ export function CasesCarrossel() {
     <section
       ref={sectionRef}
       id="cases"
-      className="relative flex min-h-[60svh] flex-col items-center justify-center overflow-hidden bg-bold-black pb-16 pt-6 scroll-mt-24 sm:pb-28 sm:pt-16"
+      className="relative -mt-10 flex min-h-[60svh] flex-col items-center justify-center overflow-hidden bg-bold-black pb-16 pt-6 scroll-mt-24 sm:mt-0 sm:pb-28 sm:pt-16"
     >
       <div
         className="cases-accordion"

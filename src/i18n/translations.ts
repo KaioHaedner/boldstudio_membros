@@ -92,7 +92,7 @@ const pt = {
   clientes: {
     eyebrow: 'Clientes',
     title: 'Marcas que a BoldStudio já atendeu',
-    helper: 'Clique numa logo para ver os detalhes da empresa.',
+    helper: 'Clique e viva a experiência',
     ctaText: 'Quer ser a próxima marca por aqui?',
     ctaButton: 'Vem gravar com a Bold',
     previewSoon: 'Preview em breve',
@@ -288,7 +288,7 @@ const en: Dict = {
   clientes: {
     eyebrow: 'Clients',
     title: 'Brands BoldStudio has worked with',
-    helper: 'Click a logo to see the company details.',
+    helper: 'Click and live the experience',
     ctaText: 'Want to be the next brand here?',
     ctaButton: "Let's shoot with Bold",
     previewSoon: 'Preview coming soon',
@@ -482,7 +482,7 @@ const es: Dict = {
   clientes: {
     eyebrow: 'Clientes',
     title: 'Marcas que BoldStudio ya atendió',
-    helper: 'Haz clic en un logo para ver los detalles de la empresa.',
+    helper: 'Haz clic y vive la experiencia',
     ctaText: '¿Quieres ser la próxima marca aquí?',
     ctaButton: 'Vamos a grabar con Bold',
     previewSoon: 'Preview en breve',

@@ -944,8 +944,161 @@ textarea {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
+
+/* Indicador visual de interação do carrossel de clientes. */
+.clientes-tap-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 11.875rem;
+  margin: 0.5rem auto -1.75rem;
+  color: #ffd712;
+}
+.clientes-tap-hint svg {
+  width: 100%;
+  height: 4.75rem;
+  overflow: visible;
+}
+.clientes-tap-hint__label {
+  margin-top: -0.2rem;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.clientes-tap-hint__arrow {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.clientes-tap-hint__arrow {
+  stroke-dasharray: 130;
+  animation: clientes-arrow-draw 2.6s ease-in-out infinite;
+}
+.clientes-tap-hint__target {
+  fill: #ffffff;
+  stroke: rgba(255, 215, 18, 0.65);
+  stroke-width: 2;
+  transform-origin: 154px 37px;
+  animation: clientes-target-click 2.6s ease-in-out infinite;
+}
+.clientes-tap-hint__target-logo {
+  fill: none;
+  stroke: #ffd712;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.clientes-tap-hint__pointer {
+  fill: #f5f1e8;
+  stroke: #090909;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transform-origin: 0 0;
+  animation: clientes-pointer-click 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.clientes-tap-hint__pulse {
+  fill: none;
+  stroke: #ffd712;
+  stroke-width: 2;
+  transform-origin: 154px 37px;
+  animation: clientes-tap-pulse 2.6s ease-out infinite;
+}
+.clientes-tap-hint__pulse--two {
+  animation-delay: 0.2s;
+}
+@keyframes clientes-arrow-draw {
+  0%, 12% { stroke-dashoffset: 130; opacity: 0; }
+  34%, 82% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -18; opacity: 0; }
+}
+@keyframes clientes-pointer-click {
+  0%, 15% { transform: translate(-82px, 15px) scale(0.82); opacity: 0; }
+  28% { opacity: 1; }
+  52% { transform: translate(-7px, 4px) scale(0.9); opacity: 1; }
+  61% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  68% { transform: translate(2px, 2px) scale(0.78); opacity: 1; }
+  78% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  100% { transform: translate(8px, 5px) scale(0.9); opacity: 0; }
+}
+@keyframes clientes-target-click {
+  0%, 57% { transform: scale(1); filter: none; }
+  68% { transform: scale(0.95); filter: drop-shadow(0 0 8px rgba(255, 215, 18, 0.95)); }
+  82%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+}
+@keyframes clientes-tap-pulse {
+  0%, 62% { transform: scale(0.2); opacity: 0; }
+  68% { opacity: 0.95; }
+  90%, 100% { transform: scale(1.75); opacity: 0; }
+}
+
+/* Modal claro: CTA usa o mesmo motor de brilho da hero, com a paleta invertida. */
+.clientes-detail-card {
+  isolation: isolate;
+  overflow: visible;
+  animation: clientes-card-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.clientes-detail-card__surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 18, 0.45);
+  border-radius: 1.5rem;
+  background: #ffffff;
+}
+.clientes-modal__project-cta {
+  width: 100%;
+}
+.clientes-modal__project-cta > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+@keyframes clientes-card-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .marcas-marquee { animation: none; }
+  .marcas-marquee,
+  .clientes-tap-hint__arrow,
+  .clientes-tap-hint__pointer,
+  .clientes-tap-hint__target,
+  .clientes-tap-hint__pulse,
+  .clientes-detail-card { animation: none; }
+}
+
+/* Durante a troca automática, AnimatePresence mantém a miniatura anterior por
+   alguns frames. No mobile ambas ficam absolutas dentro do mesmo slot para a
+   segunda não empurrar e cobrir a descrição. */
+@media (max-width: 639px) {
+  .solucoes-cycle-thumb {
+    top: 0 !important;
+  }
+}
+
+/* No footer alto do mobile, offsets percentuais empurravam os blobs inteiros
+   para fora. Posicionamento fixo nos cantos mantém o mesmo brilho do desktop. */
+@media (max-width: 767px) {
+  .footer-yellow-glow {
+    width: 15rem !important;
+    height: 15rem !important;
+    min-width: 15rem !important;
+    min-height: 15rem !important;
+    opacity: 0.9;
+  }
+  .footer-yellow-glow--top {
+    top: -5rem !important;
+    left: -6rem !important;
+  }
+  .footer-yellow-glow--bottom {
+    right: -6rem !important;
+    bottom: -5rem !important;
+  }
 }
 
 /* ============== Coin decorativo (símbolo Bold espalhado) ============== */
