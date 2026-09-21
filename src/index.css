@@ -1234,62 +1234,40 @@ textarea {
   }
 }
 
-/* ============== Cases — Accordion Frames Spotlight ==============
-   Laminas verticais lado a lado: a em foco abre, as outras ficam finas. O video
-   mantem SEMPRE a largura aberta e fica centralizado, entao a lamina fina vira
-   um recorte dele (esse deslize do recorte e o efeito). Larguras vem de custom
-   properties pra o mobile so trocar os valores, sem JS medindo nada. */
-.cases-accordion {
-  --case-open: clamp(320px, 42vw, 620px);
-  --case-closed: 26px;
-  --case-gap: 6px;
-  --case-height: clamp(320px, 46svh, 460px);
-  --case-ease: cubic-bezier(0.075, 0.82, 0.165, 1);
-  display: flex;
-  justify-content: center;
-  gap: var(--case-gap);
-  width: 100%;
-  padding-inline: 1rem;
-}
-.cases-accordion__panel {
+/* ============== Cases — palco grande com seletor de marcas ==============
+   Substituiu o accordion de lâminas, que exigia hover pra abrir e ficava ruim
+   no celular. Agora o vídeo já nasce aberto ocupando perto de 80% da tela, a
+   logo fica dentro do próprio vídeo e as marcas ficam num seletor no canto. */
+.cases-secao {
   position: relative;
-  flex: 0 0 auto;
-  width: var(--case-closed);
-  height: var(--case-height);
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: #141414;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: hidden;
-  cursor: pointer;
-  transition: width 0.9s var(--case-ease);
-  will-change: width;
+  background: var(--color-bold-black);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 7vw, 5rem);
 }
-.cases-accordion__panel[data-open='true'] {
-  width: var(--case-open);
+.cases-palco {
+  position: relative;
+  width: min(1280px, 100%);
+  /* 16:9, mas sem passar de ~80% da altura da tela */
+  aspect-ratio: 16 / 9;
+  max-height: 80svh;
+  overflow: hidden;
+  border-radius: clamp(0.9rem, 2vw, 1.5rem);
+  border: 1px solid rgba(255, 215, 18, 0.18);
+  background: #0d0d0d;
+  box-shadow: 0 40px 100px -35px rgba(0, 0, 0, 0.95);
 }
-.cases-accordion__panel video {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: var(--case-open);
-  height: 100%;
-  object-fit: cover;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-/* moldura amarela do case em foco, com os tracos verticais saindo pra cima e
-   pra baixo (assinatura do efeito) — em degrade pra nao brigar com a legenda */
-.cases-accordion__frame {
+.cases-palco__video {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  border: 3px solid #ffd712;
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-/* vídeo indisponível: logo da marca centralizada, recortada pela lâmina do
-   mesmo jeito que o vídeo seria */
-.cases-accordion__fallback {
+/* vídeo indisponível: mostra a marca em vez de um retângulo preto */
+.cases-palco__vazio {
   position: absolute;
   inset: 0;
   display: flex;
@@ -1297,31 +1275,119 @@ textarea {
   justify-content: center;
   background: radial-gradient(circle at 50% 45%, #242424, #101010 70%);
 }
-.cases-accordion__fallback img {
-  width: calc(var(--case-open) * 0.45);
-  max-width: none;
+.cases-palco__vazio img {
+  width: min(38%, 320px);
   opacity: 0.55;
   filter: grayscale(1) brightness(1.6);
   object-fit: contain;
 }
-.cases-accordion__frame::before,
-.cases-accordion__frame::after {
-  content: '';
+/* escurece as bordas pra logo e seletor ficarem legíveis sobre o vídeo */
+.cases-palco__sombra {
   position: absolute;
-  left: 50%;
-  width: 3px;
-  height: 22svh;
-  transform: translateX(-50%);
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, transparent 28%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 42%);
 }
-.cases-accordion__frame::before {
-  bottom: 100%;
-  background: linear-gradient(to top, #ffd712, transparent);
+.cases-palco__marca {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  left: clamp(0.75rem, 2vw, 1.5rem);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(2.75rem, 6vw, 4.5rem);
+  padding-inline: clamp(0.6rem, 1.2vw, 1rem);
+  border-radius: 0.65rem;
+  background: #ffffff;
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.9);
 }
-.cases-accordion__frame::after {
-  top: 100%;
-  background: linear-gradient(to bottom, #ffd712, transparent);
+.cases-palco__marca img {
+  max-height: 72%;
+  max-width: clamp(80px, 12vw, 150px);
+  width: auto;
+  object-fit: contain;
 }
-/* Etiqueta "Cases": acompanha o scroll e estaciona na divisa com Clientes. */
+/* Seletor de marcas no canto inferior direito. Rola na horizontal quando não
+   couber, o que acontece no celular com dez marcas. */
+.cases-seletor {
+  position: absolute;
+  right: clamp(0.5rem, 1.5vw, 1.25rem);
+  bottom: clamp(0.5rem, 1.5vw, 1.25rem);
+  left: clamp(0.5rem, 1.5vw, 1.25rem);
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  scrollbar-width: none;
+}
+.cases-seletor::-webkit-scrollbar {
+  display: none;
+}
+.cases-seletor__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  height: clamp(1.9rem, 3.4vw, 2.6rem);
+  padding: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.cases-seletor__item:hover {
+  opacity: 0.9;
+}
+.cases-seletor__item[data-ativo='true'] {
+  opacity: 1;
+  border-color: #fde100;
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px rgba(253, 225, 0, 0.55);
+}
+.cases-seletor__item img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+@keyframes cases-legenda-entra {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.cases-legenda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  width: min(1280px, 100%);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  animation: cases-legenda-entra 0.4s ease both;
+}
+.cases-legenda__nome {
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-bold-white);
+}
+.cases-legenda__area {
+  margin-top: 0.35rem;
+  font-size: clamp(0.7rem, 1.1vw, 0.875rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
 .cases-etiqueta {
   position: sticky;
   bottom: 1.5rem;
@@ -1331,36 +1397,13 @@ textarea {
   margin-bottom: -3rem;
   pointer-events: none;
 }
-@keyframes cases-caption-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-.cases-caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1rem, 2vw, 1.75rem);
-  margin-top: clamp(2.5rem, 6svh, 4rem);
-  padding-inline: 1.5rem;
-  text-align: left;
-  animation: cases-caption-in 0.4s ease both;
-}
 @media (max-width: 720px) {
-  .cases-accordion {
-    --case-open: 150px;
-    --case-closed: 12px;
-    --case-gap: 4px;
-    --case-height: clamp(200px, 30svh, 260px);
-  }
-  .cases-caption {
+  .cases-legenda {
     flex-direction: column;
     text-align: center;
   }
-  /* No mobile a legenda vira coluna e ocupa o rodapé inteiro da seção — a
-     etiqueta grudada no rodapé da tela ficava por cima do nome e do botão.
-     Aqui ela sai do sticky e fica no fluxo, no fim da seção. */
+  /* No mobile a legenda ocupa o rodapé inteiro da seção e a etiqueta grudada
+     ficava por cima do nome e do botão, então ela sai do sticky. */
   .cases-etiqueta {
     position: static;
     margin-top: 2.5rem;
@@ -1368,11 +1411,10 @@ textarea {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cases-accordion__panel {
-    transition: none;
-  }
-  .cases-caption {
+  .cases-legenda,
+  .cases-seletor__item {
     animation: none;
+    transition: none;
   }
 }
 

@@ -4,186 +4,155 @@ import { CLIENTES } from '@/data/clientes'
 import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
 
-// Só as marcas que têm vídeo demoreel entram no carrossel.
+// Só as marcas que têm vídeo demoreel entram nos cases.
 const CASES = CLIENTES.filter((c) => c.videos.length > 0)
 
-const AUTO_ADVANCE_MS = 5000
+const TROCA_AUTOMATICA_MS = 5000
 
-// "Accordion Frames Spotlight": os cases viram lâminas verticais lado a lado; a
-// lâmina em foco abre e mostra o vídeo, as outras ficam finas (o vídeo mantém a
-// largura aberta, então a lâmina fina funciona como um recorte dele).
-// Substitui o carrossel fullscreen pinado — o cliente não queria mais o scroll
-// travado até acabarem os cases, então a seção fica no fluxo normal (60% da
-// tela) e o foco anda sozinho de 5 em 5 segundos.
+// Cases: um palco grande (perto de 80% da tela) com o vídeo do case aberto
+// desde o início, a logo da marca dentro do próprio vídeo e um seletor de
+// marcas no canto. Substituiu o accordion de lâminas, que obrigava a passar o
+// mouse pra abrir e ficava difícil de usar no celular.
 export function CasesCarrossel() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const sectionRef = useRef<HTMLElement>(null)
-  const videosRef = useRef<(HTMLVideoElement | null)[]>([])
-  // Volta da página do projeto (?case=slug): já monta com a lâmina daquele case
-  // aberta, em vez de piscar o primeiro antes de trocar.
-  const [focused, setFocused] = useState(() => {
-    const slug = new URLSearchParams(window.location.search).get('case')
-    const index = slug ? CASES.findIndex((client) => client.slug === slug) : -1
-    return index < 0 ? 0 : index
-  })
-  const [paused, setPaused] = useState(false)
-  const [failed, setFailed] = useState<Record<string, boolean>>({})
-  // Um case só ganha `src` depois de entrar em foco pela primeira vez, e o que
-  // já carregou continua carregado. Com os 10 baixando de uma vez (mesmo em
-  // preload=metadata) as conexões ociosas estouravam o timeout do QUIC no
-  // navegador, e ainda gastava egress de vídeo que ninguém chegou a ver.
-  const [carregados, setCarregados] = useState<Set<number>>(() => new Set([focused]))
+  const videoRef = useRef<HTMLVideoElement>(null)
 
-  // Ref pra o intervalo saber o foco atual sem virar dependência do efeito.
-  const focoAtual = useRef(focused)
-  const focar = useCallback((index: number) => {
-    focoAtual.current = index
-    setFocused(index)
-    setCarregados((atuais) => (atuais.has(index) ? atuais : new Set(atuais).add(index)))
+  // Volta da página do projeto (?case=slug): já abre naquele case.
+  const [atual, setAtual] = useState(() => {
+    const slug = new URLSearchParams(window.location.search).get('case')
+    const indice = slug ? CASES.findIndex((c) => c.slug === slug) : -1
+    return indice < 0 ? 0 : indice
+  })
+  const [pausado, setPausado] = useState(false)
+  const [falhou, setFalhou] = useState<Record<string, boolean>>({})
+
+  const indiceAtual = useRef(atual)
+  const selecionar = useCallback((indice: number) => {
+    indiceAtual.current = indice
+    setAtual(indice)
   }, [])
 
-  // Só o case em foco roda o vídeo; os que já carregaram ficam no frame parado.
+  const caso = CASES[atual]
+  const semVideo = falhou[caso.slug]
+
+  // Só existe um <video> no palco e ele troca de src conforme o case, então
+  // nunca há mais de um vídeo baixando ao mesmo tempo. Isso importa porque a
+  // cota do Supabase novo já estourou uma vez com dez vídeos simultâneos.
   useEffect(() => {
-    videosRef.current.forEach((video, index) => {
-      if (!video) return
-      if (index === focused) void video.play().catch(() => {})
-      else video.pause()
-    })
-  }, [focused, carregados])
+    const video = videoRef.current
+    if (!video) return
+    void video.play().catch(() => {})
+  }, [atual])
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
+    const secao = sectionRef.current
+    if (!secao) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    let interval: number | null = null
-
-    const stop = () => {
-      if (interval) window.clearInterval(interval)
-      interval = null
+    let intervalo: number | null = null
+    const parar = () => {
+      if (intervalo) window.clearInterval(intervalo)
+      intervalo = null
     }
-
-    const start = () => {
-      if (interval || paused) return
-      interval = window.setInterval(() => {
-        focar((focoAtual.current + 1) % CASES.length)
-      }, AUTO_ADVANCE_MS)
+    const comecar = () => {
+      if (intervalo || pausado) return
+      intervalo = window.setInterval(() => {
+        selecionar((indiceAtual.current + 1) % CASES.length)
+      }, TROCA_AUTOMATICA_MS)
     }
 
     const io = new IntersectionObserver(
-      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      ([entrada]) => (entrada.isIntersecting ? comecar() : parar()),
       { threshold: 0.25 }
     )
-    io.observe(section)
+    io.observe(secao)
 
     return () => {
       io.disconnect()
-      stop()
+      parar()
     }
-  }, [paused, focar])
+  }, [pausado, selecionar])
 
-  // Rola até a seção quando veio de ?case=slug. O timeout dá um frame pro
-  // layout assentar antes de medir a posição.
+  // Rola até a seção quando veio de ?case=slug.
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).get('case')) return
-
     const timeout = window.setTimeout(() => {
       sectionRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
       const url = new URL(window.location.href)
       url.searchParams.delete('case')
       window.history.replaceState(null, '', url.pathname + url.hash)
     }, 150)
-
     return () => window.clearTimeout(timeout)
   }, [])
 
-  const active = CASES[focused]
-
   return (
-    <section
-      ref={sectionRef}
-      id="cases"
-      className="relative -mt-10 flex min-h-[60svh] flex-col items-center justify-center overflow-hidden bg-bold-black pb-16 pt-6 scroll-mt-24 sm:mt-0 sm:pb-28 sm:pt-16"
-    >
+    <section ref={sectionRef} id="cases" className="cases-secao scroll-mt-24">
       <div
-        className="cases-accordion"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        className="cases-palco"
+        onMouseEnter={() => setPausado(true)}
+        onMouseLeave={() => setPausado(false)}
       >
-        {CASES.map((client, index) => (
-          <button
-            key={client.slug}
-            type="button"
-            className="cases-accordion__panel"
-            data-open={index === focused}
-            aria-label={client.nome}
-            aria-current={index === focused}
-            onMouseEnter={() => focar(index)}
-            onClick={() =>
-              index === focused ? navigate(`/projeto-${client.slug}`) : focar(index)
-            }
-          >
-            <video
-              ref={(element) => {
-                videosRef.current[index] = element
-              }}
-              src={carregados.has(index) ? client.videos[0] : undefined}
-              loop
-              muted
-              playsInline
-              preload="none"
-              onError={() =>
-                setFailed((current) =>
-                  current[client.slug] ? current : { ...current, [client.slug]: true }
-                )
-              }
-            />
-            {/* Logo da marca enquanto a lâmina não tem vídeo, seja porque ainda
-                não entrou em foco ou porque o arquivo está fora do ar (hoje: a
-                cota do Supabase novo estourada). Volta a ser vídeo sozinho. */}
-            {(!carregados.has(index) || failed[client.slug]) && (
-              <span className="cases-accordion__fallback">
-                <img src={client.logo} alt="" loading="lazy" />
-              </span>
-            )}
-            {index === focused && <span className="cases-accordion__frame" aria-hidden="true" />}
-          </button>
-        ))}
-      </div>
+        <video
+          ref={videoRef}
+          key={caso.slug}
+          className="cases-palco__video"
+          src={caso.videos[0]}
+          loop
+          muted
+          playsInline
+          preload="auto"
+          onError={() =>
+            setFalhou((atuais) => (atuais[caso.slug] ? atuais : { ...atuais, [caso.slug]: true }))
+          }
+        />
 
-      <div key={active.slug} className="cases-caption">
-        <span className="flex h-14 shrink-0 items-center justify-center rounded-lg bg-white px-3 sm:h-20">
-          <img
-            src={active.logo}
-            alt={active.nome}
-            loading="lazy"
-            className="h-full max-h-10 w-auto max-w-[110px] object-contain sm:max-h-14"
-          />
+        {/* Enquanto o vídeo não carrega (hoje a cota do Supabase novo está
+            estourada), o palco mostra a marca em vez de um retângulo preto. */}
+        {semVideo && (
+          <span className="cases-palco__vazio">
+            <img src={caso.logo} alt="" loading="lazy" />
+          </span>
+        )}
+
+        <span className="cases-palco__sombra" aria-hidden="true" />
+
+        {/* Logo DENTRO do card, como o cliente pediu */}
+        <span className="cases-palco__marca">
+          <img src={caso.logo} alt={caso.nome} loading="lazy" />
         </span>
 
-        <div className="min-w-0">
-          <h3 className="text-[clamp(1.5rem,3.4vw,2.75rem)] font-black uppercase leading-[0.95] tracking-[-0.02em] text-bold-white">
-            {active.nome}
-            <span className="ml-3 text-bold-yellow">{String(focused + 1).padStart(2, '0')}</span>
-          </h3>
-          {active.area && (
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-bold-white/50 sm:text-sm">
-              {active.area}
-            </p>
-          )}
+        {/* Seletor no canto: as marcas ficam disponíveis pra escolher qual ver */}
+        <div className="cases-seletor" role="tablist" aria-label={t.cases.label}>
+          {CASES.map((cliente, indice) => (
+            <button
+              key={cliente.slug}
+              type="button"
+              role="tab"
+              aria-selected={indice === atual}
+              aria-label={cliente.nome}
+              className="cases-seletor__item"
+              data-ativo={indice === atual}
+              onClick={() => selecionar(indice)}
+            >
+              <img src={cliente.logo} alt="" loading="lazy" />
+            </button>
+          ))}
         </div>
+      </div>
 
-        <ShinyButton onClick={() => navigate(`/projeto-${active.slug}`)}>
+      {/* Embaixo do vídeo: nome, área e o botão do projeto */}
+      <div key={caso.slug} className="cases-legenda">
+        <div className="min-w-0">
+          <h3 className="cases-legenda__nome">{caso.nome}</h3>
+          {caso.area && <p className="cases-legenda__area">{caso.area}</p>}
+        </div>
+        <ShinyButton onClick={() => navigate(`/projeto-${caso.slug}`)}>
           {t.clientes.viewProject}
         </ShinyButton>
       </div>
 
-      {/* Etiqueta sticky (mesmo mecanismo do Academy/Contato): acompanha o
-          scroll e estaciona na divisa com Clientes. Presa a ESTA seção, não a
-          um wrapper que inclua a abertura — senão ela já apareceria no rodapé
-          enquanto a etiqueta BoldCrew ainda passa pelo mesmo canto, e as duas
-          se sobrepunham. */}
       <div className="cases-etiqueta">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.cases.label}
