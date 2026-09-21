@@ -185,7 +185,7 @@ export function CasesCarrossel() {
           enquanto a etiqueta BoldCrew ainda passa pelo mesmo canto, e as duas
           se sobrepunham. */}
       <div className="cases-etiqueta">
-        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
+        <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.cases.label}
         </span>
       </div>

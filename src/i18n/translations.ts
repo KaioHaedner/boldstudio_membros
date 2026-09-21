@@ -62,6 +62,56 @@ const pt = {
       { nome: 'Recorrência', descricao: 'Um banco de horas mensal para sua empresa produzir o que quiser.' },
     ],
   },
+  servicoPaginas: {
+    voltar: 'Voltar para a home',
+    exemplosTitulo: 'Alguns trabalhos',
+    exemplosVazio: 'Estamos selecionando os melhores trabalhos desta linha para mostrar aqui.',
+    entregaTitulo: 'O que entra na entrega',
+    ctaTexto: 'Quer um material assim para a sua marca?',
+    ctaBotao: 'Falar com a Bold',
+    itens: {
+      'vt-comercial': {
+        chamada: 'Propaganda feita para vender, não para enfeitar',
+        paragrafos: [
+          'O VT comercial é o filme que leva a sua oferta para a televisão, para o digital e para o ponto de venda com a força que ela merece. Trabalhamos a ideia, o roteiro e a direção pensando no que precisa acontecer depois que o vídeo termina, que é a pessoa procurar a sua marca.',
+          'Nossa origem no agro e na indústria ensinou que propaganda bonita que não move o ponteiro não serve para nada, então cada decisão de imagem nasce colada no objetivo comercial que você tem para aquele período.',
+        ],
+        entregaveis: ['Conceito e roteiro', 'Direção e captação', 'Edição, cor e trilha', 'Versões para TV, digital e vertical'],
+      },
+      institucionais: {
+        chamada: 'A sua empresa contada como um filme de verdade',
+        paragrafos: [
+          'O institucional é onde a empresa mostra quem ela é, como trabalha e por que merece confiança. Em vez do vídeo corporativo engessado de sempre, construímos uma narrativa que passa autoridade e aproxima quem assiste.',
+          'Ele funciona para apresentar a operação a um cliente grande, para abrir uma reunião comercial, para receber visita na fábrica e para sustentar a sua marca em qualquer lugar onde a primeira impressão conta.',
+        ],
+        entregaveis: ['Imersão e roteiro', 'Captação na sua operação', 'Entrevistas e depoimentos', 'Versão completa e cortes curtos'],
+      },
+      eventos: {
+        chamada: 'O que aconteceu ali não pode morrer ali',
+        paragrafos: [
+          'Cobrimos desde o corporativo fechado até o mega evento, com equipe dimensionada para não perder o momento que importa. A ideia é simples: quem estava presente revive, e quem não estava entende o tamanho do que aconteceu.',
+          'Trabalhamos com entrega rápida quando o evento pede repercussão ainda quente, e com o aftermovie caprichado para sustentar a marca durante o ano inteiro.',
+        ],
+        entregaveis: ['Planejamento de cobertura', 'Equipe multicâmera', 'Cortes diários para redes', 'Aftermovie completo'],
+      },
+      'food-produto': {
+        chamada: 'A imagem que faz o cliente querer antes de saber o preço',
+        paragrafos: [
+          'Food e produto é onde o detalhe decide a venda. A textura, o vapor, o brilho e o movimento certo despertam desejo antes de qualquer argumento racional, e é isso que construímos em estúdio ou no seu ambiente.',
+          'É o mesmo padrão de imagem que as grandes marcas usam, aplicado ao seu cardápio, à sua linha de produtos ou ao lançamento que precisa nascer grande.',
+        ],
+        entregaveis: ['Direção de arte e styling', 'Captação em alta velocidade', 'Tratamento e cor', 'Pacote de fotos e vídeos'],
+      },
+      recorrencia: {
+        chamada: 'Uma equipe audiovisual à disposição todo mês',
+        paragrafos: [
+          'A recorrência é um banco de horas mensal: a sua empresa passa a ter equipe, equipamento e direção disponíveis para produzir o que precisar, sem abrir orçamento novo a cada demanda.',
+          'Funciona bem para quem alimenta redes toda semana, para quem lança produto com frequência e para quem cansou de depender de freelancer diferente a cada campanha, porque o time já conhece a marca e o padrão.',
+        ],
+        entregaveis: ['Banco de horas mensal', 'Planejamento de pauta', 'Produção contínua', 'Prioridade de agenda'],
+      },
+    },
+  },
   crew: {
     eyebrow: 'Crew',
     title: 'Quem faz a BoldStudio acontecer',
@@ -133,7 +183,7 @@ const pt = {
   },
   nascida: {
     lineA: 'Nascida para ganhar o',
-    highlight: 'Brasil',
+    highlight: 'Mundo',
   },
   academy: {
     recWords: ['Solta', 'O', 'Rec'],
@@ -258,6 +308,56 @@ const en: Dict = {
       { nome: 'Recurring', descricao: 'A monthly hour bank for your company to produce whatever it needs.' },
     ],
   },
+  servicoPaginas: {
+    voltar: 'Back to home',
+    exemplosTitulo: 'Selected work',
+    exemplosVazio: 'We are selecting the best work in this line to show here.',
+    entregaTitulo: 'What the delivery includes',
+    ctaTexto: 'Want material like this for your brand?',
+    ctaBotao: 'Talk to Bold',
+    itens: {
+      'vt-comercial': {
+        chamada: 'Propaganda feita para vender, não para enfeitar',
+        paragrafos: [
+          'O VT comercial é o filme que leva a sua oferta para a televisão, para o digital e para o ponto de venda com a força que ela merece. Trabalhamos a ideia, o roteiro e a direção pensando no que precisa acontecer depois que o vídeo termina, que é a pessoa procurar a sua marca.',
+          'Nossa origem no agro e na indústria ensinou que propaganda bonita que não move o ponteiro não serve para nada, então cada decisão de imagem nasce colada no objetivo comercial que você tem para aquele período.',
+        ],
+        entregaveis: ['Conceito e roteiro', 'Direção e captação', 'Edição, cor e trilha', 'Versões para TV, digital e vertical'],
+      },
+      institucionais: {
+        chamada: 'A sua empresa contada como um filme de verdade',
+        paragrafos: [
+          'O institucional é onde a empresa mostra quem ela é, como trabalha e por que merece confiança. Em vez do vídeo corporativo engessado de sempre, construímos uma narrativa que passa autoridade e aproxima quem assiste.',
+          'Ele funciona para apresentar a operação a um cliente grande, para abrir uma reunião comercial, para receber visita na fábrica e para sustentar a sua marca em qualquer lugar onde a primeira impressão conta.',
+        ],
+        entregaveis: ['Imersão e roteiro', 'Captação na sua operação', 'Entrevistas e depoimentos', 'Versão completa e cortes curtos'],
+      },
+      eventos: {
+        chamada: 'O que aconteceu ali não pode morrer ali',
+        paragrafos: [
+          'Cobrimos desde o corporativo fechado até o mega evento, com equipe dimensionada para não perder o momento que importa. A ideia é simples: quem estava presente revive, e quem não estava entende o tamanho do que aconteceu.',
+          'Trabalhamos com entrega rápida quando o evento pede repercussão ainda quente, e com o aftermovie caprichado para sustentar a marca durante o ano inteiro.',
+        ],
+        entregaveis: ['Planejamento de cobertura', 'Equipe multicâmera', 'Cortes diários para redes', 'Aftermovie completo'],
+      },
+      'food-produto': {
+        chamada: 'A imagem que faz o cliente querer antes de saber o preço',
+        paragrafos: [
+          'Food e produto é onde o detalhe decide a venda. A textura, o vapor, o brilho e o movimento certo despertam desejo antes de qualquer argumento racional, e é isso que construímos em estúdio ou no seu ambiente.',
+          'É o mesmo padrão de imagem que as grandes marcas usam, aplicado ao seu cardápio, à sua linha de produtos ou ao lançamento que precisa nascer grande.',
+        ],
+        entregaveis: ['Direção de arte e styling', 'Captação em alta velocidade', 'Tratamento e cor', 'Pacote de fotos e vídeos'],
+      },
+      recorrencia: {
+        chamada: 'Uma equipe audiovisual à disposição todo mês',
+        paragrafos: [
+          'A recorrência é um banco de horas mensal: a sua empresa passa a ter equipe, equipamento e direção disponíveis para produzir o que precisar, sem abrir orçamento novo a cada demanda.',
+          'Funciona bem para quem alimenta redes toda semana, para quem lança produto com frequência e para quem cansou de depender de freelancer diferente a cada campanha, porque o time já conhece a marca e o padrão.',
+        ],
+        entregaveis: ['Banco de horas mensal', 'Planejamento de pauta', 'Produção contínua', 'Prioridade de agenda'],
+      },
+    },
+  },
   crew: {
     eyebrow: 'Crew',
     title: 'The people behind BoldStudio',
@@ -329,7 +429,7 @@ const en: Dict = {
   },
   nascida: {
     lineA: 'Born to win over',
-    highlight: 'Brazil',
+    highlight: 'the world',
   },
   academy: {
     recWords: ['Roll', 'The', 'Rec'],
@@ -452,6 +552,56 @@ const es: Dict = {
       { nome: 'Recurrencia', descricao: 'Una bolsa de horas mensual para que tu empresa produzca lo que quiera.' },
     ],
   },
+  servicoPaginas: {
+    voltar: 'Volver al inicio',
+    exemplosTitulo: 'Algunos trabajos',
+    exemplosVazio: 'Estamos seleccionando los mejores trabajos de esta línea para mostrarlos aquí.',
+    entregaTitulo: 'Qué incluye la entrega',
+    ctaTexto: '¿Quieres un material así para tu marca?',
+    ctaBotao: 'Hablar con Bold',
+    itens: {
+      'vt-comercial': {
+        chamada: 'Propaganda feita para vender, não para enfeitar',
+        paragrafos: [
+          'O VT comercial é o filme que leva a sua oferta para a televisão, para o digital e para o ponto de venda com a força que ela merece. Trabalhamos a ideia, o roteiro e a direção pensando no que precisa acontecer depois que o vídeo termina, que é a pessoa procurar a sua marca.',
+          'Nossa origem no agro e na indústria ensinou que propaganda bonita que não move o ponteiro não serve para nada, então cada decisão de imagem nasce colada no objetivo comercial que você tem para aquele período.',
+        ],
+        entregaveis: ['Conceito e roteiro', 'Direção e captação', 'Edição, cor e trilha', 'Versões para TV, digital e vertical'],
+      },
+      institucionais: {
+        chamada: 'A sua empresa contada como um filme de verdade',
+        paragrafos: [
+          'O institucional é onde a empresa mostra quem ela é, como trabalha e por que merece confiança. Em vez do vídeo corporativo engessado de sempre, construímos uma narrativa que passa autoridade e aproxima quem assiste.',
+          'Ele funciona para apresentar a operação a um cliente grande, para abrir uma reunião comercial, para receber visita na fábrica e para sustentar a sua marca em qualquer lugar onde a primeira impressão conta.',
+        ],
+        entregaveis: ['Imersão e roteiro', 'Captação na sua operação', 'Entrevistas e depoimentos', 'Versão completa e cortes curtos'],
+      },
+      eventos: {
+        chamada: 'O que aconteceu ali não pode morrer ali',
+        paragrafos: [
+          'Cobrimos desde o corporativo fechado até o mega evento, com equipe dimensionada para não perder o momento que importa. A ideia é simples: quem estava presente revive, e quem não estava entende o tamanho do que aconteceu.',
+          'Trabalhamos com entrega rápida quando o evento pede repercussão ainda quente, e com o aftermovie caprichado para sustentar a marca durante o ano inteiro.',
+        ],
+        entregaveis: ['Planejamento de cobertura', 'Equipe multicâmera', 'Cortes diários para redes', 'Aftermovie completo'],
+      },
+      'food-produto': {
+        chamada: 'A imagem que faz o cliente querer antes de saber o preço',
+        paragrafos: [
+          'Food e produto é onde o detalhe decide a venda. A textura, o vapor, o brilho e o movimento certo despertam desejo antes de qualquer argumento racional, e é isso que construímos em estúdio ou no seu ambiente.',
+          'É o mesmo padrão de imagem que as grandes marcas usam, aplicado ao seu cardápio, à sua linha de produtos ou ao lançamento que precisa nascer grande.',
+        ],
+        entregaveis: ['Direção de arte e styling', 'Captação em alta velocidade', 'Tratamento e cor', 'Pacote de fotos e vídeos'],
+      },
+      recorrencia: {
+        chamada: 'Uma equipe audiovisual à disposição todo mês',
+        paragrafos: [
+          'A recorrência é um banco de horas mensal: a sua empresa passa a ter equipe, equipamento e direção disponíveis para produzir o que precisar, sem abrir orçamento novo a cada demanda.',
+          'Funciona bem para quem alimenta redes toda semana, para quem lança produto com frequência e para quem cansou de depender de freelancer diferente a cada campanha, porque o time já conhece a marca e o padrão.',
+        ],
+        entregaveis: ['Banco de horas mensal', 'Planejamento de pauta', 'Produção contínua', 'Prioridade de agenda'],
+      },
+    },
+  },
   crew: {
     eyebrow: 'Crew',
     title: 'Quiénes hacen que BoldStudio suceda',
@@ -523,7 +673,7 @@ const es: Dict = {
   },
   nascida: {
     lineA: 'Nacida para ganar el',
-    highlight: 'Brasil',
+    highlight: 'Mundo',
   },
   academy: {
     recWords: ['Dale', 'Al', 'Rec'],

@@ -72,11 +72,22 @@ export default async function handler(req: Request) {
   const contentRange = upstream.headers.get('content-range')
   if (contentRange) headers.set('Content-Range', contentRange)
   headers.set('Accept-Ranges', 'bytes')
-  // s-maxage cacheia na borda da Vercel (não só no navegador do visitante) —
-  // depois do primeiro sucesso, visitas seguintes nem chegam a bater no
-  // Supabase instável.
-  headers.set('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable')
   headers.set('Access-Control-Allow-Origin', '*')
+
+  // A chave de cache da borda é a URL, que NÃO inclui o header Range. Cachear
+  // uma resposta 206 aqui servia aquele pedaço para todo mundo: como todo
+  // player de vídeo pede range, o primeiro visitante envenenava o cache e os
+  // seguintes recebiam ~1KB de um MP4 de 13MB, que o navegador rejeita com
+  // erro de formato. Por isso resposta parcial fica só no cache do navegador
+  // (private), que sabe lidar com range, e nunca na borda compartilhada.
+  if (upstream.status === 206) {
+    headers.set('Cache-Control', 'private, max-age=31536000')
+    headers.set('Vary', 'Range')
+  } else {
+    // Resposta inteira pode ficar na borda: depois do primeiro sucesso as
+    // visitas seguintes nem chegam a bater no Supabase instável.
+    headers.set('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable')
+  }
 
   return new Response(upstream.body, { status: upstream.status, headers })
 }

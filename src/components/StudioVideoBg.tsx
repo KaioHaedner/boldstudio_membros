@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
+import { media } from '@/lib/media'
 
 // Vídeo do estúdio, servido via proxy api.boldstudiobrasil.com (esconde o
 // Supabase de origem). Fica nítido cobrindo a tela; o blur fica nos painéis
 // de vidro por cima (form e título), não aqui.
-const STUDIO_VIDEO_URL = 'https://api.boldstudiobrasil.com/api/media?b=avatars&f=VD_BOLD_01.mp4'
+const STUDIO_VIDEO_URL = media('avatars', 'VD_BOLD_01.mp4')
 
 const MAX_RETRIES = 3
 

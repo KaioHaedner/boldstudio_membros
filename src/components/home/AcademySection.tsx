@@ -183,7 +183,7 @@ export function AcademySection() {
 
       {/* Etiqueta amarela sticky com gradiente vivo (estilo Soluções/Contato) */}
       <div className="pointer-events-none sticky bottom-6 z-20 mt-16">
-        <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black shadow-[0_12px_30px_-8px_rgba(0,0,0,0.45)] sm:pr-10">
+        <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black shadow-[0_12px_30px_-8px_rgba(0,0,0,0.45)] sm:pr-10">
           {t.academy.label}
         </span>
       </div>

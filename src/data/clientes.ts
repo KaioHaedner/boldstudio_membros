@@ -1,3 +1,4 @@
+import { mediaBase } from '@/lib/media'
 // Fonte unica dos clientes da Bold. Usada na home (ClientesWave) e nas paginas
 // individuais (/projeto-:slug). Conforme novos assets chegarem (site, telefone,
 // fotos de evento, demoreel), e so preencher aqui — a UI se adapta sozinha.
@@ -10,9 +11,9 @@
 
 // Servidos via proxy api.boldstudiobrasil.com — esconde qual Supabase (antigo
 // ou novo) está por trás de cada bucket, ver api/media/[...path].ts
-const LOGO = 'https://api.boldstudiobrasil.com/api/media?b=CLIENTES_CONTEINER&f='
-const VID = 'https://api.boldstudiobrasil.com/api/media?b=CLIENTES_CONTEINER_PREVIA_VD&f='
-const VID_NEW = 'https://api.boldstudiobrasil.com/api/media?b=Videos_Cliente_New&f='
+const LOGO = mediaBase('CLIENTES_CONTEINER')
+const VID = mediaBase('CLIENTES_CONTEINER_PREVIA_VD')
+const VID_NEW = mediaBase('Videos_Cliente_New')
 // Placeholder pra clientes novos sem logo ainda — troca quando o Kaio mandar a logo real
 const LOGO_PLACEHOLDER = '/brand/logo-boldstudio.webp'
 

@@ -4,6 +4,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import { ToastProvider } from '@/components/Toast'
 import { CookieBar } from '@/components/CookieBar'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { ServicoPage } from '@/pages/ServicoPage'
 import { AppLayout } from '@/components/AppLayout'
 import { AdminLayout } from '@/components/AdminLayout'
 import { LandingPage } from '@/pages/LandingPage'
@@ -63,6 +64,7 @@ function App() {
           <Route path="/" element={<RootGate />} />
           <Route path="/home" element={<Navigate to="/home-bold-studio-sinop-brasil" replace />} />
           <Route path="/home-bold-studio-sinop-brasil" element={<HomeInstitucionalPage />} />
+          <Route path="/servico/:slug" element={<ServicoPage />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/cadastro" element={<CadastroPage />} />

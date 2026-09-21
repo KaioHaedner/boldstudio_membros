@@ -163,7 +163,7 @@ function HomeContent() {
           <h2 className="relative z-10 text-[45px] font-extrabold leading-[0.95] text-bold-white sm:text-[54px] md:text-[72px] lg:text-[96px]">
             {t.nascida.lineA}
           </h2>
-          <span className="live-yellow relative z-10 mt-4 inline-block rounded-xl px-5 py-1.5 text-6xl font-black italic tracking-[-0.03em] text-bold-black sm:text-7xl md:text-8xl lg:text-9xl">
+          <span className="sticker-amarelo relative z-10 mt-4 inline-block rounded-xl px-5 py-1.5 text-6xl font-black italic tracking-[-0.03em] text-bold-black sm:text-7xl md:text-8xl lg:text-9xl">
             {t.nascida.highlight}
           </span>
         </section>
@@ -214,7 +214,7 @@ function HomeContent() {
 
           {/* Etiqueta amarela sticky com gradiente vivo (estilo BoldCrew/Soluções) */}
           <div className="pointer-events-none sticky bottom-6 z-10 -ml-6">
-            <span className="live-yellow inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
+            <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
               {t.contato.eyebrow}
             </span>
           </div>

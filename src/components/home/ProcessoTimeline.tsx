@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { useI18n } from '@/i18n/I18nContext'
+import { mediaBase } from '@/lib/media'
 
-const IMG_BASE = 'https://api.boldstudiobrasil.com/api/media?b=PROCESSO&f='
+const IMG_BASE = mediaBase('PROCESSO')
 
 // Peças de caminho (as imagens já trazem linha, pontos, ícones e rótulos).
 const PARTS = [

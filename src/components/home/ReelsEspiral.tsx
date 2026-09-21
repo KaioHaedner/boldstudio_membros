@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useI18n } from '@/i18n/I18nContext'
+import { mediaBase } from '@/lib/media'
 
 // Galeria espiral 3D (Three.js) — portado do efeito "Galeria Espiral 3D" da
 // Imperio WEB Codes Store para componente React/Vite.
@@ -8,7 +9,7 @@ import { useI18n } from '@/i18n/I18nContext'
 // logo da Bold + card branco intercalados com os previews dos cases (VideoTexture).
 // Cada video roda mudo, em loop CORTADO em PREVIEW_SECONDS, e pausa fora da tela.
 const PREVIEW_SECONDS = 10
-const VID = 'https://api.boldstudiobrasil.com/api/media?b=CLIENTES_CONTEINER_PREVIA_VD&f='
+const VID = mediaBase('CLIENTES_CONTEINER_PREVIA_VD')
 const VIDEO_URLS = [
   `${VID}FORTEZA_.mp4`,
   `${VID}MACHADO_.mp4`,
