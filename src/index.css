@@ -1166,6 +1166,14 @@ textarea {
   backface-visibility: hidden;
   will-change: transform;
   overflow: hidden;
+  /* o card pode ser arrastado pro lado pra passar pro proximo; pan-y deixa o
+     gesto horizontal com a gente e mantem o vertical rolando a pagina */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.crew-card:active {
+  cursor: grabbing;
 }
 .crew-card__info {
   flex: 0 0 44%;

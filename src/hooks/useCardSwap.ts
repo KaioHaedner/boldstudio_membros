@@ -183,6 +183,69 @@ export function useCardSwap(
       container.addEventListener('mouseleave', onLeave)
     }
 
+    // --- Arrasto manual do card da frente ---
+    // Puxar o card pro lado e soltar passa pro proximo; soltar antes do limite
+    // devolve ele pro lugar. Enquanto o dedo esta na tela o ciclo automatico
+    // fica parado, e volta a rodar quando solta. O CSS poe touch-action: pan-y
+    // nos cards, entao o gesto horizontal e nosso e o vertical continua
+    // rolando a pagina normalmente.
+    let arrastando = false
+    let inicioX = 0
+    let deslocamento = 0
+    let ponteiro: number | null = null
+
+    const cardDaFrente = () => cards[order[0]]
+
+    const onPointerDown = (evento: PointerEvent) => {
+      if (reduceMotion || timeline?.isActive()) return
+      const alvo = cardDaFrente()
+      if (!(evento.target instanceof Node) || !alvo.contains(evento.target)) return
+      arrastando = true
+      ponteiro = evento.pointerId
+      inicioX = evento.clientX
+      deslocamento = 0
+      stop()
+      alvo.setPointerCapture?.(evento.pointerId)
+    }
+
+    const onPointerMove = (evento: PointerEvent) => {
+      if (!arrastando || evento.pointerId !== ponteiro) return
+      deslocamento = evento.clientX - inicioX
+      const slot = makeSlot(0, cardDistance, verticalDistance, total)
+      gsap.set(cardDaFrente(), {
+        x: slot.x + deslocamento,
+        rotationZ: deslocamento * 0.02,
+        zIndex: total + 10,
+      })
+    }
+
+    const onPointerUp = (evento: PointerEvent) => {
+      if (!arrastando || evento.pointerId !== ponteiro) return
+      arrastando = false
+      ponteiro = null
+      const alvo = cardDaFrente()
+      const limite = Math.max(60, alvo.offsetWidth * 0.22)
+
+      if (Math.abs(deslocamento) > limite) {
+        swap()
+      } else {
+        const slot = makeSlot(0, cardDistance, verticalDistance, total)
+        gsap.to(alvo, {
+          x: slot.x,
+          rotationZ: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+          onComplete: () => gsap.set(alvo, { zIndex: slot.zIndex }),
+        })
+      }
+      start()
+    }
+
+    container.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointercancel', onPointerUp)
+
     return () => {
       io.disconnect()
       stop()
@@ -190,6 +253,10 @@ export function useCardSwap(
       window.removeEventListener('resize', onResize)
       container.removeEventListener('mouseenter', onEnter)
       container.removeEventListener('mouseleave', onLeave)
+      container.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
       restoreStyles()
     }
   }, [containerRef, delay, skewAmount, pauseOnHover])
