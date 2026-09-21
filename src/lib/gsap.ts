@@ -43,6 +43,10 @@ ScrollTrigger.addEventListener('refreshInit', () => {
 // Dev only: expoe pra depurar triggers no console (window.ScrollTrigger.getAll()).
 if (import.meta.env.DEV) {
   ;(window as unknown as { ScrollTrigger?: typeof ScrollTrigger }).ScrollTrigger = ScrollTrigger
+  // gsap tambem: util pra inspecionar tweens no console e, em navegador de
+  // automacao, pra desligar o lagSmoothing (que num rAF estrangulado freia as
+  // animacoes a ~1/30 da velocidade e mascara o comportamento real).
+  ;(window as unknown as { gsap?: typeof gsap }).gsap = gsap
 }
 
 export { gsap, ScrollTrigger }

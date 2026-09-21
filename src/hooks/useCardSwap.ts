@@ -87,8 +87,14 @@ export function useCardSwap(
 
     function swap() {
       if (order.length < 2 || timeline?.isActive()) return
-      const front = order[0]
-      const rest = order.slice(1)
+      // Rotaciona a fila JA, no inicio da troca. Antes isso acontecia num
+      // timeline.call() no fim da animacao, entao existia uma janela em que o
+      // card novo ja estava visivel na frente mas order[0] ainda apontava pro
+      // antigo — e o arrasto, que usa order[0], simplesmente nao respondia.
+      // Em maquina lenta essa janela esticava e o card parecia travado.
+      const front = order.shift() as number
+      order.push(front)
+      const rest = order.slice(0, total - 1)
       const frontEl = cards[front]
       const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total)
       const containerRect = stageElement.getBoundingClientRect()
@@ -129,10 +135,6 @@ export function useCardSwap(
         )
       })
 
-      timeline.call(() => {
-        order.shift()
-        order.push(front)
-      })
     }
 
     // Reaplica a ordem atual ao redimensionar, depois de cancelar a animacao
@@ -197,15 +199,38 @@ export function useCardSwap(
     const cardDaFrente = () => cards[order[0]]
 
     const onPointerDown = (evento: PointerEvent) => {
-      if (reduceMotion || timeline?.isActive()) return
+      if (reduceMotion) return
+      // Aceita o gesto pela AREA do palco, e nao por quem esta no topo da
+      // pilha de hit-test. Escutando so no container o pointerdown nao chegava
+      // (os cards usam preserve-3d e translateZ, e qualquer camada por cima
+      // engolia o evento), entao o dedo nao pegava o card.
+      const area = stageElement.getBoundingClientRect()
+      const dentroDoPalco =
+        evento.clientX >= area.left &&
+        evento.clientX <= area.right &&
+        evento.clientY >= area.top &&
+        evento.clientY <= area.bottom
+      if (!dentroDoPalco) return
+      // O dedo sempre tem prioridade: se uma troca estiver rodando, ela e
+      // cortada e a pilha volta pras posicoes da ordem atual. Antes o gesto era
+      // ignorado enquanto a animacao corria, entao dois deslizes seguidos
+      // perdiam o segundo e o card parecia travado.
+      if (timeline?.isActive()) {
+        timeline.kill()
+        resync()
+      }
+      // Qualquer ponto do palco serve pra pegar o card da frente. Exigir que o
+      // toque comecasse dentro dele deixava gestos legitimos sem resposta
+      // quando a pilha estava no meio de um reposicionamento.
       const alvo = cardDaFrente()
-      if (!(evento.target instanceof Node) || !alvo.contains(evento.target)) return
       arrastando = true
       ponteiro = evento.pointerId
       inicioX = evento.clientX
       deslocamento = 0
       stop()
-      alvo.setPointerCapture?.(evento.pointerId)
+      // setPointerCapture lanca se o ponteiro ja nao estiver ativo; nao pode
+      // derrubar o resto do gesto por causa disso
+      try { alvo.setPointerCapture?.(evento.pointerId) } catch { /* ignora */ }
     }
 
     const onPointerMove = (evento: PointerEvent) => {
@@ -226,6 +251,7 @@ export function useCardSwap(
       const alvo = cardDaFrente()
       const limite = Math.max(60, alvo.offsetWidth * 0.22)
 
+
       if (Math.abs(deslocamento) > limite) {
         swap()
       } else {
@@ -241,7 +267,7 @@ export function useCardSwap(
       start()
     }
 
-    container.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('pointerdown', onPointerDown)
     window.addEventListener('pointermove', onPointerMove)
     window.addEventListener('pointerup', onPointerUp)
     window.addEventListener('pointercancel', onPointerUp)
@@ -253,7 +279,7 @@ export function useCardSwap(
       window.removeEventListener('resize', onResize)
       container.removeEventListener('mouseenter', onEnter)
       container.removeEventListener('mouseleave', onLeave)
-      container.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)
       window.removeEventListener('pointercancel', onPointerUp)
