@@ -1606,58 +1606,115 @@ textarea {
   vertical-align: -0.06em;
   margin: 0 0.06em;
 }
-/* Palco travado (pin) onde o quebra-cabeça monta */
-.processo__stage {
-  position: relative;
-  height: 100vh;
-  max-height: 920px;
-  overflow: hidden;
-}
-.processo__stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
+/* ---- Jornada do cliente: caminho em S que acende etapa por etapa ----
+   Substituiu o palco pinado com as três imagens da linha do tempo e as duas
+   fotos de reunião. O SVG vale do sm: pra cima; abaixo disso as treze etapas
+   não cabem em serpentina e viram uma coluna. */
+.processo-jornada {
   width: 100%;
   max-width: 78rem;
-  margin: 0 auto;
-  padding-top: clamp(4.5rem, 10vh, 7rem);
-  will-change: transform;
+  margin: clamp(2rem, 6vw, 4rem) auto 0;
+  padding-inline: 1.25rem;
 }
-.processo__stack > * {
-  will-change: opacity, transform;
-}
-
-/* ---- Peças da linha do tempo (imagens ja trazem tudo embutido) ---- */
-.tl-piece__path {
-  display: block;
-  width: 75%;
-  height: auto;
-}
-
-/* ---- Foto de fundo com parallax + frame preto ---- */
-.processo-frame {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.25rem;
-  width: 75%;
-  height: clamp(165px, 25.5vw, 345px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.processo-frame__img {
-  position: absolute;
-  inset: 0;
+.processo-jornada__svg {
+  display: none;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  overflow: visible;
 }
-.processo-frame__overlay {
+.processo-jornada__trilho,
+.processo-jornada__linha {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.processo-jornada__trilho {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+.processo-jornada__linha {
+  stroke: #fde100;
+  filter: drop-shadow(0 0 6px rgba(253, 225, 0, 0.45));
+}
+.processo-jornada__bolinha {
+  fill: #1a1a1a;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 3;
+  transition: fill 0.35s ease, stroke 0.35s ease, r 0.35s ease;
+}
+.processo-jornada__no[data-aceso='true'] .processo-jornada__bolinha {
+  fill: #fde100;
+  stroke: #fde100;
+}
+.processo-jornada__rotulo {
+  fill: rgba(255, 255, 255, 0.35);
+  font-size: 17px;
+  font-weight: 700;
+  transition: fill 0.35s ease;
+}
+.processo-jornada__no[data-aceso='true'] .processo-jornada__rotulo {
+  fill: #ffffff;
+}
+/* versão em coluna (mobile) */
+.processo-jornada__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 24rem;
+  list-style: none;
+}
+.processo-jornada__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 0 0.55rem 0.35rem;
+}
+/* o traço que liga um item ao seguinte */
+.processo-jornada__item:not(:last-child)::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(120% 120% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.55) 100%),
-    linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
-  pointer-events: none;
+  left: 0.85rem;
+  top: 50%;
+  bottom: -50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.processo-jornada__item[data-aceso='true']:not(:last-child)::before {
+  background: #fde100;
+}
+.processo-jornada__marcador {
+  position: relative;
+  z-index: 1;
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #1a1a1a;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+.processo-jornada__item[data-aceso='true'] .processo-jornada__marcador {
+  background: #fde100;
+  border-color: #fde100;
+}
+.processo-jornada__texto {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.35s ease;
+}
+.processo-jornada__item[data-aceso='true'] .processo-jornada__texto {
+  color: #ffffff;
+}
+@media (min-width: 768px) {
+  .processo-jornada__svg {
+    display: block;
+  }
+  .processo-jornada__lista {
+    display: none;
+  }
 }
 
 /* ---- Frase ---- */
@@ -1797,19 +1854,6 @@ textarea {
     white-space: normal;
     font-size: clamp(2rem, 9vw, 3.2rem);
     text-wrap: balance;
-  }
-  /* 10vh de respiro no topo do palco (~80px) so aumentava o vazio preto entre
-     o titulo e a primeira peca da linha do tempo. */
-  .processo__stack {
-    padding-top: 2rem;
-  }
-  /* Imagens (linha do tempo + fotos) ocupam a largura toda e ficam maiores */
-  .tl-piece__path {
-    width: 100%;
-  }
-  .processo-frame {
-    width: 100%;
-    height: clamp(230px, 62vw, 340px);
   }
 }
 
