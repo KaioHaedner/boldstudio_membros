@@ -1357,10 +1357,15 @@ textarea {
   max-width: 100%;
   object-fit: contain;
 }
+/* So o deslize: opacidade dentro da animacao deixava a legenda invisivel
+   sempre que o navegador estrangulava a animacao (aba em segundo plano), e ela
+   remonta a cada troca de case. O texto agora existe mesmo sem animar. */
 @keyframes cases-legenda-entra {
   from {
-    opacity: 0;
     transform: translateY(10px);
+  }
+  to {
+    transform: none;
   }
 }
 .cases-legenda {
@@ -1370,7 +1375,9 @@ textarea {
   gap: clamp(1rem, 2vw, 2rem);
   width: min(1280px, 100%);
   margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  animation: cases-legenda-entra 0.4s ease both;
+  /* sem `both`: com ele a legenda fica em opacity 0 ate a animacao rodar,
+     e qualquer throttle do navegador deixava o nome do case invisivel */
+  animation: cases-legenda-entra 0.4s ease;
 }
 .cases-legenda__nome {
   font-size: clamp(1.4rem, 3.2vw, 2.6rem);
