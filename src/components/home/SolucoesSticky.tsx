@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '@/i18n/I18nContext'
 import { SERVICO_SLUGS } from '@/data/servicos'
@@ -10,32 +10,29 @@ import { SERVICO_SLUGS } from '@/data/servicos'
 export function SolucoesSticky() {
   const { t } = useI18n()
   const produtos = t.servicos.produtos
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const [autoCycle, setAutoCycle] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
+  // No desktop o hover manda enquanto o mouse está na lista; fora disso o
+  // destaque volta a percorrer sozinho. No touch, onde hover não existe, ele
+  // percorre o tempo todo.
+  const [mouseNaLista, setMouseNaLista] = useState(false)
 
-  // Mobile/touch: o destaque que no desktop responde ao hover percorre a lista
-  // sozinho. Incluímos largura, hover e ponteiro na detecção porque alguns
-  // navegadores/emuladores móveis ainda anunciam hover e deixavam a seção vazia.
-  useEffect(() => {
-    const media = window.matchMedia('(max-width: 767px), (hover: none), (pointer: coarse)')
-    const update = () => setAutoCycle(media.matches)
-
-    update()
-    media.addEventListener('change', update)
-    return () => media.removeEventListener('change', update)
+  // Ref pra o intervalo saber onde parou sem virar dependência do efeito (se
+  // virasse, o intervalo seria recriado a cada troca).
+  const indiceAtual = useRef(0)
+  const ativar = useCallback((indice: number) => {
+    indiceAtual.current = indice
+    setActiveIndex(indice)
   }, [])
 
   useEffect(() => {
-    if (!autoCycle) return
+    if (mouseNaLista) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    let i = 0
-    setActiveIndex(0)
     const id = window.setInterval(() => {
-      i = (i + 1) % produtos.length
-      setActiveIndex(i)
+      ativar((indiceAtual.current + 1) % produtos.length)
     }, 2200)
     return () => window.clearInterval(id)
-  }, [autoCycle, produtos.length])
+  }, [mouseNaLista, produtos.length, ativar])
 
   return (
     <section id="servicos" className="relative scroll-mt-24 px-6 py-16 sm:py-32">
@@ -49,9 +46,8 @@ export function SolucoesSticky() {
 
         <div className="relative mt-10 sm:mt-16">
           <ul
-            onMouseLeave={() => {
-              if (!autoCycle) setActiveIndex(null)
-            }}
+            onMouseEnter={() => setMouseNaLista(true)}
+            onMouseLeave={() => setMouseNaLista(false)}
             className="mx-auto flex max-w-3xl flex-col items-center"
           >
             {produtos.map((produto, index) => (
@@ -64,17 +60,10 @@ export function SolucoesSticky() {
                 </span>
                 <Link
                   to={`/servico/${SERVICO_SLUGS[index]}`}
-                  onMouseEnter={() => {
-                    if (!autoCycle) setActiveIndex(index)
-                  }}
+                  onMouseEnter={() => ativar(index)}
                   className="text-[clamp(1.8rem,6vw,4rem)] font-black uppercase leading-[1.05] tracking-tight transition-all duration-300"
                   style={{
-                    color:
-                      activeIndex === index
-                        ? '#FFD712'
-                        : activeIndex === null
-                          ? '#FFFFFF'
-                          : 'rgba(255,255,255,0.2)',
+                    color: activeIndex === index ? '#FFD712' : 'rgba(255,255,255,0.25)',
                   }}
                 >
                   {produto.nome}

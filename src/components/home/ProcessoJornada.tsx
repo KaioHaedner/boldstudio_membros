@@ -1,68 +1,78 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
-// Jornada do cliente: caminho em S que se desenha sozinho quando a seção entra
-// na tela, acendendo etapa por etapa. Antes eram três imagens .webp com linha,
-// pontos e rótulos achatados no pixel, o que impedia acender ponto a ponto —
-// por isso virou SVG de verdade.
+// Jornada do cliente: caminho em serpentina que se desenha sozinho quando a
+// seção entra na tela, acendendo etapa por etapa. Antes eram três imagens .webp
+// com linha, pontos e rótulos achatados no pixel, o que impedia acender ponto a
+// ponto — por isso virou SVG de verdade.
 //
-// Duas geometrias: no desktop o S de três linhas, no mobile uma linha vertical
-// (treze etapas em serpentina não cabem em 375px de forma legível). As duas
-// compartilham o mesmo progresso 0..1 da animação.
+// O percurso começa na esquerda, vai até a direita, desce e volta, desce e vai
+// de novo, terminando com a seta. Duas geometrias com o mesmo formato: no
+// desktop poucas linhas bem largas, no celular mais linhas com duas etapas
+// cada, porque treze etapas numa linha só ficam ilegíveis.
 
-const LARGURA = 1200
-const ALTURA = 560
-const MARGEM = 70
-const RAIO = 60
+type No = { x: number; y: number }
 
-// Quantos pontos em cada uma das três linhas do S, na ordem do caminho.
-const POR_LINHA = [4, 5, 4]
-const LINHAS_Y = [130, 310, 490]
+type Serpentina = { caminho: string; nos: No[]; altura: number }
 
-type No = { x: number; y: number; linha: number }
+function montarSerpentina(
+  largura: number,
+  margem: number,
+  raio: number,
+  espacoEntreLinhas: number,
+  porLinha: number[]
+): Serpentina {
+  const esq = margem
+  const dir = largura - margem
+  const ys = porLinha.map((_, linha) => margem + linha * espacoEntreLinhas)
 
-// Monta os pontos seguindo o sentido de cada linha: a 1ª vai pra direita, a 2ª
-// volta, a 3ª vai pra direita de novo.
-function montarNos(): No[] {
   const nos: No[] = []
-  POR_LINHA.forEach((quantidade, linha) => {
+  porLinha.forEach((quantidade, linha) => {
     const paraDireita = linha % 2 === 0
-    const util = LARGURA - MARGEM * 2
-    const passo = util / (quantidade - 1)
+    const util = largura - margem * 2
+    // com um ponto só na linha ele fica no começo dela, não no meio
+    const passo = quantidade > 1 ? util / (quantidade - 1) : 0
     for (let i = 0; i < quantidade; i++) {
-      const avanco = MARGEM + passo * i
-      nos.push({ x: paraDireita ? avanco : LARGURA - avanco, y: LINHAS_Y[linha], linha })
+      const avanco = margem + passo * i
+      nos.push({ x: paraDireita ? avanco : largura - avanco, y: ys[linha] })
     }
   })
-  return nos
+
+  const partes = [`M ${esq} ${ys[0]}`]
+  ys.forEach((y, linha) => {
+    const ultima = linha === ys.length - 1
+    const paraDireita = linha % 2 === 0
+    const fim = paraDireita ? dir : esq
+    if (ultima) {
+      partes.push(`H ${fim}`)
+      return
+    }
+    // reta até quase o canto, curva de 90°, desce, curva de novo
+    const proximo = ys[linha + 1]
+    if (paraDireita) {
+      partes.push(`H ${dir - raio}`)
+      partes.push(`A ${raio} ${raio} 0 0 1 ${dir} ${y + raio}`)
+      partes.push(`V ${proximo - raio}`)
+      partes.push(`A ${raio} ${raio} 0 0 1 ${dir - raio} ${proximo}`)
+    } else {
+      partes.push(`H ${esq + raio}`)
+      partes.push(`A ${raio} ${raio} 0 0 0 ${esq} ${y + raio}`)
+      partes.push(`V ${proximo - raio}`)
+      partes.push(`A ${raio} ${raio} 0 0 0 ${esq + raio} ${proximo}`)
+    }
+  })
+
+  return { caminho: partes.join(' '), nos, altura: ys[ys.length - 1] + margem }
 }
 
-// Caminho em S: reta, curva de 90° pra descer, reta no sentido oposto, e assim
-// por diante. Os arcos usam RAIO para o canto não sair quadrado.
-function montarCaminho(): string {
-  const esq = MARGEM
-  const dir = LARGURA - MARGEM
-  const [y1, y2, y3] = LINHAS_Y
-  return [
-    `M ${esq} ${y1}`,
-    `H ${dir - RAIO}`,
-    `A ${RAIO} ${RAIO} 0 0 1 ${dir} ${y1 + RAIO}`,
-    `V ${y2 - RAIO}`,
-    `A ${RAIO} ${RAIO} 0 0 1 ${dir - RAIO} ${y2}`,
-    `H ${esq + RAIO}`,
-    `A ${RAIO} ${RAIO} 0 0 0 ${esq} ${y2 + RAIO}`,
-    `V ${y3 - RAIO}`,
-    `A ${RAIO} ${RAIO} 0 0 0 ${esq + RAIO} ${y3}`,
-    `H ${dir}`,
-  ].join(' ')
-}
-
-const NOS = montarNos()
-const CAMINHO = montarCaminho()
+// 13 etapas: 4 + 5 + 4 no desktop, de duas em duas no celular.
+const DESKTOP = montarSerpentina(1200, 90, 60, 190, [4, 5, 4])
+const MOBILE = montarSerpentina(360, 55, 38, 108, [2, 2, 2, 2, 2, 2, 1])
 
 export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
+  const pathMobileRef = useRef<SVGPathElement>(null)
   // Com "reduzir movimento" a jornada já nasce inteira acesa, sem animar.
   const [progresso, setProgresso] = useState(() =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0
@@ -70,20 +80,22 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
 
   useEffect(() => {
     const wrap = wrapRef.current
-    const path = pathRef.current
-    if (!wrap || !path) return
+    if (!wrap) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const comprimento = path.getTotalLength()
-    path.style.strokeDasharray = String(comprimento)
-    path.style.strokeDashoffset = String(comprimento)
+    // os dois caminhos (desktop e celular) são desenhados juntos; só um está
+    // visível por vez, mas assim o progresso serve para ambos
+    const caminhos = [pathRef.current, pathMobileRef.current].filter(Boolean) as SVGPathElement[]
+    const comprimentos = caminhos.map((p) => p.getTotalLength())
+    caminhos.forEach((p, i) => {
+      p.style.strokeDasharray = String(comprimentos[i])
+      p.style.strokeDashoffset = String(comprimentos[i])
+    })
 
     const estado = { p: 0 }
     let tween: gsap.core.Tween | null = null
 
-    // Toca uma vez, quando a seção aparece. Antes a linha vinha presa a um pin
-    // de ScrollTrigger; sem o pin a seção fica bem mais curta e a animação
-    // acontece sozinha, como o cliente pediu.
+    // Toca uma vez, quando a seção aparece.
     const io = new IntersectionObserver(
       ([entrada]) => {
         if (!entrada.isIntersecting || tween) return
@@ -93,7 +105,9 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
           duration: 3.4,
           ease: 'none',
           onUpdate: () => {
-            path.style.strokeDashoffset = String(comprimento * (1 - estado.p))
+            caminhos.forEach((p, i) => {
+              p.style.strokeDashoffset = String(comprimentos[i] * (1 - estado.p))
+            })
             setProgresso(estado.p)
           },
         })
@@ -108,16 +122,24 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
     }
   }, [])
 
-  // Fração do caminho onde cada ponto acende. Distribui na ordem do caminho,
-  // com uma folga no fim pra última etapa acender antes da seta chegar.
-  const fracaoDoNo = (indice: number) => (indice + 0.5) / NOS.length
+  // So no celular: centralizar o rotulo da ponta no ponto jogaria metade dele
+  // pra fora da tela, entao nas extremidades ele ancora pra dentro. No desktop
+  // a margem do viewBox ja absorve essa metade, e ancorar na ponta so empurrava
+  // o rotulo da borda por cima do vizinho.
+  const ancora = (x: number, largura: number, margem: number) => {
+    if (x <= margem + 1) return 'start' as const
+    if (x >= largura - margem - 1) return 'end' as const
+    return 'middle' as const
+  }
+
+  // Fração do caminho onde cada ponto acende, na ordem do percurso.
+  const fracaoDoNo = (indice: number) => (indice + 0.5) / etapas.length
 
   return (
     <div ref={wrapRef} className="processo-jornada">
-      {/* Desktop: o S */}
       <svg
         className="processo-jornada__svg"
-        viewBox={`0 0 ${LARGURA} ${ALTURA}`}
+        viewBox={`0 0 1200 ${DESKTOP.altura}`}
         role="img"
         aria-label={etapas.join(', ')}
       >
@@ -127,40 +149,66 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
           </marker>
         </defs>
 
-        {/* trilho apagado, sempre visível */}
-        <path d={CAMINHO} className="processo-jornada__trilho" />
-        {/* Trilho aceso, desenhado pela animação. A seta só entra no fim: o
-            markerEnd é desenhado na ponta geométrica do caminho e apareceria
-            lá desde o começo, antes da linha chegar. */}
+        <path d={DESKTOP.caminho} className="processo-jornada__trilho" />
+        {/* A seta só entra no fim: o markerEnd é desenhado na ponta geométrica
+            do caminho e apareceria lá desde o começo. */}
         <path
           ref={pathRef}
-          d={CAMINHO}
+          d={DESKTOP.caminho}
           className="processo-jornada__linha"
           markerEnd={progresso > 0.99 ? 'url(#jornada-seta)' : undefined}
         />
 
-        {NOS.map((no, i) => {
-          const aceso = progresso >= fracaoDoNo(i)
-          return (
-            <g key={etapas[i] ?? i} className="processo-jornada__no" data-aceso={aceso}>
-              <circle cx={no.x} cy={no.y} r="13" className="processo-jornada__bolinha" />
-              <text x={no.x} y={no.y - 34} className="processo-jornada__rotulo" textAnchor="middle">
-                {etapas[i]}
-              </text>
-            </g>
-          )
-        })}
+        {DESKTOP.nos.map((no, i) => (
+          <g key={etapas[i] ?? i} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
+            <circle cx={no.x} cy={no.y} r="13" className="processo-jornada__bolinha" />
+            <text
+              x={no.x}
+              y={no.y - 34}
+              className="processo-jornada__rotulo"
+              textAnchor="middle"
+            >
+              {etapas[i]}
+            </text>
+          </g>
+        ))}
       </svg>
 
-      {/* Mobile: mesma jornada em coluna */}
-      <ol className="processo-jornada__lista">
-        {etapas.map((etapa, i) => (
-          <li key={etapa} className="processo-jornada__item" data-aceso={progresso >= fracaoDoNo(i)}>
-            <span className="processo-jornada__marcador" aria-hidden="true" />
-            <span className="processo-jornada__texto">{etapa}</span>
-          </li>
+      <svg
+        className="processo-jornada__svg-mobile"
+        viewBox={`0 0 360 ${MOBILE.altura}`}
+        role="img"
+        aria-label={etapas.join(', ')}
+      >
+        <defs>
+          <marker id="jornada-seta-m" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto">
+            <path d="M 0 1 L 9 6 L 0 11 z" fill="#fde100" />
+          </marker>
+        </defs>
+
+        <path d={MOBILE.caminho} className="processo-jornada__trilho" />
+        <path
+          ref={pathMobileRef}
+          d={MOBILE.caminho}
+          className="processo-jornada__linha"
+          markerEnd={progresso > 0.99 ? 'url(#jornada-seta-m)' : undefined}
+        />
+
+        {MOBILE.nos.map((no, i) => (
+          <g key={`m-${etapas[i] ?? i}`} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
+            <circle cx={no.x} cy={no.y} r="10" className="processo-jornada__bolinha" />
+            {/* alterna acima/abaixo pra dois rótulos da mesma linha não colidirem */}
+            <text
+              x={no.x}
+              y={no.y + (i % 2 === 0 ? -22 : 30)}
+              className="processo-jornada__rotulo processo-jornada__rotulo--mobile"
+              textAnchor={ancora(no.x, 360, 55)}
+            >
+              {etapas[i]}
+            </text>
+          </g>
         ))}
-      </ol>
+      </svg>
     </div>
   )
 }

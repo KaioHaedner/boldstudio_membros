@@ -919,66 +919,85 @@ textarea {
   mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
-/* Dica de interação do carrossel de clientes: uma seta em cada margem
-   apontando pras marcas de verdade. A versão anterior era um SVG central com
-   um quadrado de mentira e um cursor, e o próprio dono do estúdio clicou nele
-   achando que era botão. */
+/* Dica de clique da esteira de clientes: a seta sai da frase e cai numa logo
+   de verdade, onde o cursor clica. A versão anterior era um SVG central com um
+   quadrado de mentira, e o próprio dono do estúdio clicou nele achando que era
+   botão; a de antes desta, duas setas nas margens, ele também não quis. */
 .clientes-esteira {
   position: relative;
 }
-.clientes-seta {
+.clientes-dica {
   position: absolute;
-  top: 50%;
+  left: clamp(0.5rem, 4vw, 3rem);
+  /* o SVG entra pra dentro da esteira: o ponto do clique (67% da altura dele)
+     precisa cair EM CIMA de uma logo, nao acima dela */
+  bottom: calc(100% - 7rem);
   z-index: 3;
-  width: clamp(2.2rem, 5vw, 3.4rem);
+  width: clamp(9rem, 22vw, 12rem);
   color: #fde100;
-  transform: translateY(-50%);
   pointer-events: none;
 }
-.clientes-seta svg {
+.clientes-dica__label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.clientes-dica__svg {
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
 }
-.clientes-seta__traco,
-.clientes-seta__ponta {
+.clientes-dica__curva,
+.clientes-dica__ponta {
   fill: none;
   stroke: currentColor;
-  stroke-width: 5;
+  stroke-width: 3;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.85));
+  stroke-dasharray: 140;
+  animation: clientes-dica-traco 2.8s ease-in-out infinite;
 }
-/* a da esquerda aponta pra dentro (pra direita); a da direita é espelhada */
-.clientes-seta--esquerda {
-  left: clamp(0.35rem, 2vw, 1.25rem);
-  animation: clientes-seta-cutuca 2.4s ease-in-out infinite;
+.clientes-dica__cursor {
+  fill: #f5f1e8;
+  stroke: #090909;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transform-origin: 0 0;
+  animation: clientes-dica-cursor 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
-.clientes-seta--direita {
-  right: clamp(0.35rem, 2vw, 1.25rem);
-  transform: translateY(-50%) scaleX(-1);
-  animation: clientes-seta-cutuca-espelhada 2.4s ease-in-out infinite;
+.clientes-dica__pulso {
+  fill: none;
+  stroke: #fde100;
+  stroke-width: 2;
+  transform-origin: 80px 80px;
+  animation: clientes-dica-pulso 2.8s ease-out infinite;
 }
-@keyframes clientes-seta-cutuca {
-  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.75; }
-  50% { transform: translateY(-50%) translateX(10px); opacity: 1; }
+.clientes-dica__pulso--dois {
+  animation-delay: 0.2s;
 }
-@keyframes clientes-seta-cutuca-espelhada {
-  0%, 100% { transform: translateY(-50%) scaleX(-1) translateX(0); opacity: 0.75; }
-  50% { transform: translateY(-50%) scaleX(-1) translateX(10px); opacity: 1; }
+@keyframes clientes-dica-traco {
+  0%, 10% { stroke-dashoffset: 140; opacity: 0; }
+  32%, 80% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -20; opacity: 0; }
 }
-.clientes-tap-hint__label {
-  /* sem nowrap: agora a frase fica sozinha embaixo do titulo e precisa poder
-     quebrar em tela estreita */
-  margin-top: 0.9rem;
-  font-size: 0.72rem;
-  font-weight: 900;
-  font-style: italic;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #ffffff;
+@keyframes clientes-dica-cursor {
+  0%, 18% { transform: translate(-46px, -44px) scale(0.8); opacity: 0; }
+  30% { opacity: 1; }
+  55% { transform: translate(-6px, -4px) scale(0.9); opacity: 1; }
+  64% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  71% { transform: translate(2px, 2px) scale(0.76); opacity: 1; }
+  80% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  100% { transform: translate(8px, 6px) scale(0.9); opacity: 0; }
+}
+@keyframes clientes-dica-pulso {
+  0%, 66% { transform: scale(0.2); opacity: 0; }
+  72% { opacity: 0.9; }
+  92%, 100% { transform: scale(1.8); opacity: 0; }
 }
 /* Modal claro: CTA usa o mesmo motor de brilho da hero, com a paleta invertida. */
 .clientes-detail-card {
@@ -1008,8 +1027,9 @@ textarea {
 }
 @media (prefers-reduced-motion: reduce) {
   .marcas-marquee,
-  .clientes-seta--esquerda,
-  .clientes-seta--direita,
+  .clientes-dica__curva,
+  .clientes-dica__cursor,
+  .clientes-dica__pulso,
   .clientes-detail-card { animation: none; }
 }
 
@@ -1678,65 +1698,21 @@ textarea {
 .processo-jornada__no[data-aceso='true'] .processo-jornada__rotulo {
   fill: #ffffff;
 }
-/* versão em coluna (mobile) */
-.processo-jornada__lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin: 0 auto;
-  padding: 0;
-  max-width: 24rem;
-  list-style: none;
+/* versão de celular: mesma serpentina, duas etapas por linha */
+.processo-jornada__svg-mobile {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
-.processo-jornada__item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.55rem 0 0.55rem 0.35rem;
-}
-/* o traço que liga um item ao seguinte */
-.processo-jornada__item:not(:last-child)::before {
-  content: '';
-  position: absolute;
-  left: 0.85rem;
-  top: 50%;
-  bottom: -50%;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.12);
-}
-.processo-jornada__item[data-aceso='true']:not(:last-child)::before {
-  background: #fde100;
-}
-.processo-jornada__marcador {
-  position: relative;
-  z-index: 1;
-  width: 0.85rem;
-  height: 0.85rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: #1a1a1a;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  transition: background 0.35s ease, border-color 0.35s ease;
-}
-.processo-jornada__item[data-aceso='true'] .processo-jornada__marcador {
-  background: #fde100;
-  border-color: #fde100;
-}
-.processo-jornada__texto {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.4);
-  transition: color 0.35s ease;
-}
-.processo-jornada__item[data-aceso='true'] .processo-jornada__texto {
-  color: #ffffff;
+.processo-jornada__rotulo--mobile {
+  font-size: 15px;
 }
 @media (min-width: 768px) {
   .processo-jornada__svg {
     display: block;
   }
-  .processo-jornada__lista {
+  .processo-jornada__svg-mobile {
     display: none;
   }
 }
@@ -2030,4 +2006,29 @@ textarea {
   .kaio-social__btn,
   .kaio-social__tip { transition: none; }
   .kaio-social:hover .kaio-social__btn { transform: none; }
+}
+
+/* ============== "Nascida para ganhar o Mundo" ==============
+   No celular o cliente pediu a frase ocupando quase a tela toda, com uma
+   palavra por linha. `word-spacing` gigante força a quebra a cada palavra sem
+   precisar picotar o texto em spans (o conteúdo vem do i18n e muda de idioma). */
+/* No celular o espaco entre palavras maior que a tela obriga cada palavra a cair
+   numa linha propria. Nao pode vir com nowrap junto: sem poder quebrar, a frase
+   virava uma linha unica de quase 1900px e sumia atras do overflow da secao. */
+.nascida-frase {
+  font-size: clamp(3.4rem, 21.5vw, 5.4rem);
+  word-spacing: 100vw;
+  line-height: 0.86;
+}
+.nascida-destaque {
+  font-size: clamp(3.6rem, 20.5vw, 5.2rem);
+}
+@media (min-width: 640px) {
+  .nascida-frase {
+    font-size: clamp(3.4rem, 6vw, 6rem);
+    word-spacing: normal;
+  }
+  .nascida-destaque {
+    font-size: clamp(4rem, 8vw, 8rem);
+  }
 }

@@ -6,18 +6,27 @@ import { CoinDecor } from '@/components/home/CoinDecor'
 import { useI18n } from '@/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/data/clientes'
 
-// Seta que fica na margem apontando pra logo daquele lado. Antes existia um
-// SVG central com um quadrado de mentira e um cursor, e o proprio dono do
-// estudio clicou nele achando que era botao — por isso a dica agora aponta pras
-// marcas de verdade, uma seta em cada ponta da esteira.
-function SetaParaLogo({ lado }: { lado: 'esquerda' | 'direita' }) {
+// Dica de clique: a seta sai da frase e desce até uma das logos reais da
+// esteira, onde o cursor dá o clique. Fica por cima da esteira, alinhada com a
+// primeira marca visível, e é decorativa (pointer-events: none) pra ninguém
+// clicar nela achando que é botão.
+function DicaDeClique({ label }: { label: string }) {
   return (
-    <span className={`clientes-seta clientes-seta--${lado}`} aria-hidden="true">
-      <svg viewBox="0 0 64 40">
-        <path className="clientes-seta__traco" d="M4 20h48" />
-        <path className="clientes-seta__ponta" d="m44 10 12 10-12 10" />
+    <div className="clientes-dica" aria-hidden="true">
+      <p className="clientes-dica__label">{label}</p>
+      <svg className="clientes-dica__svg" viewBox="0 0 150 120">
+        {/* curva saindo do texto e caindo na logo */}
+        <path className="clientes-dica__curva" d="M18 8c6 34 26 56 58 66" />
+        <path className="clientes-dica__ponta" d="m68 66 12 10-16 4" />
+        {/* pulso no ponto onde o clique acontece */}
+        <circle className="clientes-dica__pulso" cx="80" cy="80" r="12" />
+        <circle className="clientes-dica__pulso clientes-dica__pulso--dois" cx="80" cy="80" r="12" />
+        {/* cursor que encosta e clica */}
+        <g className="clientes-dica__cursor" transform="translate(80 80)">
+          <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
+        </g>
       </svg>
-    </span>
+    </div>
   )
 }
 
@@ -37,12 +46,10 @@ export function ClientesWave() {
       <div className="px-6 text-center">
         <p className="text-[clamp(1.15rem,2.4vw,1.75rem)] font-black italic uppercase leading-none tracking-[-0.035em] text-bold-yellow">{t.clientes.eyebrow}</p>
         <h2 className="mx-auto mt-3 max-w-4xl text-[clamp(1.8rem,4vw,3.4rem)] font-black italic uppercase leading-[0.92] tracking-[-0.035em] text-bold-white">{t.clientes.title}</h2>
-        <p className="clientes-tap-hint__label">{t.clientes.helper}</p>
       </div>
 
       <div className="clientes-esteira mt-12">
-        <SetaParaLogo lado="esquerda" />
-        <SetaParaLogo lado="direita" />
+        <DicaDeClique label={t.clientes.helper} />
         <div className="marcas-marquee-mask flex overflow-hidden">
         <div className="marcas-marquee flex shrink-0">
           {[0, 1].map((copyIndex) =>
