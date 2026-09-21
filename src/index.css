@@ -919,23 +919,59 @@ textarea {
   mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
-/* Indicador visual de interação do carrossel de clientes. */
-.clientes-tap-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 11.875rem;
-  margin: 0.5rem auto -1.75rem;
-  color: #ffd712;
+/* Dica de interação do carrossel de clientes: uma seta em cada margem
+   apontando pras marcas de verdade. A versão anterior era um SVG central com
+   um quadrado de mentira e um cursor, e o próprio dono do estúdio clicou nele
+   achando que era botão. */
+.clientes-esteira {
+  position: relative;
 }
-.clientes-tap-hint svg {
+.clientes-seta {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: clamp(2.2rem, 5vw, 3.4rem);
+  color: #fde100;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.clientes-seta svg {
+  display: block;
   width: 100%;
-  height: 4.75rem;
+  height: auto;
   overflow: visible;
 }
+.clientes-seta__traco,
+.clientes-seta__ponta {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.85));
+}
+/* a da esquerda aponta pra dentro (pra direita); a da direita é espelhada */
+.clientes-seta--esquerda {
+  left: clamp(0.35rem, 2vw, 1.25rem);
+  animation: clientes-seta-cutuca 2.4s ease-in-out infinite;
+}
+.clientes-seta--direita {
+  right: clamp(0.35rem, 2vw, 1.25rem);
+  transform: translateY(-50%) scaleX(-1);
+  animation: clientes-seta-cutuca-espelhada 2.4s ease-in-out infinite;
+}
+@keyframes clientes-seta-cutuca {
+  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.75; }
+  50% { transform: translateY(-50%) translateX(10px); opacity: 1; }
+}
+@keyframes clientes-seta-cutuca-espelhada {
+  0%, 100% { transform: translateY(-50%) scaleX(-1) translateX(0); opacity: 0.75; }
+  50% { transform: translateY(-50%) scaleX(-1) translateX(10px); opacity: 1; }
+}
 .clientes-tap-hint__label {
-  margin-top: -0.2rem;
-  white-space: nowrap;
+  /* sem nowrap: agora a frase fica sozinha embaixo do titulo e precisa poder
+     quebrar em tela estreita */
+  margin-top: 0.9rem;
   font-size: 0.72rem;
   font-weight: 900;
   font-style: italic;
@@ -944,73 +980,6 @@ textarea {
   text-transform: uppercase;
   color: #ffffff;
 }
-.clientes-tap-hint__arrow {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.clientes-tap-hint__arrow {
-  stroke-dasharray: 130;
-  animation: clientes-arrow-draw 2.6s ease-in-out infinite;
-}
-.clientes-tap-hint__target {
-  fill: #ffffff;
-  stroke: rgba(255, 215, 18, 0.65);
-  stroke-width: 2;
-  transform-origin: 154px 37px;
-  animation: clientes-target-click 2.6s ease-in-out infinite;
-}
-.clientes-tap-hint__target-logo {
-  fill: none;
-  stroke: #ffd712;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-.clientes-tap-hint__pointer {
-  fill: #f5f1e8;
-  stroke: #090909;
-  stroke-width: 2;
-  stroke-linejoin: round;
-  transform-origin: 0 0;
-  animation: clientes-pointer-click 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-}
-.clientes-tap-hint__pulse {
-  fill: none;
-  stroke: #ffd712;
-  stroke-width: 2;
-  transform-origin: 154px 37px;
-  animation: clientes-tap-pulse 2.6s ease-out infinite;
-}
-.clientes-tap-hint__pulse--two {
-  animation-delay: 0.2s;
-}
-@keyframes clientes-arrow-draw {
-  0%, 12% { stroke-dashoffset: 130; opacity: 0; }
-  34%, 82% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: -18; opacity: 0; }
-}
-@keyframes clientes-pointer-click {
-  0%, 15% { transform: translate(-82px, 15px) scale(0.82); opacity: 0; }
-  28% { opacity: 1; }
-  52% { transform: translate(-7px, 4px) scale(0.9); opacity: 1; }
-  61% { transform: translate(0, 0) scale(0.9); opacity: 1; }
-  68% { transform: translate(2px, 2px) scale(0.78); opacity: 1; }
-  78% { transform: translate(0, 0) scale(0.9); opacity: 1; }
-  100% { transform: translate(8px, 5px) scale(0.9); opacity: 0; }
-}
-@keyframes clientes-target-click {
-  0%, 57% { transform: scale(1); filter: none; }
-  68% { transform: scale(0.95); filter: drop-shadow(0 0 8px rgba(255, 215, 18, 0.95)); }
-  82%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
-}
-@keyframes clientes-tap-pulse {
-  0%, 62% { transform: scale(0.2); opacity: 0; }
-  68% { opacity: 0.95; }
-  90%, 100% { transform: scale(1.75); opacity: 0; }
-}
-
 /* Modal claro: CTA usa o mesmo motor de brilho da hero, com a paleta invertida. */
 .clientes-detail-card {
   isolation: isolate;
@@ -1039,10 +1008,8 @@ textarea {
 }
 @media (prefers-reduced-motion: reduce) {
   .marcas-marquee,
-  .clientes-tap-hint__arrow,
-  .clientes-tap-hint__pointer,
-  .clientes-tap-hint__target,
-  .clientes-tap-hint__pulse,
+  .clientes-seta--esquerda,
+  .clientes-seta--direita,
   .clientes-detail-card { animation: none; }
 }
 

@@ -6,30 +6,18 @@ import { CoinDecor } from '@/components/home/CoinDecor'
 import { useI18n } from '@/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/data/clientes'
 
-function LogoTapHint({ label }: { label: string }) {
+// Seta que fica na margem apontando pra logo daquele lado. Antes existia um
+// SVG central com um quadrado de mentira e um cursor, e o proprio dono do
+// estudio clicou nele achando que era botao — por isso a dica agora aponta pras
+// marcas de verdade, uma seta em cada ponta da esteira.
+function SetaParaLogo({ lado }: { lado: 'esquerda' | 'direita' }) {
   return (
-    <div className="clientes-tap-hint">
-      <svg viewBox="0 0 190 76" aria-hidden="true">
-        <path className="clientes-tap-hint__arrow" d="M12 43c25-30 67-31 104-8" />
-        <path className="clientes-tap-hint__arrow" d="m106 25 11 10-14 5" />
-
-        <rect className="clientes-tap-hint__target" x="126" y="9" width="56" height="56" rx="11" />
-        <g className="clientes-tap-hint__target-logo">
-          <circle cx="154" cy="37" r="11" />
-          <path d="M154 26v7m9-2-6 4m6 8-7-3m-2 8v-7m-9 2 6-4m-6-8 7 3" />
-        </g>
-
-        <circle className="clientes-tap-hint__pulse" cx="154" cy="37" r="13" />
-        <circle className="clientes-tap-hint__pulse clientes-tap-hint__pulse--two" cx="154" cy="37" r="13" />
-
-        <g transform="translate(154 37)">
-          <g className="clientes-tap-hint__pointer">
-            <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
-          </g>
-        </g>
+    <span className={`clientes-seta clientes-seta--${lado}`} aria-hidden="true">
+      <svg viewBox="0 0 64 40">
+        <path className="clientes-seta__traco" d="M4 20h48" />
+        <path className="clientes-seta__ponta" d="m44 10 12 10-12 10" />
       </svg>
-      <p className="clientes-tap-hint__label">{label}</p>
-    </div>
+    </span>
   )
 }
 
@@ -49,10 +37,13 @@ export function ClientesWave() {
       <div className="px-6 text-center">
         <p className="text-[clamp(1.15rem,2.4vw,1.75rem)] font-black italic uppercase leading-none tracking-[-0.035em] text-bold-yellow">{t.clientes.eyebrow}</p>
         <h2 className="mx-auto mt-3 max-w-4xl text-[clamp(1.8rem,4vw,3.4rem)] font-black italic uppercase leading-[0.92] tracking-[-0.035em] text-bold-white">{t.clientes.title}</h2>
-        <LogoTapHint label={t.clientes.helper} />
+        <p className="clientes-tap-hint__label">{t.clientes.helper}</p>
       </div>
 
-      <div className="marcas-marquee-mask mt-12 flex overflow-hidden">
+      <div className="clientes-esteira mt-12">
+        <SetaParaLogo lado="esquerda" />
+        <SetaParaLogo lado="direita" />
+        <div className="marcas-marquee-mask flex overflow-hidden">
         <div className="marcas-marquee flex shrink-0">
           {[0, 1].map((copyIndex) =>
             CLIENTES.map((client) => {
@@ -78,6 +69,7 @@ export function ClientesWave() {
               )
             })
           )}
+          </div>
         </div>
       </div>
 
