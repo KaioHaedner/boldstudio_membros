@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Header } from '@/components/home/Header'
 import { Footer } from '@/components/home/Footer'
 import { ShinyButton } from '@/components/ShinyButton'
@@ -20,6 +20,12 @@ function ServicoConteudo() {
   const { slug } = useParams<{ slug: string }>()
   const { t } = useI18n()
   const navigate = useNavigate()
+  // Marca que teve o vídeo recusado cai pra logo em vez de deixar um buraco
+  // preto no card (hoje parte dos previews está fora do ar por cota).
+  const [semVideo, setSemVideo] = useState<Record<string, boolean>>({})
+  // O vídeo só aparece depois do primeiro quadro; até lá quem fica à mostra é a
+  // logo por baixo, senão o card abre como um retângulo preto esperando a rede.
+  const [videoPronto, setVideoPronto] = useState<Record<string, boolean>>({})
 
   // Página nova sempre abre no topo: sem isso o React Router mantém a posição
   // de scroll de quem veio da home.
@@ -59,23 +65,23 @@ function ServicoConteudo() {
 
         <div className="mt-10 max-w-3xl space-y-5">
           {conteudo.paragrafos.map((paragrafo) => (
-            <p key={paragrafo} className="text-base leading-relaxed text-bold-white/70 sm:text-lg">
+            <p key={paragrafo} className="text-base leading-relaxed text-bold-white sm:text-lg">
               {paragrafo}
             </p>
           ))}
         </div>
 
         <section className="mt-16">
-          <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-bold-white/50">
+          <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-bold-white">
             {pagina.entregaTitulo}
           </h2>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {conteudo.entregaveis.map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-3 rounded-xl border border-bold-yellow/20 bg-bold-gray/40 px-5 py-4 text-sm font-semibold text-bold-white sm:text-base"
+                className="flex items-center gap-3 rounded-xl bg-bold-yellow px-5 py-4 text-sm font-black uppercase leading-tight tracking-[-0.01em] text-bold-black sm:text-base"
               >
-                <span className="h-2 w-2 shrink-0 rounded-full bg-bold-yellow" aria-hidden="true" />
+                <ArrowRight size={18} strokeWidth={3} className="shrink-0" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -83,7 +89,7 @@ function ServicoConteudo() {
         </section>
 
         <section className="mt-16">
-          <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-bold-white/50">
+          <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-bold-white">
             {pagina.exemplosTitulo}
           </h2>
           {EXEMPLOS.length === 0 ? (
@@ -95,26 +101,49 @@ function ServicoConteudo() {
                   key={cliente.slug}
                   type="button"
                   onClick={() => navigate(`/projeto-${cliente.slug}`)}
-                  className="group overflow-hidden rounded-2xl border border-bold-yellow/15 bg-bold-gray/40 text-left transition-colors hover:border-bold-yellow/50"
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-bold-yellow/15 bg-bold-gray/40 text-center transition-colors hover:border-bold-yellow/50"
                 >
-                  <span className="flex h-40 items-center justify-center bg-black/40 p-6">
+                  <span className="relative flex h-40 items-center justify-center overflow-hidden bg-black/40">
                     <img
                       src={cliente.logo}
                       alt={cliente.nome}
                       loading="lazy"
                       className="max-h-16 w-auto max-w-[70%] object-contain opacity-70 transition-opacity group-hover:opacity-100"
                     />
-                  </span>
-                  <span className="block px-5 py-4">
-                    <span className="block text-sm font-black uppercase leading-tight text-bold-white">
-                      {cliente.nome}
-                    </span>
-                    {cliente.area && (
-                      <span className="mt-1 block text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-bold-white/45">
-                        {cliente.area}
-                      </span>
+                    {cliente.videos[0] && !semVideo[cliente.slug] && (
+                      <video
+                        src={cliente.videos[0]}
+                        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                          videoPronto[cliente.slug] ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                        onLoadedData={() =>
+                          setVideoPronto((atuais) =>
+                            atuais[cliente.slug] ? atuais : { ...atuais, [cliente.slug]: true }
+                          )
+                        }
+                        onError={() =>
+                          setSemVideo((atuais) =>
+                            atuais[cliente.slug] ? atuais : { ...atuais, [cliente.slug]: true }
+                          )
+                        }
+                      />
                     )}
                   </span>
+                  <span className="flex flex-1 items-center justify-center px-4 py-4">
+                    <span className="text-sm font-black uppercase leading-tight text-bold-white">
+                      {cliente.nome}
+                    </span>
+                  </span>
+                  {cliente.area && (
+                    <span className="block bg-bold-yellow px-4 py-2.5 text-[0.7rem] font-black uppercase tracking-[0.18em] text-bold-black">
+                      {cliente.area}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
