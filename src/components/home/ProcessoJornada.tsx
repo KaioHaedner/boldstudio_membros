@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
+import { JORNADA_ICONES_LOCAIS } from '@/data/jornada'
 
 // Jornada do cliente: caminho em serpentina que se desenha sozinho quando a
 // seção entra na tela, acendendo etapa por etapa. Antes eram três imagens .webp
@@ -173,12 +174,23 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
 
         {DESKTOP.nos.map((no, i) => (
           <g key={etapas[i] ?? i} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
-            <circle cx={no.x} cy={no.y} r="13" className="processo-jornada__bolinha" />
+            {/* disco preto tapa a linha atrás do ícone, senão o traço cruza o
+                desenho; o ícone acende junto com a etapa */}
+            <circle cx={no.x} cy={no.y} r="30" className="processo-jornada__disco" />
+            <image
+              href={JORNADA_ICONES_LOCAIS[i]}
+              x={no.x - 19}
+              y={no.y - 19}
+              width="38"
+              height="38"
+              className="processo-jornada__icone"
+              preserveAspectRatio="xMidYMid meet"
+            />
             {/* alterna acima/abaixo: com 5 etapas numa linha os rotulos
                 vizinhos quase se encostavam no mesmo nivel */}
             <text
               x={no.x}
-              y={no.y + (i % 2 === 0 ? -34 : 46)}
+              y={no.y + (i % 2 === 0 ? -48 : 62)}
               className="processo-jornada__rotulo"
               textAnchor="middle"
             >
@@ -210,11 +222,20 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
 
         {MOBILE.nos.map((no, i) => (
           <g key={`m-${etapas[i] ?? i}`} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
-            <circle cx={no.x} cy={no.y} r="10" className="processo-jornada__bolinha" />
+            <circle cx={no.x} cy={no.y} r="22" className="processo-jornada__disco" />
+            <image
+              href={JORNADA_ICONES_LOCAIS[i]}
+              x={no.x - 14}
+              y={no.y - 14}
+              width="28"
+              height="28"
+              className="processo-jornada__icone"
+              preserveAspectRatio="xMidYMid meet"
+            />
             {/* alterna acima/abaixo pra dois rótulos da mesma linha não colidirem */}
             <text
               x={no.x}
-              y={no.y + (i % 2 === 0 ? -22 : 30)}
+              y={no.y + (i % 2 === 0 ? -34 : 46)}
               className="processo-jornada__rotulo processo-jornada__rotulo--mobile"
               textAnchor={ancora(no.x, MOBILE)}
             >
