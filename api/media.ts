@@ -16,6 +16,7 @@ const BUCKET_ORIGIN: Record<string, string> = {
   PROCESSO: 'https://erhtqgaxibncpondscna.supabase.co',
   brand: 'https://erhtqgaxibncpondscna.supabase.co',
   Videos_Cliente_New: 'https://heriogfvynncvabbwspu.supabase.co',
+  ICONES_JORNADAS_SVG: 'https://heriogfvynncvabbwspu.supabase.co',
 }
 
 // O Supabase antigo (erhtqgaxibncpondscna, sem acesso ao dashboard) falha de
