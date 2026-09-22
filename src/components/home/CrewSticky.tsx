@@ -3,24 +3,26 @@ import { User } from 'lucide-react'
 import { ShinyButton } from '@/components/ShinyButton'
 import { useCardSwap } from '@/hooks/useCardSwap'
 import { useI18n } from '@/i18n/I18nContext'
-import { mediaBase } from '@/lib/media'
 
-// Fotos coloridas do crew: uma unica imagem por membro evita baixar duas
-// versoes do Supabase para cada card e reduz o tempo de carregamento da home.
-// Servido via proxy api.boldstudiobrasil.com (esconde o Supabase de origem).
-const COLOR_BASE = mediaBase('Fotos_CREW_COLORIDAS')
-
-const CREW = [
-  { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.', color: `${COLOR_BASE}PEDRAO_BOLD_IMG_CREW.png` },
-  { id: 'miguel', nome: 'Miguel Souza', color: `${COLOR_BASE}MIGUEL_BOLD_IMG_CREW.png` },
-  { id: 'bruno', nome: 'Bruno Cavedon', color: `${COLOR_BASE}CAVEDON_BOLD_IMG_CREW.png` },
-  { id: 'william', nome: 'William Ferruda', color: `${COLOR_BASE}IMG_1088.JPG%201.png` },
-  { id: 'rafaela', nome: 'Rafaela Souza', color: `${COLOR_BASE}RAFAELA_BOLD_IMG_CREW.png` },
-  { id: 'nathalia', nome: 'Nathalia Umburanas', color: `${COLOR_BASE}NATHALIA_BOLD_IMG_CREW.webp` },
-  { id: 'caroline', nome: 'Caroline Ventura', color: `${COLOR_BASE}MULHER_MIGUEL_BOLD_IMG_CREW.png` },
-  { id: 'germano', nome: 'Germano Pagliari', color: `${COLOR_BASE}GERMANO_BOLD_IMG_CREW.png` },
-  { id: 'pedro-neto', nome: 'Pedro Garcia Neto', color: `${COLOR_BASE}juninho_BOLD_IMG_CREW.png` },
-] as const
+// Fotos do crew servidas pelo proprio site, em WebP de 720px. Antes vinham do
+// Supabase como PNG de 900x1350, 15,6 MB no total: cada uma custa 4,9 MB de
+// bitmap decodificado, e com a copia desfocada davam 84 MB so nesta secao. Era
+// isso que esquentava o celular e fazia os cards ficarem pretos no meio do uso,
+// porque o navegador descartava as imagens por falta de memoria.
+//
+// A bruma usa uma copia de 48px de largura: ela e desfocada de qualquer jeito,
+// entao resolucao ali e desperdicio puro (1 KB no lugar de 2 MB).
+const CREW = ([
+  { id: 'pedro-garcia', nome: 'Pedro Garcia Jr.' },
+  { id: 'miguel', nome: 'Miguel Souza' },
+  { id: 'bruno', nome: 'Bruno Cavedon' },
+  { id: 'william', nome: 'William Ferruda' },
+  { id: 'rafaela', nome: 'Rafaela Souza' },
+  { id: 'nathalia', nome: 'Nathalia Umburanas' },
+  { id: 'caroline', nome: 'Caroline Ventura' },
+  { id: 'germano', nome: 'Germano Pagliari' },
+  { id: 'pedro-neto', nome: 'Pedro Garcia Neto' },
+] as const).map((m) => ({ ...m, foto: `/crew/${m.id}.webp`, bruma: `/crew/${m.id}-bruma.webp` }))
 
 // Stack de cards em perspectiva 3D que troca sozinho (efeito "Card Swap"),
 // substituindo o sticky com portao de scroll: o cliente nao queria mais o
@@ -64,13 +66,12 @@ export function CrewSticky() {
           >
             {CREW.map((m, i) => {
               const info = t.crew.members[m.id]
-              const hasPhoto = 'color' in m
               return (
                 <article key={m.id} className="crew-card" style={{ zIndex: CREW.length - i }}>
-                  {hasPhoto ? (
+                  {m.foto ? (
                     <img
                       className="crew-card__foto"
-                      src={m.color}
+                      src={m.foto}
                       alt={m.nome}
                       loading="lazy"
                       decoding="async"
@@ -84,13 +85,14 @@ export function CrewSticky() {
                       <User size={64} className="text-bold-white/20" aria-hidden="true" />
                     </span>
                   )}
-                  {/* A bruma e a propria foto desfocada por cima dela mesma,
-                      com mascara de degrade. Feito com backdrop-filter, o
-                      Chrome ignorava a mascara e cortava reto no meio do peito. */}
-                  {hasPhoto && (
+                  {/* A bruma e uma copia minuscula da foto, esticada e
+                      desfocada, com mascara de degrade. Feita com
+                      backdrop-filter, o Chrome ignorava a mascara e cortava
+                      reto no meio do peito. */}
+                  {m.bruma && (
                     <img
                       className="crew-card__bruma"
-                      src={m.color}
+                      src={m.bruma}
                       alt=""
                       aria-hidden="true"
                       loading="lazy"

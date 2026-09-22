@@ -13,27 +13,33 @@ import { gsap } from '@/lib/gsap'
 
 type No = { x: number; y: number }
 
-type Serpentina = { caminho: string; nos: No[]; altura: number }
+type Serpentina = { caminho: string; nos: No[]; altura: number; menorX: number; maiorX: number }
 
 function montarSerpentina(
   largura: number,
   margem: number,
   raio: number,
   espacoEntreLinhas: number,
-  porLinha: number[]
+  porLinha: number[],
+  // recuo extra das pontas: o ponto ja assenta na reta com o raio, mas o rotulo
+  // dele ainda alcancava a curva que desce pra proxima linha
+  folga = 0
 ): Serpentina {
   const esq = margem
   const dir = largura - margem
   const ys = porLinha.map((_, linha) => margem + linha * espacoEntreLinhas)
 
+  // As pontas recuam o tamanho do raio. Sem isso o ponto da ponta cai no canto
+  // exato que a curva arredonda: a linha passa por dentro e a bolinha fica
+  // solta, fora do traço. Recuado, todo ponto assenta num trecho reto.
   const nos: No[] = []
   porLinha.forEach((quantidade, linha) => {
     const paraDireita = linha % 2 === 0
-    const util = largura - margem * 2
+    const util = largura - (margem + raio + folga) * 2
     // com um ponto só na linha ele fica no começo dela, não no meio
     const passo = quantidade > 1 ? util / (quantidade - 1) : 0
     for (let i = 0; i < quantidade; i++) {
-      const avanco = margem + passo * i
+      const avanco = margem + raio + folga + passo * i
       nos.push({ x: paraDireita ? avanco : largura - avanco, y: ys[linha] })
     }
   })
@@ -62,11 +68,17 @@ function montarSerpentina(
     }
   })
 
-  return { caminho: partes.join(' '), nos, altura: ys[ys.length - 1] + margem }
+  return {
+    caminho: partes.join(' '),
+    nos,
+    altura: ys[ys.length - 1] + margem,
+    menorX: Math.min(...nos.map((n) => n.x)),
+    maiorX: Math.max(...nos.map((n) => n.x)),
+  }
 }
 
 // 13 etapas: 4 + 5 + 4 no desktop, de duas em duas no celular.
-const DESKTOP = montarSerpentina(1200, 90, 60, 190, [4, 5, 4])
+const DESKTOP = montarSerpentina(1200, 90, 60, 190, [4, 5, 4], 80)
 const MOBILE = montarSerpentina(360, 55, 38, 108, [2, 2, 2, 2, 2, 2, 1])
 
 export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
@@ -122,13 +134,13 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
     }
   }, [])
 
-  // So no celular: centralizar o rotulo da ponta no ponto jogaria metade dele
-  // pra fora da tela, entao nas extremidades ele ancora pra dentro. No desktop
-  // a margem do viewBox ja absorve essa metade, e ancorar na ponta so empurrava
-  // o rotulo da borda por cima do vizinho.
-  const ancora = (x: number, largura: number, margem: number) => {
-    if (x <= margem + 1) return 'start' as const
-    if (x >= largura - margem - 1) return 'end' as const
+  // So no celular: centralizar o rotulo no ponto jogaria metade dele pra fora
+  // da tela e por cima da curva, entao quem esta na ponta ancora pra dentro.
+  // No desktop a margem do viewBox absorve essa metade, e ancorar na ponta so
+  // empurrava o rotulo da borda por cima do vizinho.
+  const ancora = (x: number, s: Serpentina) => {
+    if (x <= s.menorX + 1) return 'start' as const
+    if (x >= s.maiorX - 1) return 'end' as const
     return 'middle' as const
   }
 
@@ -162,9 +174,11 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
         {DESKTOP.nos.map((no, i) => (
           <g key={etapas[i] ?? i} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
             <circle cx={no.x} cy={no.y} r="13" className="processo-jornada__bolinha" />
+            {/* alterna acima/abaixo: com 5 etapas numa linha os rotulos
+                vizinhos quase se encostavam no mesmo nivel */}
             <text
               x={no.x}
-              y={no.y - 34}
+              y={no.y + (i % 2 === 0 ? -34 : 46)}
               className="processo-jornada__rotulo"
               textAnchor="middle"
             >
@@ -202,7 +216,7 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
               x={no.x}
               y={no.y + (i % 2 === 0 ? -22 : 30)}
               className="processo-jornada__rotulo processo-jornada__rotulo--mobile"
-              textAnchor={ancora(no.x, 360, 55)}
+              textAnchor={ancora(no.x, MOBILE)}
             >
               {etapas[i]}
             </text>
