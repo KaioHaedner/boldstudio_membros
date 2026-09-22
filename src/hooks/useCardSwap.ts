@@ -85,8 +85,34 @@ export function useCardSwap(
     let visible = false
     let hovered = false
 
+    // Encerra a troca anterior e recompoe a pilha nas posicoes da ordem
+    // atual. Sem isso, uma animacao que nao chega ao fim (aba em segundo
+    // plano, celular economizando bateria, engasgo de render) deixa a carta
+    // parada onde o dedo soltou e a fila interna passa a discordar da tela.
+    // Rede de seguranca: se a animacao nao chegar ao fim dentro do prazo
+    // (aba em segundo plano congela o rAF, e ai a carta fica parada onde o
+    // dedo soltou), o estado final e aplicado na marra, sem depender de
+    // nenhum quadro ser desenhado.
+    let guarda: number | null = null
+    function cancelarGuarda() {
+      if (guarda === null) return
+      window.clearTimeout(guarda)
+      guarda = null
+    }
+
+    function encerrarTrocaPendente() {
+      cancelarGuarda()
+      if (!timeline) return
+      timeline.kill()
+      timeline = null
+      resync()
+    }
+
     function swap() {
-      if (order.length < 2 || timeline?.isActive()) return
+      if (order.length < 2) return
+      // antes esta funcao desistia quando uma troca estava rodando, entao o
+      // gesto do usuario simplesmente nao acontecia
+      encerrarTrocaPendente()
       // Rotaciona a fila JA, no inicio da troca. Antes isso acontecia num
       // timeline.call() no fim da animacao, entao existia uma janela em que o
       // card novo ja estava visivel na frente mas order[0] ainda apontava pro
@@ -103,7 +129,12 @@ export function useCardSwap(
       // do card alem da margem direita da viewport em qualquer breakpoint.
       const exitX = window.innerWidth - stageCenterX + frontEl.offsetWidth / 2 + 48
 
-      timeline = gsap.timeline()
+      timeline = gsap.timeline({
+        onComplete: () => {
+          timeline = null
+          cancelarGuarda()
+        },
+      })
 
       // O primeiro card sai inteiro pela margem direita. So depois de estar
       // fora da tela ele e colocado no ultimo slot, ja atras dos demais.
@@ -135,6 +166,15 @@ export function useCardSwap(
         )
       })
 
+      // a troca inteira leva 0,9s; passou de 1,5s sem terminar, forca o fim
+      cancelarGuarda()
+      guarda = window.setTimeout(() => {
+        guarda = null
+        if (!timeline) return
+        timeline.progress(1)
+        timeline = null
+        resync()
+      }, 1500)
     }
 
     // Reaplica a ordem atual ao redimensionar, depois de cancelar a animacao
@@ -174,6 +214,7 @@ export function useCardSwap(
     // e as posicoes ficam em px — sem isso a pilha fica torta depois do resize.
     const onResize = () => {
       timeline?.kill()
+      timeline = null
       const fan = readFan()
       cardDistance = fan.x
       verticalDistance = fan.y
@@ -198,11 +239,14 @@ export function useCardSwap(
     let arrastando = false
     let inicioX = 0
     let inicioY = 0
+    let inicioTempo = 0
     let deslocamento = 0
     let ponteiro: number | null = null
     // null enquanto o dedo nao andou o bastante pra dizer se o gesto e de
     // trocar de card ou de rolar a pagina.
     let direcao: 'horizontal' | 'vertical' | null = null
+    // carta escolhida no inicio do gesto: a mesma do comeco ao fim
+    let alvoDoGesto: HTMLElement | null = null
 
     const cardDaFrente = () => cards[order[0]]
 
@@ -219,28 +263,22 @@ export function useCardSwap(
         evento.clientY >= area.top &&
         evento.clientY <= area.bottom
       if (!dentroDoPalco) return
-      // O dedo sempre tem prioridade: se uma troca estiver rodando, ela e
-      // cortada e a pilha volta pras posicoes da ordem atual. Antes o gesto era
-      // ignorado enquanto a animacao corria, entao dois deslizes seguidos
-      // perdiam o segundo e o card parecia travado.
-      if (timeline?.isActive()) {
-        timeline.kill()
-        resync()
-      }
-      // Qualquer ponto do palco serve pra pegar o card da frente. Exigir que o
-      // toque comecasse dentro dele deixava gestos legitimos sem resposta
-      // quando a pilha estava no meio de um reposicionamento.
-      const alvo = cardDaFrente()
+      // O dedo sempre tem prioridade: troca pendente e encerrada e a pilha
+      // volta pras posicoes da ordem atual antes do gesto comecar.
+      encerrarTrocaPendente()
       arrastando = true
+      alvoDoGesto = cardDaFrente()
       ponteiro = evento.pointerId
       inicioX = evento.clientX
       inicioY = evento.clientY
+      inicioTempo = evento.timeStamp
       deslocamento = 0
       direcao = null
       stop()
-      // setPointerCapture lanca se o ponteiro ja nao estiver ativo; nao pode
-      // derrubar o resto do gesto por causa disso
-      try { alvo.setPointerCapture?.(evento.pointerId) } catch { /* ignora */ }
+      // De proposito NAO capturamos o ponteiro aqui. Capturar logo no toque
+      // segurava tambem os gestos verticais, e quem comecava a rolar a pagina
+      // a partir da base do card ficava com a rolagem presa. A captura so
+      // acontece quando fica claro que o gesto e horizontal.
     }
 
     const onPointerMove = (evento: PointerEvent) => {
@@ -249,8 +287,7 @@ export function useCardSwap(
       const dy = evento.clientY - inicioY
 
       // Primeiro decide a intencao do gesto. Sem isso o card acompanhava
-      // qualquer tremida de dedo enquanto a pessoa so queria rolar a pagina,
-      // e a pilha balancava junto com o scroll.
+      // qualquer tremida de dedo enquanto a pessoa so queria rolar a pagina.
       if (direcao === null) {
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return
         direcao = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
@@ -258,14 +295,16 @@ export function useCardSwap(
           // e rolagem, nao troca de card: devolve a pagina pro usuario
           arrastando = false
           ponteiro = null
+          alvoDoGesto = null
           start()
           return
         }
+        try { alvoDoGesto?.setPointerCapture?.(evento.pointerId) } catch { /* ignora */ }
       }
 
       deslocamento = dx
       const slot = makeSlot(0, cardDistance, verticalDistance, total)
-      gsap.set(cardDaFrente(), {
+      gsap.set(alvoDoGesto ?? cardDaFrente(), {
         x: slot.x + deslocamento,
         rotationZ: deslocamento * 0.02,
         zIndex: total + 10,
@@ -278,10 +317,19 @@ export function useCardSwap(
       ponteiro = null
       const eraHorizontal = direcao === 'horizontal'
       direcao = null
-      const alvo = cardDaFrente()
-      const limite = Math.max(60, alvo.offsetWidth * 0.22)
+      const alvo = alvoDoGesto ?? cardDaFrente()
+      alvoDoGesto = null
 
-      if (eraHorizontal && Math.abs(deslocamento) > limite) {
+      // Limite curto (12% da largura, minimo 40px) porque com 22% era preciso
+      // arrastar quase a tela inteira pra carta sair. Um peteleco rapido
+      // tambem passa o card mesmo andando pouco, que e como se usa carrossel
+      // no celular.
+      const limite = Math.max(40, alvo.offsetWidth * 0.12)
+      const duracao = Math.max(1, evento.timeStamp - inicioTempo)
+      const velocidade = Math.abs(deslocamento) / duracao
+      const peteleco = velocidade > 0.35 && Math.abs(deslocamento) > 24
+
+      if (eraHorizontal && (Math.abs(deslocamento) > limite || peteleco)) {
         swap()
       } else if (eraHorizontal) {
         const slot = makeSlot(0, cardDistance, verticalDistance, total)
@@ -304,6 +352,7 @@ export function useCardSwap(
     return () => {
       io.disconnect()
       stop()
+      cancelarGuarda()
       timeline?.kill()
       window.removeEventListener('resize', onResize)
       container.removeEventListener('mouseenter', onEnter)
