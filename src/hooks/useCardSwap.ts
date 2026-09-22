@@ -145,9 +145,13 @@ export function useCardSwap(
       })
     }
 
+    // So agenda, nao troca na hora. Antes um swap saia daqui, entao soltar o
+    // card depois de arrastar (o gesto ja troca por conta propria) pulava duas
+    // cartas de uma vez, e tirar o mouse de cima trocava sem ninguem pedir.
+    // Como o intervalo nasce zerado, o gesto manual tambem devolve o tempo
+    // cheio antes da proxima troca automatica.
     function start() {
       if (interval || reduceMotion || !visible || hovered) return
-      swap()
       interval = window.setInterval(swap, delay)
     }
 
@@ -193,8 +197,12 @@ export function useCardSwap(
     // rolando a pagina normalmente.
     let arrastando = false
     let inicioX = 0
+    let inicioY = 0
     let deslocamento = 0
     let ponteiro: number | null = null
+    // null enquanto o dedo nao andou o bastante pra dizer se o gesto e de
+    // trocar de card ou de rolar a pagina.
+    let direcao: 'horizontal' | 'vertical' | null = null
 
     const cardDaFrente = () => cards[order[0]]
 
@@ -226,7 +234,9 @@ export function useCardSwap(
       arrastando = true
       ponteiro = evento.pointerId
       inicioX = evento.clientX
+      inicioY = evento.clientY
       deslocamento = 0
+      direcao = null
       stop()
       // setPointerCapture lanca se o ponteiro ja nao estiver ativo; nao pode
       // derrubar o resto do gesto por causa disso
@@ -235,7 +245,25 @@ export function useCardSwap(
 
     const onPointerMove = (evento: PointerEvent) => {
       if (!arrastando || evento.pointerId !== ponteiro) return
-      deslocamento = evento.clientX - inicioX
+      const dx = evento.clientX - inicioX
+      const dy = evento.clientY - inicioY
+
+      // Primeiro decide a intencao do gesto. Sem isso o card acompanhava
+      // qualquer tremida de dedo enquanto a pessoa so queria rolar a pagina,
+      // e a pilha balancava junto com o scroll.
+      if (direcao === null) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return
+        direcao = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
+        if (direcao === 'vertical') {
+          // e rolagem, nao troca de card: devolve a pagina pro usuario
+          arrastando = false
+          ponteiro = null
+          start()
+          return
+        }
+      }
+
+      deslocamento = dx
       const slot = makeSlot(0, cardDistance, verticalDistance, total)
       gsap.set(cardDaFrente(), {
         x: slot.x + deslocamento,
@@ -248,13 +276,14 @@ export function useCardSwap(
       if (!arrastando || evento.pointerId !== ponteiro) return
       arrastando = false
       ponteiro = null
+      const eraHorizontal = direcao === 'horizontal'
+      direcao = null
       const alvo = cardDaFrente()
       const limite = Math.max(60, alvo.offsetWidth * 0.22)
 
-
-      if (Math.abs(deslocamento) > limite) {
+      if (eraHorizontal && Math.abs(deslocamento) > limite) {
         swap()
-      } else {
+      } else if (eraHorizontal) {
         const slot = makeSlot(0, cardDistance, verticalDistance, total)
         gsap.to(alvo, {
           x: slot.x,
