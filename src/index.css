@@ -1790,7 +1790,8 @@ textarea {
 }
 .processo-jornada__rotulo {
   fill: rgba(255, 255, 255, 0.35);
-  font-size: 25px;
+  /* 20px na tela: o svg do desktop desenha praticamente 1:1 */
+  font-size: 20px;
   font-weight: 700;
   transition: fill 0.35s ease;
 }
@@ -1804,21 +1805,11 @@ textarea {
   height: auto;
   overflow: visible;
 }
-/* linha menor embaixo do nome, só nas etapas que têm apoio */
-.processo-jornada__apoio {
-  fill: rgba(255, 255, 255, 0.5);
-  font-size: 21px;
-  font-weight: 500;
-}
-.processo-jornada__no[data-aceso='true'] .processo-jornada__apoio {
-  fill: rgba(255, 255, 255, 0.72);
-}
-.processo-jornada__apoio--mobile {
-  font-size: 8px;
-}
 /* 5 etapas numa linha de 360: acima disso os nomes vizinhos se encostam */
+/* 15px na tela. Aqui o número é maior que isso porque o svg do celular é
+   desenhado a 86% (viewBox de 360 numa faixa de ~310px). */
 .processo-jornada__rotulo--mobile {
-  font-size: 10.5px;
+  font-size: 18.2px;
 }
 @media (min-width: 768px) {
   .processo-jornada__svg {
@@ -1830,8 +1821,7 @@ textarea {
 }
 
 /* CTA de fechamento de cada seção: mesmo respiro da etiqueta */
-.processo__cta,
-.cases-cta {
+.processo__cta {
   display: flex;
   justify-content: center;
   margin-top: var(--espaco-etiqueta);

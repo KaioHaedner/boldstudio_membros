@@ -220,7 +220,7 @@ export function ProcessoTimeline() {
       {/* Jornada do cliente: caminho em S que se desenha acendendo etapa por
           etapa. Substituiu as três imagens da linha do tempo e as duas fotos
           de reunião, a pedido do cliente. */}
-      <ProcessoJornada etapas={t.processo.etapas} apoio={t.processo.etapasApoio} />
+      <ProcessoJornada etapas={t.processo.etapas} />
 
       <p className="processo__frase" data-reveal>
         {t.processo.frase}<span className="processo__frase-hi">{t.processo.fraseHi}</span>

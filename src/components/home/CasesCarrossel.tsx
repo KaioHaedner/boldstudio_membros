@@ -153,16 +153,6 @@ export function CasesCarrossel() {
         </ShinyButton>
       </div>
 
-      <div className="cases-cta">
-        <ShinyButton
-          onClick={() =>
-                document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }
-        >
-          {t.cases.ctaButton}
-        </ShinyButton>
-      </div>
-
       <div className="cases-etiqueta">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.cases.label}

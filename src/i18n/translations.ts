@@ -138,7 +138,6 @@ const pt = {
     lineA: 'Eles confiaram na',
     lineB: 'e suas marcas estão',
     highlight: 'eternizadas',
-    ctaButton: 'Quero um case para o meu negócio',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
   },
   clientes: {
@@ -418,7 +417,6 @@ const en: Dict = {
     lineA: 'They trusted',
     lineB: 'and their brands are',
     highlight: 'eternalized',
-    ctaButton: 'I want a case for my business',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
   },
   clientes: {
@@ -696,7 +694,6 @@ const es: Dict = {
     lineA: 'Confiaron en',
     lineB: 'y sus marcas están',
     highlight: 'eternizadas',
-    ctaButton: 'Quiero un case para mi negocio',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
   },
   clientes: {
