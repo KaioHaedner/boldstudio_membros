@@ -83,6 +83,7 @@ export function ClientesWave() {
       <div className="mt-14 flex flex-col items-center gap-5 px-6 text-center">
         <p className="text-xl font-bold text-bold-white md:text-2xl">{t.clientes.ctaText}</p>
         <ShinyButton
+          className="shiny-cta--grande"
           onClick={() =>
             document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }

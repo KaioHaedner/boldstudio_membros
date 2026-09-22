@@ -54,6 +54,7 @@ const pt = {
     eyebrow: 'O que fazemos',
     title: 'Soluções de ponta a ponta',
     label: 'Soluções',
+    ctaButton: 'Quero as soluções da Bold para o meu negócio',
     produtos: [
       { nome: 'VT Comercial', descricao: 'Propagandas que impactam e geram resultados.' },
       { nome: 'Institucionais', descricao: 'Apresente sua empresa com um verdadeiro filme.' },
@@ -116,9 +117,9 @@ const pt = {
     eyebrow: 'Crew',
     title: 'Quem faz a BoldStudio acontecer',
     marquee: 'A última produtora AudioVisual que você irá contratar • A última produtora AudioVisual que você irá contratar • ',
-    ctaTextA: 'Vamos gravar algo ',
-    ctaTextHighlight: 'bold',
-    ctaTextB: '?',
+    ctaTextA: 'Conheça o ',
+    ctaTextHighlight: 'Crew',
+    ctaTextB: ' da Bold',
     ctaButton: 'Falar com a Bold Studio',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera a visão e a direção geral do estúdio, da estratégia ao padrão de entrega que carrega a marca Bold.' },
@@ -137,6 +138,7 @@ const pt = {
     lineA: 'Eles confiaram na',
     lineB: 'e suas marcas estão',
     highlight: 'eternizadas',
+    ctaButton: 'Quero um case para o meu negócio',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
   },
   clientes: {
@@ -144,7 +146,7 @@ const pt = {
     title: 'Marcas que a BoldStudio já atendeu',
     helper: 'Clique e viva a experiência',
     ctaText: 'Quer ser a próxima marca por aqui?',
-    ctaButton: 'Vem gravar com a Bold',
+    ctaButton: 'Quero ser o próximo cliente da Bold',
     previewSoon: 'Preview em breve',
     watchCase: 'Ver vídeo do case',
     viewProject: 'Ver projeto completo',
@@ -203,6 +205,7 @@ const pt = {
     titleC: 'é especialista',
     frase: 'Processo claro ',
     fraseHi: 'resultado garantido',
+    ctaButton: 'Quero essa jornada para o meu negócio',
     note: 'Com números que ninguém no Mato Grosso tem!',
     counters: ['Marcas atendidas', 'Projetos entregues', 'Reconhecimentos', 'Clientes satisfeitos'],
     etapas: [
@@ -315,6 +318,7 @@ const en: Dict = {
     eyebrow: 'What we do',
     title: 'End-to-end solutions',
     label: 'Solutions',
+    ctaButton: 'I want Bold solutions for my business',
     produtos: [
       { nome: 'Commercial', descricao: 'Ads that make an impact and drive results.' },
       { nome: 'Institutional', descricao: 'Present your company with a real film.' },
@@ -377,9 +381,9 @@ const en: Dict = {
     eyebrow: 'Crew',
     title: 'The people behind BoldStudio',
     marquee: 'The last audiovisual team you will ever need',
-    ctaTextA: "Let's shoot something ",
-    ctaTextHighlight: 'bold',
-    ctaTextB: '?',
+    ctaTextA: 'Meet the ',
+    ctaTextHighlight: 'Crew',
+    ctaTextB: ' at Bold',
     ctaButton: 'Talk to Bold Studio',
     members: {
       'pedro-garcia': { role: 'Founder & CEO', desc: "Leads the studio's vision and overall direction, from strategy to the delivery standard that carries the Bold brand." },
@@ -398,6 +402,7 @@ const en: Dict = {
     lineA: 'They trusted',
     lineB: 'and their brands are',
     highlight: 'eternalized',
+    ctaButton: 'I want a case for my business',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
   },
   clientes: {
@@ -405,7 +410,7 @@ const en: Dict = {
     title: 'Brands BoldStudio has worked with',
     helper: 'Click and live the experience',
     ctaText: 'Want to be the next brand here?',
-    ctaButton: "Let's shoot with Bold",
+    ctaButton: "I want to be Bold's next client",
     previewSoon: 'Preview coming soon',
     watchCase: 'Watch the case video',
     viewProject: 'View full project',
@@ -464,6 +469,7 @@ const en: Dict = {
     titleC: 'is a specialist',
     frase: 'Clear process, ',
     fraseHi: 'guaranteed results',
+    ctaButton: 'I want this journey for my business',
     note: 'With numbers no one in Mato Grosso has!',
     counters: ['Brands served', 'Projects delivered', 'Awards', 'Satisfied clients'],
     etapas: [
@@ -574,6 +580,7 @@ const es: Dict = {
     eyebrow: 'Lo que hacemos',
     title: 'Soluciones de punta a punta',
     label: 'Soluciones',
+    ctaButton: 'Quiero las soluciones de Bold para mi negocio',
     produtos: [
       { nome: 'VT Comercial', descricao: 'Anuncios que impactan y generan resultados.' },
       { nome: 'Institucionales', descricao: 'Presenta tu empresa con una verdadera película.' },
@@ -636,9 +643,9 @@ const es: Dict = {
     eyebrow: 'Crew',
     title: 'Quiénes hacen que BoldStudio suceda',
     marquee: 'El último equipo audiovisual que necesitarás',
-    ctaTextA: '¿Vamos a grabar algo ',
-    ctaTextHighlight: 'bold',
-    ctaTextB: '?',
+    ctaTextA: 'Conoce el ',
+    ctaTextHighlight: 'Crew',
+    ctaTextB: ' de Bold',
     ctaButton: 'Hablar con Bold Studio',
     members: {
       'pedro-garcia': { role: 'Fundador & CEO', desc: 'Lidera la visión y la dirección general del estudio, de la estrategia al estándar de entrega que lleva la marca Bold.' },
@@ -657,6 +664,7 @@ const es: Dict = {
     lineA: 'Confiaron en',
     lineB: 'y sus marcas están',
     highlight: 'eternizadas',
+    ctaButton: 'Quiero un case para mi negocio',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
   },
   clientes: {
@@ -664,7 +672,7 @@ const es: Dict = {
     title: 'Marcas que BoldStudio ya atendió',
     helper: 'Haz clic y vive la experiencia',
     ctaText: '¿Quieres ser la próxima marca aquí?',
-    ctaButton: 'Vamos a grabar con Bold',
+    ctaButton: 'Quiero ser el próximo cliente de Bold',
     previewSoon: 'Preview en breve',
     watchCase: 'Ver el video del case',
     viewProject: 'Ver proyecto completo',
@@ -723,6 +731,7 @@ const es: Dict = {
     titleC: 'es especialista',
     frase: 'Proceso claro, ',
     fraseHi: 'resultado garantizado',
+    ctaButton: 'Quiero este recorrido para mi negocio',
     note: '¡Con números que nadie en Mato Grosso tiene!',
     counters: ['Marcas atendidas', 'Proyectos entregados', 'Reconocimientos', 'Clientes satisfechos'],
     etapas: [

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { gsap } from '@/lib/gsap'
+import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
 import { ProcessoJornada } from '@/components/home/ProcessoJornada'
 type Counter = { prefix?: string; value: number; suffix?: string; label: string }
@@ -224,6 +225,16 @@ export function ProcessoTimeline() {
       <p className="processo__frase" data-reveal>
         {t.processo.frase}<span className="processo__frase-hi">{t.processo.fraseHi}</span>
       </p>
+
+      <div className="processo__cta" data-reveal>
+        <ShinyButton
+          onClick={() =>
+            document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+        >
+          {t.processo.ctaButton}
+        </ShinyButton>
+      </div>
 
       <Counters />
     </section>

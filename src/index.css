@@ -568,6 +568,16 @@ textarea {
   transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine;
 }
 
+/* CTA grande: 1,5x o padrão. Só a partir do tablet — no celular ele viraria
+   uma faixa de borda a borda. */
+@media (min-width: 768px) {
+  .shiny-cta--grande {
+    padding: 1.5rem 3.375rem;
+    font-size: 1.5rem;
+    border-radius: 14px;
+  }
+}
+
 .shiny-cta::before,
 .shiny-cta::after,
 .shiny-cta span::before {
@@ -1466,6 +1476,9 @@ textarea {
   color: rgba(255, 255, 255, 0.5);
 }
 .cases-etiqueta {
+  /* anula o padding lateral da seção pra etiqueta encostar na borda, igual às
+     outras; antes ela parava a 48px no desktop e 19px no celular */
+  margin-left: calc(clamp(1rem, 4vw, 3rem) * -1);
   position: sticky;
   bottom: 1.5rem;
   z-index: 20;
@@ -1763,6 +1776,14 @@ textarea {
   .processo-jornada__svg-mobile {
     display: none;
   }
+}
+
+/* CTA de fechamento de cada seção: mesmo respiro da etiqueta */
+.processo__cta,
+.cases-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--espaco-etiqueta);
 }
 
 /* ---- Frase ---- */

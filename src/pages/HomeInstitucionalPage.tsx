@@ -155,7 +155,11 @@ function HomeContent() {
 
           {/* CTAs colados na base, canto inferior esquerdo */}
           <div className="absolute bottom-7 left-5 z-[90] flex flex-wrap items-center gap-x-7 gap-y-4 sm:left-8 lg:left-12">
-            <ShinyButton onClick={() => document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+            {/* 1,5x no desktop: é o CTA principal da página */}
+            <ShinyButton
+              className="shiny-cta--grande"
+              onClick={() => document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            >
               {t.hero.ctaPrimary}
             </ShinyButton>
             <button

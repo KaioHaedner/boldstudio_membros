@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ShinyButton } from '@/components/ShinyButton'
 import { useI18n } from '@/i18n/I18nContext'
 import { SERVICO_SLUGS } from '@/data/servicos'
 
@@ -78,10 +79,22 @@ export function SolucoesSticky() {
         <p className="mx-auto mt-10 min-h-[4rem] max-w-3xl text-[clamp(1rem,3vw,2rem)] font-black uppercase leading-[1.05] tracking-tight text-bold-yellow sm:min-h-[4.5rem]">
           {activeIndex !== null ? produtos[activeIndex].descricao : ''}
         </p>
+
+        <div className="mt-10 flex justify-center">
+          <ShinyButton
+            onClick={() =>
+                document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }
+          >
+            {t.servicos.ctaButton}
+          </ShinyButton>
+        </div>
       </div>
 
       {/* Etiqueta amarela sticky */}
-      <div className="pointer-events-none sticky bottom-6 z-10 mt-[var(--espaco-etiqueta)]">
+      {/* -ml-6 anula o px-6 da seção: sem isso a etiqueta parava a 24px da borda,
+          enquanto BoldCrew, Academy e Contato encostavam de fato. */}
+      <div className="pointer-events-none sticky bottom-6 z-10 -ml-6 mt-[var(--espaco-etiqueta)]">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.servicos.label}
         </span>
