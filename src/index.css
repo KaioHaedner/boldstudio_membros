@@ -1750,6 +1750,7 @@ textarea {
    e um nucleo branco estourado, que e o que da a sensacao de brilho forte. */
 .processo-jornada__luz {
   opacity: 0;
+  transition: opacity 0.4s ease;
 }
 .processo-jornada__luz-nucleo {
   fill: #ffffff;

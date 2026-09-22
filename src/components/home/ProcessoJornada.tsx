@@ -186,7 +186,8 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
       duration: 10,
       ease: 'none',
       repeat: -1,
-      repeatDelay: 1.4,
+      // segura 10s com a jornada inteira montada antes de recomeçar
+      repeatDelay: 10,
       paused: true,
       onUpdate: () => {
         caminhos.forEach((caminho, i) => {
@@ -207,6 +208,9 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
             if (chegou) caminho.setAttribute('marker-end', setas[i])
             else caminho.removeAttribute('marker-end')
           })
+          // a luz parada em cima da seta escondia justamente o desenho que
+          // marca o fim do percurso
+          luzes.forEach((l) => l?.style.setProperty('opacity', chegou ? '0' : '1'))
         }
         grupos.forEach((g, i) => {
           const deveAcender = estado.p >= porGrupo[i]
@@ -227,6 +231,7 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
         acesos.clear()
         setaAcesa = false
         caminhos.forEach((caminho) => caminho.removeAttribute('marker-end'))
+        luzes.forEach((l) => l?.style.setProperty('opacity', '1'))
       },
     })
 
