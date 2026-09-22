@@ -9,6 +9,9 @@ import { SERVICO_SLUGS, isServicoSlug } from '@/data/servicos'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
 
 const HOME = '/home-bold-studio-sinop-brasil'
+// Todo link pra ca sai da secao Solucoes, entao o voltar devolve a pessoa
+// exatamente naquela secao em vez de jogar ela no topo da home.
+const VOLTAR_PARA = `${HOME}#servicos`
 
 // Página de um serviço da seção Soluções (/servico/:slug). Explica a linha de
 // trabalho e mostra exemplos. Os exemplos hoje reaproveitam os cases que já
@@ -46,7 +49,7 @@ function ServicoConteudo() {
 
       <main className="mx-auto max-w-5xl px-6 pb-24 pt-32 sm:pt-40">
         <Link
-          to={HOME}
+          to={VOLTAR_PARA}
           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-bold-white/50 transition-colors hover:text-bold-yellow"
         >
           <ArrowLeft size={16} />

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { MapPin } from 'lucide-react'
 import { ScrollTrigger } from '@/lib/gsap'
 import { I18nProvider, useI18n } from '@/i18n/I18nContext'
@@ -22,6 +23,7 @@ import { QuickNav } from '@/components/home/QuickNav'
 
 function HomeContent() {
   const { t } = useI18n()
+  const { hash } = useLocation()
   const rootRef = useRef<HTMLDivElement>(null)
   // A intro toca na primeira visita da sessao. So nesse caso o conteudo entra
   // com slide-up ao final dela; em navegacoes seguintes a home aparece direto.
@@ -88,6 +90,36 @@ function HomeContent() {
     const id = window.setTimeout(() => ScrollTrigger.refresh(), 1000)
     return () => window.clearTimeout(id)
   }, [revelar])
+
+  // Quem chega com #secao na URL cai direto nela: e o caso de quem volta de
+  // uma pagina de servico, que saiu da home na secao Solucoes e espera voltar
+  // pra ela, nao pro topo. O alvo e reconferido algumas vezes porque o layout
+  // so assenta depois do reveal e das midias, mas qualquer rolagem do usuario
+  // cancela o ajuste na hora pra nao brigar com o dedo dele.
+  useEffect(() => {
+    if (!hash) return
+    const alvo = document.querySelector(hash)
+    if (!alvo) return
+
+    let cancelado = false
+    const cancelar = () => {
+      cancelado = true
+    }
+    window.addEventListener('wheel', cancelar, { passive: true })
+    window.addEventListener('touchstart', cancelar, { passive: true })
+
+    const ir = () => {
+      if (!cancelado) alvo.scrollIntoView({ block: 'start' })
+    }
+    ir()
+    const tentativas = [120, 400, 800].map((ms) => window.setTimeout(ir, ms))
+
+    return () => {
+      tentativas.forEach((id) => window.clearTimeout(id))
+      window.removeEventListener('wheel', cancelar)
+      window.removeEventListener('touchstart', cancelar)
+    }
+  }, [hash, revelar])
 
   return (
     <div ref={rootRef} className="relative isolate min-h-screen bg-bold-black text-bold-white">
