@@ -1727,40 +1727,70 @@ textarea {
   height: auto;
   overflow: visible;
 }
-.processo-jornada__trilho,
 .processo-jornada__linha {
   fill: none;
   stroke-width: 4;
   stroke-linecap: round;
 }
-.processo-jornada__trilho {
-  stroke: rgba(255, 255, 255, 0.1);
-}
 .processo-jornada__linha {
   stroke: #fde100;
   filter: drop-shadow(0 0 6px rgba(253, 225, 0, 0.45));
 }
+/* Nada da etapa existe antes da luz chegar: disco, icone e nome entram juntos
+   quando a cabeca da linha passa por eles, e somem de novo a cada volta. */
+.processo-jornada__no {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.processo-jornada__no[data-aceso='true'] {
+  opacity: 1;
+}
+
+/* A luz que corre na ponta da linha, em duas camadas: um halo amarelo borrado
+   e um nucleo branco estourado, que e o que da a sensacao de brilho forte. */
+.processo-jornada__luz {
+  opacity: 0;
+}
+.processo-jornada__luz-nucleo {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 14px #fde100)
+    drop-shadow(0 0 30px rgba(253, 225, 0, 0.95));
+}
+
 .processo-jornada__disco {
   fill: #000000;
   stroke: rgba(255, 255, 255, 0.18);
   stroke-width: 3;
   transition: stroke 0.35s ease;
 }
-.processo-jornada__no[data-aceso='true'] .processo-jornada__disco {
+.processo-jornada__no[data-aceso='true'] /* Nada da etapa existe antes da luz chegar: disco, icone e nome entram juntos
+   quando a cabeca da linha passa por eles, e somem de novo a cada volta. */
+.processo-jornada__no {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.processo-jornada__no[data-aceso='true'] {
+  opacity: 1;
+}
+
+/* A luz que corre na ponta da linha, em duas camadas: um halo amarelo borrado
+   e um nucleo branco estourado, que e o que da a sensacao de brilho forte. */
+.processo-jornada__luz {
+  opacity: 0;
+}
+.processo-jornada__luz-nucleo {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 14px #fde100)
+    drop-shadow(0 0 30px rgba(253, 225, 0, 0.95));
+}
+
+.processo-jornada__disco {
   stroke: #fde100;
   filter: drop-shadow(0 0 10px rgba(253, 225, 0, 0.45));
 }
-/* o ícone nasce apagado e acende quando a linha chega na etapa */
-.processo-jornada__icone {
-  opacity: 0.25;
-  transition: opacity 0.35s ease;
-}
-.processo-jornada__no[data-aceso='true'] .processo-jornada__icone {
-  opacity: 1;
-}
 .processo-jornada__rotulo {
   fill: rgba(255, 255, 255, 0.35);
-  font-size: 17px;
+  font-size: 25px;
   font-weight: 700;
   transition: fill 0.35s ease;
 }
@@ -1774,8 +1804,21 @@ textarea {
   height: auto;
   overflow: visible;
 }
+/* linha menor embaixo do nome, só nas etapas que têm apoio */
+.processo-jornada__apoio {
+  fill: rgba(255, 255, 255, 0.5);
+  font-size: 21px;
+  font-weight: 500;
+}
+.processo-jornada__no[data-aceso='true'] .processo-jornada__apoio {
+  fill: rgba(255, 255, 255, 0.72);
+}
+.processo-jornada__apoio--mobile {
+  font-size: 8px;
+}
+/* 5 etapas numa linha de 360: acima disso os nomes vizinhos se encostam */
 .processo-jornada__rotulo--mobile {
-  font-size: 15px;
+  font-size: 10.5px;
 }
 @media (min-width: 768px) {
   .processo-jornada__svg {

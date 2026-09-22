@@ -24,11 +24,17 @@ function montarSerpentina(
   porLinha: number[],
   // recuo extra das pontas: o ponto ja assenta na reta com o raio, mas o rotulo
   // dele ainda alcancava a curva que desce pra proxima linha
-  folga = 0
+  folga = 0,
+  // quanto a linha passa do último ícone, pra seta caber fora do disco dele
+  sobraFinal = 60,
+  // folga de cima e de baixo. Separada da margem lateral porque o nome e o
+  // apoio da primeira fileira sobem bastante, e com a margem lateral esses
+  // textos invadiam o título da seção
+  margemTopo = margem
 ): Serpentina {
   const esq = margem
   const dir = largura - margem
-  const ys = porLinha.map((_, linha) => margem + linha * espacoEntreLinhas)
+  const ys = porLinha.map((_, linha) => margemTopo + linha * espacoEntreLinhas)
 
   // As pontas recuam o tamanho do raio. Sem isso o ponto da ponta cai no canto
   // exato que a curva arredonda: a linha passa por dentro e a bolinha fica
@@ -45,13 +51,21 @@ function montarSerpentina(
     }
   })
 
-  const partes = [`M ${esq} ${ys[0]}`]
+  // Comeca exatamente no primeiro icone: antes o traco nascia na margem e a luz
+  // aparecia num pedaco de linha antes da primeira etapa, como se estivesse
+  // solta. A ponta final sobra um pouco depois do ultimo icone, so pra seta
+  // caber fora do disco.
+  const primeiro = nos[0]
+  const ultimo = nos[nos.length - 1]
+  const ultimaParaDireita = (porLinha.length - 1) % 2 === 0
+  // sobra o bastante pro disco do último ícone não cobrir a seta de chegada
+  const fimDaLinha = ultimo.x + (ultimaParaDireita ? sobraFinal : -sobraFinal)
+  const partes = [`M ${primeiro.x} ${ys[0]}`]
   ys.forEach((y, linha) => {
     const ultima = linha === ys.length - 1
     const paraDireita = linha % 2 === 0
-    const fim = paraDireita ? dir : esq
     if (ultima) {
-      partes.push(`H ${fim}`)
+      partes.push(`H ${fimDaLinha}`)
       return
     }
     // reta até quase o canto, curva de 90°, desce, curva de novo
@@ -72,23 +86,33 @@ function montarSerpentina(
   return {
     caminho: partes.join(' '),
     nos,
-    altura: ys[ys.length - 1] + margem,
+    altura: ys[ys.length - 1] + margemTopo,
     menorX: Math.min(...nos.map((n) => n.x)),
     maiorX: Math.max(...nos.map((n) => n.x)),
   }
 }
 
 // 13 etapas: 4 + 5 + 4 no desktop, de duas em duas no celular.
-const DESKTOP = montarSerpentina(1200, 90, 60, 190, [4, 5, 4], 80)
-const MOBILE = montarSerpentina(360, 55, 38, 108, [2, 2, 2, 2, 2, 2, 1])
+// 260 e 178 de distância entre fileiras: abaixo disso o nome de uma etapa
+// encontra o da fileira seguinte, porque agora cada uma carrega nome e apoio
+const DESKTOP = montarSerpentina(1200, 90, 60, 260, [4, 5, 4], 80, 60, 140)
+const MOBILE = montarSerpentina(360, 24, 30, 178, [4, 5, 4], 4, 40, 86)
 
-export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
+export function ProcessoJornada({
+  etapas,
+  apoio,
+}: {
+  etapas: readonly string[]
+  apoio: readonly string[]
+}) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const pathMobileRef = useRef<SVGPathElement>(null)
+  const luzDesktopRef = useRef<SVGGElement>(null)
+  const luzMobileRef = useRef<SVGGElement>(null)
   // Com "reduzir movimento" a jornada já nasce inteira acesa, sem animar.
-  const [progresso, setProgresso] = useState(() =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0
+  const [estatico] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
   )
 
   useEffect(() => {
@@ -105,33 +129,83 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
       p.style.strokeDashoffset = String(comprimentos[i])
     })
 
-    const estado = { p: 0 }
-    let tween: gsap.core.Tween | null = null
+    // Nada de estado do React por quadro: a 60fps isso redesenhava os 13 nós
+    // inteiros sessenta vezes por segundo e a animação engasgava. Aqui o quadro
+    // só escreve atributo direto no DOM, e cada etapa só é tocada no quadro em
+    // que ela realmente muda.
+    const setas = ['url(#jornada-seta)', 'url(#jornada-seta-m)']
+    let setaAcesa = false
+    const grupos = Array.from(wrap.querySelectorAll<SVGGElement>('.processo-jornada__no'))
+    const acesos = new Set<SVGGElement>()
+    const luzes = [luzDesktopRef.current, luzMobileRef.current]
 
-    // Toca uma vez, quando a seção aparece.
-    const io = new IntersectionObserver(
-      ([entrada]) => {
-        if (!entrada.isIntersecting || tween) return
-        io.disconnect()
-        tween = gsap.to(estado, {
-          p: 1,
-          duration: 3.4,
-          ease: 'none',
-          onUpdate: () => {
-            caminhos.forEach((p, i) => {
-              p.style.strokeDashoffset = String(comprimentos[i] * (1 - estado.p))
-            })
-            setProgresso(estado.p)
-          },
+    // fração do caminho em que cada etapa acende, na ordem do percurso
+    const porGrupo = grupos.map((g) => {
+      const indice = Number(g.dataset.indice ?? '0')
+      return (indice + 0.5) / etapas.length
+    })
+
+    const estado = { p: 0 }
+
+    // Roda em loop: a luz corre a jornada inteira, segura um instante no fim e
+    // recomeça do zero, apagando tudo de novo. Pausa fora da tela pra não
+    // gastar bateria à toa.
+    const tween = gsap.to(estado, {
+      p: 1,
+      duration: 10,
+      ease: 'none',
+      repeat: -1,
+      repeatDelay: 1.4,
+      paused: true,
+      onUpdate: () => {
+        caminhos.forEach((caminho, i) => {
+          caminho.style.strokeDashoffset = String(comprimentos[i] * (1 - estado.p))
+          // +6: o traço tem ponta arredondada e brilho, então o fim que o olho
+          // enxerga fica um pouco à frente do fim geométrico
+          const ponto = caminho.getPointAtLength(
+            Math.min(comprimentos[i], comprimentos[i] * estado.p + 6)
+          )
+          const luz = luzes[i]
+          if (luz) luz.setAttribute('transform', `translate(${ponto.x} ${ponto.y})`)
+        })
+        // a seta de chegada só existe quando a linha termina de desenhar
+        const chegou = estado.p > 0.995
+        if (chegou !== setaAcesa) {
+          setaAcesa = chegou
+          caminhos.forEach((caminho, i) => {
+            if (chegou) caminho.setAttribute('marker-end', setas[i])
+            else caminho.removeAttribute('marker-end')
+          })
+        }
+        grupos.forEach((g, i) => {
+          const deveAcender = estado.p >= porGrupo[i]
+          if (deveAcender === acesos.has(g)) return
+          if (deveAcender) { acesos.add(g); g.dataset.aceso = 'true' }
+          else { acesos.delete(g); g.dataset.aceso = 'false' }
         })
       },
-      { threshold: 0.25 }
+      onRepeat: () => {
+        acesos.forEach((g) => { g.dataset.aceso = 'false' })
+        acesos.clear()
+        setaAcesa = false
+        caminhos.forEach((caminho) => caminho.removeAttribute('marker-end'))
+      },
+    })
+
+    luzes.forEach((l) => l?.style.setProperty('opacity', '1'))
+
+    const io = new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada.isIntersecting) tween.play()
+        else tween.pause()
+      },
+      { threshold: 0.2 }
     )
     io.observe(wrap)
 
     return () => {
       io.disconnect()
-      tween?.kill()
+      tween.kill()
     }
   }, [])
 
@@ -145,8 +219,20 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
     return 'middle' as const
   }
 
-  // Fração do caminho onde cada ponto acende, na ordem do percurso.
-  const fracaoDoNo = (indice: number) => (indice + 0.5) / etapas.length
+  // Com 5 etapas numa linha de 360 de largura, o rótulo inteiro não cabe numa
+  // linha só. Quebra no espaço mais perto do meio, que dá duas linhas de
+  // tamanho parecido em vez de uma comprida e uma solta.
+  const emDuasLinhas = (texto: string) => {
+    if (texto.length <= 12) return [texto]
+    const meio = texto.length / 2
+    let corte = -1
+    for (let i = 0; i < texto.length; i++) {
+      if (texto[i] !== ' ') continue
+      if (corte < 0 || Math.abs(i - meio) < Math.abs(corte - meio)) corte = i
+    }
+    if (corte < 0) return [texto]
+    return [texto.slice(0, corte), texto.slice(corte + 1)]
+  }
 
   return (
     <div ref={wrapRef} className="processo-jornada">
@@ -160,29 +246,40 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
           <marker id="jornada-seta" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto">
             <path d="M 0 1 L 9 6 L 0 11 z" fill="#fde100" />
           </marker>
+          <radialGradient id="jornada-halo">
+            <stop offset="0%" stopColor="#fde100" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#fde100" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#fde100" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
-        <path d={DESKTOP.caminho} className="processo-jornada__trilho" />
         {/* A seta só entra no fim: o markerEnd é desenhado na ponta geométrica
             do caminho e apareceria lá desde o começo. */}
         <path
           ref={pathRef}
           d={DESKTOP.caminho}
           className="processo-jornada__linha"
-          markerEnd={progresso > 0.99 ? 'url(#jornada-seta)' : undefined}
         />
 
+        {/* A luz corre na ponta da linha. Ela é movida por transform direto no
+            DOM, e o halo usa gradiente em vez de blur: filtro borrado num
+            elemento que anda todo quadro custa caro e travava a animação. */}
+        <g ref={luzDesktopRef} className="processo-jornada__luz">
+          <circle r="38" fill="url(#jornada-halo)" />
+          <circle r="11" className="processo-jornada__luz-nucleo" />
+        </g>
+
         {DESKTOP.nos.map((no, i) => (
-          <g key={etapas[i] ?? i} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
+          <g key={etapas[i] ?? i} className="processo-jornada__no" data-indice={i} data-aceso={estatico}>
             {/* disco preto tapa a linha atrás do ícone, senão o traço cruza o
                 desenho; o ícone acende junto com a etapa */}
-            <circle cx={no.x} cy={no.y} r="30" className="processo-jornada__disco" />
+            <circle cx={no.x} cy={no.y} r="37" className="processo-jornada__disco" />
             <image
               href={JORNADA_ICONES_LOCAIS[i]}
-              x={no.x - 19}
-              y={no.y - 19}
-              width="38"
-              height="38"
+              x={no.x - 32}
+              y={no.y - 32}
+              width="64"
+              height="64"
               className="processo-jornada__icone"
               preserveAspectRatio="xMidYMid meet"
             />
@@ -190,12 +287,22 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
                 vizinhos quase se encostavam no mesmo nivel */}
             <text
               x={no.x}
-              y={no.y + (i % 2 === 0 ? -48 : 62)}
+              y={no.y + (i % 2 === 0 ? (apoio[i] ? -98 : -66) : 78)}
               className="processo-jornada__rotulo"
               textAnchor="middle"
             >
               {etapas[i]}
             </text>
+            {apoio[i] ? (
+              <text
+                x={no.x}
+                y={no.y + (i % 2 === 0 ? -66 : 110)}
+                className="processo-jornada__apoio"
+                textAnchor="middle"
+              >
+                {apoio[i]}
+              </text>
+            ) : null}
           </g>
         ))}
       </svg>
@@ -210,37 +317,67 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
           <marker id="jornada-seta-m" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto">
             <path d="M 0 1 L 9 6 L 0 11 z" fill="#fde100" />
           </marker>
+          <radialGradient id="jornada-halo-m">
+            <stop offset="0%" stopColor="#fde100" stopOpacity="0.85" />
+            <stop offset="45%" stopColor="#fde100" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#fde100" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
-        <path d={MOBILE.caminho} className="processo-jornada__trilho" />
         <path
           ref={pathMobileRef}
           d={MOBILE.caminho}
           className="processo-jornada__linha"
-          markerEnd={progresso > 0.99 ? 'url(#jornada-seta-m)' : undefined}
         />
 
+        <g ref={luzMobileRef} className="processo-jornada__luz">
+          <circle r="26" fill="url(#jornada-halo-m)" />
+          <circle r="8" className="processo-jornada__luz-nucleo" />
+        </g>
+
         {MOBILE.nos.map((no, i) => (
-          <g key={`m-${etapas[i] ?? i}`} className="processo-jornada__no" data-aceso={progresso >= fracaoDoNo(i)}>
+          <g key={`m-${etapas[i] ?? i}`} className="processo-jornada__no" data-indice={i} data-aceso={estatico}>
             <circle cx={no.x} cy={no.y} r="22" className="processo-jornada__disco" />
             <image
               href={JORNADA_ICONES_LOCAIS[i]}
-              x={no.x - 14}
-              y={no.y - 14}
-              width="28"
-              height="28"
+              x={no.x - 19}
+              y={no.y - 19}
+              width="38"
+              height="38"
               className="processo-jornada__icone"
               preserveAspectRatio="xMidYMid meet"
             />
             {/* alterna acima/abaixo pra dois rótulos da mesma linha não colidirem */}
             <text
               x={no.x}
-              y={no.y + (i % 2 === 0 ? -34 : 46)}
+              y={no.y + (i % 2 === 0 ? (apoio[i] ? -66 : -42) : 42)}
               className="processo-jornada__rotulo processo-jornada__rotulo--mobile"
               textAnchor={ancora(no.x, MOBILE)}
             >
-              {etapas[i]}
+              {emDuasLinhas(etapas[i] ?? '').map((linha, l, todas) => (
+                <tspan
+                  key={linha}
+                  x={no.x}
+                  dy={l === 0 ? (i % 2 === 0 ? -(todas.length - 1) * 11 : 0) : 11}
+                >
+                  {linha}
+                </tspan>
+              ))}
             </text>
+            {apoio[i] ? (
+              <text
+                x={no.x}
+                y={no.y + (i % 2 === 0 ? -42 : 42 + 26)}
+                className="processo-jornada__apoio processo-jornada__apoio--mobile"
+                textAnchor={ancora(no.x, MOBILE)}
+              >
+                {emDuasLinhas(apoio[i]).map((linha, l) => (
+                  <tspan key={linha} x={no.x} dy={l === 0 ? 0 : 10}>
+                    {linha}
+                  </tspan>
+                ))}
+              </text>
+            ) : null}
           </g>
         ))}
       </svg>
