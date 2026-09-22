@@ -13,9 +13,9 @@ const ICONE = mediaBase('ICONES_JORNADAS_SVG')
 
 export const JORNADA_ICONES = [
   `${ICONE}reuniao-inicial.webp`,
-  `${ICONE}proposta-1.webp`,
+  `${ICONE}proposta.webp`,
   `${ICONE}onboarding.webp`,
-  `${ICONE}proposta-2.webp`,
+  `${ICONE}referencias-moodboard.webp`,
   `${ICONE}roteiros.webp`,
   `${ICONE}cronograma.webp`,
   `${ICONE}ppm.webp`,
