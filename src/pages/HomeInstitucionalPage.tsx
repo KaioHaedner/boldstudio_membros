@@ -187,7 +187,7 @@ function HomeContent() {
         <section
           id="nascida-brasil"
           data-reveal
-          className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-bold-black px-4 pb-28 pt-14 text-center sm:min-h-[80vh] sm:px-6 sm:pb-44 sm:pt-24 max-sm:min-h-[92svh]"
+          className="relative flex flex-col items-center justify-center overflow-hidden bg-bold-black px-4 py-[var(--espaco-secao)] text-center sm:px-6 max-sm:min-h-[92svh]"
         >
           <CoinDecor className="left-8 top-16 z-[1] w-20 opacity-15 sm:w-28" rotate={-14} floatDuration={8} />
           <CoinDecor className="right-8 bottom-20 z-[1] hidden w-16 opacity-15 sm:block sm:w-24" rotate={16} floatDuration={6} />
@@ -223,7 +223,7 @@ function HomeContent() {
           <CoinDecor className="left-6 bottom-16 z-[1] hidden w-16 opacity-20 sm:block sm:w-24" rotate={-12} floatDuration={6} />
 
           {/* Área de conteúdo (altura da tela) */}
-          <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 pb-24 pt-32 lg:grid-cols-2 lg:gap-16">
+          <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 py-[var(--espaco-secao)] lg:grid-cols-2 lg:gap-16">
             {/* Esquerda: chamada + apoio */}
             <div className="text-center lg:text-left">
               <h2 className="text-5xl font-bold leading-[1] md:text-6xl">

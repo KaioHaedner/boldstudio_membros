@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Respiro vertical de toda seção da home. O vão entre duas seções é sempre dois
+   deles, então nenhuma emenda fica maior que a outra. Antes cada seção tinha seu
+   proprio valor (py-16, py-20, py-24, py-28, py-32, clamps soltos) e o vazio
+   preto ia de 24px a 463px conforme o trecho. */
+:root {
+  --espaco-secao: clamp(3rem, 6vw, 5rem);
+  /* distância entre o fim do conteúdo e a etiqueta amarela que desliza */
+  --espaco-etiqueta: clamp(2rem, 4vw, 3rem);
+}
+
+
 /* iOS Safari da zoom automatico ao focar um input/textarea com fonte < 16px.
    Forcar 16px nos campos no mobile bloqueia esse zoom (chat do RecIA, forms).
    So no mobile — no desktop mantem o tamanho do design (text-sm etc). */
@@ -1109,7 +1120,9 @@ textarea {
 .crew-swap-grid {
   display: grid;
   grid-template-columns: minmax(240px, 35fr) minmax(360px, 65fr);
-  align-items: center;
+  /* alinhado pelo topo: centralizado, o texto flutuava no meio da pilha e abria
+     mais de 100px de preto entre a etiqueta da seção anterior e o título */
+  align-items: start;
   gap: clamp(2rem, 6vw, 5rem);
 }
 .crew-cta {
@@ -1302,7 +1315,7 @@ textarea {
   align-items: center;
   overflow: hidden;
   background: var(--color-bold-black);
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 7vw, 5rem);
+  padding: var(--espaco-secao) clamp(1rem, 4vw, 3rem);
 }
 .cases-palco {
   position: relative;
@@ -1457,8 +1470,7 @@ textarea {
   bottom: 1.5rem;
   z-index: 20;
   align-self: flex-start;
-  margin-top: 3rem;
-  margin-bottom: -3rem;
+  margin-top: var(--espaco-etiqueta);
   pointer-events: none;
 }
 @media (max-width: 720px) {
@@ -1470,8 +1482,7 @@ textarea {
      ficava por cima do nome e do botão, então ela sai do sticky. */
   .cases-etiqueta {
     position: static;
-    margin-top: 2.5rem;
-    margin-bottom: 0;
+    margin-top: var(--espaco-etiqueta);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1662,7 +1673,7 @@ textarea {
 .processo {
   position: relative;
   overflow: hidden;
-  padding: clamp(4rem, 9vw, 8rem) clamp(1.25rem, 5vw, 4rem);
+  padding: var(--espaco-secao) clamp(1.25rem, 5vw, 4rem);
   background: var(--color-bold-black);
 }
 .processo__intro {

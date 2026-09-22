@@ -103,7 +103,7 @@ export function AcademySection() {
       <section
         id="academy"
         data-reveal
-        className="relative scroll-mt-24 border-t-2 border-bold-yellow bg-bold-white pb-24 pt-24 md:pb-32 md:pt-28"
+        className="relative scroll-mt-24 border-t-2 border-bold-yellow bg-bold-white py-[var(--espaco-secao)]"
       >
       {/* Shaders amarelos (opacidade ~15%), só neste container */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -182,7 +182,7 @@ export function AcademySection() {
       </div>
 
       {/* Etiqueta amarela sticky com gradiente vivo (estilo Soluções/Contato) */}
-      <div className="pointer-events-none sticky bottom-6 z-20 mt-16">
+      <div className="pointer-events-none sticky bottom-6 z-20 mt-[var(--espaco-etiqueta)]">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black shadow-[0_12px_30px_-8px_rgba(0,0,0,0.45)] sm:pr-10">
           {t.academy.label}
         </span>

@@ -37,7 +37,7 @@ export function CrewSticky() {
   useCardSwap(stageRef, { delay: 12000, skewAmount: 2 })
 
   return (
-    <section id="crew" className="relative overflow-hidden bg-bold-black py-24 scroll-mt-24 sm:py-32">
+    <section id="crew" className="relative overflow-hidden bg-bold-black scroll-mt-24 pt-[var(--espaco-secao)] pb-[calc(var(--espaco-secao)+var(--espaco-etiqueta))]">
       <div className="mx-auto max-w-6xl px-6">
         <div className="crew-swap-grid">
           {/* No celular a ordem vira titulo, cards e so entao o botao: o CTA

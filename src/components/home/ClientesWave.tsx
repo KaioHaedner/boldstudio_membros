@@ -39,7 +39,7 @@ export function ClientesWave() {
   const [selected, setSelected] = useState<Cliente | null>(null)
 
   return (
-    <section id="clientes" className="relative scroll-mt-24 overflow-hidden py-20 md:py-28">
+    <section id="clientes" className="relative scroll-mt-24 overflow-hidden py-[var(--espaco-secao)]">
       <CoinDecor className="right-8 top-10 w-16 opacity-15 sm:w-24" rotate={18} floatDuration={7} />
       <CoinDecor className="left-4 bottom-10 hidden w-14 opacity-[0.12] lg:block" rotate={-20} floatDuration={9} />
 

@@ -49,7 +49,7 @@ export function CasesAbertura() {
   return (
     <section
       id="cases-abertura"
-      className="relative flex min-h-[44svh] scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 text-center sm:min-h-[90vh]"
+      className="relative flex scroll-mt-24 flex-col items-center justify-center overflow-hidden bg-bold-black px-6 py-[var(--espaco-secao)] text-center"
     >
       <div className="max-w-4xl">
         <h2 className="text-[clamp(2rem,5.5vw,4.75rem)] font-black italic leading-[1.15] tracking-tight text-bold-white">

@@ -35,7 +35,7 @@ export function SolucoesSticky() {
   }, [mouseNaLista, produtos.length, ativar])
 
   return (
-    <section id="servicos" className="relative scroll-mt-24 px-6 py-16 sm:py-32">
+    <section id="servicos" className="relative scroll-mt-24 px-6 py-[var(--espaco-secao)]">
       <div className="mx-auto max-w-6xl text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow">
           {t.servicos.eyebrow}
@@ -81,7 +81,7 @@ export function SolucoesSticky() {
       </div>
 
       {/* Etiqueta amarela sticky */}
-      <div className="pointer-events-none sticky bottom-6 z-10 mt-16">
+      <div className="pointer-events-none sticky bottom-6 z-10 mt-[var(--espaco-etiqueta)]">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           {t.servicos.label}
         </span>

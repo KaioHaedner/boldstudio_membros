@@ -99,7 +99,7 @@ export function SobreAboutUs() {
     <section
       ref={sectionRef}
       id="sobre"
-      className="relative scroll-mt-24 overflow-hidden px-5 py-24 sm:px-8 md:py-32 lg:px-12"
+      className="relative scroll-mt-24 overflow-hidden px-5 py-[var(--espaco-secao)] sm:px-8 lg:px-12"
     >
       <CoinDecor className="right-6 top-10 w-16 opacity-15 sm:w-24 lg:right-16" rotate={20} floatDuration={7.5} />
       <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
