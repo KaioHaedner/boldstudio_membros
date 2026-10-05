@@ -916,6 +916,46 @@ textarea {
   opacity: 0;
 }
 
+/* Static lateral photos: feather into black without GPU blur/parallax. */
+.side-backdrops {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.side-backdrops__photo {
+  position: absolute;
+  width: clamp(220px, 36vw, 650px);
+  height: clamp(320px, 40vw, 580px);
+  object-fit: cover;
+  opacity: 0.3;
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+}
+.side-backdrops__photo--left {
+  left: 0;
+  mask-image: linear-gradient(to right, #000, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+  -webkit-mask-image: linear-gradient(to right, #000, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+}
+.side-backdrops__photo--right {
+  right: 0;
+  mask-image: linear-gradient(to left, #000, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+  -webkit-mask-image: linear-gradient(to left, #000, transparent), linear-gradient(to bottom, transparent, #000 22%, #000 75%, transparent);
+}
+.side-backdrops__photo--left,
+.side-backdrops__photo--right {
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+@media (max-width: 767px) {
+  .side-backdrops__photo {
+    width: 48vw;
+    height: 300px;
+    opacity: 0.16;
+  }
+}
+
 /* ============== Etiquetas amarelas (stickers das seções) ==============
    Cor chapada, sem gradiente e sem animação. Substituiu o "amarelo vivo", que
    deslizava um gradiente dourado num ::before: o cliente pediu um amarelo mais
@@ -946,20 +986,39 @@ textarea {
    botão; a de antes desta, duas setas nas margens, ele também não quis. */
 .clientes-esteira {
   position: relative;
+  z-index: 1;
+}
+.clientes-lateral {
+  position: absolute;
+  right: -3%;
+  bottom: 0;
+  width: clamp(270px, 48vw, 645px);
+  height: clamp(330px, 40.5vw, 510px);
+  opacity: .38;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
+}
+.clientes-lateral img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 68% center;
+  mask-image: linear-gradient(to right, transparent, #000 40%);
+}
+@media (max-width: 639px) {
+  .clientes-lateral { right: -12%; width: 72%; height: 315px; opacity: .26; }
 }
 .clientes-dica {
-  position: absolute;
-  left: clamp(0.5rem, 4vw, 3rem);
-  /* o SVG entra pra dentro da esteira: o ponto do clique (67% da altura dele)
-     precisa cair EM CIMA de uma logo, nao acima dela */
-  bottom: calc(100% - 7rem);
+  position: relative;
+  margin-left: clamp(1.5rem, 4vw, 3rem);
+  margin-top: -4.5rem;
   z-index: 3;
-  width: clamp(9rem, 22vw, 12rem);
+  width: clamp(12rem, 28vw, 18rem);
   color: #fde100;
   pointer-events: none;
 }
 .clientes-dica__label {
-  font-size: 0.72rem;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
   font-weight: 900;
   font-style: italic;
   line-height: 1.1;
@@ -969,7 +1028,7 @@ textarea {
 }
 .clientes-dica__svg {
   display: block;
-  width: 100%;
+  width: 150px;
   height: auto;
   overflow: visible;
 }
@@ -990,6 +1049,15 @@ textarea {
   stroke-linejoin: round;
   transform-origin: 0 0;
   animation: clientes-dica-cursor 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.clientes-logo-click {
+  position: absolute;
+  left: calc(50% - 8px);
+  top: calc(50% - 8px);
+  width: 32px;
+  height: 36px;
+  overflow: visible;
+  pointer-events: none;
 }
 .clientes-dica__pulso {
   fill: none;
@@ -1019,6 +1087,21 @@ textarea {
   0%, 66% { transform: scale(0.2); opacity: 0; }
   72% { opacity: 0.9; }
   92%, 100% { transform: scale(1.8); opacity: 0; }
+}
+.clientes-logo-click .clientes-dica__pulso { transform-origin: 0 0; }
+.clientes-logo-click .clientes-dica__cursor {
+  animation-name: clientes-logo-cursor;
+}
+@keyframes clientes-logo-cursor {
+  0%, 18%, 100% { transform: translate(6px, 8px) scale(0.8); opacity: 0; }
+  35%, 60%, 80% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  70% { transform: translate(1px, 1px) scale(0.76); opacity: 1; }
+}
+.clientes-dica__pulso--logo { transform-origin: 0 0; }
+.clientes-dica__cursor--logo { animation: clientes-guia-click 2.8s ease-in-out infinite; }
+@keyframes clientes-guia-click {
+  0%, 55%, 80%, 100% { transform: scale(.65); }
+  70% { transform: scale(.55); }
 }
 /* Modal claro: CTA usa o mesmo motor de brilho da hero, com a paleta invertida. */
 .clientes-detail-card {
@@ -1149,6 +1232,9 @@ textarea {
   }
 }
 .crew-swap-stage {
+  /* Keep Chrome's scroll anchoring away from the moving 3D stack. */
+  overflow-anchor: none;
+  touch-action: pan-y pinch-zoom;
   /* tamanho do leque — lido tambem pelo useCardSwap (--card-swap-x/y) */
   --card-swap-x: 11px;
   --card-swap-y: 13px;
@@ -1167,6 +1253,7 @@ textarea {
   .crew-swap-grid {
     grid-template-columns: 1fr;
     justify-items: center;
+    row-gap: 0;
   }
   /* display: contents solta o titulo e o botao como itens da grade, e ai a
      ordem pode intercalar a pilha entre os dois: titulo, cards, botao. */
@@ -1176,7 +1263,7 @@ textarea {
   .crew-cta__texto {
     order: 1;
     text-align: center;
-    margin-bottom: 1.75rem;
+    margin-bottom: 3.75rem;
   }
   .crew-swap-stage {
     order: 2;
@@ -1184,6 +1271,16 @@ textarea {
   }
   .crew-cta__botao {
     order: 3;
+    margin-top: 2rem;
+  }
+  .crew-section {
+    padding-bottom: 2rem;
+  }
+  .crew-sticker {
+    /* Keep the CTA between card and label, rather than overlapping a label
+       positioned against the section's bottom padding. */
+    position: relative;
+    bottom: auto;
     margin-top: 1.75rem;
   }
 }
@@ -1193,6 +1290,7 @@ textarea {
    partia o card em duas metades, uma preta com o texto e outra com a foto —
    e so a metade preta respondia ao arrasto. */
 .crew-card {
+  overflow-anchor: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1208,7 +1306,7 @@ textarea {
   overflow: hidden;
   /* o card pode ser arrastado pro lado pra passar pro proximo; pan-y deixa o
      gesto horizontal com a gente e mantem o vertical rolando a pagina */
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
   cursor: grab;
   user-select: none;
 }
@@ -1297,6 +1395,10 @@ textarea {
   line-height: 1.5;
 }
 @media (max-width: 720px) {
+  .crew-card {
+    /* The photo layers are 2D. Do not allocate a separate 3D subtree per card. */
+    transform-style: flat;
+  }
   .crew-swap-stage {
     /* leque menor: em tela estreita o deslocamento de desktop jogava os cards
        de tras pra fora da tela (ficavam cortados na borda) */
@@ -1418,9 +1520,9 @@ textarea {
   padding: 0.25rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 0.4rem;
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(0, 0, 0, 0.7);
   cursor: pointer;
-  opacity: 0.55;
+  opacity: 0.85;
   transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .cases-seletor__item:hover {
@@ -1507,6 +1609,103 @@ textarea {
 }
 
 /* ============== Clientes — duas pistas horizontais ============== */
+.client-white-logo__image {
+  /* These exports include a white canvas. Turn it black and screen it out;
+     contrast keeps the light canvas from becoming an opaque white block. */
+  filter: grayscale(1) invert(1) contrast(3) brightness(10);
+  mix-blend-mode: screen;
+}
+.cases-palco__project {
+  position: absolute;
+  top: clamp(.75rem, 2vw, 1.5rem);
+  right: clamp(.75rem, 2vw, 1.5rem);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .65rem;
+  max-width: calc(100% - 1.5rem);
+}
+.cases-palco__project .cases-palco__marca {
+  position: static;
+}
+.cases-palco__project-button {
+  font-size: clamp(.75rem, 1.2vw, .95rem);
+  padding: .6rem 1rem;
+}
+.client-white-logo {
+  isolation: isolate;
+  background: transparent;
+}
+.client-original-logo { filter: none; }
+.clientes-esteira { position: relative; z-index: 1; }
+.crew-section, .cases-abertura, .cases-secao, #clientes, .processo { isolation: isolate; }
+.cases-abertura { padding-bottom: 1rem; }
+.cases-secao { padding: 1rem clamp(.5rem, 2vw, 1.5rem) calc(var(--espaco-secao) + 4rem); }
+.cases-coin { top: calc(100% + 12px); left: 1.25rem; }
+.cases-palco { width: min(1600px, 100%); z-index: 1; }
+.cases-legenda { position: relative; z-index: 1; }
+.cases-palco__marca { background: rgba(0,0,0,.5); }
+.cases-palco__marca img { max-height: 90%; }
+.processo > :not(.solucoes-parallax) { position: relative; z-index: 1; }
+.section-backdrop--crew .solucoes-parallax__photo,
+.section-backdrop--abertura .solucoes-parallax__photo {
+  top: 18%; height: 70%; max-height: 650px;
+}
+.section-backdrop--cases .solucoes-parallax__photo,
+.section-backdrop--clientes .solucoes-parallax__photo {
+  top: auto; bottom: 0; height: 65%; max-height: 650px; opacity: .5;
+}
+.section-backdrop--processo .solucoes-parallax__photo { top: 24%; height: 55%; max-height: 800px; opacity: .32; }
+@media (max-width: 639px) {
+  .cases-palco { aspect-ratio: 4 / 3; }
+  .section-backdrop--crew .solucoes-parallax__photo,
+  .section-backdrop--abertura .solucoes-parallax__photo,
+  .section-backdrop--clientes .solucoes-parallax__photo,
+  .section-backdrop--cases .solucoes-parallax__photo { opacity: .32; }
+  .section-backdrop--processo .solucoes-parallax__photo { opacity: .24; }
+}
+.client-white-logo__image--transparent {
+  filter: brightness(0) invert(1);
+}
+.client-white-logo__image--dark {
+  filter: grayscale(1) contrast(3) brightness(10);
+}
+.solucoes-section { isolation: isolate; }
+.solucoes-parallax {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  z-index: 0;
+}
+.solucoes-parallax__photo {
+  position: absolute;
+  width: clamp(160px, 29vw, 420px);
+  height: clamp(220px, 32vw, 460px);
+  opacity: .42;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 75%, transparent);
+}
+.solucoes-parallax__photo--left { left: -4%; }
+.solucoes-parallax__photo--right { right: -4%; }
+.solucoes-parallax__photo--upper { top: 8%; }
+.solucoes-parallax__photo--lower { top: 56%; }
+.solucoes-parallax__photo--center { top: 32%; }
+.solucoes-parallax__photo img { width: 100%; height: 100%; object-fit: cover; }
+.solucoes-parallax__photo--left img {
+  mask-image: linear-gradient(to right, transparent, #000 22%, #000 48%, transparent);
+}
+.solucoes-parallax__photo--right img {
+  mask-image: linear-gradient(to left, transparent, #000 22%, #000 48%, transparent);
+}
+@media (max-width: 639px) {
+  .solucoes-parallax__photo { width: 42%; height: 230px; opacity: .24; }
+  .solucoes-parallax__photo--left { left: -10%; }
+  .solucoes-parallax__photo--right { right: -10%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .solucoes-parallax__photo { transform: none !important; }
+}
 .clientes-wave {
   position: relative;
   overflow-x: clip;
@@ -1688,6 +1887,19 @@ textarea {
   overflow: hidden;
   padding: var(--espaco-secao) clamp(1.25rem, 5vw, 4rem);
   background: var(--color-bold-black);
+}
+.processo__journey-scene { position: relative; isolation: isolate; }
+.processo__journey-scene .processo-jornada { position: relative; z-index: 1; }
+.processo__journey-photo { z-index: 0; }
+.processo__journey-photo--start { left: -5vw; right: auto; top: -2rem; bottom: auto; }
+.processo__journey-photo--start img {
+  object-position: 35% center;
+  mask-image: linear-gradient(to left, transparent, #000 40%);
+}
+.processo__journey-photo--end { right: -5vw; bottom: -2rem; }
+@media (max-width: 639px) {
+  .processo__journey-photo--start { left: -16%; }
+  .processo__journey-photo--end { right: -16%; }
 }
 .processo__intro {
   max-width: 82rem;
@@ -2024,6 +2236,34 @@ textarea {
 }
 
 /* ==== Botoes de contato do Kaio no footer (efeito hover + card/tooltip) ==== */
+.bold-credit-popup {
+  position: fixed;
+  inset: auto 24px 24px auto;
+  margin: 0;
+  padding: 0;
+  width: min(300px, calc(100vw - 24px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(140deg, #fde100 0%, #e4c800 55%, #a88e00 100%);
+  color: #080808;
+  text-align: left;
+  box-shadow: 0 20px 60px #000b;
+}
+.bold-credit-popup::backdrop { background: transparent; }
+.bold-credit-popup__content { position: relative; padding: 24px 20px 20px; isolation: isolate; }
+.bold-credit-popup__content::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 1px 1px, #0000005c 1px, transparent 1.6px) 0 0 / 12px 12px; mask-image: linear-gradient(135deg, transparent 48%, #000 100%); }
+.bold-credit-popup__eyebrow { padding-right: 30px; font-size: 10px; font-weight: 800; letter-spacing: .12em; color: #fde100; }
+.bold-credit-popup h3 { margin: 0; padding-right: 28px; font: italic 500 26px/1.1 Georgia, 'Times New Roman', serif; }
+.bold-credit-popup__support { margin-top: 10px; color: #080808; font-size: 13px; line-height: 1.5; }
+.bold-credit-popup__links { display: grid; gap: 10px; margin-top: 10px; }
+.bold-credit-popup__link { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 0; background: #000; color: #fff; font-size: 13px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; transition: background .2s ease; }
+.bold-credit-popup__link:hover { background: #1f1f1f; }
+.bold-credit-popup__arrow { margin-left: auto; font-size: 18px; }
+.bold-credit-popup__close { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 0; background: transparent; color: #080808; cursor: pointer; }
+.bold-credit-popup :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (max-width: 639px) { .bold-credit-popup { left: 16px; right: 16px; bottom: 16px; width: auto; } }
 .kaio-socials {
   display: flex;
   flex-direction: row;
@@ -2130,6 +2370,27 @@ textarea {
   font-size: clamp(3.4rem, 21.5vw, 5.4rem);
   word-spacing: 100vw;
   line-height: 0.86;
+}
+
+/* Oversized closing signature: the lower portion ends at the page boundary. */
+.footer-wordmark {
+  position: relative;
+  z-index: 10;
+  padding-top: clamp(12px, 1.5vw, 24px);
+  background: #050505;
+  pointer-events: none;
+  user-select: none;
+}
+.footer-wordmark__crop {
+  width: 100%;
+  aspect-ratio: 4.5 / 1;
+  overflow: hidden;
+}
+.footer-wordmark__crop img {
+  display: block;
+  width: 112%;
+  max-width: none;
+  height: auto;
 }
 .nascida-destaque {
   font-size: clamp(3.6rem, 20.5vw, 5.2rem);

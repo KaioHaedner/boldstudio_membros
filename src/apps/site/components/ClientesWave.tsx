@@ -2,30 +2,26 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, MapPin, Phone, Play, X } from 'lucide-react'
 import { ShinyButton } from '@/shared/components/ShinyButton'
-import { CoinDecor } from '@/apps/site/components/CoinDecor'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/apps/site/data/clientes'
+import { BudgetVideo } from '@/shared/components/BudgetVideo'
+import { videoPreview } from '@/shared/lib/video-preview'
 
-// Dica de clique: a seta sai da frase e desce até uma das logos reais da
-// esteira, onde o cursor dá o clique. Fica por cima da esteira, alinhada com a
-// primeira marca visível, e é decorativa (pointer-events: none) pra ninguém
-// clicar nela achando que é botão.
+// Instruction below the carousel; the decorative arrow points back up to a logo.
 function DicaDeClique({ label }: { label: string }) {
   return (
-    <div className="clientes-dica" aria-hidden="true">
-      <p className="clientes-dica__label">{label}</p>
-      <svg className="clientes-dica__svg" viewBox="0 0 150 120">
-        {/* curva saindo do texto e caindo na logo */}
-        <path className="clientes-dica__curva" d="M18 8c6 34 26 56 58 66" />
-        <path className="clientes-dica__ponta" d="m68 66 12 10-16 4" />
-        {/* pulso no ponto onde o clique acontece */}
-        <circle className="clientes-dica__pulso" cx="80" cy="80" r="12" />
-        <circle className="clientes-dica__pulso clientes-dica__pulso--dois" cx="80" cy="80" r="12" />
-        {/* cursor que encosta e clica */}
-        <g className="clientes-dica__cursor" transform="translate(80 80)">
-          <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
+    <div className="clientes-dica">
+      <svg className="clientes-dica__svg" viewBox="0 0 150 120" aria-hidden="true">
+        <path className="clientes-dica__curva" d="M18 112C26 62 48 30 80 8" />
+        <path className="clientes-dica__ponta" d="m64 12 16-4-4 16" />
+        <g transform="translate(80 8)">
+          <circle className="clientes-dica__pulso clientes-dica__pulso--logo" cx="0" cy="0" r="12" />
+          <g className="clientes-dica__cursor clientes-dica__cursor--logo">
+            <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
+          </g>
         </g>
       </svg>
+      <p className="clientes-dica__label">{label}</p>
     </div>
   )
 }
@@ -40,16 +36,16 @@ export function ClientesWave() {
 
   return (
     <section id="clientes" className="relative scroll-mt-24 overflow-hidden py-[var(--espaco-secao)]">
-      <CoinDecor className="right-8 top-10 w-16 opacity-15 sm:w-24" rotate={18} floatDuration={7} />
-      <CoinDecor className="left-4 bottom-10 hidden w-14 opacity-[0.12] lg:block" rotate={-20} floatDuration={9} />
+      <div className="clientes-lateral" aria-hidden="true">
+        <img src="/media/backgrounds/dsc09006-lateral-v1.webp" alt="" loading="lazy" decoding="async" width="1440" height="960" />
+      </div>
 
-      <div className="px-6 text-center">
+      <div className="relative z-10 px-6 text-center">
         <p className="text-[clamp(1.15rem,2.4vw,1.75rem)] font-black italic uppercase leading-none tracking-[-0.035em] text-bold-yellow">{t.clientes.eyebrow}</p>
         <h2 className="mx-auto mt-3 max-w-4xl text-[clamp(1.8rem,4vw,3.4rem)] font-black italic uppercase leading-[0.92] tracking-[-0.035em] text-bold-white">{t.clientes.title}</h2>
       </div>
 
       <div className="clientes-esteira mt-12">
-        <DicaDeClique label={t.clientes.helper} />
         <div className="marcas-marquee-mask flex overflow-hidden">
         <div className="marcas-marquee flex shrink-0">
           {[0, 1].map((copyIndex) =>
@@ -63,25 +59,25 @@ export function ClientesWave() {
                   aria-hidden={isCopy || undefined}
                   aria-label={isCopy ? undefined : `Ver detalhes de ${client.nome}`}
                   onClick={() => setSelected(client)}
-                  className="group mx-3 flex h-28 w-52 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white p-6 transition-transform hover:scale-[1.03] hover:border-bold-yellow/50 sm:h-32 sm:w-60"
+                  className="client-white-logo group relative mx-3 flex h-28 w-52 shrink-0 items-center justify-center bg-transparent p-6 transition-transform hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-bold-yellow sm:h-32 sm:w-60"
                 >
-                  <img
+                  {client.logo === '/brand/logo-boldstudio.webp' ? <span className="text-xl font-black uppercase text-white">{client.nome}</span> : <img
                     src={client.logo}
                     alt={isCopy ? '' : client.nome}
                     loading="eager"
                     decoding="async"
-                    className="max-h-full max-w-full object-contain"
-                  />
+                    className="client-original-logo max-h-full max-w-full object-contain"
+                  />}
                 </button>
               )
             })
           )}
           </div>
         </div>
+        <DicaDeClique label={t.clientes.helper} />
       </div>
 
-      <div className="mt-14 flex flex-col items-center gap-5 px-6 text-center">
-        <p className="text-xl font-bold text-bold-white md:text-2xl">{t.clientes.ctaText}</p>
+      <div className="relative z-10 mt-14 flex flex-col items-center gap-5 px-6 text-center">
         <ShinyButton
           className="shiny-cta--grande"
           onClick={() =>
@@ -117,9 +113,11 @@ export function ClientesWave() {
             <div className="clientes-detail-card__surface">
               <div className="aspect-video w-full overflow-hidden bg-[#858585]">
                 {selected.videos[0] ? (
-                  <video
-                    src={selected.videos[0]}
-                    autoPlay
+                  <BudgetVideo
+                    src={videoPreview(selected.videos[0]) || selected.videos[0]}
+                    autoPlay={Boolean(videoPreview(selected.videos[0]))}
+                    controls={!videoPreview(selected.videos[0])}
+                    poster={selected.logo}
                     loop
                     muted
                     playsInline

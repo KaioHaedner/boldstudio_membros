@@ -15,7 +15,7 @@ const BASE = import.meta.env.VITE_MEDIA_BASE_URL || '/api/media'
 
 /** URL completa de um arquivo. */
 export function media(bucket: string, arquivo: string) {
-  return `${BASE}?b=${bucket}&v=${VERSAO}&f=${arquivo}`
+  return `${BASE}?b=${encodeURIComponent(bucket)}&v=${VERSAO}&f=${encodeURIComponent(arquivo)}`
 }
 
 /** Prefixo para quem concatena o nome do arquivo depois. */

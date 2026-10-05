@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Globe } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Globe, X } from 'lucide-react'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { whatsappLink } from '@/shared/lib/whatsapp'
 
@@ -96,11 +96,26 @@ function scrollToAnchor(href: string) {
 export function Footer() {
   const { t } = useI18n()
   const [kaioOpen, setKaioOpen] = useState(false)
+  const creditDialog = useRef<HTMLDialogElement>(null)
+  const creditTrigger = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!kaioOpen) return
+    const trigger = creditTrigger.current
+    const dialog = creditDialog.current
+    if (dialog && trigger) {
+      const rect = trigger.getBoundingClientRect()
+      if (window.innerWidth > 639) {
+        dialog.style.right = `${Math.max(12, window.innerWidth - rect.right)}px`
+        dialog.style.bottom = `${Math.max(12, window.innerHeight - rect.top + 14)}px`
+      }
+      dialog.showModal()
+    }
+    return () => trigger?.focus({ preventScroll: true })
+  }, [kaioOpen])
   return (
-    <footer className="relative z-10 overflow-hidden border-t border-white/10 bg-[#050505] px-6 py-14 text-bold-white">
+    <footer className="relative z-10 overflow-hidden border-t border-white/10 bg-[#050505] px-6 pb-6 pt-14 text-bold-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="footer-yellow-glow footer-yellow-glow--top animate-blob-1 absolute -left-[6%] -top-[35%] h-[22vw] w-[22vw] min-h-[180px] min-w-[180px] rounded-full bg-bold-yellow/30 blur-[55px]" />
-        <div className="footer-yellow-glow footer-yellow-glow--bottom animate-blob-2 absolute -right-[6%] -bottom-[40%] h-[22vw] w-[22vw] min-h-[180px] min-w-[180px] rounded-full bg-bold-yellow/30 blur-[55px]" />
       </div>
       <div className="mx-auto flex max-w-5xl flex-col gap-10 md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
@@ -156,46 +171,58 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-12 flex max-w-5xl flex-col items-center gap-3 border-t border-white/5 pt-6 text-center">
-        <div className="flex flex-col items-center gap-4 text-[15.6px] text-bold-white/70">
+      <div className="footer-credits mx-auto mt-12 grid max-w-5xl grid-cols-2 items-start gap-6 border-t border-white/5 pt-6 sm:items-center">
+        <p className="text-left text-xs text-bold-white/40">
+          © {new Date().getFullYear()} Bold Studio Brasil. {t.footer.rights}
+        </p>
+        <div className="flex flex-col items-end gap-4 text-right text-[15.6px] text-bold-white/70">
           <p>
             Powered by{' '}
             <button
+              ref={creditTrigger}
               type="button"
               onClick={() => setKaioOpen((v) => !v)}
               aria-expanded={kaioOpen}
+              aria-haspopup="dialog"
+              aria-controls="bold-credit-dialog"
               className="font-semibold text-bold-yellow underline-offset-4 transition-colors hover:underline"
             >
               Kaio Haedner
             </button>
           </p>
           {kaioOpen && (
-          <div className="kaio-socials">
-            {KAIO_SOCIALS.map((s) => (
-              <div key={s.name} className={`kaio-social ${s.mod}`}>
+          <dialog
+            ref={creditDialog}
+            id="bold-credit-dialog"
+            className="bold-credit-popup"
+            aria-labelledby="bold-credit-title"
+            onCancel={() => setKaioOpen(false)}
+            onClose={() => setKaioOpen(false)}
+            onClick={(event) => { if (event.target === event.currentTarget) setKaioOpen(false) }}
+          >
+          <div className="bold-credit-popup__content">
+            <button className="bold-credit-popup__close" type="button" aria-label="Fechar contatos do Kaio" onClick={() => setKaioOpen(false)}><X size={20} /></button>
+            <h3 id="bold-credit-title">Seu site pode ser o próximo.</h3>
+            <p className="bold-credit-popup__support">Quer um site com essa presença para a sua marca?</p>
+            <div className="bold-credit-popup__links">
+            {[KAIO_SOCIALS[1], KAIO_SOCIALS[0], KAIO_SOCIALS[2]].map((s) => (
                 <a
+                  key={s.name}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${s.name} do Kaio Haedner`}
-                  className="kaio-social__btn"
+                  className="bold-credit-popup__link"
                 >
-                  {s.path ? <BrandIcon path={s.path} size={20} /> : <Globe size={20} strokeWidth={2.4} />}
+                  {s.path ? <BrandIcon path={s.path} size={16} /> : <Globe size={16} strokeWidth={2} />}
+                  <span>{s.name}</span>
                 </a>
-                <span className="kaio-social__tip" role="tooltip">
-                  <span className="kaio-social__card">
-                    {s.path ? <BrandIcon path={s.path} size={24} /> : <Globe size={24} strokeWidth={2.4} />}
-                  </span>
-                  <span className="kaio-social__handle">{s.handle}</span>
-                </span>
-              </div>
             ))}
+            </div>
           </div>
+          </dialog>
           )}
         </div>
-        <p className="text-xs text-bold-white/40">
-          © {new Date().getFullYear()} Bold Studio Brasil. {t.footer.rights}
-        </p>
       </div>
     </footer>
   )

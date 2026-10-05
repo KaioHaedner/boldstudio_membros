@@ -24,19 +24,19 @@ const BUCKET_ORIGIN: Record<string, string> = {
   ICONES_JORNADAS_SVG: PRIMARY_ORIGIN,
 }
 
-// O Supabase antigo (erhtqgaxibncpondscna, sem acesso ao dashboard) falha de
-// forma intermitente (timeout/503). Tenta de novo antes de desistir, em vez
-// de propagar a falha transitória pro navegador na primeira tentativa.
-async function fetchWithRetry(target: string, headers: HeadersInit, attempts = 3) {
+async function fetchWithRetry(target: string, init: RequestInit, attempts = 2) {
   let lastError: unknown
   for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetch(target, { headers })
-      const retryable = res.status >= 500 || res.status === 429
+      const res = await fetch(target, init)
+      // Quota/rate-limit responses need intervention/backoff, not amplification.
+      const retryable = res.status >= 500
       if (!retryable || i === attempts - 1) return res
       lastError = new Error(`upstream ${res.status}`)
+      await res.body?.cancel()
     } catch (err) {
       lastError = err
+      if (init.signal?.aborted) throw err
       if (i === attempts - 1) throw lastError
     }
     await new Promise((r) => setTimeout(r, 300 * (i + 1)))
@@ -45,30 +45,48 @@ async function fetchWithRetry(target: string, headers: HeadersInit, attempts = 3
 }
 
 export default async function handler(req: Request) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'Access-Control-Allow-Headers': 'Range, If-Range, If-None-Match, If-Modified-Since',
+    } })
+  }
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS', 'Cache-Control': 'no-store' } })
+  }
   const url = new URL(req.url)
   const bucket = url.searchParams.get('b') ?? ''
   const file = url.searchParams.get('f') ?? ''
-  const origin = BUCKET_ORIGIN[bucket]
+  const origin = Object.hasOwn(BUCKET_ORIGIN, bucket) ? BUCKET_ORIGIN[bucket] : undefined
 
-  if (!origin || !file) {
-    return new Response('Not found', { status: 404 })
+  if (!origin || !file || file.length > 2048 || file.split('/').some((part) => !part || part === '.' || part === '..')) {
+    return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } })
   }
 
-  const target = `${origin}/storage/v1/object/public/${bucket}/${encodeURIComponent(file)}`
+  const target = `${origin}/storage/v1/object/public/${bucket}/${file.split('/').map(encodeURIComponent).join('/')}`
 
   const upstreamHeaders: HeadersInit = {}
   const range = req.headers.get('range')
   if (range) upstreamHeaders['range'] = range
+  for (const name of ['if-range', 'if-none-match', 'if-modified-since']) {
+    const value = req.headers.get(name)
+    if (value) upstreamHeaders[name] = value
+  }
 
   let upstream: Response
   try {
-    upstream = await fetchWithRetry(target, upstreamHeaders)
+    upstream = await fetchWithRetry(target, { method: req.method, headers: upstreamHeaders,
+      signal: req.signal, redirect: 'error' })
   } catch {
-    return new Response('Upstream unavailable', { status: 502 })
+    return new Response('Upstream unavailable', { status: 502, headers: { 'Cache-Control': 'no-store' } })
   }
 
-  if (!upstream.ok && upstream.status !== 206) {
-    return new Response('Upstream error', { status: upstream.status })
+  if (!upstream.ok && upstream.status !== 304) {
+    const headers = new Headers({ 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' })
+    if (upstream.status === 416 && upstream.headers.has('content-range')) headers.set('Content-Range', upstream.headers.get('content-range')!)
+    await upstream.body?.cancel()
+    return new Response(req.method === 'HEAD' ? null : 'Upstream error', { status: upstream.status, headers })
   }
 
   const headers = new Headers()
@@ -79,6 +97,11 @@ export default async function handler(req: Request) {
   if (contentRange) headers.set('Content-Range', contentRange)
   headers.set('Accept-Ranges', 'bytes')
   headers.set('Access-Control-Allow-Origin', '*')
+  headers.set('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, ETag, Last-Modified')
+  for (const name of ['etag', 'last-modified']) {
+    const value = upstream.headers.get(name)
+    if (value) headers.set(name, value)
+  }
 
   // A chave de cache da borda é a URL, que NÃO inclui o header Range. Cachear
   // uma resposta 206 aqui servia aquele pedaço para todo mundo: como todo
@@ -95,5 +118,5 @@ export default async function handler(req: Request) {
     headers.set('Cache-Control', 'public, max-age=31536000, s-maxage=31536000, immutable')
   }
 
-  return new Response(upstream.body, { status: upstream.status, headers })
+  return new Response(req.method === 'HEAD' || upstream.status === 304 ? null : upstream.body, { status: upstream.status, headers })
 }

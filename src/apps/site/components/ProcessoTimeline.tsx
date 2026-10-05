@@ -72,7 +72,16 @@ function FluidAura({ phase }: { phase: number }) {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: false })
+    // Four decorative WebGL contexts are unnecessary on mobile and can fail
+    // under GPU/memory pressure. Keep a CSS glow; never tear down the page.
+    canvas.style.background = 'radial-gradient(ellipse at 45% 55%, #6b570d 0%, #191402 45%, #020202 75%)'
+    if (window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches) return
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: false })
+    } catch {
+      return
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))
     const scene = new THREE.Scene()
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
@@ -104,11 +113,11 @@ function FluidAura({ phase }: { phase: number }) {
     resize()
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const clock = new THREE.Clock()
-    let visible = true
+    const startTime = performance.now()
+    let visible = false
     let raf = 0
     const render = () => {
-      uniforms.u_time.value = reduceMotion ? 4 : clock.getElapsedTime() * 0.72
+      uniforms.u_time.value = reduceMotion ? 4 : (performance.now() - startTime) / 1000 * 0.72
       renderer.render(scene, camera)
       if (!reduceMotion && visible) raf = window.requestAnimationFrame(render)
     }
@@ -119,7 +128,6 @@ function FluidAura({ phase }: { phase: number }) {
       if (!visible && raf) window.cancelAnimationFrame(raf)
     }, { threshold: 0.05 })
     observer.observe(canvas)
-    render()
 
     return () => {
       observer.disconnect()
@@ -220,7 +228,15 @@ export function ProcessoTimeline() {
       {/* Jornada do cliente: caminho em S que se desenha acendendo etapa por
           etapa. Substituiu as três imagens da linha do tempo e as duas fotos
           de reunião, a pedido do cliente. */}
-      <ProcessoJornada etapas={t.processo.etapas} />
+      <div className="processo__journey-scene">
+        <div className="clientes-lateral processo__journey-photo processo__journey-photo--start" aria-hidden="true">
+          <img src="/media/backgrounds/boldstudio_lateral_linha_do_tempo_01-d41a90324c5d.webp" alt="" width="500" height="333" loading="lazy" decoding="async" />
+        </div>
+        <div className="clientes-lateral processo__journey-photo processo__journey-photo--end" aria-hidden="true">
+          <img src="/media/backgrounds/boldstudio_lateral_linha_do_tempo_02-d75bf77e37fc.webp" alt="" width="500" height="333" loading="lazy" decoding="async" />
+        </div>
+        <ProcessoJornada etapas={t.processo.etapas} />
+      </div>
 
       <p className="processo__frase" data-reveal>
         {t.processo.frase}<span className="processo__frase-hi">{t.processo.fraseHi}</span>

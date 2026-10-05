@@ -37,8 +37,8 @@ export function CrewSticky() {
   useCardSwap(stageRef, { delay: 12000, skewAmount: 2 })
 
   return (
-    <section id="crew" className="relative overflow-hidden bg-bold-black scroll-mt-24 pt-[var(--espaco-secao)] pb-[calc(var(--espaco-secao)+var(--espaco-etiqueta))]">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="crew" className="crew-section relative overflow-hidden scroll-mt-24 pt-[var(--espaco-secao)] pb-[calc(var(--espaco-secao)+var(--espaco-etiqueta))]">
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
         <div className="crew-swap-grid">
           {/* No celular a ordem vira titulo, cards e so entao o botao: o CTA
               em cima da pilha deixava o botao longe do card que ele fecha. */}
@@ -73,7 +73,8 @@ export function CrewSticky() {
                       className="crew-card__foto"
                       src={m.foto}
                       alt={m.nome}
-                      loading="lazy"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={i === 0 ? 'high' : 'auto'}
                       decoding="async"
                       /* imagem e arrastavel por padrao: o drag nativo do
                          navegador roubava o gesto e ainda rolava a pagina
@@ -113,7 +114,7 @@ export function CrewSticky() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-0">
+      <div className="crew-sticker absolute bottom-8 left-0">
         <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
           BoldCrew
         </span>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ShinyButton } from '@/shared/components/ShinyButton'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { SERVICO_SLUGS } from '@/apps/site/data/servicos'
+import { SolucoesParallax } from './SolucoesParallax'
 
 // Seção "Soluções" (produtos). Lista central: o item ativo fica amarelo e os
 // outros apagam. No desktop (mouse de verdade) o realce segue o hover; no
@@ -36,8 +37,9 @@ export function SolucoesSticky() {
   }, [mouseNaLista, produtos.length, ativar])
 
   return (
-    <section id="servicos" className="relative scroll-mt-24 px-6 py-[var(--espaco-secao)]">
-      <div className="mx-auto max-w-6xl text-center">
+    <section id="servicos" className="solucoes-section relative scroll-mt-24 px-6 py-[var(--espaco-secao)]">
+      <SolucoesParallax />
+      <div className="relative z-10 mx-auto max-w-6xl text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-bold-yellow">
           {t.servicos.eyebrow}
         </p>

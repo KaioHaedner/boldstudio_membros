@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from 'react'
 import { gsap } from '@/shared/lib/gsap'
+import { bindCardSwipe } from './card-swipe'
 
 type CardSwapOptions = {
   delay?: number
@@ -69,6 +70,7 @@ export function useCardSwap(
         yPercent: -50,
         skewY: skewAmount,
         rotationX: 0,
+        rotationZ: 0,
         scale: 1,
         transformOrigin: '50% 50%',
         zIndex: slot.zIndex,
@@ -191,7 +193,7 @@ export function useCardSwap(
     // Como o intervalo nasce zerado, o gesto manual tambem devolve o tempo
     // cheio antes da proxima troca automatica.
     function start() {
-      if (interval || reduceMotion || !visible || hovered) return
+      if (interval || reduceMotion || !visible || hovered || document.hidden) return
       interval = window.setInterval(swap, delay)
     }
 
@@ -213,6 +215,7 @@ export function useCardSwap(
     // Girar o celular / redimensionar troca a media query e o tamanho do stage,
     // e as posicoes ficam em px — sem isso a pilha fica torta depois do resize.
     const onResize = () => {
+      cancelarGuarda()
       timeline?.kill()
       timeline = null
       const fan = readFan()
@@ -225,129 +228,43 @@ export function useCardSwap(
     // Hover pausa as proximas trocas, mas deixa o card atual completar o arco.
     const onEnter = () => { hovered = true; stop() }
     const onLeave = () => { hovered = false; start() }
-    if (pauseOnHover) {
+    const hasHover = pauseOnHover && window.matchMedia('(hover: hover)').matches
+    if (hasHover) {
       container.addEventListener('mouseenter', onEnter)
       container.addEventListener('mouseleave', onLeave)
     }
 
-    // --- Arrasto manual do card da frente ---
-    // Puxar o card pro lado e soltar passa pro proximo; soltar antes do limite
-    // devolve ele pro lugar. Enquanto o dedo esta na tela o ciclo automatico
-    // fica parado, e volta a rodar quando solta. O CSS poe touch-action: pan-y
-    // nos cards, entao o gesto horizontal e nosso e o vertical continua
-    // rolando a pagina normalmente.
-    let arrastando = false
-    let inicioX = 0
-    let inicioY = 0
-    let inicioTempo = 0
-    let deslocamento = 0
-    let ponteiro: number | null = null
-    // null enquanto o dedo nao andou o bastante pra dizer se o gesto e de
-    // trocar de card ou de rolar a pagina.
-    let direcao: 'horizontal' | 'vertical' | null = null
-    // carta escolhida no inicio do gesto: a mesma do comeco ao fim
-    let alvoDoGesto: HTMLElement | null = null
-
-    const cardDaFrente = () => cards[order[0]]
-
-    const onPointerDown = (evento: PointerEvent) => {
-      if (reduceMotion) return
-      // Aceita o gesto pela AREA do palco, e nao por quem esta no topo da
-      // pilha de hit-test. Escutando so no container o pointerdown nao chegava
-      // (os cards usam preserve-3d e translateZ, e qualquer camada por cima
-      // engolia o evento), entao o dedo nao pegava o card.
-      const area = stageElement.getBoundingClientRect()
-      const dentroDoPalco =
-        evento.clientX >= area.left &&
-        evento.clientX <= area.right &&
-        evento.clientY >= area.top &&
-        evento.clientY <= area.bottom
-      if (!dentroDoPalco) return
-      // O dedo sempre tem prioridade: troca pendente e encerrada e a pilha
-      // volta pras posicoes da ordem atual antes do gesto comecar.
-      encerrarTrocaPendente()
-      arrastando = true
-      alvoDoGesto = cardDaFrente()
-      ponteiro = evento.pointerId
-      inicioX = evento.clientX
-      inicioY = evento.clientY
-      inicioTempo = evento.timeStamp
-      deslocamento = 0
-      direcao = null
-      stop()
-      // De proposito NAO capturamos o ponteiro aqui. Capturar logo no toque
-      // segurava tambem os gestos verticais, e quem comecava a rolar a pagina
-      // a partir da base do card ficava com a rolagem presa. A captura so
-      // acontece quando fica claro que o gesto e horizontal.
-    }
-
-    const onPointerMove = (evento: PointerEvent) => {
-      if (!arrastando || evento.pointerId !== ponteiro) return
-      const dx = evento.clientX - inicioX
-      const dy = evento.clientY - inicioY
-
-      // Primeiro decide a intencao do gesto. Sem isso o card acompanhava
-      // qualquer tremida de dedo enquanto a pessoa so queria rolar a pagina.
-      if (direcao === null) {
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return
-        direcao = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
-        if (direcao === 'vertical') {
-          // e rolagem, nao troca de card: devolve a pagina pro usuario
-          arrastando = false
-          ponteiro = null
-          alvoDoGesto = null
-          start()
-          return
-        }
-        try { alvoDoGesto?.setPointerCapture?.(evento.pointerId) } catch { /* ignora */ }
-      }
-
-      deslocamento = dx
-      const slot = makeSlot(0, cardDistance, verticalDistance, total)
-      gsap.set(alvoDoGesto ?? cardDaFrente(), {
-        x: slot.x + deslocamento,
-        rotationZ: deslocamento * 0.02,
-        zIndex: total + 10,
-      })
-    }
-
-    const onPointerUp = (evento: PointerEvent) => {
-      if (!arrastando || evento.pointerId !== ponteiro) return
-      arrastando = false
-      ponteiro = null
-      const eraHorizontal = direcao === 'horizontal'
-      direcao = null
-      const alvo = alvoDoGesto ?? cardDaFrente()
-      alvoDoGesto = null
-
-      // Limite curto (12% da largura, minimo 40px) porque com 22% era preciso
-      // arrastar quase a tela inteira pra carta sair. Um peteleco rapido
-      // tambem passa o card mesmo andando pouco, que e como se usa carrossel
-      // no celular.
-      const limite = Math.max(40, alvo.offsetWidth * 0.12)
-      const duracao = Math.max(1, evento.timeStamp - inicioTempo)
-      const velocidade = Math.abs(deslocamento) / duracao
-      const peteleco = velocidade > 0.35 && Math.abs(deslocamento) > 24
-
-      if (eraHorizontal && (Math.abs(deslocamento) > limite || peteleco)) {
-        swap()
-      } else if (eraHorizontal) {
+    // Capture on the stable stage only, never on a moving 3D card.
+    let gestureCard: HTMLElement | null = null
+    const unbindSwipe = bindCardSwipe(stageElement, {
+      begin: () => {
+        encerrarTrocaPendente()
+        gestureCard = cards[order[0]]
+        stop()
+      },
+      width: () => (gestureCard ?? cards[order[0]]).offsetWidth,
+      move: (distance) => {
         const slot = makeSlot(0, cardDistance, verticalDistance, total)
-        gsap.to(alvo, {
-          x: slot.x,
-          rotationZ: 0,
-          duration: 0.3,
-          ease: 'power2.out',
-          onComplete: () => gsap.set(alvo, { zIndex: slot.zIndex }),
+        gsap.set(gestureCard ?? cards[order[0]], {
+          x: slot.x + distance,
+          rotationZ: distance * 0.02,
+          zIndex: total + 10,
         })
-      }
-      start()
+      },
+      finish: (advance) => {
+        gestureCard = null
+        if (advance) swap()
+        else resync()
+        start()
+      },
+    })
+    const onVisibility = () => {
+      if (document.hidden) {
+        stop()
+        encerrarTrocaPendente()
+      } else start()
     }
-
-    window.addEventListener('pointerdown', onPointerDown)
-    window.addEventListener('pointermove', onPointerMove)
-    window.addEventListener('pointerup', onPointerUp)
-    window.addEventListener('pointercancel', onPointerUp)
+    document.addEventListener('visibilitychange', onVisibility)
 
     return () => {
       io.disconnect()
@@ -357,10 +274,8 @@ export function useCardSwap(
       window.removeEventListener('resize', onResize)
       container.removeEventListener('mouseenter', onEnter)
       container.removeEventListener('mouseleave', onLeave)
-      window.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('pointermove', onPointerMove)
-      window.removeEventListener('pointerup', onPointerUp)
-      window.removeEventListener('pointercancel', onPointerUp)
+      unbindSwipe()
+      document.removeEventListener('visibilitychange', onVisibility)
       restoreStyles()
     }
   }, [containerRef, delay, skewAmount, pauseOnHover])

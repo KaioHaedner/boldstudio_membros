@@ -5,6 +5,8 @@ import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
 import { LanguageSwitcher } from '@/apps/site/components/LanguageSwitcher'
 import { Footer } from '@/shared/components/Footer'
 import { getClienteBySlug, type Cliente } from '@/apps/site/data/clientes'
+import { BudgetVideo } from '@/shared/components/BudgetVideo'
+import { videoPreview } from '@/shared/lib/video-preview'
 
 const MIN_PHONES = 3
 
@@ -17,10 +19,11 @@ function PhoneReel({ src, index }: { src?: string; index: number }) {
       <div className="device device-iphone-x bold-iphone">
         <div className="device-frame">
           {src ? (
-            <video
+            <BudgetVideo
               className="device-screen"
-              src={src}
-              autoPlay
+              src={videoPreview(src) || src}
+              autoPlay={Boolean(videoPreview(src))}
+              controls={!videoPreview(src)}
               loop
               muted
               playsInline
@@ -104,7 +107,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           <section className="mt-20">
             <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">{t.projeto.demoreelTitle}</p>
             <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-black/60">
-              <video
+              <BudgetVideo
                 src={cliente.videos[0]}
                 controls
                 playsInline

@@ -8,6 +8,7 @@
     "dev": "vite",
     "dev:firebase": "vite --mode firebase --host 127.0.0.1 --port 5174",
     "test:firebase-rules": "node --test tests/firebase-rules.test.mjs",
+    "test:media": "node --test tests/card-swipe.test.mjs tests/media-budget.test.mjs tests/media-proxy.test.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",

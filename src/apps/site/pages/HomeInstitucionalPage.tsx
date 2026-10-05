@@ -20,6 +20,7 @@ import { CasesCarrossel } from '@/apps/site/components/CasesCarrossel'
 import { ContactForm } from '@/apps/site/components/ContactForm'
 import { RecIAWidget } from '@/apps/site/components/RecIAWidget'
 import { QuickNav } from '@/apps/site/components/QuickNav'
+import { FooterWordmark } from '@/apps/site/components/FooterWordmark'
 
 function HomeContent() {
   const { t } = useI18n()
@@ -37,11 +38,9 @@ function HomeContent() {
   })
   const [revelar, setRevelar] = useState(!introAtiva)
 
-  const mainClass = !introAtiva
-    ? 'relative z-10'
-    : revelar
-      ? 'relative z-10 home-revelar'
-      : 'relative z-10 home-oculto'
+  // The opaque intro already covers the content. Never leave the entire page
+  // at opacity:0 if an animation/timer is interrupted during reload/restore.
+  const mainClass = introAtiva && revelar ? 'relative z-10 home-revelar' : 'relative z-10'
 
   useEffect(() => {
     const sections = Array.from(
@@ -98,7 +97,9 @@ function HomeContent() {
   // cancela o ajuste na hora pra nao brigar com o dedo dele.
   useEffect(() => {
     if (!hash) return
-    const alvo = document.querySelector(hash)
+    let anchorId: string
+    try { anchorId = decodeURIComponent(hash.slice(1)) } catch { return }
+    const alvo = document.getElementById(anchorId)
     if (!alvo) return
 
     let cancelado = false
@@ -107,6 +108,8 @@ function HomeContent() {
     }
     window.addEventListener('wheel', cancelar, { passive: true })
     window.addEventListener('touchstart', cancelar, { passive: true })
+    window.addEventListener('pointerdown', cancelar, { passive: true })
+    window.addEventListener('keydown', cancelar)
 
     const ir = () => {
       if (!cancelado) alvo.scrollIntoView({ block: 'start' })
@@ -118,6 +121,8 @@ function HomeContent() {
       tentativas.forEach((id) => window.clearTimeout(id))
       window.removeEventListener('wheel', cancelar)
       window.removeEventListener('touchstart', cancelar)
+      window.removeEventListener('pointerdown', cancelar)
+      window.removeEventListener('keydown', cancelar)
     }
   }, [hash, revelar])
 
@@ -227,16 +232,16 @@ function HomeContent() {
           <CoinDecor className="left-6 bottom-16 z-[1] hidden w-16 opacity-20 sm:block sm:w-24" rotate={-12} floatDuration={6} />
 
           {/* Área de conteúdo (altura da tela) */}
-          <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 py-[var(--espaco-secao)] lg:grid-cols-2 lg:gap-16">
+          <div className="contact-layout relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 py-[var(--espaco-secao)] md:grid-cols-2 lg:gap-16">
             {/* Esquerda: chamada + apoio */}
-            <div className="text-center lg:text-left">
+            <div className="contact-copy text-left">
               <h2 className="text-5xl font-bold leading-[1] md:text-6xl">
                 {t.contato.headlineA}<span className="text-bold-yellow">{t.contato.headlineHi}</span>.
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-bold-white lg:mx-0">
+              <p className="mt-4 max-w-md text-base leading-relaxed text-bold-white">
                 {t.contato.supportA}
-                <span className="lg:hidden">{t.contato.hereMobile}</span>
-                <span className="hidden lg:inline">{t.contato.hereDesktop}</span>
+                <span className="md:hidden">{t.contato.hereMobile}</span>
+                <span className="hidden md:inline">{t.contato.hereDesktop}</span>
                 {t.contato.supportB}
               </p>
               <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-bold-white">
@@ -245,7 +250,7 @@ function HomeContent() {
             </div>
 
             {/* Direita: formulário em glass */}
-            <div className="flex justify-center lg:justify-end">
+            <div className="contact-form-column flex justify-end">
               <ContactForm />
             </div>
           </div>
@@ -260,6 +265,7 @@ function HomeContent() {
       </main>
 
       <Footer />
+      <FooterWordmark />
       <RecIAWidget />
       <QuickNav />
     </div>

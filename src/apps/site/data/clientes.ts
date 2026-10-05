@@ -1,4 +1,5 @@
 import { mediaBase } from '@/shared/lib/media'
+import originalLogos from './client-logos.json'
 // Fonte unica dos clientes da Bold. Usada na home (ClientesWave) e nas paginas
 // individuais (/projeto-:slug). Conforme novos assets chegarem (site, telefone,
 // fotos de evento, demoreel), e so preencher aqui — a UI se adapta sozinha.
@@ -23,6 +24,7 @@ export type Cliente = {
   slug: string
   nome: string
   logo: string
+  logoTreatment?: string
   area?: string
   telefone?: string
   site?: string
@@ -33,7 +35,7 @@ export type Cliente = {
   depoimento?: Depoimento
 }
 
-export const CLIENTES: Cliente[] = [
+const CLIENTES_BASE: Cliente[] = [
   {
     slug: 'agro-baggio-john-deere',
     nome: 'John Deere · Agro Baggio',
@@ -91,6 +93,12 @@ export const CLIENTES: Cliente[] = [
   { slug: 'embrapa', nome: 'Embrapa', logo: `${LOGO}EMBRAPA_LOGO_CLEINTES.png`, area: 'Pesquisa Agropecuária', videos: [] },
   { slug: 'parrilla-do-campo', nome: 'Parrilla do Campo', logo: `${LOGO}PARRILHA_DO_CAMPO_LOGO_CLIENTES.png`, area: 'Gastronomia', videos: [] },
 ]
+
+const logos: Record<string, { src: string; treatment: string }> = originalLogos
+export const CLIENTES: Cliente[] = CLIENTES_BASE.map((client) => {
+  const original = logos[client.slug]
+  return original ? { ...client, logo: original.src, logoTreatment: original.treatment } : { ...client, logoTreatment: 'transparent' }
+})
 
 export function getClienteBySlug(slug: string): Cliente | undefined {
   return CLIENTES.find((c) => c.slug === slug)

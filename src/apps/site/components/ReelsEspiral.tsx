@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { mediaBase } from '@/shared/lib/media'
+import { videoPreview } from '@/shared/lib/video-preview'
 
 // Galeria espiral 3D (Three.js) — portado do efeito "Galeria Espiral 3D" da
 // Imperio WEB Codes Store para componente React/Vite.
@@ -108,6 +109,7 @@ export function ReelsEspiral() {
     const reduce =
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData
 
     // WebGL pode estar indisponivel (aceleracao de hardware desligada, VM,
     // driver na blocklist do Chrome). Sem contexto, o Three.js lanca e o erro
@@ -139,13 +141,13 @@ export function ReelsEspiral() {
     const videoEls: HTMLVideoElement[] = []
     function videoTexture(url: string): THREE.VideoTexture {
       const v = document.createElement('video')
-      v.src = url
+      // No src/play on mount: entering the section is what starts the clip.
+      v.dataset.source = videoPreview(url)
       v.crossOrigin = 'anonymous'
       v.muted = true
       v.loop = true
       v.playsInline = true
-      v.preload = 'auto'
-      v.play().catch(() => {})
+      v.preload = 'none'
       videoEls.push(v)
       const tex = new THREE.VideoTexture(v)
       tex.colorSpace = THREE.SRGBColorSpace
@@ -312,6 +314,17 @@ export function ReelsEspiral() {
 
     let rafId = 0
     let visible = false
+    const syncVideos = () => {
+      for (const v of videoEls) {
+        if (!visible || document.hidden || reduce || saveData || !v.dataset.source) {
+          v.pause()
+        } else {
+          if (!v.getAttribute('src')) v.src = v.dataset.source
+          void v.play().catch(() => {})
+        }
+      }
+    }
+    document.addEventListener('visibilitychange', syncVideos)
 
     // O loop roda continuamente: a camera fica SEMPRE sincronizada com o scroll,
     // entao nao ha salto/zoom na transicao de entrada e saida da secao. So o
@@ -362,13 +375,9 @@ export function ReelsEspiral() {
     const observer = new IntersectionObserver(
       (entries) => {
         visible = entries[0].isIntersecting
-        // pausa os videos fora da tela pra nao gastar CPU/bateria atoa
-        for (const v of videoEls) {
-          if (visible) v.play().catch(() => {})
-          else v.pause()
-        }
+        syncVideos()
       },
-      { threshold: 0, rootMargin: '200px' }
+      { threshold: 0.15 }
     )
     observer.observe(section)
 
@@ -379,6 +388,7 @@ export function ReelsEspiral() {
     return () => {
       cancelAnimationFrame(rafId)
       observer.disconnect()
+      document.removeEventListener('visibilitychange', syncVideos)
       canvas.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onPointerUp)

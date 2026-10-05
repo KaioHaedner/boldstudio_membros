@@ -7,6 +7,8 @@ import { ShinyButton } from '@/shared/components/ShinyButton'
 import { CLIENTES } from '@/apps/site/data/clientes'
 import { SERVICO_SLUGS, isServicoSlug } from '@/apps/site/data/servicos'
 import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
+import { BudgetVideo } from '@/shared/components/BudgetVideo'
+import { videoPreview } from '@/shared/lib/video-preview'
 
 const HOME = '/home-bold-studio-sinop-brasil'
 // Todo link pra ca sai da secao Solucoes, entao o voltar devolve a pessoa
@@ -114,16 +116,16 @@ function ServicoConteudo() {
                       className="max-h-16 w-auto max-w-[70%] object-contain opacity-70 transition-opacity group-hover:opacity-100"
                     />
                     {cliente.videos[0] && !semVideo[cliente.slug] && (
-                      <video
-                        src={cliente.videos[0]}
+                      <BudgetVideo
+                        src={videoPreview(cliente.videos[0]) || cliente.videos[0]}
+                        poster={cliente.logo}
                         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
                           videoPronto[cliente.slug] ? 'opacity-100' : 'opacity-0'
                         }`}
-                        autoPlay
+                        autoPlay={Boolean(videoPreview(cliente.videos[0]))}
                         loop
                         muted
                         playsInline
-                        preload="metadata"
                         onLoadedData={() =>
                           setVideoPronto((atuais) =>
                             atuais[cliente.slug] ? atuais : { ...atuais, [cliente.slug]: true }
