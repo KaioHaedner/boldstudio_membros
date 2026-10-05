@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+# BoldStudioHub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cópia organizada de `KaioHaedner/boldstudio_membros`, commit `6e06f19`.
+Destino: `boldstudiobrasil/BoldStudioHub`.
 
-Currently, two official plugins are available:
+## Código por área
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Domínio | Diretório | Conteúdo |
+| --- | --- | --- |
+| `boldstudiobrasil.com`, `www` | `src/apps/site/` | Institucional, serviços, cases, checkout, componentes e dados |
+| `academy.boldstudiobrasil.com` | `src/apps/academy/` | Páginas, layout e hooks de alunos; tema do login |
+| `admin.boldstudiobrasil.com` | `src/apps/admin/` | Painel administrativo e tema do login |
+| `crew.boldstudiobrasil.com` | `src/apps/crew/` | Tema de login existente; painel `/crew` ainda não implementado |
+| `api.boldstudiobrasil.com` | `api/` | Proxy de mídias no runtime Vercel |
+| Compartilhado | `src/shared/` | Auth, páginas legais, componentes, estilos e integrações |
+| Banco e funções | `supabase/` | Migrations e Edge Functions; publicação separada do frontend |
+| Assets locais | `public/` | Arquivos versionados; não contém todo o Storage |
 
-## React Compiler
+O frontend continua sendo **uma SPA React/Vite**, com fontes separadas por área
+e um build compartilhado. A separação não cria deploys independentes nem muda
+permissões. `src/App.tsx` reúne as rotas e `src/shared/lib/area.ts` detecta o host.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Desenvolvimento
 
-## Expanding the ESLint configuration
+1. Execute `npm ci`.
+2. Crie `.env.local` a partir de `.env.example` e configure a chave pública
+   Supabase. Nunca coloque service_role/secret em variáveis `VITE_*`.
+3. Execute `npm run dev`.
+4. Teste os temas em `/login?area=academy`, `/login?area=admin` e `/login?area=crew`.
+5. Execute `npm run build` para gerar `dist/` e `npm run lint` para revisar o código.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Publicação e mídias
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Vercel: framework Vite, diretório raiz, comando `npm run build`, saída `dist`.
+`vercel.json` mantém o fallback das rotas. `/api/media` depende do runtime Vercel;
+não existe no servidor Vite nem em uma hospedagem estática por simples upload.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+`VITE_MEDIA_BASE_URL` define um host de mídia separado. Vazio usa `/api/media`
+do próprio deployment, permitindo previews sem depender do host antigo da API.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Supabase principal indicado: `heriogfvynncvabbwspu`. Os buckets legados continuam
+em `erhtqgaxibncpondscna` até que seus objetos sejam copiados. Trocar a URL não
+migra dados, usuários ou mídias. Origem bloqueada por quota continua falhando.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Para um institucional sem banco, ainda é necessário migrar as mídias,
+substituir formulários e separar a inicialização da autenticação. A área de
+alunos continua dependendo de banco e autenticação.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Consulte [deployment/README.md](deployment/README.md) e
+[docs/MIGRATION-2026-10-05.md](docs/MIGRATION-2026-10-05.md).

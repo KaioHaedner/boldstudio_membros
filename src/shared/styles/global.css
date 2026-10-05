@@ -1,0 +1,2145 @@
+@import "tailwindcss";
+
+/* Respiro vertical de toda seção da home. O vão entre duas seções é sempre dois
+   deles, então nenhuma emenda fica maior que a outra. Antes cada seção tinha seu
+   proprio valor (py-16, py-20, py-24, py-28, py-32, clamps soltos) e o vazio
+   preto ia de 24px a 463px conforme o trecho. */
+:root {
+  --espaco-secao: clamp(3rem, 6vw, 5rem);
+  /* distância entre o fim do conteúdo e a etiqueta amarela que desliza */
+  --espaco-etiqueta: clamp(2rem, 4vw, 3rem);
+}
+
+
+/* iOS Safari da zoom automatico ao focar um input/textarea com fonte < 16px.
+   Forcar 16px nos campos no mobile bloqueia esse zoom (chat do RecIA, forms).
+   So no mobile — no desktop mantem o tamanho do design (text-sm etc). */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Reveal por scroll (fade + slide-up) via CSS transition — NAO depende do ticker
+   do GSAP. A classe .reveal-init e adicionada por JS no mount (fail-safe: sem JS,
+   a secao fica visivel); .is-revealed entra quando a secao chega na viewport. */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-init.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init {
+    transition: none;
+  }
+}
+
+@theme {
+  /* Paleta BOLDSTUDIO */
+  --color-bold-black: #000000;
+  --color-bold-yellow: #FFD712;
+  --color-bold-white: #FFFFFF;
+  --color-bold-gray: #282828;
+
+  /* Aliases semanticos */
+  --color-background: #000000;
+  --color-foreground: #FFFFFF;
+  --color-card: #282828;
+  --color-card-foreground: #FFFFFF;
+  --color-primary: #FFD712;
+  --color-primary-foreground: #000000;
+  --color-muted: #282828;
+  --color-muted-foreground: #a3a3a3;
+  --color-border: #2e2e2e;
+  --color-input: #1a1a1a;
+  --color-ring: #FFD712;
+
+  /* Fontes */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'JetBrains Mono', Consolas, monospace;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--color-bold-black);
+  color: var(--color-bold-white);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Evita o "bounce"/overscroll que encavala com os efeitos de scroll nos extremos */
+  overscroll-behavior: none;
+}
+
+/* Reset basico para o template antigo do Vite */
+button {
+  font-family: inherit;
+}
+
+/* ============== SCROLLBAR BOLD (amarelo) ============== */
+
+html {
+  scrollbar-color: #FFD712 #0a0a0a;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FFD712 0%, #E5BE10 100%);
+  border-radius: 8px;
+  border: 2px solid #0a0a0a;
+  box-shadow: 0 0 8px rgba(255, 215, 18, 0.3);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FFE54B 0%, #FFD712 100%);
+  box-shadow: 0 0 14px rgba(255, 215, 18, 0.6);
+}
+*::-webkit-scrollbar-thumb:active {
+  background: #FFD712;
+}
+*::-webkit-scrollbar-corner {
+  background: #0a0a0a;
+}
+
+/* ============== CURSOR BOLD (seta nativa em amarelo) ============== */
+
+/* Seta padrao amarela com contorno preto (visivel em qualquer fundo) */
+body {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path fill='%23FFD712' stroke='%23000' stroke-width='1.5' stroke-linejoin='round' d='M4,2 L4,21 L9,17 L11.5,23.5 L14.5,22.3 L12,15.8 L19,15.8 Z'/></svg>") 4 2, auto;
+}
+
+/* Mao apontando amarela em elementos clicaveis */
+a,
+button,
+select,
+summary,
+label[for],
+[role="button"],
+[data-cursor-hover] {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path fill='%23FFD712' stroke='%23000' stroke-width='1.5' stroke-linejoin='round' d='M10,3 L10,12 L8.5,12 C7.5,12 7,12.8 7,13.6 L7,16 C7,21 10,25 14,25 L17,25 C20.5,25 23,22.5 23,19 L23,12.5 C23,11.7 22.3,11 21.5,11 C20.7,11 20,11.7 20,12.5 L20,11 C20,10.2 19.3,9.5 18.5,9.5 C17.7,9.5 17,10.2 17,11 L17,9.5 C17,8.7 16.3,8 15.5,8 C14.7,8 14,8.7 14,9.5 L14,5 C14,4.2 13.3,3.5 12.5,3.5 C11.7,3.5 11,4.2 11,5 Z'/></svg>") 10 3, pointer;
+}
+
+/* Inputs mantem cursor de texto padrao do SO */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="search"],
+input[type="number"],
+input[type="url"],
+textarea {
+  cursor: text;
+}
+
+/* ============== ANIMACOES (LoginBackground) ============== */
+
+@keyframes rotate-slow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.animate-rotate-slow {
+  animation: rotate-slow 60s linear infinite;
+}
+
+@keyframes blob-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(8%, 6%) scale(1.08); }
+  66%      { transform: translate(-6%, 10%) scale(0.95); }
+}
+.animate-blob-1 {
+  animation: blob-1 24s ease-in-out infinite;
+}
+
+@keyframes blob-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-10%, -8%) scale(1.12); }
+}
+.animate-blob-2 {
+  animation: blob-2 30s ease-in-out infinite;
+}
+
+@keyframes blob-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(-7%, -5%) scale(1.15); }
+  70%      { transform: translate(5%, 4%) scale(0.9); }
+}
+.animate-blob-3 {
+  animation: blob-3 36s ease-in-out infinite;
+}
+
+@keyframes float-particle {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(20px, -120px); opacity: 0; }
+}
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+/* ============== ANIMACOES (VideoBackground) ============== */
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.06); opacity: 0.7; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+@keyframes wave-x {
+  0%   { transform: translateX(-15%); }
+  50%  { transform: translateX(15%); }
+  100% { transform: translateX(-15%); }
+}
+.animate-wave-1 { animation: wave-x 12s ease-in-out infinite; }
+.animate-wave-2 { animation: wave-x 16s ease-in-out infinite reverse; }
+.animate-wave-3 { animation: wave-x 20s ease-in-out infinite; }
+
+@keyframes particle-float {
+  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translate3d(30px, -80px, 0) scale(1.4); }
+  90%  { opacity: 1; }
+  100% { transform: translate3d(-20px, -180px, 0) scale(0.6); opacity: 0; }
+}
+.animate-particle-float {
+  animation: particle-float linear infinite;
+  box-shadow: 0 0 6px rgba(255, 215, 18, 0.6);
+}
+
+.bg-radial-vignette {
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+}
+
+/* ============== ANIMACOES (Toast / notificacoes) ============== */
+@keyframes toast-in {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.animate-toast-in { animation: toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes toast-bar {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+.animate-toast-bar { animation: toast-bar 4.5s linear forwards; }
+
+/* ============== Botoes 3D (navegacao aulas/modulos) - cores Bold ============== */
+.btn3d {
+  appearance: none;
+  position: relative;
+  border: 0;
+  padding: 0 8px;
+  min-width: 3.5em;
+  min-height: 3.5em;
+  box-sizing: border-box;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 16px;
+}
+.btn3d:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.btn3d-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 8px 16px;
+  transform: translateY(0);
+  color: #000;
+  background-image: linear-gradient(145deg, #FFE54B, #E5BE10);
+  text-shadow: 0 -1px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  transition: transform 0.25s, border-radius 0.25s, background 0.4s;
+}
+.btn3d:not(:disabled):active .btn3d-top {
+  border-radius: 10px 10px 8px 8px / 8px;
+  transform: translateY(2px);
+  background-image: linear-gradient(145deg, #E5BE10, #FFE54B);
+}
+.btn3d-bottom {
+  position: absolute;
+  z-index: 1;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 16px;
+  padding-top: 6px;
+  width: calc(100% - 8px);
+  height: calc(100% - 10px);
+  background-image: linear-gradient(145deg, #E5BE10, #C9A45B);
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+  transition: border-radius 0.2s, padding-top 0.2s;
+}
+.btn3d-base {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  left: 0;
+  border-radius: 16px;
+  width: 100%;
+  height: calc(100% - 4px);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.18), inset 0 2px 2px rgba(0, 0, 0, 0.3);
+  transition: border-radius 0.2s, padding-top 0.2s;
+}
+.btn3d:not(:disabled):active .btn3d-bottom {
+  border-radius: 10px 10px 8px 8px / 8px;
+  padding-top: 0;
+}
+.btn3d:not(:disabled):active .btn3d-base {
+  border-radius: 10px 10px 8px 8px / 8px;
+}
+
+/* ============== Login "Camera" (emissor de luz + form flutuante) - Bold ============== */
+.cam-rays {
+  position: relative;
+  z-index: 2;
+  margin-top: -1.25em;
+  animation: cam-rays 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 215, 18, 0.45));
+}
+.cam-form {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  padding: 1.25rem 1.4rem;
+  border-radius: 0.75rem;
+  border: 2px solid rgba(255, 215, 18, 0.45);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 64px 0 rgba(255, 215, 18, 0.15) inset, 0 0 28px rgba(255, 215, 18, 0.22);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  animation: cam-float 3.2s ease-in-out infinite;
+}
+.cam-label {
+  text-align: center;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  text-shadow: 0 0 16px rgba(255, 215, 18, 0.4);
+}
+.cam-emitter {
+  position: relative;
+  z-index: 1;
+  margin-top: -0.5em;
+  filter: drop-shadow(0 6px 18px rgba(255, 215, 18, 0.25));
+}
+@keyframes cam-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes cam-rays {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ============== Botao brutalist "Powered by BoldStudio" - cores Bold ============== */
+.brutalist-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  color: #FFD712;
+  font-weight: bold;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #0d0d0d;
+  border: 2px solid #FFD712;
+  border-radius: 12px;
+  box-shadow: 3px 3px 1px #000000;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.brutalist-btn:hover {
+  background-color: #1a1a1a;
+  transform: translate(-6px, -6px) rotate(1deg);
+  box-shadow: 10px 10px 0 #000000, 15px 15px 20px rgba(255, 215, 18, 0.2);
+}
+.brutalist-btn::before,
+.brutalist-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 18, 0.12), transparent);
+  transition: 0.6s;
+}
+.brutalist-btn::before { left: -100%; }
+.brutalist-btn::after { left: 100%; }
+.brutalist-btn:hover::before { animation: brutalSwipeR 1.5s infinite; }
+.brutalist-btn:hover::after { animation: brutalSwipeL 1.5s infinite; }
+@keyframes brutalSwipeR { 100% { transform: translateX(200%) skew(-45deg); } }
+@keyframes brutalSwipeL { 100% { transform: translateX(-200%) skew(-45deg); } }
+.brutalist-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFD712;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.brutalist-btn:hover .brutalist-logo { transform: translateY(-8px); }
+.brutalist-btn:hover .brutalist-icon { animation: brutalSpin 4s cubic-bezier(0.25, 0.8, 0.25, 1) infinite; }
+@keyframes brutalSpin {
+  0% { transform: rotate(0) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+.brutalist-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+  text-align: center;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  z-index: 3;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.brutalist-btn:hover .brutalist-text { opacity: 1; max-height: 60px; margin-top: 8px; }
+.brutalist-text span:first-child { font-size: 11px; font-weight: 400; color: #fff; }
+.brutalist-text span:last-child { font-size: 13px; color: #FFD712; }
+.brutalist-btn:active .brutalist-logo,
+.brutalist-btn:active .brutalist-text { transform: scale(0.95); }
+
+/* ============== Glassmorphism util ============== */
+.glass-card {
+  background: rgba(40, 40, 40, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 30px 60px -15px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 215, 18, 0.08) inset,
+    0 0 60px -20px rgba(255, 215, 18, 0.15);
+}
+
+/* Liquid glass (estilo iOS/visionOS): blur forte + gradiente translucido +
+   highlight especular no topo + brilho amarelo sutil da marca. */
+.liquid-glass {
+  position: relative;
+  background: linear-gradient(135deg, rgba(28, 28, 28, 0.74), rgba(10, 10, 10, 0.62));
+  backdrop-filter: blur(26px) saturate(160%) brightness(1.02);
+  -webkit-backdrop-filter: blur(26px) saturate(160%) brightness(1.02);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 215, 18, 0.05),
+    0 0 80px -30px rgba(255, 215, 18, 0.22);
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(130% 80% at 50% -15%, rgba(255, 255, 255, 0.14), transparent 60%);
+  pointer-events: none;
+}
+.liquid-glass > * {
+  position: relative;
+  z-index: 1;
+}
+/* RecIA: painel de chat com fundo 100% solido (sem transparencia/blur), mesmas
+   cores do gradiente do liquid-glass porem opacas. Vem depois pra sobrescrever. */
+.recia-solid {
+  background: linear-gradient(135deg, #1c1c1c, #0a0a0a);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Pill lateral de chamada da RecIA */
+@keyframes recia-bubble-in {
+  0% { opacity: 0; transform: translateX(12px) scale(0.96); }
+  14% { opacity: 1; transform: translateX(0) scale(1); }
+  82% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-6px) scale(0.98); }
+}
+.recia-bubble {
+  animation: recia-bubble-in 3.6s ease-in-out forwards;
+}
+.recia-bubble::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  bottom: 12px;
+  width: 9px;
+  height: 9px;
+  background: rgba(22, 22, 22, 0.92);
+  border-top: 1px solid rgba(255, 215, 18, 0.35);
+  border-right: 1px solid rgba(255, 215, 18, 0.35);
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .recia-bubble {
+    animation: none;
+  }
+}
+
+/* ============== ShinyButton (CTA com borda conica animada) ============== */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --gradient-angle-offset {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --gradient-percent {
+  syntax: "<percentage>";
+  initial-value: 5%;
+  inherits: false;
+}
+@property --gradient-shine {
+  syntax: "<color>";
+  initial-value: #ffffff;
+  inherits: false;
+}
+
+.shiny-cta {
+  --shiny-cta-bg: #000000;
+  --shiny-cta-bg-subtle: #282828;
+  --shiny-cta-fg: #ffffff;
+  --shiny-cta-highlight: #ffd712;
+  --shiny-cta-highlight-subtle: #ffe866;
+  --animation: gradient-angle linear infinite;
+  --duration: 3s;
+  --shadow-size: 2px;
+  --transition: 800ms cubic-bezier(0.25, 1, 0.5, 1);
+
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  outline-offset: 4px;
+  padding: 1rem 2.25rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--shiny-cta-fg);
+  background: linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
+    conic-gradient(
+      from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+      transparent,
+      var(--shiny-cta-highlight) var(--gradient-percent),
+      var(--gradient-shine) calc(var(--gradient-percent) * 2),
+      var(--shiny-cta-highlight) calc(var(--gradient-percent) * 3),
+      transparent calc(var(--gradient-percent) * 4)
+    ) border-box;
+  box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
+  transition: var(--transition);
+  transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine;
+}
+
+/* CTA grande: 1,5x o padrão. Só a partir do tablet — no celular ele viraria
+   uma faixa de borda a borda. */
+@media (min-width: 768px) {
+  .shiny-cta--grande {
+    padding: 1.5rem 3.375rem;
+    font-size: 1.5rem;
+    border-radius: 14px;
+  }
+}
+
+.shiny-cta::before,
+.shiny-cta::after,
+.shiny-cta span::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-start: 50%;
+  translate: -50% -50%;
+  z-index: -1;
+}
+
+.shiny-cta:active {
+  translate: 0 1px;
+}
+
+.shiny-cta::before {
+  --size: calc(100% - var(--shadow-size) * 3);
+  --position: 2px;
+  --space: calc(var(--position) * 2);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(
+    circle at var(--position) var(--position),
+    white calc(var(--position) / 4),
+    transparent 0
+  ) padding-box;
+  background-size: var(--space) var(--space);
+  background-repeat: space;
+  mask-image: conic-gradient(
+    from calc(var(--gradient-angle) + 45deg),
+    black,
+    transparent 10% 90%,
+    black
+  );
+  border-radius: inherit;
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.shiny-cta::after {
+  --animation: shimmer linear infinite;
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(-50deg, transparent, var(--shiny-cta-highlight), transparent);
+  mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  opacity: 0.6;
+}
+
+.shiny-cta span {
+  z-index: 1;
+}
+
+.shiny-cta span::before {
+  --size: calc(100% + 1rem);
+  width: var(--size);
+  height: var(--size);
+  box-shadow: inset 0 -1ex 2rem 4px var(--shiny-cta-highlight);
+  opacity: 0;
+  transition: opacity var(--transition);
+  animation: calc(var(--duration) * 1.5) breathe linear infinite;
+}
+
+.shiny-cta,
+.shiny-cta::before,
+.shiny-cta::after {
+  animation: var(--animation) var(--duration),
+    var(--animation) calc(var(--duration) / 0.4) reverse paused;
+  animation-composition: add;
+}
+
+.shiny-cta:is(:hover, :focus-visible) {
+  --gradient-percent: 20%;
+  --gradient-angle-offset: 95deg;
+  --gradient-shine: var(--shiny-cta-highlight-subtle);
+}
+
+.shiny-cta:is(:hover, :focus-visible),
+.shiny-cta:is(:hover, :focus-visible)::before,
+.shiny-cta:is(:hover, :focus-visible)::after {
+  animation-play-state: running;
+}
+
+.shiny-cta:is(:hover, :focus-visible) span::before {
+  opacity: 1;
+}
+
+@keyframes gradient-angle {
+  to { --gradient-angle: 360deg; }
+}
+@keyframes shimmer {
+  to { rotate: 360deg; }
+}
+@keyframes breathe {
+  from, to { scale: 1; }
+  50% { scale: 1.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-cta,
+  .shiny-cta::before,
+  .shiny-cta::after,
+  .shiny-cta span::before {
+    animation: none;
+  }
+}
+
+/* ============== Intro Bold (abertura 3-2-1 + "Solta o Rec") ============== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000000;
+  display: grid;
+  place-items: center;
+  transition: opacity 500ms ease;
+}
+.intro-overlay > * {
+  grid-area: 1 / 1; /* sobrepoe cubos/frase/carregando no mesmo centro */
+}
+.intro-overlay.intro-saindo {
+  opacity: 0;
+}
+
+.intro-grid {
+  --intro-box: min(20vw, 11vh);
+  display: grid;
+  grid-template-columns: repeat(3, var(--intro-box));
+  gap: calc(var(--intro-box) * 0.28);
+  perspective: 700px;
+}
+.intro-cube {
+  position: relative;
+  width: var(--intro-box);
+  height: var(--intro-box);
+  transform-style: preserve-3d;
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.intro-cube.on {
+  transform: rotateX(0deg);
+}
+.intro-cube.off {
+  transform: rotateX(180deg);
+}
+.intro-cube .face {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.intro-cube .face-on {
+  background: #ffd712;
+}
+.intro-cube .face-off {
+  background: #282828;
+  transform: rotateX(180deg);
+}
+
+@keyframes intro-slide-out-left {
+  to {
+    transform: translateX(-60px);
+    opacity: 0;
+  }
+}
+.intro-grid.cubos-saindo {
+  animation: intro-slide-out-left 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes intro-fade-in-down {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.intro-frase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 0.95;
+  font-size: clamp(2.5rem, 12vw, 6rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+/* Cada linha da frase entra na sua vez (animationDelay vem inline). */
+.intro-frase span {
+  opacity: 0;
+  animation: intro-fade-in-down 600ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.intro-frase-o {
+  color: #ffd712;
+}
+
+/* Linha "REC" com LED vermelho piscando, estilo luz de camera gravando */
+.intro-rec-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+.intro-rec-led {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: #ff2d2d;
+  animation: intro-rec-blink 1.1s ease-in-out infinite;
+}
+@keyframes intro-rec-blink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0.7em 0.15em rgba(255, 45, 45, 0.95);
+  }
+  50% {
+    opacity: 0.25;
+    box-shadow: 0 0 0.25em 0.04em rgba(255, 45, 45, 0.4);
+  }
+}
+
+.intro-carregando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  animation: intro-fade-in-down 500ms ease both;
+}
+.intro-carregando img {
+  height: 2.4rem;
+  width: auto;
+  object-fit: contain;
+}
+.intro-carregando img.intro-coin {
+  height: auto;
+  width: min(42vw, 150px);
+  filter: drop-shadow(0 8px 24px rgba(255, 215, 18, 0.18));
+  animation: intro-coin-in 600ms ease both;
+}
+@keyframes intro-coin-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+.intro-carregando p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+.intro-dots {
+  display: flex;
+  gap: 8px;
+  height: 10px;
+  align-items: center;
+}
+.intro-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ffd712;
+  animation: intro-dot-blink 1.2s ease-in-out infinite;
+}
+.intro-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.intro-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes intro-dot-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.intro-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 28px;
+}
+.intro-eq span {
+  width: 5px;
+  height: 100%;
+  border-radius: 999px;
+  background: #ffd712;
+  transform-origin: bottom;
+  animation: intro-eq-bounce 1.1s ease-in-out infinite;
+}
+@keyframes intro-eq-bounce {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-cube,
+  .intro-grid.cubos-saindo,
+  .intro-frase span,
+  .intro-rec-led,
+  .intro-carregando,
+  .intro-eq span,
+  .intro-dots span {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Entrada da home depois que a intro termina (slide-up + fade) */
+@keyframes home-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Sem fill-mode forwards de proposito: com `both`, o transform do keyframe
+   final (translateY(0)) fica pendurado no <main> para sempre, e um transform
+   nao-nulo vira containing block dos descendentes position:fixed — o que
+   quebra o pin do ScrollTrigger do crew na primeira visita (a que toca a
+   intro). O estado final do keyframe e igual ao natural, entao deixar a
+   animacao "soltar" o elemento no fim nao muda nada visualmente. */
+.home-revelar {
+  animation: home-slide-up 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.home-oculto {
+  opacity: 0;
+}
+
+/* ============== Etiquetas amarelas (stickers das seções) ==============
+   Cor chapada, sem gradiente e sem animação. Substituiu o "amarelo vivo", que
+   deslizava um gradiente dourado num ::before: o cliente pediu um amarelo mais
+   fechado, na linha do Borussia Dortmund, e estático. */
+.sticker-amarelo {
+  background: #fde100;
+}
+
+/* ============== Marquee de marcas (carrossel contínuo de logos) ============== */
+@keyframes marcas-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marcas-marquee {
+  animation: marcas-scroll 50s linear infinite;
+}
+.marcas-marquee:hover {
+  animation-play-state: paused;
+}
+.marcas-marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+/* Dica de clique da esteira de clientes: a seta sai da frase e cai numa logo
+   de verdade, onde o cursor clica. A versão anterior era um SVG central com um
+   quadrado de mentira, e o próprio dono do estúdio clicou nele achando que era
+   botão; a de antes desta, duas setas nas margens, ele também não quis. */
+.clientes-esteira {
+  position: relative;
+}
+.clientes-dica {
+  position: absolute;
+  left: clamp(0.5rem, 4vw, 3rem);
+  /* o SVG entra pra dentro da esteira: o ponto do clique (67% da altura dele)
+     precisa cair EM CIMA de uma logo, nao acima dela */
+  bottom: calc(100% - 7rem);
+  z-index: 3;
+  width: clamp(9rem, 22vw, 12rem);
+  color: #fde100;
+  pointer-events: none;
+}
+.clientes-dica__label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.clientes-dica__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.clientes-dica__curva,
+.clientes-dica__ponta {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 140;
+  animation: clientes-dica-traco 2.8s ease-in-out infinite;
+}
+.clientes-dica__cursor {
+  fill: #f5f1e8;
+  stroke: #090909;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transform-origin: 0 0;
+  animation: clientes-dica-cursor 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.clientes-dica__pulso {
+  fill: none;
+  stroke: #fde100;
+  stroke-width: 2;
+  transform-origin: 80px 80px;
+  animation: clientes-dica-pulso 2.8s ease-out infinite;
+}
+.clientes-dica__pulso--dois {
+  animation-delay: 0.2s;
+}
+@keyframes clientes-dica-traco {
+  0%, 10% { stroke-dashoffset: 140; opacity: 0; }
+  32%, 80% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: -20; opacity: 0; }
+}
+@keyframes clientes-dica-cursor {
+  0%, 18% { transform: translate(-46px, -44px) scale(0.8); opacity: 0; }
+  30% { opacity: 1; }
+  55% { transform: translate(-6px, -4px) scale(0.9); opacity: 1; }
+  64% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  71% { transform: translate(2px, 2px) scale(0.76); opacity: 1; }
+  80% { transform: translate(0, 0) scale(0.9); opacity: 1; }
+  100% { transform: translate(8px, 6px) scale(0.9); opacity: 0; }
+}
+@keyframes clientes-dica-pulso {
+  0%, 66% { transform: scale(0.2); opacity: 0; }
+  72% { opacity: 0.9; }
+  92%, 100% { transform: scale(1.8); opacity: 0; }
+}
+/* Modal claro: CTA usa o mesmo motor de brilho da hero, com a paleta invertida. */
+.clientes-detail-card {
+  isolation: isolate;
+  overflow: visible;
+  animation: clientes-card-in 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.clientes-detail-card__surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 18, 0.45);
+  border-radius: 1.5rem;
+  background: #ffffff;
+}
+.clientes-modal__project-cta {
+  width: 100%;
+}
+.clientes-modal__project-cta > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+@keyframes clientes-card-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marcas-marquee,
+  .clientes-dica__curva,
+  .clientes-dica__cursor,
+  .clientes-dica__pulso,
+  .clientes-detail-card { animation: none; }
+}
+
+/* Durante a troca automática, AnimatePresence mantém a miniatura anterior por
+   alguns frames. No mobile ambas ficam absolutas dentro do mesmo slot para a
+   segunda não empurrar e cobrir a descrição. */
+@media (max-width: 639px) {
+  .solucoes-cycle-thumb {
+    top: 0 !important;
+  }
+}
+
+/* No footer alto do mobile, offsets percentuais empurravam os blobs inteiros
+   para fora. Posicionamento fixo nos cantos mantém o mesmo brilho do desktop. */
+@media (max-width: 767px) {
+  .footer-yellow-glow {
+    width: 15rem !important;
+    height: 15rem !important;
+    min-width: 15rem !important;
+    min-height: 15rem !important;
+    opacity: 0.9;
+  }
+  .footer-yellow-glow--top {
+    top: -5rem !important;
+    left: -6rem !important;
+  }
+  .footer-yellow-glow--bottom {
+    right: -6rem !important;
+    bottom: -5rem !important;
+  }
+}
+
+/* ============== Coin decorativo (símbolo Bold espalhado) ============== */
+@keyframes coin-bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -16px; }
+}
+.coin-bob {
+  animation: coin-bob 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .coin-bob { animation: none; }
+}
+
+/* ============== Hero institucional — vídeo do Academy ============== */
+.home-hero__video video {
+  filter: saturate(0.92) contrast(1.06);
+}
+.home-hero__overlay {
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.38) 52%, rgba(0, 0, 0, 0.48) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent 68%);
+}
+@keyframes home-menu-enter {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+  }
+}
+.home-fullscreen-menu {
+  animation: home-menu-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-revelar,
+  .home-oculto,
+  .home-fullscreen-menu {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============== Crew — Card Swap 3D (equipe) ============== */
+.crew-swap-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 35fr) minmax(360px, 65fr);
+  /* alinhado pelo topo: centralizado, o texto flutuava no meio da pilha e abria
+     mais de 100px de preto entre a etiqueta da seção anterior e o título */
+  align-items: start;
+  gap: clamp(2rem, 6vw, 5rem);
+}
+.crew-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+@media (min-width: 1024px) {
+  .crew-cta {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+.crew-swap-stage {
+  /* tamanho do leque — lido tambem pelo useCardSwap (--card-swap-x/y) */
+  --card-swap-x: 11px;
+  --card-swap-y: 13px;
+  /* folga total que o leque ocupa; o card desconta ela pra nao vazar do stage */
+  --card-swap-fan-x: calc(var(--card-swap-x) * (var(--crew-count) - 1));
+  --card-swap-fan-y: calc(var(--card-swap-y) * (var(--crew-count) - 1));
+  position: relative;
+  width: 100%;
+  height: clamp(360px, 40vw, 460px);
+  justify-self: end;
+  perspective: 1400px;
+}
+/* Mantem CTA e pilha lado a lado em notebooks/tablets horizontais. A versao
+   empilhada so entra quando realmente falta largura para as duas colunas. */
+@media (max-width: 767px) {
+  .crew-swap-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  /* display: contents solta o titulo e o botao como itens da grade, e ai a
+     ordem pode intercalar a pilha entre os dois: titulo, cards, botao. */
+  .crew-cta {
+    display: contents;
+  }
+  .crew-cta__texto {
+    order: 1;
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .crew-swap-stage {
+    order: 2;
+    justify-self: center;
+  }
+  .crew-cta__botao {
+    order: 3;
+    margin-top: 1.75rem;
+  }
+}
+
+/* Card do crew: foto ocupando o card inteiro, com uma bruma embacada subindo
+   do rodape pro texto ficar legivel sem tapar o rosto. O layout anterior
+   partia o card em duas metades, uma preta com o texto e outra com a foto —
+   e so a metade preta respondia ao arrasto. */
+.crew-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - var(--card-swap-fan-x));
+  height: calc(100% - var(--card-swap-fan-y));
+  border-radius: 1.5rem;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 215, 18, 0.15);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+  overflow: hidden;
+  /* o card pode ser arrastado pro lado pra passar pro proximo; pan-y deixa o
+     gesto horizontal com a gente e mantem o vertical rolando a pagina */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.crew-card:active {
+  cursor: grabbing;
+}
+.crew-card__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  /* o alvo do gesto e sempre o card, nunca a imagem */
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.crew-card__foto--vazia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #141414;
+}
+/* A fumacinha: copia da foto desfocada por cima dela mesma, aparecendo so no
+   rodape. Com backdrop-filter o Chrome nao feathera a mascara e o desfoque
+   terminava numa linha reta atravessando a pessoa. */
+.crew-card__bruma {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  filter: blur(16px) brightness(0.6) saturate(0.85);
+  /* o blur come as bordas; a escala esconde a moldura transparente */
+  transform: scale(1.12);
+  mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 64%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 30%, transparent 64%);
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.crew-card__info {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(1.25rem, 2.6vw, 2.25rem);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.94) 0%,
+    rgba(0, 0, 0, 0.8) 32%,
+    rgba(0, 0, 0, 0.42) 64%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+/* o travessao amarelo virou um risco curto por cima do nome */
+.crew-card__bar {
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-bottom: 0.85rem;
+  border-radius: 2px;
+  background: #ffd712;
+  box-shadow: 0 0 12px 1px rgba(255, 215, 18, 0.75);
+}
+.crew-card__name {
+  font-size: clamp(1.45rem, 2.5vw, 2.15rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.05;
+}
+.crew-card__role {
+  margin-top: 0.4rem;
+  font-size: clamp(0.8rem, 1.05vw, 0.95rem);
+  font-weight: 700;
+  color: #ffd712;
+  line-height: 1.35;
+}
+.crew-card__desc {
+  margin-top: 0.55rem;
+  max-width: 46ch;
+  font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.5;
+}
+@media (max-width: 720px) {
+  .crew-swap-stage {
+    /* leque menor: em tela estreita o deslocamento de desktop jogava os cards
+       de tras pra fora da tela (ficavam cortados na borda) */
+    --card-swap-x: 6px;
+    --card-swap-y: 7px;
+    height: clamp(470px, 128vw, 560px);
+  }
+  .crew-card__foto,
+  .crew-card__bruma {
+    /* card em pe: sobe o enquadramento pra garantir rosto e ombros */
+    object-position: 50% 18%;
+  }
+  .crew-card__desc {
+    max-width: none;
+  }
+}
+
+/* ============== Cases — palco grande com seletor de marcas ==============
+   Substituiu o accordion de lâminas, que exigia hover pra abrir e ficava ruim
+   no celular. Agora o vídeo já nasce aberto ocupando perto de 80% da tela, a
+   logo fica dentro do próprio vídeo e as marcas ficam num seletor no canto. */
+.cases-secao {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-bold-black);
+  padding: var(--espaco-secao) clamp(1rem, 4vw, 3rem);
+}
+.cases-palco {
+  position: relative;
+  width: min(1280px, 100%);
+  /* 16:9, mas sem passar de ~80% da altura da tela */
+  aspect-ratio: 16 / 9;
+  max-height: 80svh;
+  overflow: hidden;
+  border-radius: clamp(0.9rem, 2vw, 1.5rem);
+  border: 1px solid rgba(255, 215, 18, 0.18);
+  background: #0d0d0d;
+  box-shadow: 0 40px 100px -35px rgba(0, 0, 0, 0.95);
+}
+.cases-palco__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* vídeo indisponível: mostra a marca em vez de um retângulo preto */
+.cases-palco__vazio {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, #242424, #101010 70%);
+}
+.cases-palco__vazio img {
+  width: min(38%, 320px);
+  opacity: 0.55;
+  filter: grayscale(1) brightness(1.6);
+  object-fit: contain;
+}
+/* escurece as bordas pra logo e seletor ficarem legíveis sobre o vídeo */
+.cases-palco__sombra {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, transparent 28%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 42%);
+}
+.cases-palco__marca {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  left: clamp(0.75rem, 2vw, 1.5rem);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(2.75rem, 6vw, 4.5rem);
+  padding-inline: clamp(0.6rem, 1.2vw, 1rem);
+  border-radius: 0.65rem;
+  background: #ffffff;
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.9);
+}
+.cases-palco__marca img {
+  max-height: 72%;
+  max-width: clamp(80px, 12vw, 150px);
+  width: auto;
+  object-fit: contain;
+}
+/* Seletor de marcas no canto inferior direito. Rola na horizontal quando não
+   couber, o que acontece no celular com dez marcas. */
+.cases-seletor {
+  position: absolute;
+  right: clamp(0.5rem, 1.5vw, 1.25rem);
+  bottom: clamp(0.5rem, 1.5vw, 1.25rem);
+  left: clamp(0.5rem, 1.5vw, 1.25rem);
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  scrollbar-width: none;
+}
+.cases-seletor::-webkit-scrollbar {
+  display: none;
+}
+.cases-seletor__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  height: clamp(1.9rem, 3.4vw, 2.6rem);
+  padding: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.cases-seletor__item:hover {
+  opacity: 0.9;
+}
+.cases-seletor__item[data-ativo='true'] {
+  opacity: 1;
+  border-color: #fde100;
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px rgba(253, 225, 0, 0.55);
+}
+.cases-seletor__item img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* So o deslize: opacidade dentro da animacao deixava a legenda invisivel
+   sempre que o navegador estrangulava a animacao (aba em segundo plano), e ela
+   remonta a cada troca de case. O texto agora existe mesmo sem animar. */
+@keyframes cases-legenda-entra {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: none;
+  }
+}
+.cases-legenda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  width: min(1280px, 100%);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  /* sem `both`: com ele a legenda fica em opacity 0 ate a animacao rodar,
+     e qualquer throttle do navegador deixava o nome do case invisivel */
+  animation: cases-legenda-entra 0.4s ease;
+}
+.cases-legenda__nome {
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-bold-white);
+}
+.cases-legenda__area {
+  margin-top: 0.35rem;
+  font-size: clamp(0.7rem, 1.1vw, 0.875rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.cases-etiqueta {
+  /* anula o padding lateral da seção pra etiqueta encostar na borda, igual às
+     outras; antes ela parava a 48px no desktop e 19px no celular */
+  margin-left: calc(clamp(1rem, 4vw, 3rem) * -1);
+  position: sticky;
+  bottom: 1.5rem;
+  z-index: 20;
+  align-self: flex-start;
+  margin-top: var(--espaco-etiqueta);
+  pointer-events: none;
+}
+@media (max-width: 720px) {
+  .cases-legenda {
+    flex-direction: column;
+    text-align: center;
+  }
+  /* No mobile a legenda ocupa o rodapé inteiro da seção e a etiqueta grudada
+     ficava por cima do nome e do botão, então ela sai do sticky. */
+  .cases-etiqueta {
+    position: static;
+    margin-top: var(--espaco-etiqueta);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cases-legenda,
+  .cases-seletor__item {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ============== Clientes — duas pistas horizontais ============== */
+.clientes-wave {
+  position: relative;
+  overflow-x: clip;
+}
+.clients-stage {
+  min-height: 62svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+.clients-rail {
+  width: 100%;
+  overflow: hidden;
+  padding-block: 1rem;
+}
+.clients-track {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.8rem, 1.8vw, 1.5rem);
+  padding-inline: clamp(0.8rem, 2vw, 2rem);
+  will-change: transform;
+}
+.client-logo-card {
+  position: relative;
+  width: clamp(11rem, 20vw, 18rem);
+  height: clamp(7rem, 12vw, 10.5rem);
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  background: rgba(20, 20, 20, 0.88);
+  border: 1px solid rgba(255, 215, 18, 0.18);
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.client-logo-card:hover,
+.client-logo-card:focus-visible {
+  border-color: rgba(255, 215, 18, 0.6);
+  box-shadow: 0 0 24px -4px rgba(255, 215, 18, 0.4);
+  outline: none;
+  transform: scale(1.025);
+}
+.client-logo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(1rem, 2vw, 1.75rem);
+}
+@media (max-width: 640px) {
+  .clients-stage {
+    min-height: 54svh;
+  }
+  .client-logo-card {
+    width: 10.5rem;
+    height: 6.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clients-stage {
+    min-height: auto;
+  }
+  .clients-rail {
+    overflow-x: auto;
+  }
+  .clients-track {
+    transform: none !important;
+  }
+}
+
+/* ============== iPhone mockup (devices.css) — escala + Dynamic Island ============== */
+/* Frame real do iphone-x da devices.css = 428x868. Escalamos pra caber 3 lado a
+   lado e trocamos o notch por uma Dynamic Island (cara de iPhone Pro atual). */
+.bold-iphone-wrap {
+  --iphone-scale: 0.42;
+  width: calc(428px * var(--iphone-scale));
+  height: calc(868px * var(--iphone-scale));
+  flex: 0 0 auto;
+}
+.bold-iphone-wrap .device-iphone-x {
+  transform: scale(var(--iphone-scale));
+  transform-origin: top left;
+}
+@media (max-width: 640px) {
+  .bold-iphone-wrap {
+    --iphone-scale: 0.34;
+  }
+}
+/* notch -> Dynamic Island (pilula flutuante) */
+.device-iphone-x.bold-iphone .device-header {
+  width: 100px;
+  height: 28px;
+  top: 36px;
+  margin-left: -50px;
+  border-radius: 18px;
+}
+.device-iphone-x.bold-iphone .device-sensors,
+.device-iphone-x.bold-iphone .device-sensors::after,
+.device-iphone-x.bold-iphone .device-sensors::before {
+  display: none;
+}
+/* video preenche a tela do device */
+.device-iphone-x.bold-iphone .device-screen {
+  object-fit: cover;
+}
+
+/* ============== Blur progressivo fixo na margem inferior ============== */
+/* Ofusca o conteudo que esta por vir conforme o usuario rola, gerando
+   curiosidade. O blur e mais forte embaixo e some pra cima (via mask). */
+.bottom-blur {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22vh;
+  z-index: 80;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, #000 40%, transparent 100%);
+  /* gradiente vai a PRETO PURO (mais escuro que o fundo #0a0a0a), entao a faixa
+     fica visivel mesmo sobre area escura, criando a vinheta de curiosidade. */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.25) 75%,
+    transparent 100%
+  );
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+/* some ao chegar no footer pra nao apagar o rodape */
+.bottom-blur--hidden {
+  opacity: 0;
+}
+@media (max-width: 768px) {
+  .bottom-blur {
+    height: 16vh;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bottom-blur {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Pulso da aba do menu rapido (QuickNav) — anel de luz que expande */
+@keyframes quicknav-pulse {
+  0% {
+    box-shadow: 0 8px 25px -6px rgba(255, 215, 18, 0.6), 0 0 0 0 rgba(255, 215, 18, 0.55);
+  }
+  70% {
+    box-shadow: 0 8px 25px -6px rgba(255, 215, 18, 0.6), 0 0 0 16px rgba(255, 215, 18, 0);
+  }
+  100% {
+    box-shadow: 0 8px 25px -6px rgba(255, 215, 18, 0.6), 0 0 0 0 rgba(255, 215, 18, 0);
+  }
+}
+.quicknav-tab {
+  animation: quicknav-pulse 2s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .quicknav-tab {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   Secao PROCESSO / Linha do tempo
+   ========================================================= */
+.processo {
+  position: relative;
+  overflow: hidden;
+  padding: var(--espaco-secao) clamp(1.25rem, 5vw, 4rem);
+  background: var(--color-bold-black);
+}
+.processo__intro {
+  max-width: 82rem;
+  margin: 0 auto clamp(2.5rem, 6vw, 4.5rem);
+  text-align: center;
+}
+.processo__title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-style: italic;
+  font-size: clamp(2.5rem, 5.75vw, 4.7rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: var(--color-bold-white);
+  white-space: nowrap;
+}
+.processo__logo {
+  display: inline-block;
+  height: 0.82em;
+  width: auto;
+  vertical-align: -0.06em;
+  margin: 0 0.06em;
+}
+/* ---- Jornada do cliente: caminho em S que acende etapa por etapa ----
+   Substituiu o palco pinado com as três imagens da linha do tempo e as duas
+   fotos de reunião. O SVG vale do sm: pra cima; abaixo disso as treze etapas
+   não cabem em serpentina e viram uma coluna. */
+.processo-jornada {
+  width: 100%;
+  max-width: 78rem;
+  margin: clamp(2rem, 6vw, 4rem) auto 0;
+  padding-inline: 1.25rem;
+}
+.processo-jornada__svg {
+  display: none;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.processo-jornada__linha {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.processo-jornada__linha {
+  stroke: #fde100;
+  filter: drop-shadow(0 0 6px rgba(253, 225, 0, 0.45));
+}
+/* Nada da etapa existe antes da luz chegar: disco, icone e nome entram juntos
+   quando a cabeca da linha passa por eles, e somem de novo a cada volta. */
+.processo-jornada__no {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.processo-jornada__no[data-aceso='true'] {
+  opacity: 1;
+}
+
+/* A luz que corre na ponta da linha, em duas camadas: um halo amarelo borrado
+   e um nucleo branco estourado, que e o que da a sensacao de brilho forte. */
+.processo-jornada__luz {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.processo-jornada__luz-nucleo {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 14px #fde100)
+    drop-shadow(0 0 30px rgba(253, 225, 0, 0.95));
+}
+
+.processo-jornada__disco {
+  fill: #000000;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 3;
+  transition: stroke 0.35s ease;
+}
+.processo-jornada__no[data-aceso='true'] /* Nada da etapa existe antes da luz chegar: disco, icone e nome entram juntos
+   quando a cabeca da linha passa por eles, e somem de novo a cada volta. */
+.processo-jornada__no {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.processo-jornada__no[data-aceso='true'] {
+  opacity: 1;
+}
+
+/* A luz que corre na ponta da linha, em duas camadas: um halo amarelo borrado
+   e um nucleo branco estourado, que e o que da a sensacao de brilho forte. */
+.processo-jornada__luz {
+  opacity: 0;
+}
+.processo-jornada__luz-nucleo {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 14px #fde100)
+    drop-shadow(0 0 30px rgba(253, 225, 0, 0.95));
+}
+
+.processo-jornada__disco {
+  stroke: #fde100;
+  filter: drop-shadow(0 0 10px rgba(253, 225, 0, 0.45));
+}
+.processo-jornada__rotulo {
+  fill: rgba(255, 255, 255, 0.35);
+  /* 20px na tela: o svg do desktop desenha praticamente 1:1 */
+  font-size: 20px;
+  font-weight: 700;
+  transition: fill 0.35s ease;
+}
+.processo-jornada__no[data-aceso='true'] .processo-jornada__rotulo {
+  fill: #ffffff;
+}
+/* versão de celular: mesma serpentina, duas etapas por linha */
+.processo-jornada__svg-mobile {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+/* 5 etapas numa linha de 360: acima disso os nomes vizinhos se encostam */
+/* 15px na tela. Aqui o número é maior que isso porque o svg do celular é
+   desenhado a 86% (viewBox de 360 numa faixa de ~310px). */
+.processo-jornada__rotulo--mobile {
+  font-size: 18.2px;
+}
+@media (min-width: 768px) {
+  .processo-jornada__svg {
+    display: block;
+  }
+  .processo-jornada__svg-mobile {
+    display: none;
+  }
+}
+
+/* CTA de fechamento de cada seção: mesmo respiro da etiqueta */
+.processo__cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--espaco-etiqueta);
+}
+
+/* ---- Frase ---- */
+.processo__frase {
+  max-width: 72rem;
+  margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+  text-align: center;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(1.758rem, 4.23vw, 3.164rem);
+  line-height: 1.15;
+  color: var(--color-bold-white);
+}
+/* block: o trecho amarelo e sempre a segunda linha (branco em cima, amarelo
+   embaixo). Inline, a frase quebrava em qualquer palavra que coubesse. */
+.processo__frase-hi {
+  display: block;
+  color: var(--color-bold-yellow);
+}
+
+/* ---- Counters ---- */
+.processo-counters {
+  max-width: 72rem;
+  margin: clamp(3rem, 8vw, 6rem) auto 0;
+}
+.processo-counters__title {
+  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
+  line-height: 1;
+  color: var(--color-bold-white);
+}
+.processo-counters__brasil {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.1em 0.4em;
+  border-radius: 0.2em;
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  letter-spacing: -0.03em;
+  color: var(--color-bold-black);
+}
+.processo-counters__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+.processo-counter {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--color-bold-yellow);
+  border-radius: 15px;
+  text-align: center;
+  background-color: #02050d;
+}
+.processo-counter__aura {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.processo-counter::before,
+.processo-counter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Texturas do Fundo Fluido Aura: grao organico e grade diagonal discreta. */
+.processo-counter::before {
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.processo-counter::after {
+  opacity: 0.13;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+.processo-counter__value,
+.processo-counter__label {
+  position: relative;
+  z-index: 2;
+}
+.processo-counter__value {
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-bold-white);
+}
+.processo-counter__label {
+  margin-top: 0.5rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+  font-weight: 500;
+  color: var(--color-bold-yellow);
+}
+.processo-counters__note {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  text-align: right;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(1.758rem, 4.23vw, 3.164rem);
+  color: var(--color-bold-white);
+}
+
+/* ---- Ajustes mobile ---- */
+@media (max-width: 640px) {
+  .processo-counters__note {
+    text-align: center;
+  }
+  /* Titulo nao pode estourar a largura no mobile (6.2vw cabe as 2 linhas com folga) */
+  /* Sobrava muito preto em volta do titulo: a secao usava o mesmo respiro
+     generoso do desktop numa tela estreita. */
+  .processo {
+    padding-block: 2.5rem;
+  }
+  .processo__intro {
+    margin-bottom: 1.5rem;
+  }
+  .processo__title {
+    /* O nowrap do desktop obrigava a frase inteira a caber numa linha so: a
+       fonte era encolhida ate ~23px e MESMO ASSIM transbordava a largura.
+       No mobile a frase quebra em mais linhas e a fonte volta a um tamanho
+       legivel. */
+    white-space: normal;
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    text-wrap: balance;
+  }
+}
+
+/* =====================================================================
+   Academy — seção clara (única do site no branco da marca).
+   Fundo branco + shaders amarelos 15% + ícones "vindo do fundo pro perto"
+   + marquee de texto "ACADEMY •" ao fundo.
+   ===================================================================== */
+
+/* Texto gigante "ACADEMY •" rolando em loop atrás do conteúdo */
+@keyframes academy-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.academy-marquee {
+  animation: academy-marquee 40s linear infinite;
+}
+
+/* Ícone surgindo do fundo (scale 0) e crescendo até o "perto", some ao chegar.
+   O tamanho final é controlado pela largura do próprio ícone (var --acad-size). */
+@keyframes academy-approach {
+  0%   { transform: scale(0);    opacity: 0; filter: blur(6px); }
+  18%  { opacity: 0.85; }
+  70%  { opacity: 0.85; filter: blur(0); }
+  100% { transform: scale(1);    opacity: 0; filter: blur(0); }
+}
+.academy-icon {
+  position: absolute;
+  width: var(--acad-size, clamp(24px, 3vw, 46px));
+  height: var(--acad-size, clamp(24px, 3vw, 46px));
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: academy-approach var(--acad-dur, 6s) ease-in var(--acad-delay, 0s) infinite;
+}
+.academy-icon svg { width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .academy-marquee { animation: none; }
+  .academy-icon { animation: none; opacity: 0; }
+}
+
+/* "SOLTA / O / REC" — UMA palavra por vez no mesmo slot: desliza da esquerda,
+   fica ~1/3 do ciclo, sai pra direita; as 3 se revezam via animation-delay. */
+@keyframes rec-word {
+  0%   { transform: translateX(-140%); opacity: 0; }
+  8%   { transform: translateX(0);     opacity: 1; }
+  25%  { transform: translateX(0);     opacity: 1; }
+  33%  { transform: translateX(140%);  opacity: 0; }
+  100% { transform: translateX(-140%); opacity: 0; }
+}
+.animate-rec-word {
+  animation: rec-word 3.6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-rec-word { animation: none; opacity: 1; transform: none; }
+}
+
+/* ==== Botoes de contato do Kaio no footer (efeito hover + card/tooltip) ==== */
+.kaio-socials {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  animation: kaio-reveal .28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes kaio-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kaio-social {
+  position: relative;
+  /* cor da marca por botao; --ink = cor do icone sobre a marca */
+  --brand: #E1306C;
+  --ink: #ffffff;
+}
+.kaio-social--ig   { --brand: #E1306C; --ink: #ffffff; }
+.kaio-social--wa   { --brand: #25D366; --ink: #ffffff; }
+.kaio-social--site { --brand: #FFD712; --ink: #0a0a0a; }
+
+.kaio-social__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--brand);
+  transition: transform .35s ease, background .35s ease, color .35s ease, box-shadow .35s ease;
+}
+.kaio-social__btn svg { width: 20px; height: 20px; display: block; }
+.kaio-social:hover .kaio-social__btn {
+  background: var(--brand);
+  color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px -8px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+/* Instagram ganha o gradiente real no hover */
+.kaio-social--ig:hover .kaio-social__btn {
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+
+.kaio-social__tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .7rem);
+  width: 8rem;
+  padding: .9rem;
+  border-radius: .75rem;
+  background: var(--color-bold-gray, #1a1a1a);
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, .9);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(.5rem);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  z-index: 20;
+}
+.kaio-social:hover .kaio-social__tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.kaio-social__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto .65rem;
+  border-radius: .6rem;
+  background: var(--brand);
+  color: var(--ink);
+}
+.kaio-social--ig .kaio-social__card {
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 25%, #d62976 50%, #962fbf 75%, #4f5bd5 100%);
+}
+.kaio-social__card svg { width: 26px; height: 26px; display: block; }
+.kaio-social__handle {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  word-break: break-word;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kaio-social__btn,
+  .kaio-social__tip { transition: none; }
+  .kaio-social:hover .kaio-social__btn { transform: none; }
+}
+
+/* ============== "Nascida para ganhar o Mundo" ==============
+   No celular o cliente pediu a frase ocupando quase a tela toda, com uma
+   palavra por linha. `word-spacing` gigante força a quebra a cada palavra sem
+   precisar picotar o texto em spans (o conteúdo vem do i18n e muda de idioma). */
+/* No celular o espaco entre palavras maior que a tela obriga cada palavra a cair
+   numa linha propria. Nao pode vir com nowrap junto: sem poder quebrar, a frase
+   virava uma linha unica de quase 1900px e sumia atras do overflow da secao. */
+.nascida-frase {
+  font-size: clamp(3.4rem, 21.5vw, 5.4rem);
+  word-spacing: 100vw;
+  line-height: 0.86;
+}
+.nascida-destaque {
+  font-size: clamp(3.6rem, 20.5vw, 5.2rem);
+}
+@media (min-width: 640px) {
+  .nascida-frase {
+    font-size: clamp(3.4rem, 6vw, 6rem);
+    word-spacing: normal;
+  }
+  .nascida-destaque {
+    font-size: clamp(4rem, 8vw, 8rem);
+  }
+}

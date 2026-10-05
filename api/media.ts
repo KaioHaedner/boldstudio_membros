@@ -8,15 +8,20 @@ export const config = { runtime: 'edge' }
 // um bug de roteamento com funções catch-all multi-segmento em projetos sem
 // framework Next.js (a conversão automática só cobre 1 segmento e cai em 404
 // pros demais) — bucket/arquivo vêm por query string em vez de path.
+const LEGACY_ORIGIN = process.env.SUPABASE_MEDIA_LEGACY_URL || 'https://erhtqgaxibncpondscna.supabase.co'
+const PRIMARY_ORIGIN = process.env.SUPABASE_MEDIA_PRIMARY_URL || 'https://heriogfvynncvabbwspu.supabase.co'
+
+// Cada bucket conserva sua origem até que seus objetos tenham sido migrados.
+// Trocar todas as URLs para o projeto novo não copia os arquivos armazenados.
 const BUCKET_ORIGIN: Record<string, string> = {
-  avatars: 'https://erhtqgaxibncpondscna.supabase.co',
-  CLIENTES_CONTEINER: 'https://erhtqgaxibncpondscna.supabase.co',
-  CLIENTES_CONTEINER_PREVIA_VD: 'https://erhtqgaxibncpondscna.supabase.co',
-  Fotos_CREW_COLORIDAS: 'https://erhtqgaxibncpondscna.supabase.co',
-  PROCESSO: 'https://erhtqgaxibncpondscna.supabase.co',
-  brand: 'https://erhtqgaxibncpondscna.supabase.co',
-  Videos_Cliente_New: 'https://heriogfvynncvabbwspu.supabase.co',
-  ICONES_JORNADAS_SVG: 'https://heriogfvynncvabbwspu.supabase.co',
+  avatars: LEGACY_ORIGIN,
+  CLIENTES_CONTEINER: LEGACY_ORIGIN,
+  CLIENTES_CONTEINER_PREVIA_VD: LEGACY_ORIGIN,
+  Fotos_CREW_COLORIDAS: LEGACY_ORIGIN,
+  PROCESSO: LEGACY_ORIGIN,
+  brand: LEGACY_ORIGIN,
+  Videos_Cliente_New: PRIMARY_ORIGIN,
+  ICONES_JORNADAS_SVG: PRIMARY_ORIGIN,
 }
 
 // O Supabase antigo (erhtqgaxibncpondscna, sem acesso ao dashboard) falha de
