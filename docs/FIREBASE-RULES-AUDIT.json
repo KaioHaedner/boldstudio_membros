@@ -1,0 +1,13 @@
+{
+  "score": 4,
+  "summary": "Protótipo restritivo de perfis e arquivos próprios; sintaxe validada, Firestore publicado, testes de autorização não executados. Não é auditoria de produção completa.",
+  "findings": [
+    {"check":"Runtime validation","severity":"moderate","issue":"Sem Java no PATH, os testes de regras nos emuladores não rodaram.","recommendation":"Executar a suíte local antes de acesso amplo."},
+    {"check":"Storage Abuse","severity":"moderate","issue":"Limite por objeto não limita quantidade de arquivos nem frequência de operações por usuário verificado.","recommendation":"Adicionar App Check, orçamento e quotas/rate limits no backend antes de liberar uploads."},
+    {"check":"Content validation","severity":"minor","issue":"contentType é declarado pelo cliente, sem inspeção binária.","recommendation":"Inspecionar arquivos antes de distribuição/compartilhamento."},
+    {"check":"Business Logic vs Rules","severity":"minor","issue":"Academy, Admin, Crew, vídeos e dados antigos deliberadamente bloqueados.","recommendation":"Modelar e testar ACLs por área antes de trocar backend."}
+  ],
+  "reviewedControls": ["ownership on create/update/read", "hasAll/hasOnly", "type and size validation", "UID/createdAt immutable", "no self-assigned roles", "default deny", "no cross-user private profile reads"],
+  "storagePublished": false,
+  "authorizationTestsExecuted": false
+}

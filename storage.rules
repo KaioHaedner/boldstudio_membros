@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function verifiedOwner(uid) {
+      return request.auth != null && request.auth.uid == uid
+        && request.auth.token.email_verified == true;
+    }
+    match /users/{uid}/files/{fileId} {
+      allow read: if verifiedOwner(uid);
+      allow create: if verifiedOwner(uid)
+        && fileId.matches('^[a-zA-Z0-9_-]{1,100}$')
+        && request.resource.size > 0 && request.resource.size <= 20 * 1024 * 1024
+        && request.resource.contentType in ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+      // Objetos são imutáveis pelo cliente; substituição/exclusão exigem backend confiável.
+      allow update, delete: if false;
+    }
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

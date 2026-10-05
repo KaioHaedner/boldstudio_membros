@@ -43,3 +43,8 @@ desktop.ini
 .verification/
 .migration-baseline.zip
 .npm-cache/
+# Runtime local e credenciais administrativas Firebase (nunca versionar).
+.firebase/
+*-debug.log
+*serviceAccount*.json
+*service-account*.json

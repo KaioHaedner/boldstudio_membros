@@ -56,3 +56,11 @@ Projeto Vercel criado: `prj_zXXLV1iB8aZivBAqHZwPQXd5zsls`; equipe
 comercial, revisar a contratação do plano Vercel apropriado.
 
 Build não comprova recuperação das mídias externas nem funcionamento do banco remoto.
+
+## Base Firebase
+
+App Web, Authentication e Firestore Standard de São Paulo configurados no
+projeto `boldstudiohub`. SDK isolado e laboratório de desenvolvimento preparados.
+O fluxo comercial continua no Supabase. Storage permanece pendente de Blaze;
+sem transferência de mídias, usuários ou dados ainda. Consulte `FIREBASE-SETUP.md`
+e `FIREBASE-RULES-AUDIT.json` para testes, restrições e próximos gates.

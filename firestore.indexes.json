@@ -1,0 +1,6 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "users_private", "fieldPath": "*", "indexes": [] }
+  ]
+}
