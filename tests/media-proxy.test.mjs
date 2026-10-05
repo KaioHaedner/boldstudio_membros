@@ -54,3 +54,19 @@ test('invalid bucket, traversal and POST do not call upstream', async t => {
   assert.equal((await handler(new Request(url, { method: 'POST' }))).status, 405)
   assert.equal(calls.length, 0)
 })
+
+test('upstream uses its own signal and permits storage redirects', async t => {
+  const calls = mockFetch(t, () => new Response('image'))
+  const request = new Request(url)
+  await handler(request)
+  assert.notEqual(calls[0].init.signal, request.signal)
+  assert.equal(calls[0].init.redirect, 'follow')
+})
+
+test('network failure returns an uncached diagnostic 502', async t => {
+  mockFetch(t, () => { throw new TypeError('network error') })
+  const response = await handler(new Request(url))
+  assert.equal(response.status, 502)
+  assert.equal(response.headers.get('cache-control'), 'no-store')
+  assert.equal(response.headers.get('x-media-error'), 'fetch-failed')
+})

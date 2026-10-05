@@ -75,11 +75,17 @@ export default async function handler(req: Request) {
   }
 
   let upstream: Response
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 15000)
   try {
     upstream = await fetchWithRetry(target, { method: req.method, headers: upstreamHeaders,
-      signal: req.signal, redirect: 'error' })
-  } catch {
-    return new Response('Upstream unavailable', { status: 502, headers: { 'Cache-Control': 'no-store' } })
+      signal: controller.signal, redirect: 'follow' })
+  } catch (error) {
+    const code = controller.signal.aborted ? 'timeout' : 'fetch-failed'
+    console.error('[media] upstream fetch failed', { code, bucket, error: error instanceof Error ? error.name : 'UnknownError' })
+    return new Response('Upstream unavailable', { status: 502, headers: { 'Cache-Control': 'no-store', 'X-Media-Error': code } })
+  } finally {
+    clearTimeout(timeout)
   }
 
   if (!upstream.ok && upstream.status !== 304) {

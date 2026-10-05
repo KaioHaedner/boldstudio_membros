@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import backgrounds from '@/apps/site/data/backgrounds.json'
-import { media } from '@/shared/lib/media'
 
 // Independent scroll-linked implementation inspired by the supplied
 // Império WEB Codes Store demo. No wheel/touch interception or full-page lock.
@@ -67,7 +66,7 @@ export function SolucoesParallax({ indices = DEFAULT_PHOTOS, className = '', lay
       className={`solucoes-parallax__photo solucoes-parallax__photo--${layout === 'right' || index === 2 ? 'right' : 'left'} solucoes-parallax__photo--${layout === 'right' || index === 2 ? 'center' : index === 0 ? 'upper' : 'lower'}`}
       data-depth={[1, .55, -.65][index]}
     >
-      <img src={import.meta.env.DEV ? `/media/backgrounds/${backgrounds[photoIndex]}` : media('brand', `backgrounds-20261005/${backgrounds[photoIndex]}`)}
+      <img src={`/media/backgrounds/${backgrounds[photoIndex]}`}
         alt="" loading="lazy" decoding="async" draggable={false} />
     </div>)}
   </div>
