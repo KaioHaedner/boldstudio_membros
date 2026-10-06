@@ -24,26 +24,6 @@ const BUCKET_ORIGIN: Record<string, string> = {
   ICONES_JORNADAS_SVG: PRIMARY_ORIGIN,
 }
 
-async function fetchWithRetry(target: string, init: RequestInit, attempts = 2) {
-  let lastError: unknown
-  for (let i = 0; i < attempts; i++) {
-    try {
-      const res = await fetch(target, init)
-      // Quota/rate-limit responses need intervention/backoff, not amplification.
-      const retryable = res.status >= 500
-      if (!retryable || i === attempts - 1) return res
-      lastError = new Error(`upstream ${res.status}`)
-      await res.body?.cancel()
-    } catch (err) {
-      lastError = err
-      if (init.signal?.aborted) throw err
-      if (i === attempts - 1) throw lastError
-    }
-    await new Promise((r) => setTimeout(r, 300 * (i + 1)))
-  }
-  throw lastError
-}
-
 export default async function handler(req: Request) {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: {
@@ -59,9 +39,10 @@ export default async function handler(req: Request) {
   const bucket = url.searchParams.get('b') ?? ''
   const file = url.searchParams.get('f') ?? ''
   const origin = Object.hasOwn(BUCKET_ORIGIN, bucket) ? BUCKET_ORIGIN[bucket] : undefined
+  const unsafeFile = file.includes('\\') || Array.from(file).some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)
 
-  if (!origin || !file || file.length > 2048 || file.split('/').some((part) => !part || part === '.' || part === '..')) {
-    return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } })
+  if (!origin || !file || file.length > 2048 || unsafeFile || file.split('/').some((part) => !part || part === '.' || part === '..')) {
+    return new Response(req.method === 'HEAD' ? null : 'Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } })
   }
 
   const target = `${origin}/storage/v1/object/public/${bucket}/${file.split('/').map(encodeURIComponent).join('/')}`
@@ -78,12 +59,15 @@ export default async function handler(req: Request) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 15000)
   try {
-    upstream = await fetchWithRetry(target, { method: req.method, headers: upstreamHeaders,
+    // One attempt per browser request: an outage must not double Storage work.
+    // Keep the independent timeout signal: coupling it to req.signal caused
+    // aborted upstream requests on the production Edge runtime previously.
+    upstream = await fetch(target, { method: req.method, headers: upstreamHeaders,
       signal: controller.signal, redirect: 'follow' })
   } catch (error) {
     const code = controller.signal.aborted ? 'timeout' : 'fetch-failed'
     console.error('[media] upstream fetch failed', { code, bucket, error: error instanceof Error ? error.name : 'UnknownError' })
-    return new Response('Upstream unavailable', { status: 502, headers: { 'Cache-Control': 'no-store', 'X-Media-Error': code } })
+    return new Response(req.method === 'HEAD' ? null : 'Upstream unavailable', { status: 502, headers: { 'Cache-Control': 'no-store', 'X-Media-Error': code } })
   } finally {
     clearTimeout(timeout)
   }
@@ -97,11 +81,15 @@ export default async function handler(req: Request) {
 
   const headers = new Headers()
   headers.set('Content-Type', upstream.headers.get('content-type') ?? 'application/octet-stream')
+  headers.set('X-Content-Type-Options', 'nosniff')
   const contentLength = upstream.headers.get('content-length')
-  if (contentLength) headers.set('Content-Length', contentLength)
+  // Fetch can decompress an encoded upstream body. Its wire length would no
+  // longer match the bytes forwarded by this response.
+  if (contentLength && !upstream.headers.has('content-encoding')) headers.set('Content-Length', contentLength)
   const contentRange = upstream.headers.get('content-range')
   if (contentRange) headers.set('Content-Range', contentRange)
-  headers.set('Accept-Ranges', 'bytes')
+  const acceptRanges = upstream.headers.get('accept-ranges')
+  if (acceptRanges || upstream.status === 206) headers.set('Accept-Ranges', acceptRanges || 'bytes')
   headers.set('Access-Control-Allow-Origin', '*')
   headers.set('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, ETag, Last-Modified')
   for (const name of ['etag', 'last-modified']) {
@@ -109,15 +97,19 @@ export default async function handler(req: Request) {
     if (value) headers.set(name, value)
   }
 
-  // A chave de cache da borda é a URL, que NÃO inclui o header Range. Cachear
-  // uma resposta 206 aqui servia aquele pedaço para todo mundo: como todo
-  // player de vídeo pede range, o primeiro visitante envenenava o cache e os
-  // seguintes recebiam ~1KB de um MP4 de 13MB, que o navegador rejeita com
-  // erro de formato. Por isso resposta parcial fica só no cache do navegador
-  // (private), que sabe lidar com range, e nunca na borda compartilhada.
-  if (upstream.status === 206) {
+  // Vercel does not cache Function Range requests or objects >10 MB. Keep
+  // partial responses in the browser only, including when an origin ignores
+  // Range and returns 200. HEAD/304 metadata must not seed a bodyless CDN entry.
+  // Static public previews served from /media avoid this upstream altogether.
+  if (range || upstream.status === 206) {
     headers.set('Cache-Control', 'private, max-age=31536000')
     headers.set('Vary', 'Range')
+    headers.set('CDN-Cache-Control', 'no-store')
+    headers.set('Vercel-CDN-Cache-Control', 'no-store')
+  } else if (req.method === 'HEAD' || upstream.status === 304) {
+    headers.set('Cache-Control', 'private, max-age=31536000')
+    headers.set('CDN-Cache-Control', 'no-store')
+    headers.set('Vercel-CDN-Cache-Control', 'no-store')
   } else {
     // Resposta inteira pode ficar na borda: depois do primeiro sucesso as
     // visitas seguintes nem chegam a bater no Supabase instável.

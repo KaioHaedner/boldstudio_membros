@@ -177,7 +177,7 @@ export function AcademySection() {
         </div>
 
         <div className="mt-10">
-          <ShinyButton onClick={() => navigate('/academy')}>{t.academy.cta}</ShinyButton>
+          <ShinyButton onClick={() => navigate('/dashboard')}>{t.academy.cta}</ShinyButton>
         </div>
       </div>
 

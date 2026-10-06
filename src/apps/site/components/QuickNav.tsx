@@ -23,6 +23,15 @@ export function QuickNav() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
+    if (!open) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open])
+
+  useEffect(() => {
     const onScroll = () => {
       // No mobile so ativa a partir da 2a secao (#sobre) — no hero ele cobria
       // outros elementos. No desktop mantem o gatilho por rolagem da 1a tela.
@@ -65,18 +74,20 @@ export function QuickNav() {
     // transform/translate e descartava a regra, jogando o botao pra fora da
     // tela (so em prod — no dev funcionava).
     <div
+      inert={!scrolled}
       className={cn(
         'fixed right-0 top-4 z-[90] flex flex-row-reverse items-start transition-all duration-300 ease-out lg:left-0 lg:right-auto lg:top-1/2 lg:flex-row lg:items-center lg:-translate-y-1/2',
         scrolled ? 'opacity-100' : 'pointer-events-none opacity-0 lg:-translate-x-12'
       )}
     >
       <div
+        inert={!open}
         className={cn(
           'overflow-hidden transition-all duration-300 ease-out',
           open ? 'w-44 opacity-100' : 'w-0 opacity-0'
         )}
       >
-        <nav className="flex w-44 flex-col gap-1 rounded-l-2xl border border-r-0 border-bold-yellow/20 bg-bold-gray p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] lg:rounded-l-none lg:rounded-r-2xl lg:border-l-0 lg:border-r">
+        <nav id="home-quick-navigation" aria-label="Atalhos da página" className="flex w-44 flex-col gap-1 rounded-l-2xl border border-r-0 border-bold-yellow/20 bg-bold-gray p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] lg:rounded-l-none lg:rounded-r-2xl lg:border-l-0 lg:border-r">
           <button
             type="button"
             onClick={toTop}
@@ -103,6 +114,7 @@ export function QuickNav() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? t.quicknav.close : t.quicknav.open}
         aria-expanded={open}
+        aria-controls="home-quick-navigation"
         className={cn(
           'flex h-16 w-7 items-center justify-center rounded-l-lg bg-bold-yellow text-bold-black shadow-[0_8px_25px_-6px_rgba(255,215,18,0.6)] transition-all hover:w-8 lg:rounded-l-none lg:rounded-r-lg',
           !open && 'quicknav-tab'

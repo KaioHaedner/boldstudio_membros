@@ -2,10 +2,8 @@ import { Fragment, useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/shared/lib/gsap'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { CoinDecor } from '@/apps/site/components/CoinDecor'
-import { media } from '@/shared/lib/media'
 
-const CREW_IMG =
-  media('Fotos_CREW_COLORIDAS', 'BOLDSTUDIO_CREW_ABOUTUS.webp')
+const CREW_IMG = '/media/backgrounds/boldstudio-about-us-09c5b22b95fb.webp'
 
 // Destaca em amarelo os trechos marcados com **...** no texto das traduções.
 export function renderHighlighted(text: string) {

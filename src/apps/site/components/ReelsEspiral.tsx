@@ -142,7 +142,8 @@ export function ReelsEspiral() {
     function videoTexture(url: string): THREE.VideoTexture {
       const v = document.createElement('video')
       // No src/play on mount: entering the section is what starts the clip.
-      v.dataset.source = videoPreview(url)
+      const source = videoPreview(url)
+      if (source) v.dataset.source = source
       v.crossOrigin = 'anonymous'
       v.muted = true
       v.loop = true

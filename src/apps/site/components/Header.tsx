@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X, ArrowRight } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { homeSectionHref, isPlainNavigation } from '@/apps/site/lib/home-navigation'
+import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { LanguageSwitcher } from '@/apps/site/components/LanguageSwitcher'
 import { HeaderStatus } from '@/apps/site/components/HeaderStatus'
@@ -22,29 +25,22 @@ function scrollToAnchor(href: string) {
 
 export function Header() {
   const { t } = useI18n()
+  const { pathname } = useLocation()
+  const routerNavigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuPanelRef = useRef<HTMLDivElement>(null)
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!menuOpen) return
-
-    const previousOverflow = document.body.style.overflow
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
-    }
-
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', onKeyDown)
-    }
+    if (!menuOpen || !menuPanelRef.current) return
+    return bindDialogBehavior(menuPanelRef.current, () => setMenuOpen(false))
   }, [menuOpen])
 
   const navigate = (href: string) => {
     setMenuOpen(false)
-    window.requestAnimationFrame(() => scrollToAnchor(href))
+    const target = homeSectionHref(pathname, href)
+    if (target !== href) routerNavigate(target)
+    else window.requestAnimationFrame(() => scrollToAnchor(href))
   }
 
   return (
@@ -56,8 +52,9 @@ export function Header() {
         >
           <div className="flex flex-col items-start gap-1">
             <a
-              href="#home"
+              href={homeSectionHref(pathname, '#home')}
               onClick={(event) => {
+                if (!isPlainNavigation(event)) return
                 event.preventDefault()
                 navigate('#home')
               }}
@@ -87,8 +84,9 @@ export function Header() {
                   />
                 )}
                 <a
-                  href={link.href}
+                  href={homeSectionHref(pathname, link.href)}
                   onClick={(event) => {
+                    if (!isPlainNavigation(event)) return
                     event.preventDefault()
                     navigate(link.href)
                   }}
@@ -131,8 +129,10 @@ export function Header() {
 
       {menuOpen && (
         <div
+          ref={menuPanelRef}
           id="home-fullscreen-menu"
           role="dialog"
+          tabIndex={-1}
           aria-modal="true"
           aria-label="Menu principal"
           className="home-fullscreen-menu fixed inset-0 z-[100] overflow-y-auto bg-bold-black px-5 pb-10 pt-20 sm:px-8 sm:pt-28 lg:px-12"
@@ -142,8 +142,9 @@ export function Header() {
               {NAV_LINKS.map((link) => (
                 <li key={link.href} className="border-b border-white/10">
                   <a
-                    href={link.href}
+                    href={homeSectionHref(pathname, link.href)}
                     onClick={(event) => {
+                      if (!isPlainNavigation(event)) return
                       event.preventDefault()
                       navigate(link.href)
                     }}

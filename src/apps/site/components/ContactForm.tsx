@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Mic } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { ShinyButton } from '@/shared/components/ShinyButton'
@@ -46,6 +46,8 @@ export function ContactForm() {
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [recording, setRecording] = useState(false)
+  const submittingRef = useRef(false)
+  const mountedRef = useRef(false)
   // Web Speech API (transcrição por voz). Só habilita se o navegador suportar.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
@@ -55,6 +57,20 @@ export function ContactForm() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
   )
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      const recognition = recognitionRef.current
+      if (!recognition) return
+      recognition.onresult = null
+      recognition.onend = null
+      recognition.onerror = null
+      recognition.abort()
+      recognitionRef.current = null
+    }
+  }, [])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -87,24 +103,49 @@ export function ContactForm() {
         }))
       }
     }
-    rec.onend = () => setRecording(false)
-    rec.onerror = () => setRecording(false)
+    const finishVoice = () => {
+      if (recognitionRef.current !== rec) return
+      recognitionRef.current = null
+      setRecording(false)
+    }
+    rec.onend = finishVoice
+    rec.onerror = finishVoice
     recognitionRef.current = rec
-    rec.start()
-    setRecording(true)
+    try {
+      rec.start()
+      setRecording(true)
+    } catch {
+      finishVoice()
+    }
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!form.nome || !form.email || !form.whatsapp) return
+    if (submittingRef.current || !form.nome.trim() || !form.email.trim() || !form.whatsapp.trim()) return
+
+    submittingRef.current = true
+    // A completed form must not keep the microphone active or refill the
+    // cleared message after the request finishes.
+    const recognition = recognitionRef.current
+    if (recognition) {
+      recognition.onresult = null
+      recognition.onend = null
+      recognition.onerror = null
+      recognition.abort()
+      recognitionRef.current = null
+      setRecording(false)
+    }
 
     setStatus('sending')
     try {
-      await submitLead(form)
+      await submitLead({ ...form, nome: form.nome.trim(), email: form.email.trim(), whatsapp: form.whatsapp.trim() })
+      if (!mountedRef.current) return
       setStatus('sent')
       setForm(INITIAL_STATE)
     } catch {
-      setStatus('error')
+      if (mountedRef.current) setStatus('error')
+    } finally {
+      submittingRef.current = false
     }
   }
 
@@ -144,6 +185,8 @@ export function ContactForm() {
         <label htmlFor="whatsapp" className="text-sm font-medium text-bold-white/80">{t.form.whatsapp}</label>
         <input
           id="whatsapp"
+          type="tel"
+          autoComplete="tel"
           required
           value={form.whatsapp}
           onChange={(e) => update('whatsapp', e.target.value)}
@@ -191,8 +234,8 @@ export function ContactForm() {
         {status === 'sending' ? t.form.sending : t.form.send}
       </ShinyButton>
 
-      {status === 'sent' && <p className="text-sm text-bold-yellow">{t.form.sent}</p>}
-      {status === 'error' && <p className="text-sm text-red-400">{t.form.error}</p>}
+      {status === 'sent' && <p role="status" className="text-sm text-bold-yellow">{t.form.sent}</p>}
+      {status === 'error' && <p role="alert" className="text-sm text-red-400">{t.form.error}</p>}
     </form>
   )
 }

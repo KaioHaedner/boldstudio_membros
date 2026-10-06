@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Send, X } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { supabase } from '@/shared/lib/supabase'
@@ -25,7 +25,7 @@ async function saveReciaLead(lead: LeadInfo) {
     source: 'recia_widget',
     user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
   })
-  if (error) console.error('RecIA: falha ao salvar lead', error.message)
+  if (error) throw new Error(error.message)
 
   // Email de confirmacao (Resend via edge function). Best-effort.
   try {
@@ -45,15 +45,45 @@ export function RecIAWidget() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
+  const [starting, setStarting] = useState(false)
+  const [leadError, setLeadError] = useState(false)
+  const startingRef = useRef(false)
+  const requestVersion = useRef(0)
+  const mountedRef = useRef(false)
+  const replyTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    const versionRef = requestVersion
+    const timerRef = replyTimer
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      versionRef.current++
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current)
+    }
+  }, [])
 
   async function startChat(e: FormEvent) {
     e.preventDefault()
-    if (!lead.nome || !lead.whatsapp || !lead.email || !lead.cidade) return
-    await saveReciaLead(lead)
-    setMessages([
-      { role: 'recia', text: t.recia.greeting.replace('{name}', lead.nome.split(' ')[0]) },
-    ])
-    setStage('chat')
+    if (startingRef.current || !lead.nome.trim() || !lead.whatsapp.trim() || !lead.email.trim() || !lead.cidade.trim()) return
+    const version = ++requestVersion.current
+    startingRef.current = true
+    setStarting(true)
+    setLeadError(false)
+    try {
+      await saveReciaLead(lead)
+      // Closing a panel during a slow request must not reopen it afterwards.
+      if (version !== requestVersion.current) return
+      setMessages([
+        { role: 'recia', text: t.recia.greeting.replace('{name}', lead.nome.trim().split(' ')[0]) },
+      ])
+      setStage('chat')
+    } catch {
+      if (version === requestVersion.current) setLeadError(true)
+    } finally {
+      startingRef.current = false
+      if (mountedRef.current) setStarting(false)
+    }
   }
 
   async function sendMessage(e: FormEvent) {
@@ -64,12 +94,18 @@ export function RecIAWidget() {
     setInput('')
     setSending(true)
     // TODO (fase RecIA): plugar motor de IA real (Claude). O historico (next) ja chega pronto.
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    setMessages((prev) => [...prev, { role: 'recia', text: t.recia.botReply }])
-    setSending(false)
+    replyTimer.current = window.setTimeout(() => {
+      replyTimer.current = null
+      setMessages((prev) => [...prev, { role: 'recia', text: t.recia.botReply }])
+      setSending(false)
+    }, 500)
   }
 
   function close() {
+    requestVersion.current++
+    if (replyTimer.current !== null) window.clearTimeout(replyTimer.current)
+    replyTimer.current = null
+    setSending(false)
     setStage('closed')
   }
 
@@ -99,7 +135,7 @@ export function RecIAWidget() {
       )}
 
       {stage !== 'closed' && (
-        <div className="liquid-glass recia-solid flex h-[30rem] w-[21rem] flex-col overflow-hidden rounded-[26px]">
+        <div className="liquid-glass recia-solid flex h-[min(30rem,calc(100dvh-2rem))] w-[min(21rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[26px]">
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
             <div className="flex items-center gap-2.5">
               <img src={RECIA_ICON} alt="RecIA" className="h-8 w-8 object-contain" />
@@ -149,6 +185,8 @@ export function RecIAWidget() {
               <input
                 required
                 value={lead.whatsapp}
+                type="tel"
+                autoComplete="tel"
                 onChange={(e) => setLead((p) => ({ ...p, whatsapp: e.target.value }))}
                 placeholder={t.recia.whatsapp}
                 className="rounded-xl border border-white/10 bg-bold-black/40 px-3 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
@@ -168,8 +206,9 @@ export function RecIAWidget() {
                 placeholder={t.recia.cidade}
                 className="rounded-xl border border-white/10 bg-bold-black/40 px-3 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
               />
-              <button type="submit" className="mt-auto rounded-lg bg-bold-yellow px-4 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02]">
-                {t.recia.begin}
+              {leadError && <p role="alert" className="text-xs text-red-400">{t.form.error}</p>}
+              <button type="submit" disabled={starting} className="mt-auto rounded-lg bg-bold-yellow px-4 py-2.5 text-sm font-bold text-bold-black transition-transform hover:scale-[1.02] disabled:opacity-60">
+                {starting ? t.form.sending : t.recia.begin}
               </button>
             </form>
           )}
@@ -197,7 +236,7 @@ export function RecIAWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={t.recia.inputPlaceholder}
-                  className="flex-1 rounded-lg border border-white/10 bg-bold-black/40 px-4 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
+                  className="min-w-0 flex-1 rounded-lg border border-white/10 bg-bold-black/40 px-4 py-2 text-sm text-bold-white outline-none placeholder:text-bold-white/35 focus:border-bold-yellow"
                 />
                 <button type="submit" aria-label={t.recia.sendAria} className="rounded-lg bg-bold-yellow p-2.5 text-bold-black">
                   <Send size={16} />

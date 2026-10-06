@@ -38,3 +38,21 @@ test('unrecovered brands are not substituted with another brand video', () => {
     assert.equal(recovered[`Videos_Cliente_New/${name}.mp4`], undefined)
   }
 })
+
+test('home coin and About Us are real hash-named local WebPs', () => {
+  for (const path of ['/brand/boldstudio-coin-9f5cdcb2b91f.webp', '/media/backgrounds/boldstudio-about-us-09c5b22b95fb.webp']) {
+    const bytes = readFileSync(`public${path}`)
+    assert.equal(bytes.subarray(0, 4).toString(), 'RIFF')
+    assert.equal(bytes.subarray(8, 12).toString(), 'WEBP')
+    assert.ok(path.includes(createHash('sha256').update(bytes).digest('hex').slice(0, 12)))
+  }
+})
+
+test('all journey icons are served locally without proxy fallback', () => {
+  const source = readFileSync('src/apps/site/data/jornada.ts', 'utf8')
+  assert.ok(source.includes("const ICONE = '/jornada/'"))
+  assert.ok(!source.includes('mediaBase('))
+  const files = [...source.matchAll(/\$\{ICONE\}([^`]+\.webp)/g)].map(match => match[1])
+  assert.equal(files.length, 13)
+  for (const file of files) assert.ok(existsSync(`public/jornada/${file}`), file)
+})

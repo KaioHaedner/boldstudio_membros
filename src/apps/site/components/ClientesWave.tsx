@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, MapPin, Phone, Play, X } from 'lucide-react'
 import { ShinyButton } from '@/shared/components/ShinyButton'
@@ -6,6 +6,7 @@ import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/apps/site/data/clientes'
 import { BudgetVideo } from '@/shared/components/BudgetVideo'
 import { videoPreview } from '@/shared/lib/video-preview'
+import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'
 
 // Instruction below the carousel; the decorative arrow points back up to a logo.
 function DicaDeClique({ label }: { label: string }) {
@@ -33,6 +34,12 @@ export function ClientesWave() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const [selected, setSelected] = useState<Cliente | null>(null)
+  const detailPanelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!selected || !detailPanelRef.current) return
+    return bindDialogBehavior(detailPanelRef.current, () => setSelected(null))
+  }, [selected])
 
   return (
     <section id="clientes" className="relative scroll-mt-24 overflow-hidden py-[var(--espaco-secao)]">
@@ -95,7 +102,9 @@ export function ClientesWave() {
           onClick={() => setSelected(null)}
         >
           <div
+            ref={detailPanelRef}
             role="dialog"
+            tabIndex={-1}
             aria-modal="true"
             aria-label={`Detalhes de ${selected.nome}`}
             className="clientes-detail-card relative w-full max-w-md text-center text-bold-black shadow-[0_30px_90px_-15px_rgba(0,0,0,0.95)]"

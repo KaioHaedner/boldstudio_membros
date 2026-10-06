@@ -9,9 +9,10 @@
 // passou a receber 1KB de um vídeo de 13MB.
 const VERSAO = '2'
 
-// Na cópia e nos previews, usa o proxy do próprio deployment. Para manter
-// um host de mídia separado, configure VITE_MEDIA_BASE_URL no ambiente.
-const BASE = import.meta.env.VITE_MEDIA_BASE_URL || '/api/media'
+// Always use this deployment's same-origin proxy. A separate api.bold host
+// fragmented caches and tied previews to production. Storage origins remain
+// server-side in api/media.ts; static build media uses local /media paths.
+const BASE = '/api/media'
 
 /** URL completa de um arquivo. */
 export function media(bucket: string, arquivo: string) {
@@ -20,5 +21,5 @@ export function media(bucket: string, arquivo: string) {
 
 /** Prefixo para quem concatena o nome do arquivo depois. */
 export function mediaBase(bucket: string) {
-  return `${BASE}?b=${bucket}&v=${VERSAO}&f=`
+  return `${BASE}?b=${encodeURIComponent(bucket)}&v=${VERSAO}&f=`
 }

@@ -1241,9 +1241,10 @@ textarea {
   /* folga total que o leque ocupa; o card desconta ela pra nao vazar do stage */
   --card-swap-fan-x: calc(var(--card-swap-x) * (var(--crew-count) - 1));
   --card-swap-fan-y: calc(var(--card-swap-y) * (var(--crew-count) - 1));
+  --crew-card-height: 400px;
   position: relative;
   width: 100%;
-  height: clamp(360px, 40vw, 460px);
+  height: calc(var(--crew-card-height) + var(--card-swap-fan-y));
   justify-self: end;
   perspective: 1400px;
 }
@@ -1404,7 +1405,7 @@ textarea {
        de tras pra fora da tela (ficavam cortados na borda) */
     --card-swap-x: 6px;
     --card-swap-y: 7px;
-    height: clamp(470px, 128vw, 560px);
+    height: calc(var(--crew-card-height) + var(--card-swap-fan-y));
   }
   .crew-card__foto,
   .crew-card__bruma {
@@ -1556,6 +1557,7 @@ textarea {
   justify-content: center;
   gap: clamp(1rem, 2vw, 2rem);
   width: min(1280px, 100%);
+  text-align: center;
   margin-top: clamp(1.5rem, 3vw, 2.5rem);
   /* sem `both`: com ele a legenda fica em opacity 0 ate a animacao rodar,
      e qualquer throttle do navegador deixava o nome do case invisivel */
@@ -1575,7 +1577,7 @@ textarea {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-bold-yellow);
 }
 .cases-etiqueta {
   /* anula o padding lateral da seção pra etiqueta encostar na borda, igual às
