@@ -6,10 +6,15 @@ import { PageErrorBoundary } from './shared/components/PageErrorBoundary'
 
 async function boot() {
   const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+  const isBio = window.location.hostname.startsWith('bio.') || window.location.pathname === '/bio'
   // O laboratório é excluído do build de produção e não carrega o AuthProvider antigo.
-  const Page = import.meta.env.DEV && isLocal && window.location.pathname === '/firebase-setup'
-    ? (await import('./shared/firebase/FirebaseSetupPage')).default
-    : (await import('./App.tsx')).default
+  const Page = isBio
+    ? (await import('./apps/site/pages/BioPage')).BioPage
+    : import.meta.env.DEV && isLocal && window.location.pathname === '/firebase-setup'
+      ? (await import('./shared/firebase/FirebaseSetupPage')).default
+      : import.meta.env.VITE_SITE_MODE === 'institutional'
+        ? (await import('./InstitutionalApp')).default
+        : (await import('./App.tsx')).default
   createRoot(document.getElementById('root')!).render(<StrictMode><PageErrorBoundary><Page /></PageErrorBoundary></StrictMode>)
 }
 
