@@ -27,6 +27,7 @@ export function CasesCarrossel() {
     return indice < 0 ? 0 : indice
   })
   const [falhou, setFalhou] = useState<Record<string, boolean>>({})
+  const [previewEnded, setPreviewEnded] = useState(false)
 
   const caso = CASES[atual]
   const semVideo = falhou[caso.slug]
@@ -49,31 +50,47 @@ export function CasesCarrossel() {
     <section ref={sectionRef} id="cases" className="cases-secao scroll-mt-24">
       <SolucoesParallax indices={[5]} layout="right" className="section-backdrop--cases" />
       <div className="cases-palco">
-        <BudgetVideo
-          key={caso.slug}
-          className="cases-palco__video"
-          src={preview || caso.videos[0]}
-          poster={caso.logo}
-          autoPlay={Boolean(preview)}
-          controls={!preview}
-          loop
-          muted
-          playsInline
-          onError={() =>
-            setFalhou((atuais) => (atuais[caso.slug] ? atuais : { ...atuais, [caso.slug]: true }))
-          }
-        />
+        {preview && !semVideo && (
+          <BudgetVideo
+            key={caso.slug}
+            className="cases-palco__video"
+            src={preview}
+            poster={caso.logo}
+            autoPlay={!previewEnded}
+            muted
+            playsInline
+            onTimeUpdate={(event) => {
+              if (event.currentTarget.currentTime >= 10) {
+                event.currentTarget.pause()
+                setPreviewEnded(true)
+              }
+            }}
+            onEnded={() => setPreviewEnded(true)}
+            onError={() =>
+              setFalhou((atuais) => (atuais[caso.slug] ? atuais : { ...atuais, [caso.slug]: true }))
+            }
+          />
+        )}
 
         {/* Enquanto o vídeo não carrega (hoje a cota do Supabase novo está
             estourada), o palco mostra a marca em vez de um retângulo preto. */}
-        {semVideo && (
+        {(!preview || semVideo) && (
           <span className="cases-palco__vazio flex-col gap-4" role="status">
             <img src={caso.logo} alt="" loading="lazy" />
-            <span className="px-6 text-center text-sm text-white/70">{t.cases.unavailable}</span>
+            {semVideo && <span className="px-6 text-center text-sm text-white/70">{t.cases.unavailable}</span>}
           </span>
         )}
 
         <span className="cases-palco__sombra" aria-hidden="true" />
+
+        {(previewEnded || !preview || semVideo) && (
+          <div className="cases-palco__final">
+            {previewEnded && <p>{t.cases.previewFinished}</p>}
+            <ShinyButton onClick={() => navigate(`/projeto-${caso.slug}`)}>
+              {t.clientes.viewProject}
+            </ShinyButton>
+          </div>
+        )}
 
         {/* Logo DENTRO do card, como o cliente pediu */}
         <div className="cases-palco__project">
@@ -96,7 +113,10 @@ export function CasesCarrossel() {
               aria-label={cliente.nome}
               className="cases-seletor__item"
               data-ativo={indice === atual}
-              onClick={() => setAtual(indice)}
+              onClick={() => {
+                setAtual(indice)
+                setPreviewEnded(false)
+              }}
             >
               <img src={cliente.logo} alt="" loading="lazy" />
             </button>

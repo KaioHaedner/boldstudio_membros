@@ -115,14 +115,14 @@ function ServicoConteudo() {
                       loading="lazy"
                       className="max-h-16 w-auto max-w-[70%] object-contain opacity-70 transition-opacity group-hover:opacity-100"
                     />
-                    {cliente.videos[0] && !semVideo[cliente.slug] && (
+                    {cliente.videos[0] && videoPreview(cliente.videos[0]) && !semVideo[cliente.slug] && (
                       <BudgetVideo
-                        src={videoPreview(cliente.videos[0]) || cliente.videos[0]}
+                        src={videoPreview(cliente.videos[0])!}
                         poster={cliente.logo}
                         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
                           videoPronto[cliente.slug] ? 'opacity-100' : 'opacity-0'
                         }`}
-                        autoPlay={Boolean(videoPreview(cliente.videos[0]))}
+                        autoPlay
                         loop
                         muted
                         playsInline

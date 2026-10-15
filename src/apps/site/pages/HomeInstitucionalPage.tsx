@@ -211,7 +211,7 @@ function HomeContent() {
           </span>
         </section>
 
-        <AcademySection />
+        {import.meta.env.VITE_SITE_MODE !== 'institutional' && <AcademySection />}
 
         <section id="contato" data-reveal className="relative scroll-mt-24 px-6">
           {/* Fundo: foto de bastidor + overlay pra legibilidade */}

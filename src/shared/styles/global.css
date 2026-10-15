@@ -1432,10 +1432,10 @@ textarea {
 }
 .cases-palco {
   position: relative;
-  width: min(1280px, 100%);
-  /* 16:9, mas sem passar de ~80% da altura da tela */
-  aspect-ratio: 16 / 9;
-  max-height: 80svh;
+  width: min(1600px, 100%);
+  /* Um palco amplo no desktop sem baixar o filme completo na home. */
+  height: 80svh;
+  max-height: 900px;
   overflow: hidden;
   border-radius: clamp(0.9rem, 2vw, 1.5rem);
   border: 1px solid rgba(255, 215, 18, 0.18);
@@ -1472,6 +1472,26 @@ textarea {
   background:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, transparent 28%),
     linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 42%);
+}
+.cases-palco__final {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 5rem 1rem 4rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.58);
+}
+.cases-palco__final p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 .cases-palco__marca {
   position: absolute;
@@ -1660,13 +1680,42 @@ textarea {
 }
 .section-backdrop--processo .solucoes-parallax__photo { top: 24%; height: 55%; max-height: 800px; opacity: .32; }
 @media (max-width: 639px) {
-  .cases-palco { aspect-ratio: 4 / 3; }
+  .cases-palco { height: min(58svh, 440px); }
+  .cases-palco__final { padding-top: 5.5rem; padding-bottom: 4.5rem; }
   .section-backdrop--crew .solucoes-parallax__photo,
   .section-backdrop--abertura .solucoes-parallax__photo,
   .section-backdrop--clientes .solucoes-parallax__photo,
   .section-backdrop--cases .solucoes-parallax__photo { opacity: .32; }
   .section-backdrop--processo .solucoes-parallax__photo { opacity: .24; }
 }
+
+.project-full-video__poster {
+  display: flex;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: radial-gradient(circle, #242016 0%, #090909 70%);
+  color: var(--color-bold-white);
+  text-align: center;
+}
+button.project-full-video__poster { cursor: pointer; }
+.project-full-video__poster img { width: min(35%, 220px); max-height: 140px; object-fit: contain; }
+.project-full-video__poster span {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  border-radius: .75rem;
+  border: 1px solid rgba(255, 215, 18, .5);
+  padding: .75rem 1.1rem;
+  font-weight: 800;
+  background: rgba(0, 0, 0, .7);
+}
+.project-full-video__poster:hover span,
+.project-full-video__poster:focus-visible span { background: var(--color-bold-yellow); color: var(--color-bold-black); }
 .client-white-logo__image--transparent {
   filter: brightness(0) invert(1);
 }

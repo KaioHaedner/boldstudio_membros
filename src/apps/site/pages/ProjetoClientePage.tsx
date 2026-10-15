@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Globe, Phone, Play } from 'lucide-react'
 import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
@@ -14,16 +14,16 @@ const MIN_PHONES = 3
 // override no index.css). Reel roda em loop cortado em 10s. Sem src, mostra a
 // logo da Bold — assim todo cliente exibe pelo menos 3 celulares.
 function PhoneReel({ src, index }: { src?: string; index: number }) {
+  const preview = src ? videoPreview(src) : undefined
   return (
     <div className="bold-iphone-wrap">
       <div className="device device-iphone-x bold-iphone">
         <div className="device-frame">
-          {src ? (
+          {preview ? (
             <BudgetVideo
               className="device-screen"
-              src={videoPreview(src) || src}
-              autoPlay={Boolean(videoPreview(src))}
-              controls={!videoPreview(src)}
+              src={preview}
+              autoPlay
               loop
               muted
               playsInline
@@ -51,8 +51,42 @@ function PhoneReel({ src, index }: { src?: string; index: number }) {
   )
 }
 
+function FullProjectVideo({ src, poster }: { src: string; poster: string }) {
+  const { t } = useI18n()
+  const [started, setStarted] = useState(false)
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return <div className="project-full-video__poster" role="status">{t.cases.unavailable}</div>
+  }
+
+  return started ? (
+    <video
+      src={src}
+      controls
+      autoPlay
+      playsInline
+      preload="none"
+      poster={poster}
+      className="aspect-video w-full object-cover"
+      onError={() => setFailed(true)}
+    />
+  ) : (
+    <button
+      type="button"
+      className="project-full-video__poster"
+      onClick={() => setStarted(true)}
+      aria-label={t.projeto.playFullVideo}
+    >
+      <img src={poster} alt="" loading="lazy" />
+      <span><Play size={20} fill="currentColor" aria-hidden="true" /> {t.projeto.playFullVideo}</span>
+    </button>
+  )
+}
+
 function ProjetoContent({ cliente }: { cliente: Cliente }) {
   const { t } = useI18n()
+  const awaitingNewMedia = import.meta.env.VITE_SITE_MODE === 'institutional'
 
   return (
     <div className="relative isolate min-h-screen bg-bold-black text-bold-white">
@@ -107,13 +141,14 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           <section className="mt-20">
             <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">{t.projeto.demoreelTitle}</p>
             <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-black/60">
-              <BudgetVideo
-                src={cliente.videos[0]}
-                controls
-                playsInline
-                poster=""
-                className="aspect-video w-full object-cover"
-              />
+              {awaitingNewMedia ? (
+                <div className="project-full-video__poster" role="status">
+                  <img src={cliente.logo} alt="" loading="lazy" />
+                  <p className="max-w-sm text-sm font-semibold text-white/70">{t.projeto.fullVideoSoon}</p>
+                </div>
+              ) : (
+                <FullProjectVideo key={cliente.slug} src={cliente.videos[0]} poster={cliente.logo} />
+              )}
             </div>
           </section>
         )}

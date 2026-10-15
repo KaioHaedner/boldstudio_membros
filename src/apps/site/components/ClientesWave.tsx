@@ -121,11 +121,10 @@ export function ClientesWave() {
 
             <div className="clientes-detail-card__surface">
               <div className="aspect-video w-full overflow-hidden bg-[#858585]">
-                {selected.videos[0] ? (
+                {selected.videos[0] && videoPreview(selected.videos[0]) ? (
                   <BudgetVideo
-                    src={videoPreview(selected.videos[0]) || selected.videos[0]}
-                    autoPlay={Boolean(videoPreview(selected.videos[0]))}
-                    controls={!videoPreview(selected.videos[0])}
+                    src={videoPreview(selected.videos[0])!}
+                    autoPlay
                     poster={selected.logo}
                     loop
                     muted

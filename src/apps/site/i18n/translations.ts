@@ -140,6 +140,7 @@ const pt = {
     highlight: 'eternizadas',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
     recoveredPreview: 'Prévia recuperada de 10s. O vídeo completo novo ainda está indisponível.',
+    previewFinished: 'Fim da prévia de 10 segundos',
     unavailable: 'Vídeo temporariamente indisponível. Estamos recuperando este arquivo.',
   },
   clientes: {
@@ -155,6 +156,8 @@ const pt = {
   projeto: {
     back: 'Voltar para a home',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Assistir ao vídeo completo',
+    fullVideoSoon: 'Prévia disponível. O vídeo completo será adicionado em breve.',
     reelsTitle: 'Reels do projeto',
     reelsSoon: 'Reels em breve',
     testimonialTitle: 'O que dizem',
@@ -421,6 +424,7 @@ const en: Dict = {
     highlight: 'eternalized',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
     recoveredPreview: 'Recovered 10s preview. The new full video is still unavailable.',
+    previewFinished: 'End of the 10-second preview',
     unavailable: 'Video temporarily unavailable. We are recovering this file.',
   },
   clientes: {
@@ -436,6 +440,8 @@ const en: Dict = {
   projeto: {
     back: 'Back to home',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Watch the full video',
+    fullVideoSoon: 'Preview available. The full video will be added soon.',
     reelsTitle: 'Project reels',
     reelsSoon: 'Reels coming soon',
     testimonialTitle: 'What they say',
@@ -700,6 +706,7 @@ const es: Dict = {
     highlight: 'eternizadas',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
     recoveredPreview: 'Vista previa recuperada de 10s. El nuevo video completo aún no está disponible.',
+    previewFinished: 'Fin de la vista previa de 10 segundos',
     unavailable: 'Video temporalmente no disponible. Estamos recuperando este archivo.',
   },
   clientes: {
@@ -715,6 +722,8 @@ const es: Dict = {
   projeto: {
     back: 'Volver al inicio',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Ver el video completo',
+    fullVideoSoon: 'Vista previa disponible. El video completo se añadirá pronto.',
     reelsTitle: 'Reels del proyecto',
     reelsSoon: 'Reels en breve',
     testimonialTitle: 'Lo que dicen',
