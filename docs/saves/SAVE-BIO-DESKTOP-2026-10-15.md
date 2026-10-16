@@ -31,3 +31,7 @@ Após publicar, a versão pública foi novamente conferida em 1366×768 e 390×8
 3. Na pasta `../BoldStudioBioPublic`, já vinculada ao projeto Vercel `boldstudio-bio`: `vercel.cmd deploy --prod --yes`.
 
 O preparador copia o build e gera um HTML próprio da Bio com canonical e metadados do domínio correto. Não copia arquivos locais de credenciais. `deployment/bio/vercel.json` mantém `/` e `/bio` acessíveis.
+
+## Ajuste de espaçamento mobile
+
+O espaço entre a logo e o bloco de apresentação foi reduzido de 180px para 28px. A altura mínima da seção foi removida no mobile para acompanhar o conteúdo, e o sombreamento da foto foi ajustado para preservar a leitura do título. Build e conferência da versão pública em 390×844 e 1366×768 concluídos, sem overflow horizontal ou imagens quebradas.

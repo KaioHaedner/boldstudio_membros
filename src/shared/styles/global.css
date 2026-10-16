@@ -2524,13 +2524,13 @@ button.project-full-video__poster { cursor: pointer; }
   .bio-page::before { display: none; }
   .bio-page__desktop { display: none; }
   .bio-page__mobile { display: flex !important; }
-  .bio-page__main { align-items: flex-start; }
+  .bio-page__main { align-items: flex-start; min-height: 0; }
   .bio-page__photo { width: 100%; height: 560px; bottom: auto; background-position: center 34%; opacity: .8; mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 100%); }
-  .bio-page__main::after { background: linear-gradient(to bottom, #05050510 0%, #05050500 20%, #050505 500px); }
+  .bio-page__main::after { background: linear-gradient(to bottom, #05050510 0%, #05050580 140px, #050505c9 300px, #050505 450px); }
   .bio-page__content { padding: 42px 20px 25px; text-align: center; }
   .bio-page__intro { margin: auto; }
   .bio-page__logo-link img { width: 175px; }
-  .bio-page__eyebrow { margin-top: 180px; font-size: 10px; }
+  .bio-page__eyebrow { margin-top: 28px; font-size: 10px; }
   .bio-page__intro h1 { margin: auto; max-width: 360px; font-size: clamp(2.1rem, 9vw, 3.6rem); }
   .bio-page__support { margin: 14px auto 0; font-size: 14px; }
   .bio-page__actions { display: block; margin-top: 25px; }
