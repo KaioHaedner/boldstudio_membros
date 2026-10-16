@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ArrowUpRight, Clapperboard, Mail } from 'lucide-react'
 import clientLogos from '@/apps/site/data/client-logos.json'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
+import { KaioCredit } from '@/shared/components/KaioCredit'
 
 const BIO_URL = 'https://bio.boldstudiobrasil.com/'
 const SITE = 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil'
@@ -19,7 +20,6 @@ const LEGAL_LINKS = [
   { label: 'Termos de uso', href: 'https://boldstudiobrasil.com/termos' },
   { label: 'Privacidade', href: 'https://boldstudiobrasil.com/privacidade' },
   { label: 'Cookies', href: 'https://boldstudiobrasil.com/cookies' },
-  { label: 'Uso da IA', href: 'https://boldstudiobrasil.com/uso-da-ia' },
 ] as const
 
 function WhatsAppIcon() {
@@ -93,7 +93,7 @@ export function BioPage() {
         <a href={SITE}>Site oficial</a>
         {LEGAL_LINKS.map(({ label, href }) => <a key={href} href={href}>{label}</a>)}
       </nav>
-      <div className="bio-page__credits"><p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p><p>Site por <a href="https://kaiohaedner.com" target="_blank" rel="noopener noreferrer">Kaio Haedner</a></p></div>
+      <div className="bio-page__credits"><p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p><p><KaioCredit /></p></div>
     </footer>
   </main>
 }

@@ -2287,6 +2287,8 @@ button.project-full-video__poster { cursor: pointer; }
 }
 
 /* ==== Botoes de contato do Kaio no footer (efeito hover + card/tooltip) ==== */
+.kaio-credit__trigger { padding: 0; border: 0; background: transparent; color: #ffd712; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.kaio-credit__trigger:focus-visible { outline: 2px solid #ffd712; outline-offset: 4px; }
 .bold-credit-popup {
   position: fixed;
   inset: auto 24px 24px auto;
@@ -2308,6 +2310,7 @@ button.project-full-video__poster { cursor: pointer; }
 .bold-credit-popup__eyebrow { padding-right: 30px; font-size: 10px; font-weight: 800; letter-spacing: .12em; color: #fde100; }
 .bold-credit-popup h3 { margin: 0; padding-right: 28px; font: italic 500 26px/1.1 Georgia, 'Times New Roman', serif; }
 .bold-credit-popup__support { margin-top: 10px; color: #080808; font-size: 13px; line-height: 1.5; }
+.bold-credit-popup__note { margin-top: 10px; color: #080808; font-size: 12px; line-height: 1.5; opacity: .85; }
 .bold-credit-popup__links { display: grid; gap: 10px; margin-top: 10px; }
 .bold-credit-popup__link { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: 0; border-radius: 0; background: #000; color: #fff; font-size: 13px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; transition: background .2s ease; }
 .bold-credit-popup__link:hover { background: #1f1f1f; }
@@ -2505,8 +2508,6 @@ button.project-full-video__poster { cursor: pointer; }
 .bio-page__legal a { color: #ffffff9c; font-size: 11px; font-weight: 500; text-decoration: underline; text-decoration-color: #ffffff40; text-underline-offset: 3px; transition: color .2s; }
 .bio-page__legal a:hover, .bio-page__legal a:focus-visible { color: #ffd712; }
 .bio-page__credits { margin-top: 12px; display: flex; flex-direction: column; gap: 5px; color: #ffffff75; font-size: 11px; line-height: 1.5; }
-.bio-page__credits a { color: #ffd712b3; text-decoration: underline; text-underline-offset: 3px; }
-.bio-page__credits a:focus-visible, .bio-page__credits a:hover { color: #ffd712; }
 @media (min-width: 900px) and (max-height: 700px) {
   .bio-page { padding: 20px 32px; gap: 20px; }
   .bio-page__desktop { min-height: 0; }
