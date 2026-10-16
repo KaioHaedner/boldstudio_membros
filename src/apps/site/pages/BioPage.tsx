@@ -87,12 +87,13 @@ export function BioPage() {
           </nav>
         </div>
         <div className="bio-page__clients" aria-label="Marcas atendidas pela Bold Studio Brasil">
-          <span>CRIAMOS COM MARCAS COMO</span>
+          <span>Marcas atendidas pela Bold <span className="bio-page__clients-arrow" aria-hidden="true">↓</span></span>
           <div className="bio-page__client-logo" key={LOGOS[logoIndex].id}><img src={LOGOS[logoIndex].src} alt={LOGOS[logoIndex].alt} width="180" height="80" decoding="async" /></div>
         </div>
       </div>
     </section>
     <footer className="bio-page__footer">
+      <img className="bio-page__footer-logo" src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" width="104" height="37" loading="lazy" />
       <nav className="bio-page__legal" aria-label="Páginas essenciais">
         <a href={SITE}>Site oficial</a>
         {LEGAL_LINKS.map(({ label, href }) => <a key={href} href={href}>{label}</a>)}

@@ -37,3 +37,7 @@ Verificação pública do redirecionamento: HTTP raiz → 308 para HTTPS raiz �
 ## Ajuste de espaçamento mobile
 
 O espaço entre a logo e o bloco de apresentação foi reduzido de 180px para 28px. A altura mínima da seção foi removida no mobile para acompanhar o conteúdo, e o sombreamento da foto foi ajustado para preservar a leitura do título. Build e conferência da versão pública em 390×844 e 1366×768 concluídos, sem overflow horizontal ou imagens quebradas.
+
+## Legenda de marcas e logo do rodapé
+
+A legenda passou a “Marcas atendidas pela Bold ↓”, em amarelo `#ffd712`, com peso 500 e seta no mesmo amarelo com peso 400. O rodapé recebeu a logo compacta da Bold acima dos links. O layout compacto foi ajustado para também acomodar essa logo em desktop de 900×600, preservando a ausência de rolagem vertical. Conferidos cor, peso e imagem carregada nos seis tamanhos de tela.
