@@ -4,6 +4,7 @@ import clientLogos from '@/apps/site/data/client-logos.json'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
 import { KaioCredit } from '@/shared/components/KaioCredit'
 import { useBioButtonAuras } from '@/shared/hooks/useBioButtonAuras'
+import { FooterWordmark } from '@/apps/site/components/FooterWordmark'
 
 const BIO_URL = 'https://bio.boldstudiobrasil.com/bio'
 const SITE = 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil'
@@ -93,12 +94,12 @@ export function BioPage() {
       </div>
     </section>
     <footer className="bio-page__footer">
-      <img className="bio-page__footer-logo" src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" width="104" height="37" loading="lazy" />
       <nav className="bio-page__legal" aria-label="Páginas essenciais">
         <a href={SITE}>Site oficial</a>
         {LEGAL_LINKS.map(({ label, href }) => <a key={href} href={href}>{label}</a>)}
       </nav>
       <div className="bio-page__credits"><p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p><p><KaioCredit /></p></div>
     </footer>
+    <FooterWordmark />
   </main>
 }
