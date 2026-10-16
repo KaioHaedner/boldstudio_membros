@@ -56,7 +56,7 @@ export function BioPage() {
           <a href={SITE} aria-label="Ir para o site da Bold Studio Brasil" className="bio-page__logo-link"><img src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" width="220" height="79" /></a>
           <p className="bio-page__eyebrow">PRODUTORA AUDIOVISUAL · SINOP, MT</p>
           <h1>Histórias que fazem sua marca acontecer.</h1>
-          <p className="bio-page__support">Escolha por onde começar. O próximo grande projeto pode ser o seu.</p>
+          <p className="bio-page__support">O próximo grande projeto pode ser o seu!</p>
         </header>
         <div className="bio-page__actions">
           <nav aria-label="Links oficiais da Bold Studio Brasil" className="bio-page__links">
