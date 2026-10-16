@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Clapperboard, Mail } from 'lucide-react'
 import clientLogos from '@/apps/site/data/client-logos.json'
-import { FooterWordmark } from '@/apps/site/components/FooterWordmark'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
 
-const BIO_URL = window.location.hostname === 'bio.boldstudiobrasil.com'
-  ? 'https://bio.boldstudiobrasil.com/'
-  : `${window.location.origin}/bio`
+const BIO_URL = 'https://bio.boldstudiobrasil.com/'
 const SITE = 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil'
 const WHATSAPP = `https://wa.me/${BOLD_WHATSAPP}?text=${encodeURIComponent('Olá, Bold Studio! Vim pelo link da bio e quero gravar com a Bold.')}`
+const WHATSAPP_WEB = `https://web.whatsapp.com/send?phone=${BOLD_WHATSAPP}&text=${encodeURIComponent('Olá, Bold Studio! Vim pelo link da bio e quero gravar com a Bold.')}`
 const FEATURED = ['unimed', 'paiol-agricola', 'machado-supermercados', 'exponorte', 'grupo-sinop', 'mado-burguer'] as const
 const LOGOS = FEATURED.map((id) => ({ id, src: clientLogos[id].src, alt: id.replaceAll('-', ' ') }))
 const LINKS = [
@@ -39,7 +37,7 @@ export function BioPage() {
     canonical?.setAttribute('href', BIO_URL)
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
     const timer = window.setInterval(() => {
-      if (!document.hidden && !media.matches) setLogoIndex((index) => (index + 1) % LOGOS.length)
+      if (!document.hidden && !media.matches && window.innerWidth < 900) setLogoIndex((index) => (index + 1) % LOGOS.length)
     }, 3500)
     return () => {
       window.clearInterval(timer)
@@ -49,7 +47,25 @@ export function BioPage() {
   }, [])
 
   return <main className="bio-page">
-    <section className="bio-page__main" aria-label="Links da Bold Studio Brasil">
+    <section className="bio-page__desktop" aria-label="Canal oficial da Bold Studio Brasil">
+      <div className="bio-page__desktop-photo" role="img" aria-label="Equipe da Bold Studio em uma produção audiovisual" />
+      <div className="bio-page__desktop-content">
+        <img className="bio-page__desktop-logo" src="/brand/logo-boldstudio.webp" alt="Bold Studio Brasil" width="220" height="79" />
+        <p className="bio-page__desktop-eyebrow">CANAL OFICIAL · SINOP, MT</p>
+        <h1>Bold Studio Brasil</h1>
+        <p className="bio-page__desktop-support">O próximo grande projeto pode ser o seu!</p>
+        <p className="bio-page__desktop-instruction">Aponte a câmera do celular para o QR code e acesse nossos links, ou fale com a Bold pelo WhatsApp.</p>
+        <div className="bio-page__qr-card">
+          <img src="/brand/bio-boldstudio-qr.png" alt="QR code para abrir a Bio da Bold Studio no celular" width="112" height="112" />
+          <div><span>{new URL(BIO_URL).host}</span><p>Abra no celular para acessar o site, o portfólio e nossos contatos.</p></div>
+        </div>
+        <a className="shiny-cta bio-page__link bio-page__link--whatsapp bio-page__desktop-whatsapp" href={WHATSAPP_WEB} target="_blank" rel="noopener noreferrer">
+          <span className="bio-page__link-icon" aria-hidden="true"><WhatsAppIcon /></span>
+          <span>Falar pelo WhatsApp Web</span><ArrowUpRight size={18} className="bio-page__link-arrow" aria-hidden="true" />
+        </a>
+      </div>
+    </section>
+    <section className="bio-page__main bio-page__mobile" aria-label="Links da Bold Studio Brasil">
       <div className="bio-page__photo" aria-hidden="true" />
       <div className="bio-page__content">
         <header className="bio-page__intro">
@@ -65,12 +81,6 @@ export function BioPage() {
               <span>{label}</span><ArrowUpRight size={20} className="bio-page__link-arrow" aria-hidden="true" />
             </a>)}
           </nav>
-          <aside className="bio-page__desktop-qr" aria-label="Acesse a Bio no celular">
-            <span className="bio-page__qr-label">LEVE A BOLD COM VOCÊ</span>
-            <div className="bio-page__qr-image"><img src="/brand/bio-boldstudio-qr.png" alt={`QR code para ${new URL(BIO_URL).host}`} width="188" height="188" /></div>
-            <p>Aponte a câmera do celular e acesse nossos links.</p>
-            <span className="bio-page__qr-url">{new URL(BIO_URL).host}</span>
-          </aside>
         </div>
         <div className="bio-page__clients" aria-label="Marcas atendidas pela Bold Studio Brasil">
           <span>CRIAMOS COM MARCAS COMO</span>
@@ -80,10 +90,10 @@ export function BioPage() {
     </section>
     <footer className="bio-page__footer">
       <nav className="bio-page__legal" aria-label="Páginas essenciais">
+        <a href={SITE}>Site oficial</a>
         {LEGAL_LINKS.map(({ label, href }) => <a key={href} href={href}>{label}</a>)}
       </nav>
-      <div className="bio-page__credits"><p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p><p>Powered by <span>Kaio Haedner</span></p></div>
-      <FooterWordmark />
+      <div className="bio-page__credits"><p>© {new Date().getFullYear()} Bold Studio Brasil. Todos os direitos reservados.</p><p>Site por <a href="https://kaiohaedner.com" target="_blank" rel="noopener noreferrer">Kaio Haedner</a></p></div>
     </footer>
   </main>
 }
