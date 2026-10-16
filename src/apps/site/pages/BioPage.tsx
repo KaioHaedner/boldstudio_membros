@@ -3,6 +3,7 @@ import { ArrowUpRight, Clapperboard, Mail } from 'lucide-react'
 import clientLogos from '@/apps/site/data/client-logos.json'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
 import { KaioCredit } from '@/shared/components/KaioCredit'
+import { useBioButtonAuras } from '@/shared/hooks/useBioButtonAuras'
 
 const BIO_URL = 'https://bio.boldstudiobrasil.com/bio'
 const SITE = 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil'
@@ -28,6 +29,7 @@ function WhatsAppIcon() {
 
 export function BioPage() {
   const [logoIndex, setLogoIndex] = useState(0)
+  const auraRef = useBioButtonAuras()
 
   useEffect(() => {
     const previousTitle = document.title
@@ -46,7 +48,7 @@ export function BioPage() {
     }
   }, [])
 
-  return <main className="bio-page">
+  return <main ref={auraRef} className="bio-page">
     <section className="bio-page__desktop" aria-label="Canal oficial da Bold Studio Brasil">
       <div className="bio-page__desktop-photo" role="img" aria-label="Equipe da Bold Studio em uma produção audiovisual" />
       <div className="bio-page__desktop-content">
@@ -60,6 +62,7 @@ export function BioPage() {
           <div><span>{new URL(BIO_URL).host}</span><p>Abra no celular para acessar o site, o portfólio e nossos contatos.</p></div>
         </div>
         <a className="bio-page__link bio-page__link--whatsapp bio-page__desktop-whatsapp" href={WHATSAPP_WEB} target="_blank" rel="noopener noreferrer">
+          <canvas className="bio-page__button-aura" data-bio-aura="0" aria-hidden="true" />
           <span className="bio-page__link-icon" aria-hidden="true"><WhatsAppIcon /></span>
           <span>Falar pelo WhatsApp Web</span><ArrowUpRight size={18} className="bio-page__link-arrow" aria-hidden="true" />
         </a>
@@ -76,7 +79,8 @@ export function BioPage() {
         </header>
         <div className="bio-page__actions">
           <nav aria-label="Links oficiais da Bold Studio Brasil" className="bio-page__links">
-            {LINKS.map(({ label, href, kind }) => <a key={kind} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className={`bio-page__link bio-page__link--${kind}`}>
+            {LINKS.map(({ label, href, kind }, index) => <a key={kind} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className={`bio-page__link bio-page__link--${kind}`}>
+              <canvas className="bio-page__button-aura" data-bio-aura={index * 2.35} aria-hidden="true" />
               <div className="bio-page__link-icon" aria-hidden="true">{kind === 'whatsapp' ? <WhatsAppIcon /> : kind === 'portfolio' ? <Clapperboard size={23} /> : kind === 'email' ? <Mail size={23} /> : <ArrowUpRight size={25} />}</div>
               <span>{label}</span><ArrowUpRight size={20} className="bio-page__link-arrow" aria-hidden="true" />
             </a>)}
