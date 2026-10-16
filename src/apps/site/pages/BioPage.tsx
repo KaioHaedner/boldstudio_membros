@@ -59,7 +59,7 @@ export function BioPage() {
           <img src="/brand/bio-boldstudio-qr.png" alt="QR code para abrir a Bio da Bold Studio no celular" width="112" height="112" />
           <div><span>{new URL(BIO_URL).host}</span><p>Abra no celular para acessar o site, o portfólio e nossos contatos.</p></div>
         </div>
-        <a className="shiny-cta bio-page__link bio-page__link--whatsapp bio-page__desktop-whatsapp" href={WHATSAPP_WEB} target="_blank" rel="noopener noreferrer">
+        <a className="bio-page__link bio-page__link--whatsapp bio-page__desktop-whatsapp" href={WHATSAPP_WEB} target="_blank" rel="noopener noreferrer">
           <span className="bio-page__link-icon" aria-hidden="true"><WhatsAppIcon /></span>
           <span>Falar pelo WhatsApp Web</span><ArrowUpRight size={18} className="bio-page__link-arrow" aria-hidden="true" />
         </a>
@@ -76,7 +76,7 @@ export function BioPage() {
         </header>
         <div className="bio-page__actions">
           <nav aria-label="Links oficiais da Bold Studio Brasil" className="bio-page__links">
-            {LINKS.map(({ label, href, kind }) => <a key={kind} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className={`shiny-cta bio-page__link bio-page__link--${kind}`}>
+            {LINKS.map(({ label, href, kind }) => <a key={kind} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className={`bio-page__link bio-page__link--${kind}`}>
               <div className="bio-page__link-icon" aria-hidden="true">{kind === 'whatsapp' ? <WhatsAppIcon /> : kind === 'portfolio' ? <Clapperboard size={23} /> : kind === 'email' ? <Mail size={23} /> : <ArrowUpRight size={25} />}</div>
               <span>{label}</span><ArrowUpRight size={20} className="bio-page__link-arrow" aria-hidden="true" />
             </a>)}
