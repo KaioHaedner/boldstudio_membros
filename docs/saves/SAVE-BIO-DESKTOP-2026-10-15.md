@@ -1,6 +1,6 @@
 # Bio — layout desktop e mobile
 
-Endereço: https://bio.boldstudiobrasil.com/
+Endereço: https://bio.boldstudiobrasil.com/bio
 
 ## Layout aprovado como direção
 
@@ -30,7 +30,9 @@ Após publicar, a versão pública foi novamente conferida em 1366×768 e 390×8
 2. `node scripts/prepare-bio-deploy.mjs ../BoldStudioBioPublic`
 3. Na pasta `../BoldStudioBioPublic`, já vinculada ao projeto Vercel `boldstudio-bio`: `vercel.cmd deploy --prod --yes`.
 
-O preparador copia o build e gera um HTML próprio da Bio com canonical e metadados do domínio correto. Não copia arquivos locais de credenciais. `deployment/bio/vercel.json` mantém `/` e `/bio` acessíveis.
+O preparador copia o build e gera um HTML próprio da Bio com canonical e metadados do domínio correto. Não copia arquivos locais de credenciais. `deployment/bio/vercel.json` redireciona a raiz `/` para `https://bio.boldstudiobrasil.com/bio` com status 308 e serve o conteúdo em `/bio`. O QR code existente aponta para a raiz e acompanha esse redirecionamento.
+
+Verificação pública do redirecionamento: HTTP raiz → 308 para HTTPS raiz → 308 para `/bio` → 200. Chrome isolado em viewport mobile navegou a partir do endereço HTTP, terminou em `/bio` e carregou os quatro links sem erros JavaScript.
 
 ## Ajuste de espaçamento mobile
 

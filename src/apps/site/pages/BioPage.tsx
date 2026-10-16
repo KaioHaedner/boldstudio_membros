@@ -4,7 +4,7 @@ import clientLogos from '@/apps/site/data/client-logos.json'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
 import { KaioCredit } from '@/shared/components/KaioCredit'
 
-const BIO_URL = 'https://bio.boldstudiobrasil.com/'
+const BIO_URL = 'https://bio.boldstudiobrasil.com/bio'
 const SITE = 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil'
 const WHATSAPP = `https://wa.me/${BOLD_WHATSAPP}?text=${encodeURIComponent('Olá, Bold Studio! Vim pelo link da bio e quero gravar com a Bold.')}`
 const WHATSAPP_WEB = `https://web.whatsapp.com/send?phone=${BOLD_WHATSAPP}&text=${encodeURIComponent('Olá, Bold Studio! Vim pelo link da bio e quero gravar com a Bold.')}`

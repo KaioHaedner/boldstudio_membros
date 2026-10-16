@@ -23,13 +23,13 @@ await writeFile(path.join(target, 'public/index.html'), `<!doctype html>
     <meta name="theme-color" content="#050505" />
     <title>Bold Studio Brasil | Links oficiais</title>
     <meta name="description" content="O próximo grande projeto pode ser o seu! Acesse o site, portfólio e contatos da Bold Studio Brasil." />
-    <link rel="canonical" href="https://bio.boldstudiobrasil.com/" />
+    <link rel="canonical" href="https://bio.boldstudiobrasil.com/bio" />
     <link rel="icon" type="image/png" sizes="48x48" href="/brand/favicon-48.png" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Bold Studio Brasil | Links oficiais" />
     <meta property="og:description" content="O próximo grande projeto pode ser o seu!" />
-    <meta property="og:url" content="https://bio.boldstudiobrasil.com/" />
+    <meta property="og:url" content="https://bio.boldstudiobrasil.com/bio" />
     <meta property="og:image" content="https://bio.boldstudiobrasil.com/brand/og-image.jpg" />
     ${script}
     ${styles.join('\n    ')}
