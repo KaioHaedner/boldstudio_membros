@@ -2485,7 +2485,7 @@ button.project-full-video__poster { cursor: pointer; }
 .bio-page__intro { max-width: 650px; }
 .bio-page__logo-link { display: inline-flex; align-items: center; }
 .bio-page__logo-link img { width: 220px; height: auto; }
-.bio-page__intro h1 { max-width: 650px; font-size: clamp(2.6rem, 5vw, 5.7rem); font-weight: 950; line-height: .94; letter-spacing: -.055em; text-transform: uppercase; text-shadow: 0 2px 8px rgb(0 0 0 / 20%); }
+.bio-page__intro h1 { max-width: 650px; font-size: clamp(2.6rem, 5vw, 5.7rem); font-weight: 950; line-height: .94; letter-spacing: -.055em; text-transform: uppercase; text-shadow: 0 2px 8px rgb(0 0 0 / 30%); }
 .bio-page__actions { margin-top: 25px; }
 .bio-page__links { display: grid; gap: 11px; }
 .bio-page__link {
