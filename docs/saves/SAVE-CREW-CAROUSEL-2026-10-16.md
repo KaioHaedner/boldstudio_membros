@@ -26,4 +26,7 @@
 ## Publicação
 
 - O ajuste anterior do seletor de idioma já foi confirmado no domínio institucional.
-- Esta alteração do Crew será validada em deployment antes de ser promovida. Não altera Bio, DNS, banco de dados nem credenciais.
+- Preview `dpl_5ThLCeFCqc5RzFQDLfR1K3ysXVax`: validado na página completa em 1366 px (mouse) e 390 px (touch CDP), com setas e descrição branca.
+- Produção `dpl_DamNyuuPpjT9ohwUud9m66YWWUWu`: READY e domínio associado. Repetidos os mesmos testes em `https://boldstudiobrasil.com/home-bold-studio-sinop-brasil` com sucesso.
+- Código: commit `f5ee762`, enviado ao GitHub. Não altera o deployment separado da Bio, DNS, banco de dados nem credenciais.
+- O build Vercel concluiu, mas registrou diagnósticos preexistentes de tipos no empacotamento de `api/media.ts` e avisos de dependências. Não foram feitas atualizações de backend/dependências neste ajuste visual.
