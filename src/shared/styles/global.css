@@ -2287,7 +2287,8 @@ button.project-full-video__poster { cursor: pointer; }
 }
 
 /* ==== Botoes de contato do Kaio no footer (efeito hover + card/tooltip) ==== */
-.kaio-credit__trigger { padding: 0; border: 0; background: transparent; color: #ffd712; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.kaio-credit__trigger { display: inline-flex; align-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; vertical-align: middle; border-radius: 4px; }
+.kaio-credit__logo { display: block; width: 160px; max-width: 100%; height: auto; }
 .kaio-credit__trigger:focus-visible { outline: 2px solid #ffd712; outline-offset: 4px; }
 .bold-credit-popup {
   position: fixed;

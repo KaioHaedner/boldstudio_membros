@@ -182,7 +182,6 @@ export function Footer() {
         </p>
         <div className="flex flex-col items-end gap-4 text-right text-[15.6px] text-bold-white/70">
           <p>
-            Powered by{' '}
             <button
               ref={creditTrigger}
               type="button"
@@ -190,9 +189,10 @@ export function Footer() {
               aria-expanded={kaioOpen}
               aria-haspopup="dialog"
               aria-controls="bold-credit-dialog"
-              className="font-semibold text-bold-yellow underline-offset-4 transition-colors hover:underline"
+              aria-label="Kaio Haedner"
+              className="kaio-credit__trigger"
             >
-              Kaio Haedner
+              <img className="kaio-credit__logo" src="/brand/kaiohaedner-logo-horizontal-white.webp" alt="Kaio Haedner" width="300" height="100" loading="lazy" decoding="async" />
             </button>
           </p>
           {kaioOpen && (

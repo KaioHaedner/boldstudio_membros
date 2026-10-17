@@ -5,7 +5,7 @@ import { ArrowUpRight, X } from 'lucide-react'
 const WHATSAPP = `https://wa.me/5566996402088?text=${encodeURIComponent('Olá, Kaio! Vim pelo site da Bold Studio e quero um site com essa presença para a minha marca.')}`
 
 // Mesmo desenho do crédito da Óptica Lux: título, apoio, dois contatos e nota.
-export function KaioCredit({ prefix = 'Site por' }: { prefix?: string }) {
+export function KaioCredit() {
   const [open, setOpen] = useState(false)
   const trigger = useRef<HTMLButtonElement>(null)
   const dialog = useRef<HTMLDialogElement>(null)
@@ -31,8 +31,7 @@ export function KaioCredit({ prefix = 'Site por' }: { prefix?: string }) {
   }, [open])
 
   return <><span className="kaio-credit">
-    {prefix}{' '}
-    <button ref={trigger} type="button" className="kaio-credit__trigger" aria-haspopup="dialog" aria-expanded={open} aria-controls={id} onClick={() => setOpen(true)}>Kaio Haedner</button>
+    <button ref={trigger} type="button" className="kaio-credit__trigger" aria-label="Kaio Haedner" aria-haspopup="dialog" aria-expanded={open} aria-controls={id} onClick={() => setOpen(true)}><img className="kaio-credit__logo" src="/brand/kaiohaedner-logo-horizontal-white.webp" alt="Kaio Haedner" width="300" height="100" loading="lazy" decoding="async" /></button>
   </span>
     {open && createPortal(<dialog ref={dialog} id={id} className="bold-credit-popup" aria-labelledby={`${id}-title`} onCancel={() => setOpen(false)} onClose={() => setOpen(false)} onClick={event => { if (event.target === event.currentTarget) setOpen(false) }} onKeyDown={event => {
       if (event.key !== 'Tab') return
