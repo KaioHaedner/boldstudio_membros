@@ -4,7 +4,7 @@ import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { LANGS } from '@/apps/site/i18n/translations'
 
 // Seletor de idioma com bandeiras (flagcdn). Dropdown compacto no Header.
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({ className, embedded = false }: { className?: string; embedded?: boolean }) {
   const { lang, setLang } = useI18n()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -25,7 +25,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         onClick={() => setOpen((o) => !o)}
         aria-label="Selecionar idioma"
         aria-expanded={open}
-        className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-bold-white/85 transition-colors hover:border-bold-yellow/50"
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 text-bold-white/85 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bold-yellow ${embedded ? 'bg-transparent hover:text-bold-yellow' : 'rounded-lg border border-white/10 bg-white/5 hover:border-bold-yellow/50'}`}
       >
         <img
           src={`https://flagcdn.com/${current.flag}.svg`}
