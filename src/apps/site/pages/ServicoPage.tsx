@@ -10,10 +10,16 @@ import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
 import { videoPreview } from '@/shared/lib/video-preview'
 import { ServiceShowcase, type ServiceFilm } from '@/apps/site/components/ServiceShowcase'
 import vtFilms from '@/apps/site/data/vt-films.json'
+import serviceFilms from '@/apps/site/data/service-films.json'
+import serviceSeo from '@/apps/site/data/service-seo.json'
 
 const HOME = '/home-bold-studio-sinop-brasil'
 const machadoLogo = CLIENTES.find(cliente => cliente.slug === 'machado-supermercados')?.logo
 const unimedLogo = CLIENTES.find(cliente => cliente.slug === 'unimed')?.logo
+const logoFor = (slug: string) => CLIENTES.find(cliente => cliente.slug === slug)?.logo
+const paired = (film: Omit<ServiceFilm, 'format'>): ServiceFilm[] => [
+  { ...film, format: 'vertical' }, { ...film, format: 'horizontal' },
+]
 // New service-specific films are assigned here after receiving the files.
 const SERVICE_FILMS: Partial<Record<ServicoSlug, ServiceFilm[]>> = {
   'vt-comercial': [
@@ -23,6 +29,21 @@ const SERVICE_FILMS: Partial<Record<ServicoSlug, ServiceFilm[]>> = {
     { ...vtFilms['machado-horizontal'], logo: machadoLogo, format: 'horizontal' },
     { ...vtFilms.unimed, logo: unimedLogo, format: 'horizontal' },
     { ...vtFilms['mascarello-guerra'], format: 'horizontal' },
+  ],
+  institucionais: [
+    ...paired({ ...serviceFilms['agrobaggio-institucional'], logo: logoFor('agro-baggio-john-deere') }),
+    ...paired(serviceFilms['fazcarnes-institucional']),
+    ...paired(serviceFilms['mascarello-guerra-institucional']),
+  ],
+  eventos: [
+    ...paired({ ...serviceFilms['exponorte-2026-aftermovie'], logo: logoFor('exponorte') }),
+    ...paired({ ...serviceFilms['agrobaggio-confraternizacao-sorriso'], logo: logoFor('agro-baggio-john-deere'), caption: 'Confraternização em Sorriso' }),
+    ...paired({ ...serviceFilms['agrobaggio-resumo-feira-dia-5'], logo: logoFor('agro-baggio-john-deere'), caption: 'Resumo da feira' }),
+  ],
+  'food-produto': [
+    ...paired({ ...serviceFilms['forteza-filme-produto'], logo: logoFor('forteza') }),
+    ...paired(serviceFilms['louvada-weis-filme-produto']),
+    ...paired(serviceFilms['mangut-fit-batata-doce']),
   ],
 }
 // Retain the existing examples until the service's own films are supplied.
@@ -36,12 +57,37 @@ function ServicoConteudo() {
   const { t, lang } = useI18n()
   const navigate = useNavigate()
   useEffect(() => { window.scrollTo(0, 0) }, [slug])
+  useEffect(() => {
+    if (!isServicoSlug(slug)) return
+    const seo = serviceSeo[slug]
+    const previousTitle = document.title
+    const oldDescription = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+    const oldCanonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    const description = oldDescription ?? document.createElement('meta')
+    const canonical = oldCanonical ?? document.createElement('link')
+    const previousDescription = description.content
+    const previousCanonical = canonical.getAttribute('href')
+    const directServiceEntry = previousCanonical?.startsWith('https://boldstudiobrasil.com/servico/')
+    // Static HTML supplies metadata before JS; the mounted player supplies the live schema.
+    document.head.querySelector('script[data-service-videos]')?.remove()
+    description.name = 'description'; canonical.rel = 'canonical'
+    description.content = seo.description
+    canonical.href = `https://boldstudiobrasil.com/servico/${slug}`
+    document.title = seo.title
+    if (!oldDescription) document.head.append(description)
+    if (!oldCanonical) document.head.append(canonical)
+    return () => {
+      document.title = directServiceEntry ? 'Bold Studio Brasil, produtora audiovisual em Sinop MT' : previousTitle
+      if (oldDescription) description.content = directServiceEntry ? 'Produtora audiovisual em Sinop, Mato Grosso, nascida no agro e na indústria para transformar vídeo institucional e evento em resultado para a sua marca.' : previousDescription; else description.remove()
+      if (oldCanonical && previousCanonical) canonical.setAttribute('href',directServiceEntry ? 'https://boldstudiobrasil.com/home-bold-studio-sinop-brasil' : previousCanonical); else canonical.remove()
+    }
+  }, [slug])
   if (!isServicoSlug(slug)) return <Navigate to={HOME} replace />
   const produto = t.servicos.produtos[SERVICO_SLUGS.indexOf(slug)]
   const pagina = t.servicoPaginas
   const conteudo = pagina.itens[slug]
   const cta = lang === 'pt' ? 'Vem gravar com a Bold' : lang === 'en' ? 'Come shoot with Bold' : 'Ven a grabar con Bold'
-  return <div className="min-h-screen bg-bold-black text-bold-white">
+  return <div className="bold-editorial bold-editorial--service min-h-screen bg-bold-black text-bold-white">
     <Header />
     <main className="service-page">
       <div className="service-page__container">
@@ -64,7 +110,7 @@ function ServicoConteudo() {
           </ul>
         </section>
       </div>
-      <ServiceShowcase key={slug} films={SERVICE_FILMS[slug] ?? EXISTING_EXAMPLES} title={pagina.exemplosTitulo} />
+      <ServiceShowcase key={slug} films={SERVICE_FILMS[slug] ?? EXISTING_EXAMPLES} title={pagina.exemplosTitulo} pageUrl={`https://boldstudiobrasil.com/servico/${slug}`} />
       <section className="service-page__cta">
         <p>{pagina.ctaTexto}</p>
         <ShinyButton className="shiny-cta--grande service-page__cta-button" onClick={() => navigate(`${HOME}#contato`)}>{cta}</ShinyButton>

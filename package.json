@@ -9,7 +9,7 @@
     "dev:firebase": "vite --mode firebase --host 127.0.0.1 --port 5174",
     "test:firebase-rules": "node --test tests/firebase-rules.test.mjs",
     "test:media": "node --test tests/card-swipe.test.mjs tests/stacked-carousel.test.mjs tests/media-budget.test.mjs tests/media-proxy.test.mjs",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node scripts/generate-service-video-sitemap.mjs && vite build && node scripts/generate-service-seo.mjs",
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
     "preview": "vite preview"
@@ -23,6 +23,7 @@
     "firebase": "^12.19.0",
     "framer-motion": "^12.40.0",
     "gsap": "^3.15.0",
+    "hls.js": "^1.7.3",
     "lucide-react": "^1.16.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",

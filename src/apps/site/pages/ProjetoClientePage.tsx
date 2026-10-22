@@ -81,7 +81,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
   const awaitingNewMedia = import.meta.env.VITE_SITE_MODE === 'institutional'
 
   return (
-    <div className="relative isolate min-h-screen bg-bold-black text-bold-white">
+    <div className="bold-editorial bold-editorial--project relative isolate min-h-screen bg-bold-black text-bold-white">
 
       {/* topo: voltar + seletor de idioma */}
       <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-5xl items-center justify-between px-4">

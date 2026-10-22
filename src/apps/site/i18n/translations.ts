@@ -135,9 +135,7 @@ const pt = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'Eles confiaram na',
-    lineB: 'e suas marcas estão',
-    highlight: 'eternizadas',
+    lineA: 'Marcas que confiaram na',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
     recoveredPreview: 'Prévia recuperada de 10s. O vídeo completo novo ainda está indisponível.',
     previewFinished: 'Fim da prévia de 10 segundos',
@@ -419,9 +417,7 @@ const en: Dict = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'They trusted',
-    lineB: 'and their brands are',
-    highlight: 'eternalized',
+    lineA: 'Brands that trusted',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
     recoveredPreview: 'Recovered 10s preview. The new full video is still unavailable.',
     previewFinished: 'End of the 10-second preview',
@@ -701,9 +697,7 @@ const es: Dict = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'Confiaron en',
-    lineB: 'y sus marcas están',
-    highlight: 'eternizadas',
+    lineA: 'Marcas que confiaron en',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
     recoveredPreview: 'Vista previa recuperada de 10s. El nuevo video completo aún no está disponible.',
     previewFinished: 'Fin de la vista previa de 10 segundos',

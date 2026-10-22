@@ -36,6 +36,7 @@ export function CasesCarrossel() {
   const semVideo = falhou[caso.slug]
   const preview = videoPreview(caso.videos[0])
   const hasAudio = Boolean(preview && (previewAudio as Record<string, boolean>)[preview])
+  const centeredProject = previewEnded || !preview || Boolean(semVideo)
   const audioLabels = lang === 'en' ? ['Enable sound', 'Mute sound', 'Preview without audio'] : lang === 'es' ? ['Activar sonido', 'Silenciar', 'Vista previa sin audio'] : ['Ativar áudio', 'Silenciar áudio', 'Prévia sem áudio']
   // Selecting a case is explicit: no timer cycles through large full movies.
 
@@ -110,12 +111,9 @@ export function CasesCarrossel() {
           <span>{!hasAudio ? audioLabels[2] : muted ? audioLabels[0] : audioLabels[1]}</span>
         </button>}
 
-        {(previewEnded || !preview || semVideo) && (
+        {centeredProject && (
           <div className="cases-palco__final">
-            {previewEnded && <p>{t.cases.previewFinished}</p>}
-            <ShinyButton onClick={() => navigate(`/projeto-${caso.slug}`)}>
-              {t.clientes.viewProject}
-            </ShinyButton>
+            {previewEnded && <p role="status">{t.cases.previewFinished}</p>}
           </div>
         )}
 
@@ -124,6 +122,9 @@ export function CasesCarrossel() {
           <span className="cases-palco__marca">
             <img src={caso.logo} alt={caso.nome} loading="lazy" />
           </span>
+        </div>
+        {/* One persistent CTA slides from below the logo to the stage center. */}
+        <div className="cases-palco__cta" data-centered={centeredProject}>
           <ShinyButton className="cases-palco__project-button" onClick={() => navigate(`/projeto-${caso.slug}`)}>
             {t.clientes.viewProject}
           </ShinyButton>
@@ -131,6 +132,7 @@ export function CasesCarrossel() {
 
         {/* Seletor no canto: as marcas ficam disponíveis pra escolher qual ver */}
         <div className="cases-seletor" role="tablist" aria-label={t.cases.label}>
+          <div className="cases-seletor__track">
           {CASES.map((cliente, indice) => (
             <button
               key={cliente.slug}
@@ -149,6 +151,7 @@ export function CasesCarrossel() {
               <img src={cliente.logo} alt="" loading="lazy" />
             </button>
           ))}
+          </div>
         </div>
       </div>
 

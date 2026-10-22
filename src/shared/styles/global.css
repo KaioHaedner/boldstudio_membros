@@ -1561,19 +1561,19 @@ textarea {
   position: absolute;
   inset: 0;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 5rem 1rem 4rem;
+  pointer-events: none;
   text-align: center;
   background: rgba(0, 0, 0, 0.58);
 }
 .cases-palco__final p {
-  color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: calc(50% - 2.25rem);
+  left: 50%;
+  width: calc(100% - 2rem);
+  transform: translate(-50%, -100%);
+  color: var(--color-bold-yellow);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
@@ -1605,15 +1605,20 @@ textarea {
   bottom: clamp(0.5rem, 1.5vw, 1.25rem);
   left: clamp(0.5rem, 1.5vw, 1.25rem);
   z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.4rem;
+  display: block;
   overflow-x: auto;
-  padding-bottom: 0.15rem;
+  padding: 4px 2px;
   scrollbar-width: none;
 }
 .cases-seletor::-webkit-scrollbar {
   display: none;
+}
+.cases-seletor__track {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  width: max-content;
+  margin-inline: auto;
 }
 .cases-seletor__item {
   display: flex;
@@ -1628,7 +1633,7 @@ textarea {
   background: rgba(0, 0, 0, 0.7);
   cursor: pointer;
   opacity: 0.85;
-  transition: opacity 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
 }
 .cases-seletor__item:hover {
   opacity: 0.9;
@@ -1636,8 +1641,8 @@ textarea {
 .cases-seletor__item[data-ativo='true'] {
   opacity: 1;
   border-color: #fde100;
-  transform: translateY(-2px);
-  box-shadow: 0 0 0 2px rgba(253, 225, 0, 0.55);
+  transform: none;
+  box-shadow: none;
 }
 .cases-seletor__item img {
   max-height: 100%;
@@ -1739,6 +1744,23 @@ textarea {
   font-size: clamp(.75rem, 1.2vw, .95rem);
   padding: .6rem 1rem;
 }
+.cases-palco__cta {
+  position: absolute;
+  top: calc(clamp(.75rem, 2vw, 1.5rem) + clamp(2.75rem, 6vw, 4.5rem) + .65rem);
+  right: clamp(.75rem, 2vw, 1.5rem);
+  z-index: 4;
+  max-width: calc(100% - 1.5rem);
+  transform: translate(0, 0);
+  transition: top .65s ease-in-out, right .65s ease-in-out, transform .65s ease-in-out;
+}
+.cases-palco__cta[data-centered='true'] {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cases-palco__cta { transition: none; }
+}
 .client-white-logo {
   isolation: isolate;
   background: transparent;
@@ -1765,7 +1787,6 @@ textarea {
 .section-backdrop--processo .solucoes-parallax__photo { top: 24%; height: 55%; max-height: 800px; opacity: .32; }
 @media (max-width: 639px) {
   .cases-palco { height: min(58svh, 440px); }
-  .cases-palco__final { padding-top: 5.5rem; padding-bottom: 4.5rem; }
   .section-backdrop--crew .solucoes-parallax__photo,
   .section-backdrop--abertura .solucoes-parallax__photo,
   .section-backdrop--clientes .solucoes-parallax__photo,
@@ -2650,6 +2671,73 @@ button.project-full-video__poster { cursor: pointer; }
   .bio-page__credits { margin-top: 18px; align-items: center; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .bio-page__client-logo { animation: none; } .bio-page__link, .bio-page__link::before { transition: none; } .bio-page__link:is(:hover, :focus-visible) { transform: none; } }
+
+.service-client-detail { display: block; margin-top: 8px; color: #ffdf00; font-size: 12px; text-align: center; }
+.service-film__quality { position: absolute; top: 12px; right: 12px; z-index: 2; }
+.service-film__error { position: absolute; top: 54px; left: 10px; right: 10px; padding: 8px; background: #000c; color: #fff; font-size: 14px; text-align: center; pointer-events: none; }
+.service-film__quality select { max-width: 100px; padding: 6px 8px; border: 1px solid #ffdf00; border-radius: 6px; background: #111; color: #fff; font-size: 12px; cursor: pointer; }
+.about-photo { width: 100%; max-width: 560px; perspective: 1100px; }
+.about-photo__tilt { transform: rotateX(var(--photo-rotate-x, 0deg)) rotateY(var(--photo-rotate-y, 0deg)); transition: transform 220ms ease-out; transform-origin: center; }
+.about-photo[data-tilting='true'] .about-photo__tilt { will-change: transform; }
+@media (max-width: 767px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .about-photo__tilt, .about-photo img { transform: none !important; transition: none; }
+}
+
+/* Editorial surfaces: static CSS only, no additional assets, media or scroll work.
+   Background layers cannot intercept gestures or sit over text/video controls. */
+.bold-editorial {
+  --editorial-light: rgb(255 215 18 / 8%);
+  font-weight: 400;
+}
+.bold-editorial :is(#servicos, #clientes, #cases-abertura, #processo, #nascida-brasil) {
+  background-image:
+    radial-gradient(ellipse at 100% 12%, var(--editorial-light), transparent 52%),
+    radial-gradient(ellipse at 0% 90%, rgb(255 255 255 / 3%), transparent 48%),
+    linear-gradient(125deg, transparent 42%, rgb(255 215 18 / 4%) 42.1%, transparent 42.3%);
+}
+.bold-editorial #crew {
+  background-image: radial-gradient(ellipse at 70% 0%, var(--editorial-light), transparent 65%);
+}
+.bold-editorial--service .service-page,
+.bold-editorial--project > main {
+  background-image:
+    radial-gradient(ellipse 70% 28% at 100% 4%, rgb(255 215 18 / 10%), transparent 75%),
+    radial-gradient(ellipse 65% 24% at 0% 65%, rgb(255 215 18 / 6%), transparent 75%),
+    repeating-radial-gradient(ellipse at 110% 18%, transparent 0 135px, rgb(255 215 18 / 5%) 136px 137px, transparent 138px 210px),
+    linear-gradient(128deg, transparent 28%, rgb(255 255 255 / 4%) 28.05%, transparent 28.15%);
+}
+.bold-editorial .service-page__intro {
+  padding-block: 32px;
+  border-top: 1px solid rgb(255 215 18 / 20%);
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+.bold-editorial .service-page__cta {
+  padding-bottom: 32px;
+  background: radial-gradient(ellipse at 50% 100%, rgb(255 215 18 / 7%), transparent 70%);
+}
+/* Scoped to the public institutional routes; dashboards remain untouched.
+   Explicit weights override existing component and Tailwind bold styles. */
+.bold-editorial :is(h1, h2, h3, h4, h5, h6),
+.bold-editorial :is(.font-black, .font-extrabold, .font-bold, .crew-horizontal__banner,
+  .sticker-amarelo, .service-page__tagline, .service-page__cta > p) {
+  font-weight: 600;
+}
+.bold-editorial :is(.font-semibold, strong, b, .service-page__deliverables li,
+  .crew-card__role, .service-showcase__phones figcaption) {
+  font-weight: 500;
+}
+.bold-editorial :is(button, [role='button'], .shiny-cta, .button-link) {
+  font-weight: 500;
+}
+.bold-editorial :is(button, [role='button'], .shiny-cta, .button-link) :where(:not(svg, svg *)) {
+  font-weight: inherit;
+}
+@media (max-width: 767px) {
+  .bold-editorial--service .service-page,
+  .bold-editorial--project > main {
+    background-size: 100% 100%, 100% 100%, 180% 100%, 100% 100%;
+  }
+}
 
 /* One type size for every button, including nested labels and responsive CTAs.
    Keep this override after component/media rules so the size stays consistent. */

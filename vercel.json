@@ -8,12 +8,25 @@
     }
   ],
   "rewrites": [
+    { "source": "/servico/vt-comercial", "destination": "/seo/services/vt-comercial.html" },
+    { "source": "/servico/institucionais", "destination": "/seo/services/institucionais.html" },
+    { "source": "/servico/eventos", "destination": "/seo/services/eventos.html" },
+    { "source": "/servico/food-produto", "destination": "/seo/services/food-produto.html" },
+    { "source": "/servico/recorrencia", "destination": "/seo/services/recorrencia.html" },
     {
       "source": "/((?!api/|brand/|assets/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/media/services/(.*).m3u8",
+      "headers": [{ "key": "Content-Type", "value": "application/vnd.apple.mpegurl" }]
+    },
+    {
+      "source": "/media/services/(.*).m4s",
+      "headers": [{ "key": "Content-Type", "value": "video/iso.segment" }]
+    },
     {
       "source": "/media/(.*)",
       "headers": [

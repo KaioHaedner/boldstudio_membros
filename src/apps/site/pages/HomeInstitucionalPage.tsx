@@ -127,7 +127,7 @@ function HomeContent() {
   }, [hash, revelar])
 
   return (
-    <div ref={rootRef} className="relative isolate min-h-screen bg-bold-black text-bold-white">
+    <div ref={rootRef} className="bold-editorial relative isolate min-h-screen bg-bold-black text-bold-white">
       <IntroBold onFinish={() => setRevelar(true)} />
       <Header />
 
