@@ -7,6 +7,8 @@ import { BudgetVideo } from '@/shared/components/BudgetVideo'
 import { videoPreview, isRecoveredCasePreview } from '@/shared/lib/video-preview'
 import { SolucoesParallax } from './SolucoesParallax'
 import { CoinDecor } from './CoinDecor'
+import { Volume2, VolumeX } from 'lucide-react'
+import previewAudio from '@/shared/lib/preview-audio.json'
 
 // Só as marcas que têm vídeo demoreel entram nos cases.
 const CASES = CLIENTES.filter((c) => c.videos.length > 0)
@@ -16,7 +18,7 @@ const CASES = CLIENTES.filter((c) => c.videos.length > 0)
 // marcas no canto. Substituiu o accordion de lâminas, que obrigava a passar o
 // mouse pra abrir e ficava difícil de usar no celular.
 export function CasesCarrossel() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const navigate = useNavigate()
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -28,10 +30,13 @@ export function CasesCarrossel() {
   })
   const [falhou, setFalhou] = useState<Record<string, boolean>>({})
   const [previewEnded, setPreviewEnded] = useState(false)
+  const [muted, setMuted] = useState(true)
 
   const caso = CASES[atual]
   const semVideo = falhou[caso.slug]
   const preview = videoPreview(caso.videos[0])
+  const hasAudio = Boolean(preview && (previewAudio as Record<string, boolean>)[preview])
+  const audioLabels = lang === 'en' ? ['Enable sound', 'Mute sound', 'Preview without audio'] : lang === 'es' ? ['Activar sonido', 'Silenciar', 'Vista previa sin audio'] : ['Ativar áudio', 'Silenciar áudio', 'Prévia sem áudio']
   // Selecting a case is explicit: no timer cycles through large full movies.
 
   // Rola até a seção quando veio de ?case=slug.
@@ -57,7 +62,7 @@ export function CasesCarrossel() {
             src={preview}
             poster={caso.logo}
             autoPlay={!previewEnded}
-            muted
+            muted={muted}
             playsInline
             onTimeUpdate={(event) => {
               if (event.currentTarget.currentTime >= 10) {
@@ -82,6 +87,28 @@ export function CasesCarrossel() {
         )}
 
         <span className="cases-palco__sombra" aria-hidden="true" />
+        {preview && !semVideo && <button
+          type="button"
+          className="cases-palco__audio"
+          disabled={!hasAudio}
+          aria-label={!hasAudio ? audioLabels[2] : muted ? audioLabels[0] : audioLabels[1]}
+          title={!hasAudio ? audioLabels[2] : muted ? audioLabels[0] : audioLabels[1]}
+          onClick={() => {
+            const video = sectionRef.current?.querySelector('video')
+            if (!video) return
+            const nextMuted = !muted
+            video.muted = nextMuted
+            setMuted(nextMuted)
+            if (video.ended || previewEnded) {
+              video.currentTime = 0
+              setPreviewEnded(false)
+            }
+            void video.play().catch(() => { video.muted = true; setMuted(true) })
+          }}
+        >
+          {muted || !hasAudio ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}
+          <span>{!hasAudio ? audioLabels[2] : muted ? audioLabels[0] : audioLabels[1]}</span>
+        </button>}
 
         {(previewEnded || !preview || semVideo) && (
           <div className="cases-palco__final">
@@ -116,6 +143,7 @@ export function CasesCarrossel() {
               onClick={() => {
                 setAtual(indice)
                 setPreviewEnded(false)
+                setMuted(true)
               }}
             >
               <img src={cliente.logo} alt="" loading="lazy" />

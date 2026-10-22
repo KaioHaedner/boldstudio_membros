@@ -183,7 +183,7 @@ export function ProcessoJornada({ etapas }: { etapas: readonly string[] }) {
     // gastar bateria à toa.
     const tween = gsap.to(estado, {
       p: 1,
-      duration: 10,
+      duration: 5,
       ease: 'none',
       repeat: -1,
       // segura 10s com a jornada inteira montada antes de recomeçar

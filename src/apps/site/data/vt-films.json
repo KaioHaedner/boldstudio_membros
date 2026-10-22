@@ -1,0 +1,26 @@
+{
+  "machado-vertical": {
+    "id": "machado-vertical",
+    "title": "Machado — Copa do Mundo",
+    "src": "/media/services/machado-vertical-aa2bcb4dfddf.mp4",
+    "poster": "/media/services/machado-vertical-aa2bcb4dfddf.webp"
+  },
+  "machado-horizontal": {
+    "id": "machado-horizontal",
+    "title": "Machado — Copa do Mundo",
+    "src": "/media/services/machado-horizontal-bc1b31e24cf9.mp4",
+    "poster": "/media/services/machado-horizontal-bc1b31e24cf9.webp"
+  },
+  "unimed": {
+    "id": "unimed",
+    "title": "Unimed",
+    "src": "/media/services/unimed-0e2e15df7ab8.mp4",
+    "poster": "/media/services/unimed-0e2e15df7ab8.webp"
+  },
+  "mascarello-guerra": {
+    "id": "mascarello-guerra",
+    "title": "Mascarello & Guerra Advocacia",
+    "src": "/media/services/mascarello-guerra-e3cb8c58e50e.mp4",
+    "poster": "/media/services/mascarello-guerra-e3cb8c58e50e.webp"
+  }
+}

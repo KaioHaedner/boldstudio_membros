@@ -7,6 +7,7 @@ import { Footer } from '@/shared/components/Footer'
 import { getClienteBySlug, type Cliente } from '@/apps/site/data/clientes'
 import { BudgetVideo } from '@/shared/components/BudgetVideo'
 import { videoPreview } from '@/shared/lib/video-preview'
+import { IPhoneFrame } from '@/shared/components/IPhoneFrame'
 
 const MIN_PHONES = 3
 
@@ -16,9 +17,7 @@ const MIN_PHONES = 3
 function PhoneReel({ src, index }: { src?: string; index: number }) {
   const preview = src ? videoPreview(src) : undefined
   return (
-    <div className="bold-iphone-wrap">
-      <div className="device device-iphone-x bold-iphone">
-        <div className="device-frame">
+    <IPhoneFrame>
           {preview ? (
             <BudgetVideo
               className="device-screen"
@@ -40,14 +39,7 @@ function PhoneReel({ src, index }: { src?: string; index: number }) {
               <img src="/brand/logo-boldstudio.webp" alt="" aria-hidden="true" className="w-24 opacity-15" />
             </div>
           )}
-        </div>
-        <div className="device-stripe" />
-        <div className="device-header" />
-        <div className="device-sensors" />
-        <div className="device-btns" />
-        <div className="device-power" />
-      </div>
-    </div>
+    </IPhoneFrame>
   )
 }
 

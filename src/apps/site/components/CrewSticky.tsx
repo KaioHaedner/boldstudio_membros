@@ -1,5 +1,4 @@
-import { ShinyButton } from '@/shared/components/ShinyButton'
-import { StackedCarousel } from '@/shared/components/ui/StackedCarousel'
+import { CrewRail } from '@/shared/components/ui/CrewRail'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 
 // Preserva as fotos originais do time, otimizadas em WebP local de 720px.
@@ -15,8 +14,7 @@ const CREW = ([
   { id: 'pedro-neto', nome: 'Pedro Garcia Neto' },
 ] as const).map((m) => ({ ...m, label: m.nome, foto: `/crew/${m.id}.webp` }))
 
-// Pilha horizontal compacta, sem arco/rotacao e sem troca automatica.
-// Usa as fotos locais otimizadas, sem duplicar bitmaps para uma camada de blur.
+// Desktop percorre a equipe pelo scroll; mobile usa uma faixa nativa.
 export function CrewSticky() {
   const { t, lang } = useI18n()
   const labels = {
@@ -26,31 +24,24 @@ export function CrewSticky() {
   }[lang]
 
   return (
-    <section id="crew" className="crew-section relative overflow-hidden scroll-mt-24 pt-[var(--espaco-secao)] pb-[calc(var(--espaco-secao)+var(--espaco-etiqueta))]">
-      <div className="relative z-10 mx-auto max-w-6xl px-6">
-        <div className="crew-swap-grid">
-          {/* No celular a ordem vira titulo, cards e so entao o botao: o CTA
-              em cima da pilha deixava o botao longe do card que ele fecha. */}
-          <div className="crew-cta">
-            <p className="crew-cta__texto max-w-[16ch] text-4xl font-black uppercase leading-[0.95] tracking-[-0.03em] text-bold-white sm:text-6xl">
+    <section id="crew" className="crew-section crew-section--horizontal relative scroll-mt-24">
+      <CrewRail label={labels.carousel} heading={
+          <div className="crew-horizontal__heading">
+            <div className="crew-horizontal__banner" aria-hidden="true">TIME BOLD</div>
+            <div className="crew-horizontal__intro">
+            <h2>
               {t.crew.ctaTextA}
               <span className="text-bold-yellow">{t.crew.ctaTextHighlight}</span>
               {t.crew.ctaTextB}
-            </p>
-            <div className="crew-cta__botao">
-              <ShinyButton
-                onClick={() =>
-                  document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }
-              >
-                {t.crew.ctaButton}
-              </ShinyButton>
+            </h2>
+            <p>{lang === 'pt' ? 'Diferentes olhares. Um time que transforma ideias em histórias.' : lang === 'en' ? 'Different perspectives. One team turning ideas into stories.' : 'Diferentes miradas. Un equipo que convierte ideas en historias.'}</p>
+            <span className="crew-horizontal__hint" aria-hidden="true">{lang === 'pt' ? 'Conheça quem faz acontecer' : lang === 'en' ? 'Meet the team' : 'Conoce al equipo'} →</span>
             </div>
           </div>
-
-          <StackedCarousel slides={CREW} labels={labels} renderSlide={m => {
+      }>
+          {CREW.map(m => {
             const info = t.crew.members[m.id]
-            return <>
+            return <article key={m.id} className="crew-card crew-horizontal__card" tabIndex={0}>
               <img
                 className="crew-card__foto"
                 src={m.foto}
@@ -66,16 +57,9 @@ export function CrewSticky() {
                 <p className="crew-card__role">{info.role}</p>
                 <p className="crew-card__desc">{info.desc}</p>
               </div>
-            </>
-          }} />
-        </div>
-      </div>
-
-      <div className="crew-sticker absolute bottom-8 left-0">
-        <span className="sticker-amarelo inline-block rounded-r-2xl py-2.5 pl-5 pr-8 text-[clamp(1.55rem,4vw,3rem)] font-black italic leading-none tracking-[-0.055em] text-bold-black sm:pr-10">
-          BoldCrew
-        </span>
-      </div>
+            </article>
+          })}
+      </CrewRail>
     </section>
   )
 }
