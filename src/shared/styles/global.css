@@ -2654,9 +2654,9 @@ button.project-full-video__poster { cursor: pointer; }
 /* One type size for every button, including nested labels and responsive CTAs.
    Keep this override after component/media rules so the size stays consistent. */
 :root { --button-font-size: 17px; }
-:is(button, input[type='button'], input[type='submit'], input[type='reset'], [role='button'], .shiny-cta, .bio-page__link) {
+:is(button, input[type='button'], input[type='submit'], input[type='reset'], [role='button'], .shiny-cta, .button-link, .bold-credit-popup__link, .bio-page__link) {
   font-size: var(--button-font-size) !important;
 }
-:is(button, [role='button'], .shiny-cta, .bio-page__link) :where(:not(svg, svg *)) {
+:is(button, [role='button'], .shiny-cta, .button-link, .bold-credit-popup__link, .bio-page__link) :where(:not(svg, svg *)) {
   font-size: inherit !important;
 }

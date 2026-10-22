@@ -87,7 +87,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
       <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-5xl items-center justify-between px-4">
         <Link
           to={`/home-bold-studio-sinop-brasil?case=${cliente.slug}#cases`}
-          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-bold-gray/40 px-3.5 py-2 text-sm font-medium text-bold-white/85 backdrop-blur-xl transition-colors hover:border-bold-yellow/50 hover:text-bold-yellow"
+          className="button-link inline-flex items-center gap-2 rounded-lg border border-white/10 bg-bold-gray/40 px-3.5 py-2 text-sm font-medium text-bold-white/85 backdrop-blur-xl transition-colors hover:border-bold-yellow/50 hover:text-bold-yellow"
         >
           <ArrowLeft size={16} /> {t.projeto.back}
         </Link>
@@ -119,7 +119,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
                   href={cliente.site}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-bold-white/80 transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
+                  className="button-link inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-bold-white/80 transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
                 >
                   <Globe size={15} className="text-bold-yellow" /> {t.projeto.visitSite}
                 </a>
@@ -209,7 +209,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           <p className="max-w-md text-2xl font-bold md:text-3xl">{t.projeto.ctaText}</p>
           <Link
             to="/home-bold-studio-sinop-brasil#contato"
-            className="inline-flex items-center gap-2 rounded-lg bg-bold-yellow px-7 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-105"
+            className="button-link inline-flex items-center gap-2 rounded-lg bg-bold-yellow px-7 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-105"
           >
             {t.projeto.ctaButton} <ArrowRight size={16} />
           </Link>
