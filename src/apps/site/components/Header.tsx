@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
+import { ActionArrow as ArrowRight } from '@/shared/components/ActionArrow'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { homeSectionHref, isPlainNavigation } from '@/apps/site/lib/home-navigation'
 import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'

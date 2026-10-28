@@ -1,4 +1,6 @@
 import { CrewRail } from '@/shared/components/ui/CrewRail'
+import { ArrowRight } from 'lucide-react'
+import { DragHint } from './DragHint'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 
 // Preserva as fotos originais do time, otimizadas em WebP local de 720px.
@@ -14,7 +16,7 @@ const CREW = ([
   { id: 'pedro-neto', nome: 'Pedro Garcia Neto' },
 ] as const).map((m) => ({ ...m, label: m.nome, foto: `/crew/${m.id}.webp` }))
 
-// Desktop percorre a equipe pelo scroll; mobile usa uma faixa nativa.
+// Mouse drag on desktop and native horizontal touch on mobile.
 export function CrewSticky() {
   const { t, lang } = useI18n()
   const labels = {
@@ -29,14 +31,14 @@ export function CrewSticky() {
           <div className="crew-horizontal__heading">
             <div className="crew-horizontal__banner" aria-hidden="true">TIME BOLD</div>
             <div className="crew-horizontal__intro">
-            <h2>
-              {t.crew.ctaTextA}
-              <span className="text-bold-yellow">{t.crew.ctaTextHighlight}</span>
-              {t.crew.ctaTextB}
+            <h2 className="crew-horizontal__title" aria-label={lang === 'pt' ? 'Conheça o Crew da Bold' : lang === 'en' ? 'Meet the Crew at Bold' : 'Conoce al Crew de Bold'}>
+              <span className="crew-horizontal__title-line">{lang === 'pt' ? 'Conheça o' : lang === 'en' ? 'Meet the' : 'Conoce al'}</span>
+              <span className="crew-horizontal__title-line"><span className="text-bold-yellow">Crew</span>{' '}<span>{lang === 'pt' ? 'da' : lang === 'en' ? 'at' : 'de'}</span>{' '}<img src="/brand/logo-boldstudio.webp" alt="Bold" className="crew-horizontal__title-logo" width={600} height={220} /></span>
             </h2>
-            <p>{lang === 'pt' ? 'Diferentes olhares. Um time que transforma ideias em histórias.' : lang === 'en' ? 'Different perspectives. One team turning ideas into stories.' : 'Diferentes miradas. Un equipo que convierte ideas en historias.'}</p>
-            <span className="crew-horizontal__hint" aria-hidden="true">{lang === 'pt' ? 'Conheça quem faz acontecer' : lang === 'en' ? 'Meet the team' : 'Conoce al equipo'} →</span>
+            <p className="crew-horizontal__support">{lang === 'pt' ? 'Um time que transforma ideias em histórias.' : lang === 'en' ? 'One team turning ideas into stories.' : 'Un equipo que convierte ideas en historias.'}</p>
+            <span className="crew-horizontal__hint">{lang === 'pt' ? 'Conheça quem faz acontecer' : lang === 'en' ? 'Meet the team' : 'Conoce al equipo'} <ArrowRight aria-hidden="true" /></span>
             </div>
+            <DragHint label={lang === 'pt' ? 'Deslize para o lado ou clique e arraste com o mouse para conhecer a equipe' : lang === 'en' ? 'Swipe sideways or click and drag to meet the team' : 'Desliza hacia un lado o haz clic y arrastra para conocer al equipo'} />
           </div>
       }>
           {CREW.map(m => {

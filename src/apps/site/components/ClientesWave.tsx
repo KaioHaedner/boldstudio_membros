@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, MapPin, Phone, Play, X } from 'lucide-react'
+import { MapPin, Phone, Play, X } from 'lucide-react'
+import { ActionArrow as ArrowRight, ActionArrow as ArrowUpRight } from '@/shared/components/ActionArrow'
 import { ShinyButton } from '@/shared/components/ShinyButton'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/apps/site/data/clientes'
@@ -12,16 +13,7 @@ import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'
 function DicaDeClique({ label }: { label: string }) {
   return (
     <div className="clientes-dica">
-      <svg className="clientes-dica__svg" viewBox="0 0 150 120" aria-hidden="true">
-        <path className="clientes-dica__curva" d="M18 112C26 62 48 30 80 8" />
-        <path className="clientes-dica__ponta" d="m64 12 16-4-4 16" />
-        <g transform="translate(80 8)">
-          <circle className="clientes-dica__pulso clientes-dica__pulso--logo" cx="0" cy="0" r="12" />
-          <g className="clientes-dica__cursor clientes-dica__cursor--logo">
-            <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
-          </g>
-        </g>
-      </svg>
+      <ArrowUpRight size={32} className="text-bold-yellow" />
       <p className="clientes-dica__label">{label}</p>
     </div>
   )

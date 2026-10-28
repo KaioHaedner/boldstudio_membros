@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { MapPin } from 'lucide-react'
+import { ChevronDown, MapPin } from 'lucide-react'
 import { ScrollTrigger } from '@/shared/lib/gsap'
 import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
 import { IntroBold } from '@/shared/components/IntroBold'
@@ -10,6 +10,7 @@ import { Header } from '@/apps/site/components/Header'
 import { SobreAboutUs, renderHighlighted } from '@/apps/site/components/SobreAboutUs'
 import { SolucoesSticky } from '@/apps/site/components/SolucoesSticky'
 import { ProcessoTimeline } from '@/apps/site/components/ProcessoTimeline'
+import { InteractiveGlobe } from '@/apps/site/components/InteractiveGlobe'
 import { CoinDecor } from '@/apps/site/components/CoinDecor'
 import { Footer } from '@/apps/site/components/Footer'
 import { CrewSticky } from '@/apps/site/components/CrewSticky'
@@ -169,11 +170,11 @@ function HomeContent() {
             </ShinyButton>
             <button
               type="button"
-              onClick={() => document.querySelector('#clientes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              onClick={() => document.querySelector('#cases')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
               className="group hidden items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-bold-white transition-colors hover:text-bold-yellow md:inline-flex"
             >
               {t.hero.ctaSecondary}
-              <span className="text-bold-yellow transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+              <ChevronDown className="text-bold-yellow" aria-hidden="true" />
             </button>
           </div>
         </section>
@@ -198,8 +199,7 @@ function HomeContent() {
           data-reveal
           className="relative flex flex-col items-center justify-center overflow-hidden bg-bold-black px-4 py-[var(--espaco-secao)] text-center sm:px-6 max-sm:min-h-[92svh]"
         >
-          <CoinDecor className="left-8 top-16 z-[1] w-20 opacity-15 sm:w-28" rotate={-14} floatDuration={8} />
-          <CoinDecor className="right-8 bottom-20 z-[1] hidden w-16 opacity-15 sm:block sm:w-24" rotate={16} floatDuration={6} />
+          <InteractiveGlobe />
 
           {/* No celular cada palavra ocupa uma linha e a frase toma a tela
               quase inteira; a partir do sm volta a quebrar naturalmente. */}
@@ -214,23 +214,13 @@ function HomeContent() {
         {import.meta.env.VITE_SITE_MODE !== 'institutional' && <AcademySection />}
 
         <section id="contato" data-reveal className="relative scroll-mt-24 px-6">
-          {/* Fundo: foto de bastidor + overlay pra legibilidade */}
           <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden">
-            <img
-              src="/brand/boldstudio-bg.webp"
-              alt=""
-              className="h-full w-full object-cover object-center"
-              loading="lazy"
-              decoding="async"
-            />
+            <img src="/brand/boldstudio-bg.webp" alt="" className="h-full w-full object-cover object-center" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-r from-bold-black via-bold-black/85 to-bold-black/45" />
             <div className="absolute inset-0 bg-bold-black/40 md:hidden" />
           </div>
-
-          {/* Coins da marca */}
           <CoinDecor className="right-6 top-12 z-[1] w-20 opacity-25 sm:right-16 sm:w-28" rotate={16} floatDuration={8} />
           <CoinDecor className="left-6 bottom-16 z-[1] hidden w-16 opacity-20 sm:block sm:w-24" rotate={-12} floatDuration={6} />
-
           {/* Área de conteúdo (altura da tela) */}
           <div className="contact-layout relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 py-[var(--espaco-secao)] md:grid-cols-2 lg:gap-16">
             {/* Esquerda: chamada + apoio */}

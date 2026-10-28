@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { ArrowUpRight, Clapperboard, Mail } from 'lucide-react'
+import { Clapperboard, Mail } from 'lucide-react'
+import { ActionArrow as ArrowUpRight } from '@/shared/components/ActionArrow'
 import clientLogos from '@/apps/site/data/client-logos.json'
 import { BOLD_WHATSAPP } from '@/shared/lib/whatsapp'
 import { KaioCredit } from '@/shared/components/KaioCredit'

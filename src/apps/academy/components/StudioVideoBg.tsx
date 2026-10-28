@@ -1,21 +1,17 @@
 import { cn } from '@/shared/lib/utils'
-import { media } from '@/shared/lib/media'
 import { BudgetVideo } from '@/shared/components/BudgetVideo'
-import { videoPreview } from '@/shared/lib/video-preview'
 
-// Vídeo do estúdio, servido via proxy api.boldstudiobrasil.com (esconde o
-// Supabase de origem). Fica nítido cobrindo a tela; o blur fica nos painéis
-// de vidro por cima (form e título), não aqui.
-const STUDIO_VIDEO_URL = media('avatars', 'VD_BOLD_01.mp4')
+// Trecho estático de 10s, copiado do melhor arquivo recuperado sem recodificar.
+// Preserva os 1276 × 720 originais e usa o controle de visibilidade do BudgetVideo.
+const STUDIO_VIDEO_URL = '/media/previews/bold-studio-hero-hq-720-v1.mp4'
 
 export function StudioVideoBg({ className }: { className?: string }) {
-  const preview = videoPreview(STUDIO_VIDEO_URL)
   return (
     <div className={cn('absolute inset-0 overflow-hidden bg-bold-black', className)}>
       <BudgetVideo
-        src={preview || STUDIO_VIDEO_URL}
+        src={STUDIO_VIDEO_URL}
         className="h-full w-full object-cover"
-        autoPlay={Boolean(preview)}
+        autoPlay
         muted
         loop
         playsInline

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ActionArrow as ArrowLeft, ActionArrow as ArrowRight } from '@/shared/components/ActionArrow'
 import { Header } from '@/apps/site/components/Header'
 import { Footer } from '@/shared/components/Footer'
 import { ShinyButton } from '@/shared/components/ShinyButton'

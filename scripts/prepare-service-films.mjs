@@ -5,15 +5,15 @@ import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'nod
 // Keep the supplied masters untouched. Versioned static URLs need no API proxy.
 const downloads = 'C:/Users/user/Downloads'
 const inputs = [
-  ['agrobaggio-institucional', 'AgroBaggio — John Deere', 'Filme institucional da AgroBaggio John Deere produzido pela Bold Studio.', 'Agro Baggio Comercial 4k.mp4'],
+  ['agrobaggio-institucional', 'AgroBaggio, John Deere', 'Filme institucional da AgroBaggio John Deere produzido pela Bold Studio.', 'Agro Baggio Comercial 4k.mp4'],
   ['fazcarnes-institucional', 'FazCarnes', 'Filme institucional da FazCarnes produzido pela Bold Studio.', 'Institucional Redes Sociais.mp4'],
   ['mascarello-guerra-institucional', 'Mascarello & Guerra Advogados', 'Filme institucional do escritório Mascarello & Guerra Advogados produzido pela Bold Studio.', 'Video Final - Mascarello & Guerra .mp4'],
   ['exponorte-2026-aftermovie', 'Exponorte 2026', 'Aftermovie da Exponorte 2026 produzido pela Bold Studio.', 'Exponorte 2026 - Aftermovie.mp4'],
-  ['agrobaggio-confraternizacao-sorriso', 'AgroBaggio — Confraternização em Sorriso', 'Cobertura da confraternização AgroBaggio em Sorriso pela Bold Studio.', 'Agro Baggio - Evento Confraternização Sorriso.mp4'],
-  ['agrobaggio-resumo-feira-dia-5', 'AgroBaggio — Resumo da feira', 'Resumo do quinto dia de feira da AgroBaggio produzido pela Bold Studio.', 'Dia 5 - Resumo da Feira.mp4'],
+  ['agrobaggio-confraternizacao-sorriso', 'AgroBaggio, Confraternização em Sorriso', 'Cobertura da confraternização AgroBaggio em Sorriso pela Bold Studio.', 'Agro Baggio - Evento Confraternização Sorriso.mp4'],
+  ['agrobaggio-resumo-feira-dia-5', 'AgroBaggio, Resumo da feira', 'Resumo do quinto dia de feira da AgroBaggio produzido pela Bold Studio.', 'Dia 5 - Resumo da Feira.mp4'],
   ['forteza-filme-produto', 'Forteza', 'Filme de produto Forteza produzido pela Bold Studio.', 'Forteza - Video Principal .mp4'],
   ['louvada-weis-filme-produto', 'Louvada Weis', 'Filme de produto Louvada Weis produzido pela Bold Studio.', 'Louvada Weis.mp4'],
-  ['mangut-fit-batata-doce', 'Mangut Fit — Batata Doce', 'Filme de produto Batata Doce da Mangut Fit produzido pela Bold Studio.', '02 - Batata Doce.mp4'],
+  ['mangut-fit-batata-doce', 'Mangut Fit, Batata Doce', 'Filme de produto Batata Doce da Mangut Fit produzido pela Bold Studio.', '02 - Batata Doce.mp4'],
 ]
 const directory = 'public/media/services'
 mkdirSync(directory, { recursive: true })

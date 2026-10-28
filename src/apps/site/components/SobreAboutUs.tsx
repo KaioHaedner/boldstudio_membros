@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/shared/lib/gsap'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
-import { CoinDecor } from '@/apps/site/components/CoinDecor'
 import { usePointerTilt } from '@/shared/hooks/usePointerTilt'
+import { CoinDecor } from './CoinDecor'
 
 const CREW_IMG = '/media/backgrounds/boldstudio-quem-somos-1400-v2.webp'
 
@@ -93,7 +93,7 @@ export function SobreAboutUs() {
             sizes="(min-width: 1200px) 560px, (min-width: 1024px) 48vw, (min-width: 640px) 560px, calc(100vw - 40px)"
             width={1400}
             height={933}
-            alt="Equipe da BoldStudio — About Us"
+            alt="Equipe da BoldStudio"
             loading="lazy"
             decoding="async"
             className="relative w-full rounded-3xl"

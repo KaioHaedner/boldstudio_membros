@@ -4,11 +4,11 @@ import { CLIENTES } from '@/apps/site/data/clientes'
 import { ShinyButton } from '@/shared/components/ShinyButton'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { BudgetVideo } from '@/shared/components/BudgetVideo'
-import { videoPreview, isRecoveredCasePreview } from '@/shared/lib/video-preview'
-import { SolucoesParallax } from './SolucoesParallax'
-import { CoinDecor } from './CoinDecor'
+import { videoPreview } from '@/shared/lib/video-preview'
 import { Volume2, VolumeX } from 'lucide-react'
 import previewAudio from '@/shared/lib/preview-audio.json'
+import { SolucoesParallax } from './SolucoesParallax'
+import { CoinDecor } from './CoinDecor'
 
 // Só as marcas que têm vídeo demoreel entram nos cases.
 const CASES = CLIENTES.filter((c) => c.videos.length > 0)
@@ -81,9 +81,8 @@ export function CasesCarrossel() {
         {/* Enquanto o vídeo não carrega (hoje a cota do Supabase novo está
             estourada), o palco mostra a marca em vez de um retângulo preto. */}
         {(!preview || semVideo) && (
-          <span className="cases-palco__vazio flex-col gap-4" role="status">
+          <span className="cases-palco__vazio" role="status">
             <img src={caso.logo} alt="" loading="lazy" />
-            {semVideo && <span className="px-6 text-center text-sm text-white/70">{t.cases.unavailable}</span>}
           </span>
         )}
 
@@ -160,9 +159,6 @@ export function CasesCarrossel() {
         <div className="min-w-0">
           <h3 className="cases-legenda__nome">{caso.nome}</h3>
           {caso.area && <p className="cases-legenda__area">{caso.area}</p>}
-          {preview && isRecoveredCasePreview(caso.videos[0]) && (
-            <p className="mt-2 text-xs text-white/50">{t.cases.recoveredPreview}</p>
-          )}
         </div>
       </div>
 

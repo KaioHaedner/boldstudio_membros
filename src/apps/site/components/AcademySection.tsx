@@ -61,12 +61,12 @@ export function AcademySection() {
           direita faz cúpula pra BAIXO (no branco); lado reto na linha. */}
       <div className="absolute left-2 top-0 z-30 -translate-y-full sm:left-12">
         <div className="flex h-[46px] w-[92px] items-end justify-center rounded-t-full border-2 border-b-0 border-bold-yellow bg-bold-black pb-2 shadow-[0_0_24px_rgba(255,215,18,0.3)] sm:h-[108px] sm:w-[216px]">
-          <Camera className="text-bold-yellow" size={27} strokeWidth={2} />
+          <Camera className="h-[27px] w-[27px] text-bold-yellow sm:h-12 sm:w-12" strokeWidth={2} />
         </div>
       </div>
       <div className="absolute right-2 top-0 z-30 sm:right-12">
         <div className="flex h-[46px] w-[92px] items-start justify-center rounded-b-full border-2 border-t-0 border-bold-yellow bg-bold-black pt-2 shadow-[0_0_24px_rgba(255,215,18,0.3)] sm:h-[108px] sm:w-[216px]">
-          <Clapperboard className="text-bold-yellow" size={27} strokeWidth={2} />
+          <Clapperboard className="h-[27px] w-[27px] text-bold-yellow sm:h-12 sm:w-12" strokeWidth={2} />
         </div>
       </div>
 
@@ -105,12 +105,6 @@ export function AcademySection() {
         data-reveal
         className="relative scroll-mt-24 border-t-2 border-bold-yellow bg-bold-white py-[var(--espaco-secao)]"
       >
-      {/* Shaders amarelos (opacidade ~15%), só neste container */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="animate-blob-1 absolute -left-[10%] top-[8%] h-[45vw] w-[45vw] rounded-full bg-bold-yellow/15 blur-[90px]" />
-        <div className="animate-blob-2 absolute -right-[8%] top-[30%] h-[38vw] w-[38vw] rounded-full bg-bold-yellow/15 blur-[100px]" />
-        <div className="animate-blob-3 absolute bottom-[4%] left-[40%] h-[32vw] w-[32vw] rounded-full bg-bold-yellow/15 blur-[80px]" />
-      </div>
 
       {/* Marquee gigante "Bold Academy •" ao fundo */}
       <div

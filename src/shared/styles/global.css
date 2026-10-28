@@ -2537,18 +2537,21 @@ button.project-full-video__poster { cursor: pointer; }
   position: relative;
   z-index: 10;
   padding-top: clamp(12px, 1.5vw, 24px);
-  background: #050505;
+  background-color: #000;
   pointer-events: none;
   user-select: none;
 }
 .footer-wordmark__crop {
   width: 100%;
-  aspect-ratio: 4.5 / 1;
+  aspect-ratio: 3.8 / 1;
   overflow: hidden;
+  background-color: #000;
 }
 .footer-wordmark__crop img {
   display: block;
-  width: 112%;
+  width: 96%;
+  margin-inline: auto;
+  transform: translateX(1.5%);
   max-width: none;
   height: auto;
 }
@@ -2633,7 +2636,13 @@ button.project-full-video__poster { cursor: pointer; }
 .bio-page__client-logo { width: 185px; height: 72px; display: grid; place-items: center; animation: bio-logo-reveal 3.5s ease-in-out both; }
 .bio-page__client-logo img { display: block; max-width: 100%; max-height: 70px; object-fit: contain; }
 @keyframes bio-logo-reveal { 0%, 100% { opacity: 0; transform: translateY(5px); } 15%, 85% { opacity: 1; transform: none; } }
-.bio-page__footer { width: min(940px, 100%); text-align: center; }
+.bio-page__footer {
+  width: calc(100% + 64px);
+  margin-inline: -32px;
+  padding: 20px 32px 12px;
+  background-color: #000;
+  text-align: center;
+}
 .bio-page > .footer-wordmark { flex: none; width: calc(100% + 64px); }
 .bio-page__legal { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; }
 .bio-page__legal a { color: #ffffff9c; font-size: 11px; font-weight: 500; text-decoration: underline; text-decoration-color: #ffffff40; text-underline-offset: 3px; transition: color .2s; }
@@ -2653,6 +2662,7 @@ button.project-full-video__poster { cursor: pointer; }
 @media (max-width: 899px) {
   .bio-page { display: block; padding: 0; background: #050505; }
   .bio-page > .footer-wordmark { width: 100%; }
+  .bio-page__footer { width: 100%; margin-inline: 0; padding-inline: 20px; }
   .bio-page::before { display: none; }
   .bio-page__desktop { display: none; }
   .bio-page__mobile { display: flex !important; }
@@ -2683,38 +2693,124 @@ button.project-full-video__poster { cursor: pointer; }
   .about-photo__tilt, .about-photo img { transform: none !important; transition: none; }
 }
 
-/* Editorial surfaces: static CSS only, no additional assets, media or scroll work.
-   Background layers cannot intercept gestures or sit over text/video controls. */
+/* Continuous black canvas. The interactive globe is the only new decoration. */
 .bold-editorial {
-  --editorial-light: rgb(255 215 18 / 8%);
   font-weight: 400;
 }
-.bold-editorial :is(#servicos, #clientes, #cases-abertura, #processo, #nascida-brasil) {
-  background-image:
-    radial-gradient(ellipse at 100% 12%, var(--editorial-light), transparent 52%),
-    radial-gradient(ellipse at 0% 90%, rgb(255 255 255 / 3%), transparent 48%),
-    linear-gradient(125deg, transparent 42%, rgb(255 215 18 / 4%) 42.1%, transparent 42.3%);
-}
-.bold-editorial #crew {
-  background-image: radial-gradient(ellipse at 70% 0%, var(--editorial-light), transparent 65%);
-}
+.bold-editorial :is(#servicos, #clientes, #cases-abertura, #processo, #nascida-brasil, #crew),
 .bold-editorial--service .service-page,
 .bold-editorial--project > main {
-  background-image:
-    radial-gradient(ellipse 70% 28% at 100% 4%, rgb(255 215 18 / 10%), transparent 75%),
-    radial-gradient(ellipse 65% 24% at 0% 65%, rgb(255 215 18 / 6%), transparent 75%),
-    repeating-radial-gradient(ellipse at 110% 18%, transparent 0 135px, rgb(255 215 18 / 5%) 136px 137px, transparent 138px 210px),
-    linear-gradient(128deg, transparent 28%, rgb(255 255 255 / 4%) 28.05%, transparent 28.15%);
+  background-color: #000;
+  background-image: none;
 }
 .bold-editorial .service-page__intro {
   padding-block: 32px;
-  border-top: 1px solid rgb(255 215 18 / 20%);
-  border-bottom: 1px solid rgb(255 255 255 / 8%);
 }
 .bold-editorial .service-page__cta {
   padding-bottom: 32px;
-  background: radial-gradient(ellipse at 50% 100%, rgb(255 215 18 / 7%), transparent 70%);
+  border-top: 0;
 }
+.bold-editorial .crew-horizontal__intro { background: #000; }
+.bold-editorial .footer-yellow-glow { display: none; }
+.shiny-cta .shiny-cta__label { display: inline-flex; align-items: center; justify-content: center; gap: .7em; }
+.shiny-cta__arrow { flex: none; width: 20px; height: 20px; }
+.crew-horizontal__banner { border-radius: 20px; }
+.crew-horizontal__hint { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(20px, 2vw, 28px); line-height: 1.25; }
+.crew-horizontal__hint svg { flex: none; }
+.crew-horizontal__intro .crew-horizontal__title { max-width: none; font-size: clamp(32px, 6vw, 88px); line-height: 1.05; }
+.crew-horizontal__title-line { display: flex; align-items: baseline; gap: .22em; white-space: nowrap; }
+.crew-horizontal__title-logo { display: inline-block; align-self: center; width: 2.35em; height: .87em; object-fit: contain; }
+.crew-horizontal__intro > .crew-horizontal__support { max-width: none; white-space: nowrap; font-size: clamp(12px, 1.35vw, 20px); line-height: 1.5; }
+.crew-horizontal__heading { position: relative; }
+.crew-horizontal__heading > .drag-hint { position: absolute; right: clamp(8px, 1.2vw, 20px); top: 50%; transform: translateY(-50%); z-index: 3; }
+.drag-hint { display: block; position: relative; width: 132px; height: 64px; color: #ffd712; pointer-events: none; }
+.drag-hint__device { position: absolute; left: 50px; top: 16px; display: block; width: 32px; height: 32px; }
+.drag-hint__trail { position: absolute; inset: 0; width: 100%; height: 100%; }
+.drag-hint__line { stroke-dasharray: 70; stroke-dashoffset: 70; opacity: 0; animation: drag-hint-line 3s ease-in-out infinite; }
+.drag-hint__arrow { opacity: 0; animation: drag-hint-arrow 3s ease-in-out infinite; }
+.drag-hint__touch { animation: drag-hint-touch 6s ease-in-out infinite; }
+.drag-hint__mouse { opacity: 0; animation: drag-hint-mouse 6s ease-in-out infinite; }
+.drag-hint__press { position: absolute; left: 12px; top: -2px; width: 10px; height: 10px; border: 1px solid currentColor; border-radius: 50%; opacity: 0; animation: drag-hint-press 3s ease-out infinite; }
+@keyframes drag-hint-touch {
+  0%, 4% { opacity: 0; transform: translateX(42px); }
+  9% { opacity: 1; transform: translateX(42px) scale(.9); }
+  17% { opacity: 1; transform: translateX(42px); }
+  36% { opacity: 1; transform: translateX(-28px); }
+  45%, 100% { opacity: 0; transform: translateX(-28px); }
+}
+@keyframes drag-hint-mouse {
+  0%, 50% { opacity: 0; transform: translateX(42px); }
+  59% { opacity: 1; transform: translateX(42px) scale(.9); }
+  67% { opacity: 1; transform: translateX(42px); }
+  86% { opacity: 1; transform: translateX(-28px); }
+  95%, 100% { opacity: 0; transform: translateX(-28px); }
+}
+@keyframes drag-hint-line {
+  0%, 33% { stroke-dashoffset: 70; opacity: 0; }
+  34% { stroke-dashoffset: 70; opacity: .7; }
+  72%, 85% { stroke-dashoffset: 0; opacity: .8; }
+  96%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes drag-hint-arrow {
+  0%, 69%, 96%, 100% { opacity: 0; }
+  72%, 85% { opacity: .9; }
+}
+@keyframes drag-hint-press {
+  0%, 12%, 36%, 100% { opacity: 0; transform: scale(.6); }
+  18% { opacity: .8; transform: scale(.8); }
+  30% { opacity: 0; transform: scale(1.8); }
+}
+@media (max-width: 767px) {
+  .crew-horizontal__intro { padding-inline: 16px; }
+  .crew-horizontal__intro .crew-horizontal__title { font-size: clamp(24px, 8.5vw, 43px); }
+  .crew-horizontal__intro > .crew-horizontal__support { font-size: clamp(11.5px, 3.6vw, 15px); }
+  .crew-horizontal__hint { font-size: clamp(14px, 4.5vw, 22px); }
+  .crew-horizontal__heading > .drag-hint { top: 16%; right: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drag-hint { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .drag-hint__device { position: static; animation: none; opacity: 1; transform: none; }
+  .drag-hint__press { display: none; animation: none; }
+  .drag-hint__trail path { animation: none; stroke-dashoffset: 0; opacity: .5; }
+}
+.crew-horizontal__gesture { display: flex; align-items: center; gap: 10px; max-width: 34ch; font-size: 14px; color: #ffffffb3; }
+.crew-horizontal__gesture svg { flex: none; }
+.cases-abertura__typeword { color: #ffd712; text-decoration: underline; text-underline-offset: .3em; text-decoration-thickness: 1px; }
+.scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 48px; min-height: 56px; padding: 6px 10px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
+.scroll-cue:focus-visible { outline: 2px solid #ffd712; outline-offset: 4px; }
+.scroll-cue__icons { position: relative; display: block; width: 44px; height: 44px; pointer-events: none; }
+.scroll-cue__icons svg { position: absolute; left: 4px; top: 4px; }
+.scroll-cue__mouse { animation: scroll-cue-mouse 5s ease-in-out infinite; }
+.scroll-cue__touch { opacity: 0; animation: scroll-cue-touch 5s ease-in-out infinite; }
+.scroll-cue .scroll-cue__label { font-size: 11px !important; font-weight: 400; letter-spacing: .04em; }
+@keyframes scroll-cue-mouse {
+  0%, 35%, 100% { opacity: 1; transform: translateY(0); }
+  18% { opacity: 1; transform: translateY(5px); }
+  45%, 90% { opacity: 0; transform: translateY(0); }
+}
+@keyframes scroll-cue-touch {
+  0%, 40%, 95%, 100% { opacity: 0; transform: translateY(5px); }
+  50%, 85% { opacity: 1; transform: translateY(0); }
+  70% { opacity: 1; transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue__icons { display: flex; gap: 6px; width: auto; }
+  .scroll-cue__icons svg { position: static; animation: none; opacity: 1; transform: none; }
+}
+.footer-copyright { color: #ffd712; }
+.studio-globe { position: absolute; right: 3%; top: 50%; transform: translateY(-50%); z-index: 1; width: min(600px, 88vw); aspect-ratio: 1; cursor: grab; touch-action: pan-y; user-select: none; }
+.bold-editorial #nascida-brasil { min-height: 600px; }
+.studio-globe:active { cursor: grabbing; }
+.studio-globe:focus-visible { outline: 2px solid #ffd712; outline-offset: 4px; border-radius: 50%; }
+.studio-globe__scene, .studio-globe__canvas { width: 100%; aspect-ratio: 1; position: relative; }
+.studio-globe__canvas::before { content: ''; position: absolute; inset: 14%; border-radius: 50%; box-shadow: 0 0 60px 8px rgb(255 215 18 / 10%); pointer-events: none; }
+.studio-globe__canvas canvas { display: block; max-width: 100%; touch-action: pan-y; }
+.studio-globe__country { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); max-width: 85%; border: 1px solid #ffd71255; border-radius: 8px; padding: 6px 12px; background: #000e; color: #ffd712; font-size: 14px; text-align: center; pointer-events: none; }
+.studio-globe__hint { position: absolute; bottom: 4%; width: 100%; color: #ffffffa3; font-size: 12px; text-align: center; padding: 0 12px; pointer-events: none; }
+.studio-globe__select { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+.studio-globe__select:focus-visible { width: min(280px, 90%); height: 40px; left: 5%; bottom: 0; clip-path: none; background: #000; color: #fff; border: 1px solid #ffd712; z-index: 5; }
+.studio-globe__status { position: absolute; top: 65%; width: 100%; color: #ffffffa3; text-align: center; font-size: 13px; }
+.studio-globe__loading { display: block; width: 100%; height: 100%; }
 /* Scoped to the public institutional routes; dashboards remain untouched.
    Explicit weights override existing component and Tailwind bold styles. */
 .bold-editorial :is(h1, h2, h3, h4, h5, h6),
@@ -2732,13 +2828,6 @@ button.project-full-video__poster { cursor: pointer; }
 .bold-editorial :is(button, [role='button'], .shiny-cta, .button-link) :where(:not(svg, svg *)) {
   font-weight: inherit;
 }
-@media (max-width: 767px) {
-  .bold-editorial--service .service-page,
-  .bold-editorial--project > main {
-    background-size: 100% 100%, 100% 100%, 180% 100%, 100% 100%;
-  }
-}
-
 /* One type size for every button, including nested labels and responsive CTAs.
    Keep this override after component/media rules so the size stays consistent. */
 :root { --button-font-size: 17px; }
