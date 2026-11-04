@@ -23,7 +23,7 @@ function DicaDeClique({ label }: { label: string }) {
 // duplicada para o loop infinito; a segunda cópia fica fora da acessibilidade.
 // Clicar num logo abre o modal com preview/depoimento e link pro projeto.
 export function ClientesWave() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const navigate = useNavigate()
   const [selected, setSelected] = useState<Cliente | null>(null)
   const detailPanelRef = useRef<HTMLDivElement>(null)
@@ -83,7 +83,8 @@ export function ClientesWave() {
             document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }
         >
-          {t.clientes.ctaButton}
+          <span className="hidden sm:inline">{t.clientes.ctaButton}</span>
+          <span className="sm:hidden">{lang === 'pt' ? 'Quero ser a próxima marca' : lang === 'es' ? 'Quiero ser la próxima marca' : 'I want to be the next brand'}</span>
         </ShinyButton>
       </div>
 

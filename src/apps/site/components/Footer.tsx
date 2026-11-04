@@ -175,7 +175,7 @@ export function Footer() {
 
       <div className="footer-credits mx-auto mt-12 grid max-w-5xl grid-cols-2 items-start gap-6 border-t border-white/5 pt-6 sm:items-center">
         <p className="footer-copyright text-left text-xs text-bold-yellow">
-          © {new Date().getFullYear()} Bold Studio Brasil. {t.footer.rights}
+          © {new Date().getFullYear()} Bold Studio Brasil<span className="hidden sm:inline">. {t.footer.rights}</span>
         </p>
         <div className="flex flex-col items-end gap-4 text-right text-[15.6px] text-bold-white/70">
           <p>

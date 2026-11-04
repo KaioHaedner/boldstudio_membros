@@ -2811,6 +2811,34 @@ button.project-full-video__poster { cursor: pointer; }
 .studio-globe__select:focus-visible { width: min(280px, 90%); height: 40px; left: 5%; bottom: 0; clip-path: none; background: #000; color: #fff; border: 1px solid #ffd712; z-index: 5; }
 .studio-globe__status { position: absolute; top: 65%; width: 100%; color: #ffffffa3; text-align: center; font-size: 13px; }
 .studio-globe__loading { display: block; width: 100%; height: 100%; }
+
+.processo__journey-photo--middle-right,
+.processo__journey-photo--middle-left { display: none; }
+
+@media (max-width: 639px) {
+  .cases-palco { height: auto; aspect-ratio: 7 / 10; }
+  .cases-palco__audio { width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 50%; }
+  .cases-palco__audio > span,
+  .scroll-cue__label { display: none; }
+  .cases-palco__cta { width: 80%; }
+  .cases-palco__project-button { width: 100%; padding-inline: .5rem; }
+  .cases-palco__project-button .shiny-cta__label { white-space: nowrap; gap: .35em; font-size: clamp(.75rem, 3.7vw, 1.0625rem); }
+  .clientes-dica {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    width: auto; margin: 1rem 1rem 0;
+  }
+  .clientes-dica > svg { width: 16px; height: 16px; flex: none; }
+  .clientes-dica__label { color: #ffd712; font-size: clamp(.625rem, 2.65vw, .85rem); letter-spacing: 0; text-transform: none; white-space: nowrap; }
+  .processo__journey-photo--middle-right,
+  .processo__journey-photo--middle-left { display: block; bottom: auto; }
+  .processo__journey-photo--middle-right { top: 25%; right: -16%; }
+  .processo__journey-photo--middle-left { top: 51%; left: -16%; right: auto; }
+  .processo__journey-photo--middle-left img { mask-image: linear-gradient(to left, transparent, #000 40%); }
+  .bold-editorial #nascida-brasil { min-height: 0; }
+  #nascida-brasil .nascida-frase { order: -1; font-size: clamp(2rem, 10vw, 3.8rem); word-spacing: normal; text-wrap: balance; }
+  #nascida-brasil .studio-globe { position: relative; top: auto; right: auto; transform: none; width: min(100%, 390px); }
+  .footer-copyright { color: #fff; }
+}
 /* Scoped to the public institutional routes; dashboards remain untouched.
    Explicit weights override existing component and Tailwind bold styles. */
 .bold-editorial :is(h1, h2, h3, h4, h5, h6),

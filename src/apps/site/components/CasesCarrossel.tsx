@@ -112,7 +112,7 @@ export function CasesCarrossel() {
 
         {centeredProject && (
           <div className="cases-palco__final">
-            {previewEnded && <p role="status">{t.cases.previewFinished}</p>}
+            {previewEnded && <p role="status"><span className="hidden sm:inline">{t.cases.previewFinished}</span><span className="sm:hidden">{lang === 'pt' ? 'Prévia finalizada' : lang === 'es' ? 'Vista previa finalizada' : 'Preview finished'}</span></p>}
           </div>
         )}
 
