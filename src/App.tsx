@@ -1,7 +1,7 @@
 import { siteRoutes } from '@/apps/site/routes'
 import { academyRoutes } from '@/apps/academy/routes'
 import { adminRoutes } from '@/apps/admin/routes'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { getArea } from '@/shared/lib/area'
 import { AuthProvider } from '@/shared/contexts/AuthContext'
 import { ToastProvider } from '@/shared/components/Toast'
@@ -25,12 +25,19 @@ function RootGate() {
     : <Navigate to="/login" replace />
 }
 
+// Material de um cliente só, aberto por link: a barra de cookies só atrapalha a leitura.
+function BarraDeCookies() {
+  const { pathname } = useLocation()
+  if (pathname.startsWith('/tratamento/')) return null
+  return <CookieBar />
+}
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ToastProvider>
-        <CookieBar />
+        <BarraDeCookies />
         <Routes>
           {/* publicas */}
           <Route path="/" element={<RootGate />} />

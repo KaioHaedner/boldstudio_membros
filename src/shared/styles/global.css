@@ -2406,3 +2406,172 @@ textarea {
     font-size: clamp(4rem, 8vw, 8rem);
   }
 }
+
+/* ---- Tratamento de roteiro (/tratamento/:cliente) ----
+   Duas versões do mesmo layout: "tratores" (verde e amarelo da John Deere, com
+   fotos de máquinas atrás) e "bold" (preto e amarelo). Cada seção é uma peça de
+   cantos arredondados que sobe por cima da anterior. */
+.trat {
+  --a-bg: #0a0a0a; --a-fg: #fff; --a-acc: #ffde00;
+  --b-bg: #367c2b; --b-fg: #fff; --b-acc: #ffde00;
+  background: #fff;
+  color: #fff;
+  font-family: inherit;
+  overflow-x: clip;
+}
+.trat[data-layout='bold'] {
+  --a-bg: #000; --a-acc: #ffd712;
+  --b-bg: #ffd712; --b-fg: #000; --b-acc: #000;
+}
+.trat-capa {
+  min-height: 100svh; background: #fff; color: #000;
+  padding: clamp(2rem, 5vw, 4rem);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem 4rem; align-items: center; align-content: center;
+}
+.trat-capa__texto h1 {
+  margin: 0.6rem 0 1rem; font-size: clamp(3rem, 8vw, 7rem); font-weight: 900; font-style: italic;
+  line-height: 0.9; letter-spacing: -0.03em; text-transform: uppercase;
+}
+.trat-capa__texto p:last-child { margin: 0; max-width: 34rem; font-size: 1.1rem; line-height: 1.55; color: rgba(0, 0, 0, 0.75); }
+.trat-capa__logo { display: grid; place-items: center; }
+.trat-capa__logo img { width: min(100%, 36rem); height: auto; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35)) drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25)); }
+.trat-capa__midia { grid-column: 1 / -1; }
+.trat-capa__midia .trat-midia { border-radius: 1.75rem; }
+
+.trat-secao {
+  position: relative; isolation: isolate; overflow: hidden; margin: 0 clamp(0.5rem, 1.2vw, 1rem) clamp(0.5rem, 1.2vw, 1rem);
+  border-radius: 3rem; padding: clamp(3.5rem, 7vw, 6rem) clamp(1.25rem, 5vw, 4rem);
+}
+.trat-secao--a { background: var(--a-bg); color: var(--a-fg); --acc: var(--a-acc); --corpo: rgba(255, 255, 255, 0.78); }
+.trat-secao--b { background: var(--b-bg); color: var(--b-fg); --acc: var(--b-acc); --corpo: color-mix(in srgb, var(--b-fg) 82%, transparent); }
+.trat-secao__fundo {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; opacity: 0.32;
+}
+.trat-secao--a:has(.trat-secao__fundo)::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, var(--a-bg) 0%, transparent 35%, transparent 65%, var(--a-bg) 100%);
+}
+.trat-secao__miolo { max-width: 84rem; margin: 0 auto; }
+/* texto de um lado, mídia do outro: nada fica por cima de nada */
+.trat-duas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+.trat-duas > .trat-texto { position: sticky; top: 2rem; }
+.trat-uma { max-width: 52rem; }
+.trat-lado { min-width: 0; }
+
+.trat-eyebrow { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; color: var(--acc, #000); }
+.trat-eyebrow { margin: 0; }
+.trat-eyebrow--escuro { color: #000; }
+.trat-traco { display: block; width: 3.5rem; height: 4px; margin-top: 0.9rem; background: var(--acc); }
+.trat-titulo { margin: 1rem 0 0; font-size: clamp(2.2rem, 4.6vw, 4.5rem); font-weight: 900; font-style: italic; line-height: 0.93; letter-spacing: -0.03em; text-transform: uppercase; }
+.trat-palavra { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.1em 0.08em 0.14em; margin: -0.1em -0.08em -0.14em; }
+.trat-palavra > span { display: inline-block; }
+
+.trat-corpo { max-width: 44rem; margin-top: 1.75rem; display: grid; gap: 1rem; font-size: clamp(1.02rem, 1.5vw, 1.2rem); line-height: 1.6; color: var(--corpo); }
+.trat-corpo p { margin: 0; }
+.trat-falas { display: grid; gap: 0.75rem; margin-top: 0.5rem; padding: 1.25rem 1.5rem; border-left: 4px solid var(--acc); border-radius: 0 1.25rem 1.25rem 0; background: rgba(255, 255, 255, 0.07); }
+.trat-secao--b .trat-falas { background: rgba(0, 0, 0, 0.12); }
+.trat-falas strong { display: block; margin-bottom: 0.15rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acc); }
+.trat-vazio { margin-top: 2rem; padding: 1.5rem; border: 2px dashed currentColor; border-radius: 1.5rem; opacity: 0.5; }
+
+/* mosaico com parallax: a mídia é maior que o quadro e anda dentro dele */
+.trat-mosaico { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(0.5rem, 1vw, 0.9rem); }
+.trat-midia { position: relative; margin: 0; overflow: hidden; border-radius: 1.5rem; background: #000; }
+.trat-midia__inner { position: absolute; inset: -12% 0; transform: translate3d(0, var(--py, 0px), 0); will-change: transform; }
+.trat-midia__inner > video, .trat-midia__inner > img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; user-select: none; }
+.trat-midia.is-selecionavel { cursor: pointer; outline: 3px solid transparent; outline-offset: -3px; transition: outline-color 0.2s; }
+.trat-midia.is-selecionavel:hover { outline-color: rgba(255, 255, 255, 0.6); }
+.trat-midia.is-selecionada { outline-color: #ffd712; }
+.trat-midia__selo { position: absolute; top: 0.6rem; left: 0.6rem; padding: 0.15rem 0.55rem; border-radius: 999px; background: #000; color: #ffd712; font-size: 0.75rem; font-weight: 900; }
+.trat-capa__midia .trat-midia__inner { inset: -8% 0; }
+
+/* vídeo do YouTube na diagonal, texto na mesma inclinação */
+.trat-yt { margin: 0; transform: rotate(-1.4deg); transform-origin: center; }
+.trat-yt + .trat-mosaico { margin-top: 2rem; }
+.trat-yt__quadro { position: relative; aspect-ratio: 21 / 10; overflow: hidden; border-radius: 1.75rem; background: #000; box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.7); }
+.trat-yt__capa, .trat-yt__player, .trat-yt__player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.trat-yt__capa { padding: 0; border: 0; background: #000; cursor: pointer; }
+.trat-yt__capa img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s; }
+.trat-yt__capa:hover img { transform: scale(1.04); opacity: 1; }
+.trat-yt__play { position: absolute; top: 50%; left: 50%; width: 5rem; height: 5rem; transform: translate(-50%, -50%); border-radius: 50%; background: var(--acc, #ffd712); }
+.trat-yt__play::after { content: ''; position: absolute; top: 50%; left: 54%; transform: translate(-50%, -50%); border-style: solid; border-width: 0.75rem 0 0.75rem 1.25rem; border-color: transparent transparent transparent #000; }
+.trat-yt__titulo { margin: 1rem 0 0 0.5rem; font-size: 0.95rem; font-weight: 700; color: var(--corpo); }
+.trat-yt__link { display: inline-block; margin: 0.35rem 0 0 0.5rem; font-size: 0.82rem; font-weight: 700; color: var(--acc); word-break: break-all; }
+
+.trat-lista { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.7rem; max-width: 52rem; }
+.trat-lista li { padding: 1.1rem 1.5rem; border-radius: 1.25rem; background: var(--acc); color: #000; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 700; }
+.trat[data-layout='bold'] .trat-secao--b .trat-lista li { background: #000; color: #ffd712; }
+
+.trat-cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.trat-cartoes article { padding: 1.75rem; border-radius: 1.75rem; background: rgba(255, 255, 255, 0.08); }
+.trat-secao--b .trat-cartoes article { background: rgba(0, 0, 0, 0.14); }
+.trat-cartoes h3 { margin: 0; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.25em; text-transform: uppercase; color: var(--acc); }
+.trat-cartoes p { margin: 0.6rem 0 0; font-size: 1.05rem; line-height: 1.55; color: var(--corpo); }
+.trat-cartoes .trat-cartoes__aberto { border: 2px dashed currentColor; background: transparent; opacity: 0.7; }
+
+.trat-links { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; max-width: 46rem; }
+.trat-links a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.2rem 1.6rem; border-radius: 1.25rem; background: rgba(255, 255, 255, 0.08); color: inherit; font-weight: 800; text-decoration: none; transition: background 0.2s, color 0.2s, transform 0.2s; }
+.trat-secao--b .trat-links a { background: rgba(0, 0, 0, 0.14); }
+.trat-links a:hover { background: var(--acc); color: #000; transform: translateX(6px); }
+.trat-icone { flex: none; width: 1.3rem; height: 1.3rem; }
+
+/* o amarelo do rodapé começa na metade do cartão de agradecimento, desce em
+   gradiente do branco e cobre todo o fundo, sem bordas */
+.trat-final { position: relative; isolation: isolate; }
+.trat-final::before {
+  content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; top: var(--meio, 12rem);
+  background: linear-gradient(180deg, #fff 0, #ffd712 calc(var(--meio, 12rem) + 5rem), #ffd712 100%);
+}
+.trat-obrigado { position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; margin: 0 clamp(0.5rem, 1.2vw, 1rem) clamp(0.5rem, 1.2vw, 1rem); border-radius: 3rem; background: #000; color: #fff; padding: clamp(3.5rem, 7vw, 6rem) clamp(1.25rem, 5vw, 4rem); }
+.trat-obrigado h2 { margin: 1rem 0; white-space: nowrap; font-size: clamp(1.5rem, 3vw, 3.2rem); font-weight: 900; font-style: italic; line-height: 0.93; letter-spacing: -0.03em; text-transform: uppercase; }
+.trat-obrigado__texto p:not(.trat-eyebrow) { margin: 0 0 1.25rem; max-width: 32rem; font-size: 1.15rem; line-height: 1.55; color: rgba(255, 255, 255, 0.82); }
+.trat-obrigado__texto a { color: #ffd712; font-weight: 800; }
+.trat-obrigado .trat-eyebrow { color: #ffd712; }
+.trat-obrigado__video .trat-midia { border-radius: 1.75rem; }
+
+.trat-rodape { margin: 0; border-radius: 0; background: transparent; color: #000; padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem); }
+.trat-rodape__links { margin: 0 0 clamp(1.5rem, 3vw, 2.5rem); padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, max-content); justify-content: space-between; gap: 0.5rem; }
+.trat-rodape__links a { display: grid; grid-template-columns: auto auto auto; align-items: center; gap: 0.05rem clamp(0.4rem, 0.7vw, 0.7rem); padding: 0.4rem clamp(0.5rem, 0.9vw, 0.9rem) 0.4rem 0.4rem; border-radius: 1.1rem; background: #000; color: #fff; text-decoration: none; white-space: nowrap; transition: transform 0.2s, background 0.2s; }
+.trat-rodape__links a:hover { transform: translateY(-3px); background: #1a1a1a; }
+.trat-rodape__links small { grid-column: 2; align-self: end; font-size: clamp(0.5rem, 0.62vw, 0.62rem); font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #ffd712; }
+.trat-rodape__links span:not(.trat-marca) { grid-column: 2; align-self: start; font-size: clamp(0.62rem, 0.9vw, 0.85rem); font-weight: 800; }
+.trat-rodape__links .trat-icone { grid-column: 3; grid-row: 1 / 3; width: 0.9rem; height: 0.9rem; color: #ffd712; }
+.trat-marca { grid-column: 1; grid-row: 1 / 3; display: grid; place-items: center; width: clamp(2rem, 3vw, 2.6rem); height: clamp(2rem, 3vw, 2.6rem); border-radius: 0.7rem; color: #fff; overflow: hidden; }
+.trat-marca svg { width: 78%; height: 78%; }
+.trat-marca img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); }
+.trat-marca--whatsapp { background: #25d366; }
+.trat-marca--instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+.trat-marca--email { background: #ffd712; color: #000; }
+.trat-marca--site { background: #ffd712; }
+.trat-rodape__logo { display: block; transform: translate3d(0, var(--py, 0px), 0); width: min(100%, 60rem); height: auto; margin: 0 auto; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.3)); }
+
+/* controle remoto de mídias */
+.trat-controle__abrir { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 200; padding: 0.85rem 1.4rem; border: 0; border-radius: 999px; background: #ffd712; color: #000; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6); cursor: pointer; }
+.trat-controle { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 200; width: min(20rem, calc(100vw - 2.5rem)); max-height: calc(100svh - 2.5rem); overflow-y: auto; display: grid; gap: 1rem; padding: 1.1rem; border-radius: 1.5rem; background: rgba(12, 12, 12, 0.96); color: #fff; box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.7); font-size: 0.85rem; }
+.trat-controle header { display: flex; justify-content: space-between; align-items: center; }
+.trat-controle header strong { font-size: 0.8rem; letter-spacing: 0.25em; text-transform: uppercase; color: #ffd712; }
+.trat-controle header button { border: 0; background: none; color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.trat-controle__grupo { display: grid; gap: 0.6rem; }
+.trat-controle__grupo > span { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
+.trat-controle__grupo p { margin: 0; color: rgba(255, 255, 255, 0.6); line-height: 1.45; }
+.trat-controle__duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.trat-controle .trat-controle__duo button, .trat-controle .trat-controle__perigo, .trat-controle .trat-controle__tira button { padding: 0.65rem 0.5rem; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.8rem; background: transparent; color: #fff; font-weight: 700; cursor: pointer; }
+.trat-controle .trat-controle__duo button.is-on { background: #ffd712; border-color: #ffd712; color: #000; }
+.trat-controle .trat-controle__perigo { border-color: rgba(255, 90, 90, 0.5); color: #ff8a8a; }
+.trat-controle select { width: 100%; margin-top: 0.35rem; padding: 0.6rem; border-radius: 0.7rem; border: 1px solid rgba(255, 255, 255, 0.2); background: #1b1b1b; color: #fff; }
+.trat-controle label { display: block; font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); }
+.trat-controle__sel { display: grid; grid-template-columns: 5rem 1fr; gap: 0 0.7rem; align-items: center; }
+.trat-controle__sel img { grid-row: 1 / 3; width: 5rem; height: 3.2rem; object-fit: cover; border-radius: 0.5rem; }
+.trat-controle__sel b { font-size: 1.1rem; color: #ffd712; }
+.trat-controle__tira { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.trat-controle .trat-controle__tira button { padding: 0; width: 3.4rem; height: 2.3rem; overflow: hidden; }
+.trat-controle__tira img { width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+
+@media (max-width: 900px) {
+  .trat-capa, .trat-duas, .trat-obrigado { grid-template-columns: 1fr; }
+  .trat-obrigado h2 { white-space: normal; }
+  .trat-duas > .trat-texto { position: static; }
+  .trat-rodape__links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trat-midia__inner, .trat-obrigado__fundo { transform: none; }
+}

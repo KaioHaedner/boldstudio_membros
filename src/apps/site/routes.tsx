@@ -5,6 +5,7 @@ import { HomeInstitucionalPage } from '@/apps/site/pages/HomeInstitucionalPage'
 import { ProjetoClientePage } from '@/apps/site/pages/ProjetoClientePage'
 import { CheckoutPage } from '@/apps/site/pages/CheckoutPage'
 import { SucessoPage } from '@/apps/site/pages/SucessoPage'
+import { TratamentoPage } from '@/apps/site/pages/TratamentoPage'
 
 
 export function siteRoutes() {
@@ -16,6 +17,7 @@ export function siteRoutes() {
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/sucesso" element={<SucessoPage />} />
+          <Route path="/tratamento/:cliente" element={<TratamentoPage />} />
           <Route path="/:projetoSlug" element={<ProjetoClientePage />} />
     </>
   )
