@@ -1,4 +1,4 @@
-// Tratamento de roteiro da John Deere (/tratamento/john-deere).
+// Tratamento de roteiro da John Deere (/projetos/apresentacao/jhondeere).
 // Os GIFs do documento viraram MP4 curtos em loop (5 MB no total) e as fotos
 // viraram WebP, tudo em /public/tratamento/john-deere. A ordem das mídias dentro
 // de cada bloco pode ser trocada na própria página, pelo botão "Controle".

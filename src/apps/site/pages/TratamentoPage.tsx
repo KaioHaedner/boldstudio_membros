@@ -16,7 +16,7 @@ import {
 
 // Só existe o tratamento da John Deere por enquanto; a rota já aceita o nome do
 // cliente para o próximo.
-const CLIENTES_OK = ['john-deere']
+const CLIENTES_OK = ['jhondeere']
 
 type Layout = 'tratores' | 'bold'
 type Estado = { ordem: Record<string, string[]>; ocultas: string[] }

@@ -17,7 +17,7 @@ export function siteRoutes() {
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/sucesso" element={<SucessoPage />} />
-          <Route path="/tratamento/:cliente" element={<TratamentoPage />} />
+          <Route path="/projetos/apresentacao/:cliente" element={<TratamentoPage />} />
           <Route path="/:projetoSlug" element={<ProjetoClientePage />} />
     </>
   )

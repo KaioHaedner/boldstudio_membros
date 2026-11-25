@@ -28,7 +28,7 @@ function RootGate() {
 // Material de um cliente só, aberto por link: a barra de cookies só atrapalha a leitura.
 function BarraDeCookies() {
   const { pathname } = useLocation()
-  if (pathname.startsWith('/tratamento/')) return null
+  if (pathname.startsWith('/projetos/apresentacao/')) return null
   return <CookieBar />
 }
 

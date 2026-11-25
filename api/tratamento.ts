@@ -8,11 +8,11 @@ export const config = { runtime: 'edge' }
 const SITE = 'https://boldstudiobrasil.com'
 
 const TRATAMENTOS: Record<string, { titulo: string; descricao: string; imagem: string; alt: string }> = {
-  'john-deere': {
+  jhondeere: {
     titulo: 'Tratamento de roteiro · John Deere Brasil',
     descricao:
       'Como a Bold Studio pretende filmar o reality: qualidade visual de cinema, narrativa cativante e câmera viva, bloco a bloco, com referências e linguagem de cena.',
-    imagem: `${SITE}/brand/og-tratamento-john-deere.jpg`,
+    imagem: `${SITE}/brand/og-apresentacao-jhondeere.jpg`,
     alt: 'Tratamento de roteiro John Deere Brasil, por Bold Studio, sobre colheitadeira ao pôr do sol',
   },
 }
@@ -27,7 +27,7 @@ export default async function handler(req: Request) {
 
   const t = TRATAMENTOS[cliente]
   if (t) {
-    const canonica = `${SITE}/tratamento/${cliente}`
+    const canonica = `${SITE}/projetos/apresentacao/${cliente}`
     html = html
       .replace(/<title>[\s\S]*?<\/title>/, '')
       .replace(/<meta\s+(?:name|property)="(?:description|robots|og:[^"]+|twitter:[^"]+)"[\s\S]*?\/>/g, '')

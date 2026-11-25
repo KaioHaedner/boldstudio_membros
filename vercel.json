@@ -5,11 +5,16 @@
       "source": "/home",
       "destination": "/home-bold-studio-sinop-brasil",
       "permanent": true
+    },
+    {
+      "source": "/tratamento/john-deere",
+      "destination": "/projetos/apresentacao/jhondeere",
+      "permanent": false
     }
   ],
   "rewrites": [
     {
-      "source": "/tratamento/:cliente",
+      "source": "/projetos/apresentacao/:cliente",
       "destination": "/api/tratamento?c=:cliente"
     },
     {
