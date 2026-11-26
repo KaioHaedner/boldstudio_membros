@@ -142,9 +142,8 @@ export const BLOCOS: BlocoTexto[] = [
       { fala: 'Michel', texto: 'Será que o senhor pode me levar pra conhecer melhor seu dia a dia?' },
     ],
     sugestao: { rotulo: 'Sugestão de conversa' },
-    // depois do 1º texto: a conversa na mesa, as mulheres e, em destaque, o
-    // rapaz no milharal; depois do 2º: o dia a dia, com destaque no primeiro
-    grupos: [{ n: 3, cheia: 'ultima' }, { n: 5 }],
+    // depois do 1º texto: o produtor no café (em evidência) e a mesa; depois
+    // do 2º: o rapaz no milharal, o moreno de chapéu e o dia a dia, lado a lado
     midias: ['m13', 'm14', 'm9', 'm10', 'm7', 'm8', 'm11', 'm12'],
   },
   {

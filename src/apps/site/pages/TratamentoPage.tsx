@@ -196,31 +196,10 @@ function carregarApiYT(): Promise<YTGlobal> {
   return apiYT
 }
 
-const AVISO_SEGUNDOS = 4
-
 function VideoYouTube({ id, aviso }: { id: string; aviso?: string }) {
   const [ativo, setAtivo] = useState(false)
   const [capa, setCapa] = useState(`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`)
   const alvoRef = useRef<HTMLDivElement>(null)
-  const quadroRef = useRef<HTMLDivElement>(null)
-  // o aviso cobre o vídeo com blur na primeira vez que ele aparece na tela e
-  // some sozinho depois de alguns segundos
-  const [avisoNaTela, setAvisoNaTela] = useState<'espera' | 'mostrando' | 'liberado'>(aviso ? 'espera' : 'liberado')
-
-  useEffect(() => {
-    const el = quadroRef.current
-    if (!el || avisoNaTela !== 'espera') return
-    let timer = 0
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return
-      io.disconnect()
-      setAvisoNaTela('mostrando')
-      timer = window.setTimeout(() => setAvisoNaTela('liberado'), AVISO_SEGUNDOS * 1000)
-    }, { threshold: 0.55 })
-    io.observe(el)
-    return () => { io.disconnect(); window.clearTimeout(timer) }
-  }, [avisoNaTela])
-
   useEffect(() => {
     if (!ativo || !alvoRef.current) return
     let player: YTPlayer | null = null
@@ -249,21 +228,13 @@ function VideoYouTube({ id, aviso }: { id: string; aviso?: string }) {
   return (
     <div className="trat-yt">
       {aviso && (
-        <p className="trat-aviso">
+        <p className="trat-aviso" role="note">
           <span className="trat-aviso__icone" aria-hidden="true">!</span>
-          <span><strong>Importante!</strong> {aviso}</span>
+          <strong>Importante:</strong>
+          <span>{aviso}</span>
         </p>
       )}
-      <div className="trat-yt__quadro" ref={quadroRef}>
-        {aviso && avisoNaTela !== 'liberado' && (
-          <div className={`trat-yt__aviso${avisoNaTela === 'mostrando' ? ' is-on' : ''}`} style={{ '--aviso-s': `${AVISO_SEGUNDOS}s` } as CSSProperties}
-            role="note">
-            <span className="trat-aviso__icone" aria-hidden="true">!</span>
-            <strong>Importante!</strong>
-            <p>{aviso}</p>
-            <i aria-hidden="true" />
-          </div>
-        )}
+      <div className="trat-yt__quadro">
         {ativo ? (
           <div ref={alvoRef} className="trat-yt__player" />
         ) : (
@@ -317,9 +288,29 @@ function IconeMarca({ tipo }: { tipo: string }) {
   )
 }
 
+// Ondas finas que fluem devagar no fundo. O desenho tem o dobro da largura e
+// anda metade dela, então o laço fecha sem emenda; só transform, que não pesa.
+const ONDAS = Array.from({ length: 7 }, (_, i) => {
+  const y = 70 + i * 76
+  const a = 18 + i * 6
+  return {
+    d: `M 0 ${y} Q 150 ${y - a} 300 ${y} T 600 ${y} T 900 ${y} T 1200 ${y} T 1500 ${y} T 1800 ${y} T 2100 ${y} T 2400 ${y}`,
+    o: 0.35 + i * 0.09,
+  }
+})
+
+function Ondas() {
+  return (
+    <svg className="trat-ondas" viewBox="0 0 2400 600" preserveAspectRatio="none" aria-hidden="true">
+      {ONDAS.map((o, i) => <path key={i} d={o.d} style={{ opacity: o.o }} />)}
+    </svg>
+  )
+}
+
 function Secao({ id, tone, children }: { id: string; tone: SectionTone; children: React.ReactNode }) {
   return (
     <section id={id} className="trat-secao" data-trat-tone={tone}>
+      <Ondas />
       <div className="trat-secao__miolo">{children}</div>
     </section>
   )
@@ -378,16 +369,40 @@ function Galeria({ ids, cheia = 'primeira', render }: {
   )
 }
 
-function Sugestao({ rotulo, intro, falas, solta }: {
+function Carrossel({ ids, render }: { ids: string[]; render: (id: string, indice: number) => React.ReactNode }) {
+  const [passo, setPasso] = useState(0)
+  useEffect(() => {
+    if (ids.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const t = window.setInterval(() => setPasso(s => (s + 1) % ids.length), 3200)
+    return () => window.clearInterval(t)
+  }, [ids.length])
+  if (ids.length === 0) return null
+  const meio = Math.floor(Math.min(ids.length, 3) / 2)
+  return (
+    <div className="trat-carrossel" style={{ '--itens': ids.length } as CSSProperties}>
+      {ids.map((id, i) => {
+        const posicao = (i - passo + ids.length) % ids.length
+        return (
+          <div key={id} className={`trat-carrossel__item${posicao === meio ? ' is-centro' : ''}`} style={{ order: posicao }}>
+            {render(id, i)}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function Sugestao({ rotulo, intro, falas, solta, lado }: {
   rotulo: string
   intro?: string
   falas: NonNullable<BlocoTexto['exemplo']>
   solta?: boolean
+  lado?: boolean
 }) {
   return (
-    <div className={`trat-sugestao${solta ? ' trat-sugestao--solta' : ''}`}>
+    <div className={`trat-sugestao${solta ? ' trat-sugestao--solta' : ''}${lado ? ' trat-sugestao--lado' : ''}`}>
       <p className="trat-sugestao__rotulo">
-        {solta && <span className="trat-sugestao__seta" aria-hidden="true">←</span>}
+        {solta && <span className="trat-sugestao__seta" aria-hidden="true">↓</span>}
         {rotulo}
       </p>
       {intro && <p className="trat-sugestao__intro">{intro}</p>}
@@ -422,13 +437,45 @@ function BlocoView({
   )
   const video = bloco.video && <VideoYouTube key={bloco.video} id={bloco.video} aviso={bloco.aviso} />
   const sugestao = bloco.exemplo && bloco.sugestao && (
-    <Sugestao rotulo={bloco.sugestao.rotulo} intro={bloco.sugestao.intro} falas={bloco.exemplo} solta={bloco.id === 'b1'} />
+    <Sugestao rotulo={bloco.sugestao.rotulo} intro={bloco.sugestao.intro} falas={bloco.exemplo} solta={bloco.id === 'b1'} lado={bloco.id === 'b3'} />
+  )
+
+  const duasColunas = (texto: React.ReactNode, amarelo = false) => (
+    <div className="trat-topo2">
+      {cabecalho}
+      <div className={`trat-topo2__texto${amarelo ? ' is-amarelo' : ''}`}>{texto}</div>
+    </div>
+  )
+  const grade = (lista: string[], colunas: number, classe = '') => lista.length > 0 && (
+    <div className={`trat-faixa ${classe}`.trim()} style={{ '--colunas': colunas } as CSSProperties}>
+      {lista.map(midia)}
+    </div>
   )
 
   // texto e imagens intercalados: cada parágrafo traz logo abaixo as imagens dele
   const grupos = bloco.grupos
   let corpo: React.ReactNode
-  if (grupos && grupos.length) {
+  if (bloco.id === 'tom') {
+    corpo = <>{duasColunas(<Texto partes={bloco.paragrafos} />)}{video}</>
+  } else if (bloco.id === 'b2') {
+    corpo = (
+      <>
+        {duasColunas(<Texto partes={[bloco.paragrafos[0]]} />)}
+        {grade(ids.slice(0, 2), 2, 'trat-faixa--menor')}
+        <Texto partes={[bloco.paragrafos[1]]} />
+        <Carrossel ids={ids.slice(2)} render={midia} />
+      </>
+    )
+  } else if (bloco.id === 'b3') {
+    corpo = (
+      <>
+        {duasColunas(<Texto partes={[bloco.paragrafos[0]]} />, true)}
+        {grade(ids.slice(0, 2), 2, 'trat-faixa--cafe')}
+        <p className="trat-linha">{bloco.paragrafos[1]}</p>
+        {grade(ids.slice(2), 3)}
+      </>
+    )
+  } else if (grupos && grupos.length) {
     let pos = 0
     corpo = bloco.paragrafos.map((p, i) => {
       const g = grupos[i]
@@ -458,7 +505,7 @@ function BlocoView({
   const tone = 'black'
   return (
     <Secao id={bloco.id} tone={tone}>
-      {cabecalho}
+      {!['tom', 'b2', 'b3'].includes(bloco.id) && cabecalho}
       {corpo}
       {bloco.id !== 'b1' && sugestao}
       {bloco.nota && <p className="trat-nota">“{bloco.nota}”</p>}
@@ -716,6 +763,7 @@ export function TratamentoPage() {
   return (
     <div className="trat" data-layout={layout} data-control-tone={controlTone} ref={raiz}>
       <header id="capa" className="trat-capa" data-trat-tone="white" data-par data-vel={1.9}>
+        <Ondas />
         <div className="trat-capa__logo">
           <img src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" fetchPriority="high" />
         </div>
@@ -723,12 +771,12 @@ export function TratamentoPage() {
 
       <main>
         <Secao id="sobre" tone="white">
-          <div className="trat-sobre">
+          <div className="trat-topo2">
             <header className="trat-cabecalho trat-cabecalho--topico">
               <p className="trat-eyebrow">{SOBRE.eyebrow}</p>
               <Titulo texto={SOBRE.titulo} />
             </header>
-            <Texto partes={[SOBRE.texto]} />
+            <div className="trat-topo2__texto is-amarelo"><Texto partes={[SOBRE.texto]} /></div>
           </div>
           <figure className="trat-sobre__foto">
             <img src={SOBRE.foto} alt="Equipe da Bold Studio filmando no campo" loading="lazy" decoding="async" />

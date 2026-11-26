@@ -456,3 +456,80 @@
 .trat .trat-cabecalho--topico .trat-titulo { font-weight: 750; }
 
 .trat .trat-palco > :is(.trat-secao, .trat-palco__encerramento)::after { opacity: .16; }
+
+/* ---- rodada de 26/11 (Kaio): capa, sobre, tom, blocos 1 a 3 ---- */
+/* logo da capa pela metade */
+.trat .trat-capa img { width: min(37.5vw, 585px); }
+
+/* ondas que se movem no fundo de toda a página */
+.trat-capa, .trat-secao { position: relative; isolation: isolate; }
+.trat-ondas {
+  position: absolute; z-index: -1; top: 0; left: 0;
+  width: 200%; height: 100%;
+  pointer-events: none;
+  fill: none; stroke: var(--onda-cor, #2f6e26); stroke-width: 1.2;
+  opacity: var(--onda-forca, .14);
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+  animation: trat-onda 46s linear infinite;
+}
+.trat-ondas path { vector-effect: non-scaling-stroke; }
+.trat-secao:nth-of-type(even) .trat-ondas { animation-duration: 58s; animation-direction: reverse; }
+.trat-palco .trat-ondas { --onda-cor: #fff3b0; --onda-forca: .18; }
+@keyframes trat-onda { to { transform: translateX(-50%); } }
+/* as linhas paradas de antes saem: as ondas tomam o lugar delas */
+.trat .trat-palco > :is(.trat-secao, .trat-palco__encerramento)::after { content: none; }
+
+/* título à esquerda, texto de apoio à direita, na mesma linha */
+.trat-topo2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: clamp(1.5rem, 4vw, 4rem); }
+.trat-topo2__texto { justify-self: end; text-align: right; }
+.trat-topo2__texto .trat-corpo { margin-left: auto; }
+.trat-topo2__texto.is-amarelo { color: var(--jd-yellow); font-weight: 650; }
+.trat #sobre .trat-topo2__texto.is-amarelo { color: #d9a400; }
+
+/* Tom: tópico menor, vídeo 20% menor e a pílula de aviso numa linha só */
+.trat #tom .trat-cabecalho--topico .trat-eyebrow { font-size: clamp(2.2rem, 4.6vw, 4.6rem); }
+.trat #tom .trat-yt { width: 80%; justify-self: center; justify-items: center; }
+.trat #tom .trat-yt__quadro { width: 100%; }
+.trat-aviso {
+  display: inline-flex; align-items: center; gap: .55em; max-width: 100%;
+  padding: .55em 1.1em; border-radius: 999px;
+  background: #000; color: var(--jd-yellow);
+  font-size: clamp(.6rem, .92vw, .95rem); font-weight: 650; line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 .6rem 1.4rem -.6rem #000a;
+}
+.trat-aviso strong { color: #ff3b30; font-weight: 850; letter-spacing: .02em; }
+.trat-aviso .trat-aviso__icone { width: 1.5em; height: 1.5em; background: #ff3b30; color: #fff; font-size: 1em; }
+
+/* bloco 2: imagens pela metade, em duas colunas; depois três girando */
+.trat-faixa--menor { width: min(100%, 52rem); justify-self: center; }
+.trat-carrossel {
+  display: grid; grid-template-columns: repeat(min(var(--itens), 3), minmax(0, 1fr));
+  gap: clamp(.8rem, 2vw, 1.6rem); align-items: center;
+  width: min(100%, 62rem); justify-self: center; padding-block: 1.5rem;
+}
+.trat-carrossel__item { transform: scale(.9); opacity: .62; transition: transform .7s cubic-bezier(.22, 1, .36, 1), opacity .7s ease, filter .7s ease; filter: saturate(.8); }
+.trat-carrossel__item.is-centro { transform: scale(1.14); opacity: 1; filter: none; z-index: 1; }
+.trat-carrossel__item.is-centro .trat-midia { box-shadow: 0 0 0 2px var(--jd-yellow), 0 0 2.4rem rgb(255 222 0 / 45%), 0 1.4rem 2.6rem -1rem #000c; }
+
+/* bloco 3: produtor do café em evidência; o segundo texto numa linha, centralizado */
+.trat-faixa--cafe { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+.trat-linha {
+  margin: 0; justify-self: center; max-width: 100%;
+  font-size: min(1.08vw, 1.15rem); font-weight: 600; line-height: 1.4;
+  text-align: center; white-space: nowrap;
+}
+.trat-sugestao--lado .trat-falas { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; align-items: stretch; }
+.trat-sugestao--lado .trat-falas blockquote { margin-inline-start: 0; }
+
+@media (max-width: 899px) {
+  .trat-topo2, .trat-faixa--cafe, .trat-sugestao--lado .trat-falas { grid-template-columns: minmax(0, 1fr); }
+  .trat-topo2__texto { justify-self: start; text-align: left; }
+  .trat #tom .trat-yt { width: 100%; }
+  .trat-linha { white-space: normal; font-size: 1rem; }
+  .trat-aviso { white-space: normal; border-radius: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trat-ondas { animation: none; }
+  .trat-carrossel__item { transition: none; }
+}
