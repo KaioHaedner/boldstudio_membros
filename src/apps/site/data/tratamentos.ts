@@ -21,7 +21,16 @@ export type BlocoTexto = {
   titulo: string
   paragrafos: string[]
   exemplo?: { fala: string; texto: string }[]
+  // rótulo que deixa claro que as falas são sugestão, e a frase que as apresenta
+  sugestao?: { rotulo: string; intro?: string }
   video?: string
+  // aviso mostrado antes do vídeo (e por cima dele, por alguns segundos)
+  aviso?: string
+  // quantas mídias entram depois de cada parágrafo; "ultima" põe a última do
+  // grupo em tela cheia (a de destaque), o padrão é a primeira
+  grupos?: { n: number; cheia?: 'primeira' | 'ultima' | 'todas' }[]
+  // nota de rodapé no fim do bloco, sem imagem
+  nota?: string
   midias: string[]
 }
 
@@ -37,6 +46,8 @@ const DIMENSOES: Record<number, [number, number, 'video' | 'imagem']> = {
   25: [1432, 805, 'imagem'], 26: [720, 312, 'video'], 27: [1432, 932, 'imagem'], 28: [854, 348, 'video'],
   29: [852, 480, 'video'], 30: [720, 406, 'video'], 31: [720, 406, 'video'], 32: [854, 480, 'video'],
   33: [1432, 597, 'imagem'], 34: [854, 364, 'video'], 35: [1432, 537, 'imagem'],
+  // referências de direção de fotografia (versão final do documento)
+  41: [1429, 604, 'imagem'], 42: [1430, 608, 'imagem'], 43: [1429, 994, 'imagem'], 44: [1432, 568, 'imagem'], 45: [1429, 804, 'imagem'],
 }
 
 export const MIDIAS: Record<string, Midia> = Object.fromEntries(
@@ -55,7 +66,14 @@ export const MIDIAS: Record<string, Midia> = Object.fromEntries(
 
 const seq = (de: number, ate: number) => Array.from({ length: ate - de + 1 }, (_, i) => `m${de + i}`)
 
-export const CLIENTE = 'John Deere'
+// Slide "Sobre nós", entre a logo da Bold e o trator
+export const SOBRE = {
+  eyebrow: 'Sobre nós',
+  titulo: 'Nascidos no agro!',
+  texto:
+    'Viemos do celeiro do Brasil, temos o pé no chão da fazenda, entendemos a linguagem e vivemos os desafios desse ambiente todos os dias.',
+  foto: '/tratamento/john-deere/sobre-bold.webp',
+}
 
 export const CAPA = {
   titulo: 'Tratamento de roteiro',
@@ -65,16 +83,18 @@ export const CAPA = {
   midia: 'm1',
 }
 
+// Textos conforme a versão final do documento do Pedro (só a grafia corrigida).
 export const BLOCOS: BlocoTexto[] = [
   {
     id: 'tom',
     menu: 'Tom',
-    eyebrow: 'Tom e storytelling',
-    titulo: 'Reality com roupagem de documentário',
+    eyebrow: 'Tom & Storytelling',
+    titulo: 'Reality com cara de documentário',
     paragrafos: [
       'A ideia central é desenvolver um roteiro de blocos fixos que embalem e deem ritmo ao formato de reality, mas com uma roupagem de documentário padrão Netflix.',
-      'Os blocos se alternam entre cenas mais elaboradas (montadas), como os depoimentos, e momentos de câmera viva acompanhando os personagens entre as transições de cenários e momentos.',
+      'Os blocos se alternam entre cenas mais elaboradas (montadas), como os depoimentos, e momentos de “câmera viva” acompanhando os personagens entre as transições de cenários e momentos.',
     ],
+    aviso: 'O vídeo abaixo não representa o pace/ritmo que queremos desenvolver, mas tem fotografia e ângulos que mostram bem nossa visão.',
     video: 'I19VL_2BruA',
     midias: [],
   },
@@ -83,10 +103,7 @@ export const BLOCOS: BlocoTexto[] = [
     menu: 'Bloco 1',
     eyebrow: 'Bloco 1',
     titulo: 'Chamada Kellen',
-    paragrafos: [
-      'Muitos grafismos, dados e imagens complementares. Ganchos visuais e retenção.',
-      'Ela entrega a ação para o Michel com algo como:',
-    ],
+    paragrafos: ['Muitos grafismos, dados e imagens complementares. Ganchos visuais e retenção.'],
     exemplo: [
       {
         fala: 'Kellen',
@@ -94,6 +111,7 @@ export const BLOCOS: BlocoTexto[] = [
           'Mas tudo isso é teoria, expectativa. Agora vocês vão poder ver isso no mundo real, no dia a dia do produtor de verdade. E tem alguém que vai experienciar na pele esses desafios também. Michel, já chegou na fazenda do nosso parceiro?',
       },
     ],
+    sugestao: { rotulo: 'Sugestão de fala de fechamento para Kellen', intro: 'Ela entrega a ação para o Michel com algo como:' },
     video: 'nSBbX5gn1Lg',
     midias: [],
   },
@@ -104,8 +122,9 @@ export const BLOCOS: BlocoTexto[] = [
     titulo: 'Chegada do Michel',
     paragrafos: [
       'Iniciamos com uma montagem contextualizando onde o Michel está chegando. Cortes rápidos e poucas cenas, apenas para dar dinamismo à primeira parte da Kellen, que é mais estática.',
-      'A entrada do Michel é dentro do carro, falando rapidamente sobre a fazenda que estamos chegando. Seguimos com a chegada dele em si, sendo recebido e cumprimentando o produtor (e família, caso participem).',
+      'A entrada do Michel é dentro do carro, falando rapidamente sobre a fazenda a que estamos chegando. Seguimos com a chegada dele em si, sendo recebido e cumprimentando o produtor (e a família, caso participem).',
     ],
+    grupos: [{ n: 2 }, { n: 3 }],
     midias: seq(2, 6),
   },
   {
@@ -114,27 +133,32 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 3',
     titulo: 'Café com o produtor',
     paragrafos: [
-      'Introdução à fazenda, em depoimento. Aqui temos a primeira conversa com o produtor (e família, caso queiram). Imaginamos uma sala da sede ou uma área externa mais aconchegante. A ideia é ter o produtor apresentando um breve relato da sua história e da propriedade.',
+      'Introdução à fazenda, em depoimento. Aqui temos a primeira conversa com o produtor (e a família, caso queiram). Imaginamos uma sala da sede ou uma área externa mais aconchegante. A ideia é termos o produtor apresentando um breve relato da sua história e da propriedade.',
       'Cobrimos com b-rolls da fazenda e do produtor no seu dia a dia. Não aprofundamos nos desafios ainda: aqui entra a história para humanizar o convidado.',
     ],
     exemplo: [
       { fala: 'Michel', texto: 'Seu João, conta pra gente um pouquinho da sua história e da sua família no agro e sobre essa propriedade linda em que a gente está.' },
-      { fala: 'Seu João', texto: 'Minha família veio para a região em 1970, vindos do sul tentando uma vida melhor… hoje a propriedade tem XXX hectares, plantamos soja, milho e temos XX cabeças de gado…' },
+      { fala: 'Seu João', texto: 'Minha família veio para a região em 1970, vindos do sul tentando uma vida melhor… Hoje a propriedade tem XXX hectares, plantamos soja, milho e temos XX cabeças de gado.' },
       { fala: 'Michel', texto: 'Será que o senhor pode me levar pra conhecer melhor seu dia a dia?' },
     ],
-    midias: seq(7, 14),
+    sugestao: { rotulo: 'Sugestão de conversa' },
+    // depois do 1º texto: a conversa na mesa, as mulheres e, em destaque, o
+    // rapaz no milharal; depois do 2º: o dia a dia, com destaque no primeiro
+    grupos: [{ n: 3, cheia: 'ultima' }, { n: 5 }],
+    midias: ['m13', 'm14', 'm9', 'm10', 'm7', 'm8', 'm11', 'm12'],
   },
   {
     id: 'b4',
     menu: 'Bloco 4',
     eyebrow: 'Bloco 4',
-    titulo: 'Vivendo na pele',
+    titulo: 'Entendendo os desafios, vivendo na pele',
     paragrafos: [
-      'Entendendo os desafios. Câmera na mão, movimento e uma troca mais espontânea entre os protagonistas.',
-      'Seguimos para a lida do dia a dia, conhecendo melhor a fazenda e entendendo os desafios que o produtor enfrenta (focando no assunto do episódio), com os protagonistas passando por vários locais e situações.',
-      'Iniciamos os inserts de depoimentos entrando no meio das situações para pontuar algo importante ou criar um gancho de atenção, bem no estilo reality.',
-      'Aqui podemos introduzir o especialista John Deere para já fazer o tour pela propriedade, ou ele entra logo depois com a solução.',
+      'Câmera na mão, movimento e uma troca mais espontânea entre os protagonistas.',
+      'Seguimos para a “lida” do dia a dia, conhecendo melhor a fazenda e entendendo os desafios que o produtor enfrenta (focando no assunto do episódio), com os protagonistas passando por vários locais e situações.',
+      'Iniciamos os inserts de depoimentos “entrando” no meio das situações para pontuar algo importante ou criar um gancho de atenção, bem no estilo reality.',
     ],
+    nota: 'Aqui podemos introduzir o especialista John Deere para já fazer o tour pela propriedade, ou ele entra logo depois com a solução.',
+    grupos: [{ n: 3 }, { n: 3 }, { n: 6, cheia: 'todas' }],
     midias: seq(15, 26),
   },
   {
@@ -143,9 +167,9 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 5',
     titulo: 'Criação do plano',
     paragrafos: [
-      'Voltamos para o ambiente da casa ou sala de reunião da fazenda. Hora de uma montagem dinâmica mostrando o planejamento que vai trazer as soluções que a John Deere pode oferecer para ajudar nosso produtor.',
+      'Voltamos para o ambiente da casa ou sala de reunião da fazenda. Hora de uma montagem dinâmica mostrando o planejamento e como as soluções da John Deere podem ajudar nosso produtor.',
     ],
-    midias: seq(27, 31),
+    midias: ['m28', 'm29', 'm27', 'm30', 'm31'],
   },
   {
     id: 'b6',
@@ -155,50 +179,48 @@ export const BLOCOS: BlocoTexto[] = [
     paragrafos: [
       'Colocamos à prova o plano traçado pelo especialista, sempre exaltando e valorizando os produtos Deere, com hero shots e entrada de depoimentos para contextualizar informações importantes de como cada processo vai ajudar no resultado.',
     ],
-    midias: seq(32, 35),
+    midias: ['m33', 'm34', 'm35'],
   },
   {
     id: 'b7',
     menu: 'Bloco 7',
     eyebrow: 'Bloco 7',
     titulo: 'Resultado e legado',
-    paragrafos: ['Em construção. Este bloco entra assim que o roteiro dele estiver fechado.'],
+    paragrafos: [
+      'Fechamento do episódio: conversa entre Michel e o produtor falando sobre as mudanças feitas, com entrada de depoimentos do especialista. Finalizamos com Michel entrando na caminhonete e fazendo um convite para o próximo episódio, deixando o clima de suspense de para onde ele vai (ou já usando um pequeno teaser do próximo).',
+    ],
     midias: [],
   },
 ]
 
 export const CAMERA = {
-  eyebrow: 'Linguagem de câmera e DP',
-  titulo: 'Câmera viva, imagem de cinema',
+  eyebrow: 'Linguagem de câmera',
+  titulo: 'Câmera livre, imagem de cinema',
   itens: [
-    'Handheld para movimento mais vivo, levando a sensação ao espectador',
+    'Handheld: movimento vivo, o espectador se sente na ação',
     'Agilidade com qualidade de imagem',
     'Volume de b-rolls diversos (POVs são uma ideia bacana)',
-    'Depoimentos e cenas montadas, com ângulos subjetivos: o espectador é mais uma pessoa na sala',
+    'Depoimentos e cenas “montadas”, com ângulos subjetivos: o espectador é mais uma pessoa na “sala”',
     'Cinematografia high end, com master shots',
   ],
+}
+
+export const FOTOGRAFIA = {
+  eyebrow: 'Direção de fotografia',
+  titulo: 'Textura de cinema, tons quentes',
+  texto:
+    'Textura cinematográfica, tons quentes e cores vivas. A ideia aqui é seguir uma uniformidade com o próprio material publicado pela John Deere recentemente (Você e John Deere. Uma só força.).',
+  midias: ['m41', 'm42', 'm43', 'm44', 'm45'],
 }
 
 export const SOM = {
   eyebrow: 'Trilha e SFX',
   titulo: 'O campo também se escuta',
   itens: [
-    { nome: 'Trilha geral', texto: 'Pano de fundo, sem roubar a cena. Folk, viola, instrumental de cordas mais country.' },
-    { nome: 'SFX', texto: 'É aqui que construímos a identidade e a ambiência: imersão do espectador com os sons naturais do dia a dia do campo.' },
+    { nome: 'Trilha geral', texto: 'Pano de fundo: não queremos ela roubando a cena, e sim complementando as situações. Folk, viola, instrumental de cordas mais country.' },
+    { nome: 'SFX', texto: 'É aqui que construímos a identidade e a ambiência. Imersão do espectador com sons naturais do dia a dia do campo.' },
   ],
 }
-
-export const ARTE = [
-  { nome: 'Direção de arte', texto: 'Ponto a se discutir' },
-  { nome: 'Stills', texto: 'Em aberto' },
-]
-
-export const REFERENCIAS = [
-  { nome: 'Vídeo de referência', url: 'https://www.youtube.com/watch?v=I19VL_2BruA' },
-  { nome: 'Nothing but Lilydale will do', url: 'https://www.adsoftheworld.com/campaigns/nothing-but-lilydale-will-do' },
-  { nome: 'The Cycle of Tomorrow (Fleur Dyer)', url: 'https://frameset.app/search/director/fleur-dyer/the-cycle-of-tomorrow' },
-  { nome: 'Sadia Bio (GNT)', url: 'https://frameset.app/search/brand/gnt/sadia-bio' },
-]
 
 export const LINKS_BOLD = [
   { marca: 'site', nome: 'Site da Bold', texto: 'boldstudiobrasil.com', url: 'https://boldstudiobrasil.com' },
@@ -207,12 +229,64 @@ export const LINKS_BOLD = [
   { marca: 'email', nome: 'E-mail', texto: 'bold@boldstudiobrasil.com', url: 'mailto:bold@boldstudiobrasil.com' },
 ]
 
-// imagem de fundo dos trechos do layout "tratores"
-export const FUNDOS_TRATORES = [
-  '/apresentacao/john-deere/colheitadeira.webp',
-  '/apresentacao/john-deere/campo-aereo.webp',
-  '/apresentacao/john-deere/cabine-operador.webp',
-  '/apresentacao/john-deere/trator-campo.webp',
-]
-
 export const AGRADECIMENTO_MIDIA = 'm9'
+
+export type EstadoTratamento = { ordem: Record<string, string[]>; ocultas: string[] }
+
+const ORDEM_ANTIGA: Record<string, string> = {
+  b3: 'm7,m8,m9,m10,m11,m12,m13,m14',
+  b5: 'm27,m28,m29,m30,m31',
+}
+
+export const estadoTratamentoInicial = (): EstadoTratamento => ({
+  ordem: Object.fromEntries(BLOCOS.map((b) => [b.id, [...b.midias]])),
+  ocultas: [],
+})
+
+export function normalizarEstadoTratamento(bruto: unknown): EstadoTratamento {
+  const base = estadoTratamentoInicial()
+  if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) return base
+  const ordemBruta = (bruto as { ordem?: unknown }).ordem
+  if (!ordemBruta || typeof ordemBruta !== 'object' || Array.isArray(ordemBruta)) return base
+  const ordemLegada = (bruto as { versao?: number }).versao !== 2
+
+  const ordem: Record<string, string[]> = {}
+  const usados = new Set<string>()
+
+  for (const b of BLOCOS) {
+    const lista = Object.hasOwn(ordemBruta, b.id) ? (ordemBruta as Record<string, unknown>)[b.id] : undefined
+    const validos: string[] = []
+    if (Array.isArray(lista)) {
+      for (const id of lista) {
+        if (typeof id === 'string' && Object.hasOwn(MIDIAS, id) && !usados.has(id)) {
+          validos.push(id)
+          usados.add(id)
+        }
+      }
+    }
+    if (ordemLegada && validos.join(',') === ORDEM_ANTIGA[b.id]) {
+      validos.forEach((id) => usados.delete(id))
+      const migrados = base.ordem[b.id].filter((id) => !usados.has(id))
+      migrados.forEach((id) => usados.add(id))
+      ordem[b.id] = migrados
+    } else {
+      ordem[b.id] = validos
+    }
+  }
+
+  for (const b of BLOCOS) {
+    for (const id of base.ordem[b.id]) {
+      if (!usados.has(id)) {
+        ordem[b.id].push(id)
+        usados.add(id)
+      }
+    }
+  }
+
+  const ocultasBrutas = (bruto as { ocultas?: unknown }).ocultas
+  const ocultas = Array.isArray(ocultasBrutas)
+    ? Array.from(new Set(ocultasBrutas.filter((id): id is string => typeof id === 'string' && Object.hasOwn(MIDIAS, id))))
+    : []
+
+  return { ordem, ocultas }
+}

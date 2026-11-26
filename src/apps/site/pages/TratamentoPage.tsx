@@ -1,30 +1,45 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { Navigate, useParams, useSearchParams } from 'react-router-dom'
+import { SlidersHorizontal, X } from 'lucide-react'
+import { useBioButtonAuras } from '@/shared/hooks/useBioButtonAuras'
+import { useTratamentoMotion } from './useTratamentoMotion'
+import './TratamentoPage.css'
 import {
-  AGRADECIMENTO_MIDIA,
-  ARTE,
   BLOCOS,
   CAMERA,
   CAPA,
-  FUNDOS_TRATORES,
+  FOTOGRAFIA,
   LINKS_BOLD,
   MIDIAS,
-  REFERENCIAS,
+  SOBRE,
   SOM,
+  estadoTratamentoInicial,
+  normalizarEstadoTratamento,
   type BlocoTexto,
+  type EstadoTratamento,
 } from '@/apps/site/data/tratamentos'
 
 // Só existe o tratamento da John Deere por enquanto; a rota já aceita o nome do
 // cliente para o próximo.
+const LOGO_BOLD = '/brand/bold-logo-apresentacao.png'
 const CLIENTES_OK = ['jhondeere']
 
 type Layout = 'tratores' | 'bold'
-type Estado = { ordem: Record<string, string[]>; ocultas: string[] }
+type SectionTone = 'white' | 'black' | 'yellow'
 
-const estadoInicial = (): Estado => ({
-  ordem: Object.fromEntries(BLOCOS.map((b) => [b.id, [...b.midias]])),
-  ocultas: [],
-})
+function isSectionTone(valor: string | undefined): valor is SectionTone {
+  return valor === 'white' || valor === 'black' || valor === 'yellow'
+}
+
+function lerEstadoSalvo(chave: string): EstadoTratamento {
+  try {
+    const bruto = localStorage.getItem(chave)
+    if (bruto) return normalizarEstadoTratamento(JSON.parse(bruto))
+  } catch {
+    /* sem armazenamento ou JSON inválido: segue com a ordem do documento */
+  }
+  return estadoTratamentoInicial()
+}
 
 // ---------- parallax ----------
 // Um único ouvinte de scroll para a página inteira: só mexe nos elementos que
@@ -34,16 +49,19 @@ function useParalaxe(raiz: RefObject<HTMLElement | null>, chave: string) {
     const raizEl = raiz.current
     if (!raizEl || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const visiveis = new Set<HTMLElement>()
+    const alvos = raizEl.querySelectorAll<HTMLElement>('[data-par]')
+    const capa = raizEl.querySelector<HTMLElement>('#capa')
     const io = new IntersectionObserver(
-      (entradas) =>
+      (entradas) => {
         entradas.forEach((e) => {
           const el = e.target as HTMLElement
           if (e.isIntersecting) visiveis.add(el)
           else visiveis.delete(el)
-        }),
+        })
+        pede()
+      },
       { rootMargin: '20% 0px' },
     )
-    raizEl.querySelectorAll<HTMLElement>('[data-par]').forEach((el) => io.observe(el))
     let quadro = 0
     const desenha = () => {
       quadro = 0
@@ -52,12 +70,26 @@ function useParalaxe(raiz: RefObject<HTMLElement | null>, chave: string) {
         const r = el.getBoundingClientRect()
         const p = (r.top + r.height / 2 - vh / 2) / vh
         const v = Number(el.dataset.vel || '1')
-        el.style.setProperty('--py', `${(-p * v * 50).toFixed(1)}px`)
+        const alcance = el.closest('#obrigado') ? 50 : 96
+        el.style.setProperty('--py', `${(-p * v * alcance).toFixed(1)}px`)
       })
     }
     const pede = () => {
       if (!quadro) quadro = requestAnimationFrame(desenha)
     }
+    const moveCapa = (event: PointerEvent) => {
+      if (!capa || event.pointerType === 'touch') return
+      const rect = capa.getBoundingClientRect()
+      capa.style.setProperty('--capa-x', `${((event.clientX - rect.left) / rect.width - .5) * 48}px`)
+      capa.style.setProperty('--capa-y', `${((event.clientY - rect.top) / rect.height - .5) * 36}px`)
+    }
+    const limpaCapa = () => {
+      capa?.style.removeProperty('--capa-x')
+      capa?.style.removeProperty('--capa-y')
+    }
+    alvos.forEach(el => io.observe(el))
+    capa?.addEventListener('pointermove', moveCapa, { passive: true })
+    capa?.addEventListener('pointerleave', limpaCapa)
     window.addEventListener('scroll', pede, { passive: true })
     window.addEventListener('resize', pede)
     pede()
@@ -66,6 +98,10 @@ function useParalaxe(raiz: RefObject<HTMLElement | null>, chave: string) {
       window.removeEventListener('resize', pede)
       cancelAnimationFrame(quadro)
       io.disconnect()
+      alvos.forEach(el => el.style.removeProperty('--py'))
+      capa?.removeEventListener('pointermove', moveCapa)
+      capa?.removeEventListener('pointerleave', limpaCapa)
+      limpaCapa()
     }
   }, [raiz, chave])
 }
@@ -86,17 +122,17 @@ function Midia({
   selecionada: boolean
   aoSelecionar: (id: string) => void
 }) {
-  const m = MIDIAS[id]
+  const m = Object.hasOwn(MIDIAS, id) ? MIDIAS[id] : undefined
   const videoRef = useRef<HTMLVideoElement>(null)
   useEffect(() => {
     const v = videoRef.current
-    if (!v) return
+    if (!v || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) void v.play().catch(() => {})
       else v.pause()
     })
     io.observe(v)
-    return () => io.disconnect()
+    return () => { io.disconnect(); v.pause() }
   }, [])
   if (!m) return null
   const vel = 0.7 + ((indice * 37) % 7) / 10
@@ -106,8 +142,10 @@ function Midia({
       style={{ aspectRatio: proporcao }}
       data-par
       data-vel={vel}
-      onClick={selecionavel ? () => aoSelecionar(id) : undefined}
+      data-motion-frame
+      data-midia={id}
     >
+      <div className="trat-midia__frame">
       <div className="trat-midia__inner">
         {m.tipo === 'video' ? (
           <video ref={videoRef} src={m.src} poster={m.poster} muted loop playsInline preload="none" draggable={false} />
@@ -115,59 +153,14 @@ function Midia({
           <img src={m.src} alt="" loading="lazy" decoding="async" draggable={false} />
         )}
       </div>
-      {selecionavel && <span className="trat-midia__selo">{id.replace('m', '')}</span>}
+      </div>
+      {selecionavel && (
+        <button type="button" className="trat-midia__escolher" aria-label={`Selecionar mídia ${id.slice(1)}`}
+          aria-pressed={selecionada} onClick={() => aoSelecionar(id)}>
+          <span className="trat-midia__selo" aria-hidden="true">{id.slice(1)}</span>
+        </button>
+      )}
     </figure>
-  )
-}
-
-// linhas do mosaico: cada linha define quantas mídias cabem e a proporção delas
-const LINHAS: { spans: number[]; proporcao: string }[] = [
-  { spans: [12], proporcao: '21 / 9' },
-  { spans: [6, 6], proporcao: '16 / 10' },
-  { spans: [4, 4, 4], proporcao: '5 / 4' },
-  { spans: [7, 5], proporcao: '4 / 3' },
-  { spans: [5, 7], proporcao: '4 / 3' },
-]
-
-function Mosaico({
-  ids,
-  selecionavel,
-  selecionada,
-  aoSelecionar,
-}: {
-  ids: string[]
-  selecionavel: boolean
-  selecionada: string | null
-  aoSelecionar: (id: string) => void
-}) {
-  const itens: { id: string; span: number; proporcao: string; indice: number }[] = []
-  let pos = 0
-  let l = 0
-  while (pos < ids.length) {
-    const modelo = LINHAS[l % LINHAS.length]
-    const restante = ids.length - pos
-    const spans = modelo.spans.length <= restante ? modelo.spans : Array(restante).fill(12 / restante)
-    spans.forEach((span) => {
-      itens.push({ id: ids[pos], span, proporcao: modelo.proporcao, indice: pos })
-      pos += 1
-    })
-    l += 1
-  }
-  return (
-    <div className="trat-mosaico">
-      {itens.map((it) => (
-        <div key={it.id} style={{ gridColumn: `span ${it.span}` }}>
-          <Midia
-            id={it.id}
-            proporcao={it.span === 12 && ids.length > 1 && it.indice > 0 ? '21 / 9' : it.proporcao}
-            indice={it.indice}
-            selecionavel={selecionavel}
-            selecionada={selecionada === it.id}
-            aoSelecionar={aoSelecionar}
-          />
-        </div>
-      ))}
-    </div>
   )
 }
 
@@ -185,54 +178,68 @@ let apiYT: Promise<YTGlobal> | null = null
 function carregarApiYT(): Promise<YTGlobal> {
   if (window.YT?.Player) return Promise.resolve(window.YT)
   if (!apiYT) {
-    apiYT = new Promise((ok) => {
+    apiYT = new Promise((ok, falhou) => {
       const anterior = window.onYouTubeIframeAPIReady
       window.onYouTubeIframeAPIReady = () => {
         anterior?.()
-        if (window.YT) ok(window.YT)
+        if (window.YT?.Player) ok(window.YT)
       }
       const s = document.createElement('script')
       s.src = 'https://www.youtube.com/iframe_api'
+      s.onerror = () => {
+        apiYT = null
+        falhou(new Error('Falha ao carregar YouTube IFrame API'))
+      }
       document.head.appendChild(s)
     })
   }
   return apiYT
 }
 
-function VideoYouTube({ id }: { id: string }) {
+const AVISO_SEGUNDOS = 4
+
+function VideoYouTube({ id, aviso }: { id: string; aviso?: string }) {
   const [ativo, setAtivo] = useState(false)
-  const [titulo, setTitulo] = useState('')
   const [capa, setCapa] = useState(`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`)
   const alvoRef = useRef<HTMLDivElement>(null)
+  const quadroRef = useRef<HTMLDivElement>(null)
+  // o aviso cobre o vídeo com blur na primeira vez que ele aparece na tela e
+  // some sozinho depois de alguns segundos
+  const [avisoNaTela, setAvisoNaTela] = useState<'espera' | 'mostrando' | 'liberado'>(aviso ? 'espera' : 'liberado')
 
   useEffect(() => {
-    let vivo = true
-    fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}&format=json`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j: { title?: string } | null) => {
-        if (vivo && j?.title) setTitulo(j.title)
-      })
-      .catch(() => {})
-    return () => {
-      vivo = false
-    }
-  }, [id])
+    const el = quadroRef.current
+    if (!el || avisoNaTela !== 'espera') return
+    let timer = 0
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return
+      io.disconnect()
+      setAvisoNaTela('mostrando')
+      timer = window.setTimeout(() => setAvisoNaTela('liberado'), AVISO_SEGUNDOS * 1000)
+    }, { threshold: 0.55 })
+    io.observe(el)
+    return () => { io.disconnect(); window.clearTimeout(timer) }
+  }, [avisoNaTela])
 
   useEffect(() => {
     if (!ativo || !alvoRef.current) return
     let player: YTPlayer | null = null
     let vivo = true
-    void carregarApiYT().then((YT) => {
-      if (!vivo || !alvoRef.current) return
-      const el = document.createElement('div')
-      alvoRef.current.appendChild(el)
-      player = new YT.Player(el, {
-        videoId: id,
-        width: '100%',
-        height: '100%',
-        playerVars: { autoplay: 1, rel: 0, modestbranding: 1, playsinline: 1 },
+    void carregarApiYT()
+      .then((YT) => {
+        if (!vivo || !alvoRef.current) return
+        const el = document.createElement('div')
+        alvoRef.current.appendChild(el)
+        player = new YT.Player(el, {
+          videoId: id,
+          width: '100%',
+          height: '100%',
+          playerVars: { autoplay: 1, rel: 0, modestbranding: 1, playsinline: 1 },
+        })
       })
-    })
+      .catch(() => {
+        if (vivo) setAtivo(false)
+      })
     return () => {
       vivo = false
       player?.destroy()
@@ -241,20 +248,31 @@ function VideoYouTube({ id }: { id: string }) {
 
   return (
     <div className="trat-yt">
-      <div className="trat-yt__quadro">
+      {aviso && (
+        <p className="trat-aviso">
+          <span className="trat-aviso__icone" aria-hidden="true">!</span>
+          <span><strong>Importante!</strong> {aviso}</span>
+        </p>
+      )}
+      <div className="trat-yt__quadro" ref={quadroRef}>
+        {aviso && avisoNaTela !== 'liberado' && (
+          <div className={`trat-yt__aviso${avisoNaTela === 'mostrando' ? ' is-on' : ''}`} style={{ '--aviso-s': `${AVISO_SEGUNDOS}s` } as CSSProperties}
+            role="note">
+            <span className="trat-aviso__icone" aria-hidden="true">!</span>
+            <strong>Importante!</strong>
+            <p>{aviso}</p>
+            <i aria-hidden="true" />
+          </div>
+        )}
         {ativo ? (
           <div ref={alvoRef} className="trat-yt__player" />
         ) : (
           <button type="button" className="trat-yt__capa" onClick={() => setAtivo(true)} aria-label="Reproduzir vídeo">
-            <img src={capa} alt="" onError={() => setCapa(`https://i.ytimg.com/vi/${id}/hqdefault.jpg`)} />
+            <img src={capa} alt="" loading="lazy" onError={() => setCapa(`https://i.ytimg.com/vi/${id}/hqdefault.jpg`)} />
             <span className="trat-yt__play" aria-hidden="true" />
           </button>
         )}
       </div>
-      {titulo && <p className="trat-yt__titulo">{titulo}</p>}
-      <a className="trat-yt__link" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener noreferrer">
-        youtube.com/watch?v={id}
-      </a>
     </div>
   )
 }
@@ -299,113 +317,150 @@ function IconeMarca({ tipo }: { tipo: string }) {
   )
 }
 
-// ---------- textos ----------
-function Titulo({ texto }: { texto: string }) {
+function Secao({ id, tone, children }: { id: string; tone: SectionTone; children: React.ReactNode }) {
   return (
-    <h2 className="trat-titulo">
-      {texto.split(' ').map((p, i, arr) => (
-        <Fragment key={i}>
-          <span className="trat-palavra">
-            <span style={{ '--i': i } as CSSProperties}>{p}</span>
-          </span>
-          {i < arr.length - 1 ? ' ' : null}
-        </Fragment>
-      ))}
-    </h2>
-  )
-}
-
-function Secao({
-  id,
-  indice,
-  layout,
-  clara,
-  children,
-}: {
-  id: string
-  indice: number
-  layout: Layout
-  clara?: boolean
-  children: React.ReactNode
-}) {
-  const ref = useRef<HTMLElement>(null)
-  const [visivel, setVisivel] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && setVisivel(true), { threshold: 0.12 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  const tom = clara ? 'b' : 'a'
-  return (
-    <section
-      id={id}
-      ref={ref}
-      className={`trat-secao trat-secao--${tom}${visivel ? ' is-visivel' : ''}`}
-    >
-      {layout === 'tratores' && !clara && (
-        <img className="trat-secao__fundo" src={FUNDOS_TRATORES[indice % FUNDOS_TRATORES.length]} alt="" loading="lazy" decoding="async" />
-      )}
+    <section id={id} className="trat-secao" data-trat-tone={tone}>
       <div className="trat-secao__miolo">{children}</div>
     </section>
   )
 }
 
+function Titulo({ texto }: { texto: string }) {
+  return <h2 className="trat-titulo">{texto}</h2>
+}
+
+function Texto({ partes }: { partes: string[] }) {
+  return (
+    <div className="trat-corpo">
+      {partes.map((texto, indice) => <p key={indice}>{texto}</p>)}
+    </div>
+  )
+}
+
+function Falas({ falas }: { falas: NonNullable<BlocoTexto['exemplo']> }) {
+  return (
+    <div className="trat-falas">
+      {falas.map(({ fala, texto }, indice) => (
+        <blockquote key={indice}>
+          <strong>{fala}</strong>
+          <p>{texto}</p>
+        </blockquote>
+      ))}
+    </div>
+  )
+}
+
+// Mídias grandes: no máximo duas por linha. A de destaque ocupa a largura toda.
+function Galeria({ ids, cheia = 'primeira', render }: {
+  ids: string[]
+  cheia?: 'primeira' | 'ultima' | 'todas'
+  render: (id: string, indice: number) => React.ReactNode
+}) {
+  if (ids.length === 0) return null
+  const linhas: string[][] = []
+  if (cheia === 'todas') ids.forEach(id => linhas.push([id]))
+  else {
+    const resto = [...ids]
+    const destaque = cheia === 'ultima' ? resto.pop() : resto.shift()
+    if (cheia === 'primeira' && destaque) linhas.push([destaque])
+    while (resto.length) linhas.push(resto.length === 1 ? [resto.shift()!] : [resto.shift()!, resto.shift()!])
+    if (cheia === 'ultima' && destaque) linhas.push([destaque])
+  }
+  let n = 0
+  return (
+    <div className="trat-galeria">
+      {linhas.map((linha, i) => (
+        <div key={i} className="trat-faixa" style={{ '--colunas': linha.length } as CSSProperties}>
+          {linha.map(id => render(id, n++))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Sugestao({ rotulo, intro, falas, solta }: {
+  rotulo: string
+  intro?: string
+  falas: NonNullable<BlocoTexto['exemplo']>
+  solta?: boolean
+}) {
+  return (
+    <div className={`trat-sugestao${solta ? ' trat-sugestao--solta' : ''}`}>
+      <p className="trat-sugestao__rotulo">
+        {solta && <span className="trat-sugestao__seta" aria-hidden="true">←</span>}
+        {rotulo}
+      </p>
+      {intro && <p className="trat-sugestao__intro">{intro}</p>}
+      <Falas falas={falas} />
+    </div>
+  )
+}
+
 function BlocoView({
-  bloco,
-  indice,
-  layout,
-  ids,
-  controle,
-  selecionada,
-  aoSelecionar,
+  bloco, ids, controle, selecionada, aoSelecionar,
 }: {
   bloco: BlocoTexto
-  indice: number
-  layout: Layout
   ids: string[]
   controle: boolean
   selecionada: string | null
   aoSelecionar: (id: string) => void
 }) {
-  const temMidia = ids.length > 0 || controle
-  const temLado = temMidia || !!bloco.video
-  return (
-    <Secao id={bloco.id} indice={indice} layout={layout} clara={indice % 2 === 1}>
-      <div className={temLado ? 'trat-duas' : 'trat-uma'}>
-        <div className="trat-texto">
-          <p className="trat-eyebrow">{bloco.eyebrow}</p>
-          <span className="trat-traco" />
-          <Titulo texto={bloco.titulo} />
-          <div className="trat-corpo">
-            {bloco.paragrafos.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-            {bloco.exemplo && (
-              <div className="trat-falas">
-                {bloco.exemplo.map((f, i) => (
-                  <p key={i}>
-                    <strong>{f.fala}</strong>
-                    {f.texto}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
+  const midia = (id: string, indice: number) => {
+    const item = Object.hasOwn(MIDIAS, id) ? MIDIAS[id] : undefined
+    if (!item) return null
+    return (
+      <Midia key={id} id={id} proporcao="16 / 9" indice={indice}
+        selecionavel={controle} selecionada={selecionada === id} aoSelecionar={aoSelecionar} />
+    )
+  }
+  const topoEmDestaque = bloco.id === 'tom'
+  const cabecalho = (
+    <header className={`trat-cabecalho${topoEmDestaque ? ' trat-cabecalho--topico' : ''}`}>
+      <p className="trat-eyebrow">{bloco.eyebrow}</p>
+      <Titulo texto={bloco.titulo} />
+    </header>
+  )
+  const video = bloco.video && <VideoYouTube key={bloco.video} id={bloco.video} aviso={bloco.aviso} />
+  const sugestao = bloco.exemplo && bloco.sugestao && (
+    <Sugestao rotulo={bloco.sugestao.rotulo} intro={bloco.sugestao.intro} falas={bloco.exemplo} solta={bloco.id === 'b1'} />
+  )
+
+  // texto e imagens intercalados: cada parágrafo traz logo abaixo as imagens dele
+  const grupos = bloco.grupos
+  let corpo: React.ReactNode
+  if (grupos && grupos.length) {
+    let pos = 0
+    corpo = bloco.paragrafos.map((p, i) => {
+      const g = grupos[i]
+      const fatia = g ? ids.slice(pos, pos + g.n) : []
+      pos += g ? g.n : 0
+      const ultimo = i === bloco.paragrafos.length - 1
+      return (
+        <div className="trat-trecho" key={i}>
+          <Texto partes={[p]} />
+          <Galeria ids={ultimo ? [...fatia, ...ids.slice(pos)] : fatia} cheia={g?.cheia} render={midia} />
         </div>
-        {temLado && (
-          <div className="trat-lado">
-            {bloco.video && <VideoYouTube id={bloco.video} />}
-            {temMidia && (
-              <Mosaico ids={ids} selecionavel={controle} selecionada={selecionada} aoSelecionar={aoSelecionar} />
-            )}
-            {controle && ids.length === 0 && !bloco.video && (
-              <p className="trat-vazio">Sem mídia neste bloco. Selecione uma e mande para cá pelo controle.</p>
-            )}
-          </div>
-        )}
-      </div>
+      )
+    })
+  } else {
+    corpo = (
+      <>
+        <Texto partes={bloco.paragrafos} />
+        {bloco.id === 'b1' ? (
+          <div className="trat-kellen">{video}{sugestao}</div>
+        ) : video}
+        <Galeria ids={ids} render={midia} />
+      </>
+    )
+  }
+
+  const tone = ['b1', 'b3', 'b5'].includes(bloco.id) ? 'yellow' : bloco.id === 'b4' ? 'white' : 'black'
+  return (
+    <Secao id={bloco.id} tone={tone}>
+      {cabecalho}
+      {corpo}
+      {bloco.id !== 'b1' && sugestao}
+      {bloco.nota && <p className="trat-nota">“{bloco.nota}”</p>}
     </Secao>
   )
 }
@@ -418,40 +473,51 @@ function Controle({
   aoMudar,
   selecionada,
   aoSelecionar,
+  aoLocalizar,
   fechar,
 }: {
   layout: Layout
   aoLayout: (l: Layout) => void
-  estado: Estado
-  aoMudar: (e: Estado) => void
+  estado: EstadoTratamento
+  aoMudar: (e: EstadoTratamento) => void
   selecionada: string | null
   aoSelecionar: (id: string | null) => void
+  aoLocalizar: (id: string) => void
   fechar: () => void
 }) {
   const [copiado, setCopiado] = useState(false)
-  const blocoDe = (id: string) => BLOCOS.find((b) => estado.ordem[b.id].includes(id))?.id
-  const atual = selecionada ? blocoDe(selecionada) : undefined
+  const timerRef = useRef<number>(0)
+  useEffect(() => () => window.clearTimeout(timerRef.current), [])
+
+  const atual = BLOCOS.find(b => selecionada && estado.ordem[b.id].includes(selecionada))
   const oculta = selecionada ? estado.ocultas.includes(selecionada) : false
+  const ordemAtual = atual ? estado.ordem[atual.id] : []
+  const visiveis = ordemAtual.filter(id => !estado.ocultas.includes(id))
+  const posicao = selecionada ? visiveis.indexOf(selecionada) : -1
+  const ocultasValidas = estado.ocultas.filter((id) => Object.hasOwn(MIDIAS, id))
 
   const mover = (delta: number) => {
-    if (!selecionada || !atual) return
-    const lista = [...estado.ordem[atual]]
+    if (!selecionada || !atual || posicao < 0) return
+    const vizinha = visiveis[posicao + delta]
+    if (!vizinha) return
+    const lista = [...ordemAtual]
     const i = lista.indexOf(selecionada)
-    const j = i + delta
-    if (j < 0 || j >= lista.length) return
+    const j = lista.indexOf(vizinha)
     ;[lista[i], lista[j]] = [lista[j], lista[i]]
-    aoMudar({ ...estado, ordem: { ...estado.ordem, [atual]: lista } })
+    aoMudar({ ...estado, ordem: { ...estado.ordem, [atual.id]: lista } })
+    aoLocalizar(selecionada)
   }
   const paraBloco = (destino: string) => {
-    if (!selecionada || !atual || destino === atual) return
+    if (!selecionada || !atual || destino === atual.id || !Object.hasOwn(estado.ordem, destino)) return
     aoMudar({
       ...estado,
       ordem: {
         ...estado.ordem,
-        [atual]: estado.ordem[atual].filter((x) => x !== selecionada),
+        [atual.id]: ordemAtual.filter((x) => x !== selecionada),
         [destino]: [...estado.ordem[destino], selecionada],
       },
     })
+    if (!oculta) aoLocalizar(selecionada)
   }
   const alternarOculta = (id: string) =>
     aoMudar({ ...estado, ocultas: estado.ocultas.includes(id) ? estado.ocultas.filter((x) => x !== id) : [...estado.ocultas, id] })
@@ -462,41 +528,60 @@ function Controle({
       null,
       2,
     )
-    void navigator.clipboard.writeText(texto).then(() => {
-      setCopiado(true)
-      window.setTimeout(() => setCopiado(false), 1800)
-    })
+    if (!navigator.clipboard?.writeText) return
+    void navigator.clipboard
+      .writeText(texto)
+      .then(() => {
+        setCopiado(true)
+        window.clearTimeout(timerRef.current)
+        timerRef.current = window.setTimeout(() => setCopiado(false), 1800)
+      })
+      .catch(() => {})
   }
 
   return (
     <aside className="trat-controle" aria-label="Controle de mídias">
       <header>
-        <strong>Controle</strong>
-        <button type="button" onClick={fechar} aria-label="Fechar controle">×</button>
+        <strong>Controle da apresentação</strong>
+        <button type="button" onClick={fechar} aria-label="Fechar controle"><X size={16} /></button>
       </header>
       <div className="trat-controle__grupo">
-        <span>Layout</span>
+        <span>Paleta</span>
         <div className="trat-controle__duo">
-          <button type="button" className={layout === 'tratores' ? 'is-on' : ''} onClick={() => aoLayout('tratores')}>Com tratores</button>
-          <button type="button" className={layout === 'bold' ? 'is-on' : ''} onClick={() => aoLayout('bold')}>Bold puro</button>
+          <button type="button" aria-pressed={layout === 'tratores'} className={layout === 'tratores' ? 'is-on' : ''} onClick={() => aoLayout('tratores')}>John Deere</button>
+          <button type="button" aria-pressed={layout === 'bold'} className={layout === 'bold' ? 'is-on' : ''} onClick={() => aoLayout('bold')}>Bold Studio</button>
         </div>
       </div>
       <div className="trat-controle__grupo">
-        <span>Mídia selecionada</span>
-        {selecionada && MIDIAS[selecionada] ? (
+        <label>
+          Mídia
+          <select value={selecionada ?? ''} onChange={event => {
+            const id = event.target.value
+            aoSelecionar(id || null)
+            if (id && !estado.ocultas.includes(id)) aoLocalizar(id)
+          }}>
+            <option value="">Selecione um quadro</option>
+            {BLOCOS.filter(b => estado.ordem[b.id].length > 0).map(b => (
+              <optgroup key={b.id} label={b.menu}>
+                {estado.ordem[b.id].map(id => <option key={id} value={id}>Quadro {id.slice(1)}{estado.ocultas.includes(id) ? ' (oculto)' : ''}</option>)}
+              </optgroup>
+            ))}
+          </select>
+        </label>
+        {selecionada && atual ? (
           <>
             <div className="trat-controle__sel">
               <img src={MIDIAS[selecionada].poster} alt="" />
               <b>{selecionada.replace('m', '#')}</b>
-              <small>{BLOCOS.find((b) => b.id === atual)?.menu}</small>
+              <small aria-live="polite">{atual.menu} · {oculta ? 'Oculto' : `${posicao + 1} de ${visiveis.length}`}</small>
             </div>
             <div className="trat-controle__duo">
-              <button type="button" onClick={() => mover(-1)}>← Antes</button>
-              <button type="button" onClick={() => mover(1)}>Depois →</button>
+              <button type="button" disabled={posicao <= 0} onClick={() => mover(-1)}>← Antes</button>
+              <button type="button" disabled={posicao < 0 || posicao === visiveis.length - 1} onClick={() => mover(1)}>Depois →</button>
             </div>
             <label>
-              Mandar para
-              <select value={atual} onChange={(e) => paraBloco(e.target.value)}>
+              Mover para
+              <select value={atual.id} onChange={(e) => paraBloco(e.target.value)}>
                 {BLOCOS.map((b) => (
                   <option key={b.id} value={b.id}>{b.menu} · {b.titulo}</option>
                 ))}
@@ -507,14 +592,14 @@ function Controle({
             </button>
           </>
         ) : (
-          <p>Clique em qualquer imagem ou GIF da página para escolher.</p>
+          <p>Selecione um quadro para mover ou ocultar.</p>
         )}
       </div>
-      {estado.ocultas.length > 0 && (
+      {ocultasValidas.length > 0 && (
         <div className="trat-controle__grupo">
-          <span>Escondidas ({estado.ocultas.length})</span>
+          <span>Escondidas ({ocultasValidas.length})</span>
           <div className="trat-controle__tira">
-            {estado.ocultas.map((id) => (
+            {ocultasValidas.map((id) => (
               <button key={id} type="button" onClick={() => alternarOculta(id)} title="Mostrar de novo">
                 <img src={MIDIAS[id].poster} alt="" />
               </button>
@@ -524,7 +609,7 @@ function Controle({
       )}
       <div className="trat-controle__duo">
         <button type="button" onClick={copiar}>{copiado ? 'Copiado' : 'Copiar ordem'}</button>
-        <button type="button" onClick={() => { aoMudar(estadoInicial()); aoSelecionar(null) }}>Restaurar</button>
+        <button type="button" onClick={() => { aoMudar(estadoTratamentoInicial()); aoSelecionar(null) }}>Restaurar</button>
       </div>
     </aside>
   )
@@ -536,34 +621,25 @@ export function TratamentoPage() {
   const [busca, setBusca] = useSearchParams()
   const layout: Layout = busca.get('layout') === 'bold' ? 'bold' : 'tratores'
   const limpo = busca.has('limpo')
-  const chaveSalva = `tratamento-${cliente}`
+  const chaveSalva = `tratamento-${cliente}-v3`
 
-  const [estado, setEstado] = useState<Estado>(() => {
-    try {
-      const salvo = JSON.parse(localStorage.getItem(chaveSalva) || 'null') as Estado | null
-      if (salvo?.ordem) {
-        // ids novos que não existiam quando a ordem foi salva voltam ao lugar original
-        const base = estadoInicial()
-        const usados = new Set(Object.values(salvo.ordem).flat())
-        for (const b of BLOCOS) {
-          salvo.ordem[b.id] = salvo.ordem[b.id] || []
-          base.ordem[b.id].forEach((id) => !usados.has(id) && salvo.ordem[b.id].push(id))
-        }
-        return { ordem: salvo.ordem, ocultas: salvo.ocultas || [] }
-      }
-    } catch {
-      /* sem armazenamento: segue com a ordem do documento */
-    }
-    return estadoInicial()
-  })
+  const [estadoPorChave, setEstadoPorChave] = useState<{ chave: string; estado: EstadoTratamento }>(() => ({
+    chave: chaveSalva,
+    estado: lerEstadoSalvo(chaveSalva),
+  }))
+  const estado = estadoPorChave.chave === chaveSalva ? estadoPorChave.estado : lerEstadoSalvo(chaveSalva)
+  const setEstado = (novoEstado: EstadoTratamento) => setEstadoPorChave({ chave: chaveSalva, estado: novoEstado })
+
   const [aberto, setAberto] = useState(false)
   const [selecionada, setSelecionada] = useState<string | null>(null)
+  const [localizar, setLocalizar] = useState<{ id: string } | null>(null)
   const raiz = useRef<HTMLDivElement>(null)
-  const finalRef = useRef<HTMLDivElement>(null)
+  const cameraAuras = useBioButtonAuras<HTMLDivElement>()
+  const [controlTone, setControlTone] = useState<SectionTone>('white')
 
   useEffect(() => {
     try {
-      localStorage.setItem(chaveSalva, JSON.stringify(estado))
+      localStorage.setItem(chaveSalva, JSON.stringify({ ...estado, versao: 2 }))
     } catch {
       /* ignora */
     }
@@ -582,22 +658,50 @@ export function TratamentoPage() {
     }
   }, [])
 
-  // o gradiente do rodapé nasce na metade do cartão de agradecimento
   useEffect(() => {
-    const fim = finalRef.current
-    const cartao = fim?.querySelector<HTMLElement>('.trat-obrigado')
-    if (!fim || !cartao) return
-    const ro = new ResizeObserver(() => fim.style.setProperty('--meio', `${cartao.offsetHeight / 2}px`))
-    ro.observe(cartao)
-    return () => ro.disconnect()
-  }, [])
+    const root = raiz.current
+    if (!root || limpo) return
+    let quadro = 0
+    const atualizar = () => {
+      quadro = 0
+      const ponto = window.innerHeight - 34
+      const secoes = Array.from(root.querySelectorAll<HTMLElement>('[data-trat-tone]'))
+      const secao = secoes.find(el => {
+        const rect = el.getBoundingClientRect()
+        return rect.top <= ponto && rect.bottom > ponto
+      })
+      if (!secao) { setControlTone('white'); return }
+      const rawTone = secao.dataset.tratTone
+      const tone: SectionTone = isSectionTone(rawTone) ? rawTone : 'white'
+      setControlTone(tone)
+    }
+    const agendar = () => { if (!quadro) quadro = requestAnimationFrame(atualizar) }
+    const resize = new ResizeObserver(agendar)
+    resize.observe(root)
+    window.addEventListener('scroll', agendar, { passive: true })
+    window.addEventListener('resize', agendar)
+    atualizar()
+    return () => {
+      resize.disconnect()
+      cancelAnimationFrame(quadro)
+      window.removeEventListener('scroll', agendar)
+      window.removeEventListener('resize', agendar)
+    }
+  }, [limpo])
 
   const visiveis = useMemo(
-    () => Object.fromEntries(BLOCOS.map((b) => [b.id, estado.ordem[b.id].filter((id) => !estado.ocultas.includes(id))])),
+    () => Object.fromEntries(BLOCOS.map((b) => [b.id, (estado.ordem[b.id] ?? []).filter((id) => !estado.ocultas.includes(id) && Object.hasOwn(MIDIAS, id))])),
     [estado],
   )
-  const chaveParalaxe = JSON.stringify(visiveis) + layout + aberto
-  useParalaxe(raiz, chaveParalaxe)
+  const controle = aberto && !limpo
+  const chaveEstrutura = useMemo(() => JSON.stringify(visiveis), [visiveis])
+  useParalaxe(raiz, chaveEstrutura)
+  useTratamentoMotion(raiz, chaveEstrutura)
+  useEffect(() => {
+    if (!localizar) return
+    const quadro = raiz.current?.querySelector<HTMLElement>(`[data-midia="${localizar.id}"]`)
+    quadro?.scrollIntoView({ block: 'start', behavior: 'instant' })
+  }, [localizar])
 
   if (!CLIENTES_OK.includes(cliente)) return <Navigate to="/" replace />
 
@@ -607,162 +711,119 @@ export function TratamentoPage() {
     else p.delete('layout')
     setBusca(p, { replace: true })
   }
-  const controle = aberto && !limpo
-  const ultimo = BLOCOS.length
 
   return (
-    <div className="trat" data-layout={layout} ref={raiz}>
-      {/* capa: fundo todo branco; a logo da Bold em SVG com contorno preto e sombra */}
-      <section id="capa" className="trat-capa">
-        <div className="trat-capa__texto">
-          <p className="trat-eyebrow trat-eyebrow--escuro">{CAPA.titulo}</p>
-          <h1>{CAPA.cliente}</h1>
-          <p>{CAPA.texto}</p>
-        </div>
+    <div className="trat" data-layout={layout} data-control-tone={controlTone} ref={raiz}>
+      <header id="capa" className="trat-capa" data-trat-tone="white" data-par data-vel={1.9}>
         <div className="trat-capa__logo">
-          <img src="/brand/bold-logo-contorno.svg" alt="Bold Studio" />
+          <img src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" fetchPriority="high" />
         </div>
-        <div className="trat-capa__midia">
-          <Midia id={CAPA.midia} proporcao="21 / 9" indice={0} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
-        </div>
-      </section>
+      </header>
 
-      {BLOCOS.map((b, i) => (
-        <BlocoView
-          key={b.id}
-          bloco={b}
-          indice={i}
-          layout={layout}
-          ids={visiveis[b.id]}
-          controle={controle}
-          selecionada={selecionada}
-          aoSelecionar={(id) => setSelecionada((s) => (s === id ? null : id))}
-        />
-      ))}
-
-      <Secao id="camera" indice={ultimo} layout={layout} clara={ultimo % 2 === 1}>
-        <div className="trat-duas">
-          <div className="trat-texto">
-        <p className="trat-eyebrow">{CAMERA.eyebrow}</p>
-        <span className="trat-traco" />
-        <Titulo texto={CAMERA.titulo} />
-                  </div>
-          <div className="trat-lado">
-<ul className="trat-lista">
-          {CAMERA.itens.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
+      <main>
+        <Secao id="sobre" tone="white">
+          <div className="trat-sobre">
+            <header className="trat-cabecalho trat-cabecalho--topico">
+              <p className="trat-eyebrow">{SOBRE.eyebrow}</p>
+              <Titulo texto={SOBRE.titulo} />
+            </header>
+            <Texto partes={[SOBRE.texto]} />
           </div>
-        </div>
-      </Secao>
+          <figure className="trat-sobre__foto">
+            <img src={SOBRE.foto} alt="Equipe da Bold Studio filmando no campo" loading="lazy" decoding="async" />
+          </figure>
+        </Secao>
 
-      <Secao id="som" indice={ultimo + 1} layout={layout} clara={(ultimo + 1) % 2 === 1}>
-        <div className="trat-duas">
-          <div className="trat-texto">
-        <p className="trat-eyebrow">{SOM.eyebrow}</p>
-        <span className="trat-traco" />
-        <Titulo texto={SOM.titulo} />
-                  </div>
-          <div className="trat-lado">
-<div className="trat-cartoes">
-          {SOM.itens.map((c) => (
-            <article key={c.nome}>
-              <h3>{c.nome}</h3>
-              <p>{c.texto}</p>
-            </article>
-          ))}
-          {ARTE.map((c) => (
-            <article key={c.nome} className="trat-cartoes__aberto">
-              <h3>{c.nome}</h3>
-              <p>{c.texto}</p>
-            </article>
-          ))}
-        </div>
+        <Secao id="john-deere" tone="white">
+          <header className="trat-jd__cabecalho">
+            <h1>{CAPA.titulo}</h1>
+            <span className="trat-jd__marca">
+              <img src="/brand/clients/john-deere-branco.webp" alt="John Deere" />
+            </span>
+          </header>
+          <div className="trat-jd__cena">
+            <Midia id={CAPA.midia} proporcao="1431 / 617" indice={0} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
+            <p>{CAPA.texto}</p>
           </div>
-        </div>
-      </Secao>
+        </Secao>
 
-      <Secao id="referencias" indice={ultimo + 2} layout={layout} clara={(ultimo + 2) % 2 === 1}>
-        <div className="trat-duas">
-          <div className="trat-texto">
-        <p className="trat-eyebrow">Referências</p>
-        <span className="trat-traco" />
-        <Titulo texto="Onde a gente se inspira" />
-                  </div>
-          <div className="trat-lado">
-<ul className="trat-links">
-          {REFERENCIAS.map((r) => (
-            <li key={r.url}>
-              <a href={r.url} target="_blank" rel="noopener noreferrer">
-                <span>{r.nome}</span>
-                <IconeExterno />
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="trat-palco">
+        {BLOCOS.map(bloco => (
+          <BlocoView key={bloco.id} bloco={bloco} ids={visiveis[bloco.id]} controle={controle}
+            selecionada={selecionada} aoSelecionar={id => setSelecionada(atual => atual === id ? null : id)} />
+        ))}
+
+        <Secao id="camera" tone="black">
+          <header className="trat-cabecalho trat-cabecalho--topico">
+            <p className="trat-eyebrow">{CAMERA.eyebrow}</p>
+            <Titulo texto={CAMERA.titulo} />
+          </header>
+          <div ref={cameraAuras}><ul className="trat-lista">
+            {CAMERA.itens.map((texto, indice) => (
+              <li key={texto}>
+                <canvas className="trat-camera__aura" data-bio-aura={indice * 2.35} aria-hidden="true" />
+                <span>{texto.replace(/[.!?]+$/, '')}.</span>
+              </li>
+            ))}
+          </ul></div>
+        </Secao>
+
+        <Secao id="fotografia" tone="black">
+          <header className="trat-cabecalho trat-cabecalho--topico">
+            <p className="trat-eyebrow">{FOTOGRAFIA.eyebrow}</p>
+            <Titulo texto={FOTOGRAFIA.titulo} />
+          </header>
+          <Texto partes={[FOTOGRAFIA.texto]} />
+          <Galeria ids={FOTOGRAFIA.midias} render={(id, i) => (
+            <Midia key={id} id={id} proporcao="16 / 9" indice={i} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
+          )} />
+        </Secao>
+
+        <div className="trat-palco__encerramento">
+        <Secao id="som" tone="black">
+          <header className="trat-cabecalho trat-cabecalho--topico">
+            <p className="trat-eyebrow">{SOM.eyebrow}</p>
+            <Titulo texto={SOM.titulo} />
+          </header>
+          <div className="trat-som">
+            {SOM.itens.map(item => <article key={item.nome}><h3>{item.nome}</h3><p>{item.texto}</p></article>)}
           </div>
+        </Secao>
         </div>
-      </Secao>
+        </div>
 
-      <div className="trat-final" ref={finalRef}>
-      {/* agradecimento: texto de um lado, o vídeo grande do outro */}
-      <section id="obrigado" className="trat-obrigado">
-        <div className="trat-obrigado__texto">
-          <p className="trat-eyebrow">Obrigado</p>
-          <h2>
-            Muito obrigado
-            <br />
-            pela oportunidade.
-          </h2>
-          <p>Caso queiram conhecer mais sobre a Bold, é só chamar. Vai ser um prazer contar essa história com vocês.</p>
-          <a href="https://boldstudiobrasil.com" target="_blank" rel="noopener noreferrer">boldstudiobrasil.com</a>
-        </div>
-        <div className="trat-obrigado__video">
-          <Midia id={AGRADECIMENTO_MIDIA} proporcao="21 / 9" indice={2} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
-        </div>
-      </section>
+        <section id="obrigado" className="trat-obrigado" data-trat-tone="white">
+          <div>
+            <h2>Obrigado</h2>
+            <p>Foi um prazer apresentar este tratamento de roteiro e será um prazer contar essa história com vocês.</p>
+          </div>
+          <figure className="trat-obrigado__foto">
+            <img src="/media/backgrounds/boldstudio-about-us-09c5b22b95fb.webp" alt="Equipe da Bold Studio" loading="lazy" decoding="async" />
+          </figure>
+        </section>
+      </main>
 
-      <footer className="trat-rodape">
+      <footer className="trat-rodape" data-trat-tone="white">
         <ul className="trat-rodape__links">
-          {LINKS_BOLD.map((l) => (
-            <li key={l.nome}>
-              <a href={l.url} target={l.url.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
-                <IconeMarca tipo={l.marca} />
-                <small>{l.nome}</small>
-                <span>{l.texto}</span>
-                <IconeExterno />
+          {LINKS_BOLD.map(link => (
+            <li key={link.nome}>
+              <a href={link.url} target={link.url.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
+                <IconeMarca tipo={link.marca} />
+                <small>{link.nome}</small><span>{link.texto}</span><IconeExterno />
               </a>
             </li>
           ))}
         </ul>
-        <img className="trat-rodape__logo" src="/brand/bold-logo-contorno.svg" alt="Bold Studio" data-par data-vel="0.9" />
+        <img className="trat-rodape__logo" src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" loading="lazy" />
       </footer>
-      </div>
 
-      {!limpo && (
-        <>
-          {!aberto && (
-            <button type="button" className="trat-controle__abrir" onClick={() => setAberto(true)}>
-              Controle
-            </button>
-          )}
-          {aberto && (
-            <Controle
-              layout={layout}
-              aoLayout={mudarLayout}
-              estado={estado}
-              aoMudar={setEstado}
-              selecionada={selecionada}
-              aoSelecionar={setSelecionada}
-              fechar={() => {
-                setAberto(false)
-                setSelecionada(null)
-              }}
-            />
-          )}
-        </>
-      )}
+      {!limpo && (aberto ? (
+        <Controle layout={layout} aoLayout={mudarLayout} estado={estado} aoMudar={setEstado}
+          selecionada={selecionada} aoSelecionar={setSelecionada} aoLocalizar={id => setLocalizar({ id })}
+          fechar={() => { setAberto(false); setSelecionada(null) }} />
+      ) : (
+        <button type="button" className="trat-controle__abrir" onClick={() => setAberto(true)}><SlidersHorizontal size={15} aria-hidden="true" />Controle</button>
+      ))}
     </div>
   )
 }
