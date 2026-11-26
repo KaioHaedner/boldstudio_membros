@@ -709,3 +709,12 @@
 @media (max-width: 899px) {
   .trat :is(#b4, #b5, #b6, #b7, #fotografia) .trat-topo2 { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* nenhuma mídia parada: as fotos ganham um zoom lento e contínuo (os GIFs já rodam como vídeo) */
+.trat .trat-midia__inner img { animation: trat-ken 14s ease-in-out infinite alternate; transform-origin: 50% 40%; }
+.trat .trat-vitrine__item:nth-child(3n + 2) .trat-midia__inner img { animation-delay: -5s; transform-origin: 30% 60%; }
+.trat .trat-vitrine__item:nth-child(3n) .trat-midia__inner img { animation-delay: -9s; transform-origin: 70% 50%; }
+@keyframes trat-ken {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(-1.5%, -1%, 0); }
+}

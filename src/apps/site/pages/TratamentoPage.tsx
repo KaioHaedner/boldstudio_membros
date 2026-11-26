@@ -126,7 +126,7 @@ function Midia({
   const videoRef = useRef<HTMLVideoElement>(null)
   useEffect(() => {
     const v = videoRef.current
-    if (!v || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!v) return
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) void v.play().catch(() => {})
       else v.pause()
