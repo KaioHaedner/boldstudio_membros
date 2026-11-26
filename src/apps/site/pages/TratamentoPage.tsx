@@ -431,7 +431,7 @@ function BlocoView({
   const topoEmDestaque = bloco.id === 'tom'
   const cabecalho = (
     <header className={`trat-cabecalho${topoEmDestaque ? ' trat-cabecalho--topico' : ''}`}>
-      <p className="trat-eyebrow">{bloco.eyebrow}</p>
+      <p className="trat-eyebrow">{topoEmDestaque ? bloco.eyebrow.replace(' & ', ' &\n') : bloco.eyebrow}</p>
       <Titulo texto={bloco.titulo} />
     </header>
   )
@@ -456,7 +456,8 @@ function BlocoView({
   const grupos = bloco.grupos
   let corpo: React.ReactNode
   if (bloco.id === 'tom') {
-    corpo = <>{duasColunas(<Texto partes={bloco.paragrafos} />)}{video}</>
+    // um texto único, sem quebra de parágrafo
+    corpo = <>{duasColunas(<Texto partes={[bloco.paragrafos.join(' ')]} />)}{video}</>
   } else if (bloco.id === 'b2') {
     corpo = (
       <>
