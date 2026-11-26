@@ -549,7 +549,7 @@
 /* Tom: "Tom &" e "Storytelling" em duas linhas; texto de apoio menor, amarelo,
    numa linha só de 80% da largura, igual ao do bloco 2 */
 .trat #tom .trat-cabecalho--topico .trat-eyebrow { white-space: pre-line; }
-.trat #tom .trat-topo2__texto .trat-corpo { width: 80%; max-width: none; margin-inline: auto; font-size: clamp(.9rem, 1.12vw, 1.08rem); line-height: 1.5; color: var(--jd-yellow); font-weight: 600; text-align: center; }
+.trat #tom .trat-topo2__texto .trat-corpo { width: auto; max-width: none; margin-inline: auto 0; font-size: clamp(.9rem, 1.12vw, 1.08rem); line-height: 1.5; color: var(--jd-yellow); font-weight: 600; text-align: right; }
 
 /* bloco 3: texto de apoio do segundo parágrafo em duas linhas, amarelo */
 
@@ -718,3 +718,6 @@
   from { transform: scale(1) translate3d(0, 0, 0); }
   to { transform: scale(1.1) translate3d(-1.5%, -1%, 0); }
 }
+
+/* tom: mesma grade dos outros blocos (título à esquerda, apoio alinhado à direita) */
+.trat #tom .trat-topo2 { grid-template-columns: minmax(0, .75fr) minmax(0, 1.7fr); align-items: center; }
