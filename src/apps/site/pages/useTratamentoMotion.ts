@@ -244,7 +244,7 @@ export function useTratamentoMotion(rootRef: RefObject<HTMLDivElement | null>, m
       const move = (event: PointerEvent) => {
         if (event.pointerType === 'touch' || !(event.target instanceof Element)) return
         const target = event.target.closest<HTMLElement>('[data-motion-frame]')
-        const frame = target?.querySelector<HTMLElement>('.trat-midia__frame')
+        const frame = target && !target.closest('.trat-faixa--cafe') ? target.querySelector<HTMLElement>('.trat-midia__frame') : null
         if (frame !== active) reset()
         if (!frame || !target) return
         active = frame

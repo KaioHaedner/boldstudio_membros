@@ -512,7 +512,7 @@
 .trat-carrossel__item.is-centro { transform: scale(1.14); opacity: 1; filter: none; z-index: 1; }
 .trat-carrossel__item.is-centro .trat-midia { box-shadow: 0 0 0 2px var(--jd-yellow), 0 0 2.4rem rgb(255 222 0 / 45%), 0 1.4rem 2.6rem -1rem #000c; }
 
-/* bloco 3: as duas imagens de cima com o mesmo tamanho; o segundo texto numa linha, centralizado */
+/* bloco 3: as duas imagens de cima com o mesmo tamanho (sem o zoom do hover, que deixava uma maior); o segundo texto numa linha, centralizado */
 .trat-faixa--cafe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .trat-linha {
   margin: 0; justify-self: center; width: min(100%, 62ch);
