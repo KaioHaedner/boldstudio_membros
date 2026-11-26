@@ -620,3 +620,8 @@
 
 /* bloco 4: segundo texto centralizado, em amarelo, mais forte e mais largo (duas linhas) */
 .trat #b4 .trat-trecho:nth-of-type(2) .trat-corpo { text-align: center; margin-inline: auto; color: var(--jd-yellow); font-weight: 800; width: 100%; max-width: 96ch; }
+
+/* bloco 4: a nota numa linha só, centralizada no desktop */
+@media (min-width: 900px) {
+  .trat #b4 .trat-nota { max-width: none; text-align: center; margin-inline: auto; white-space: nowrap; }
+}

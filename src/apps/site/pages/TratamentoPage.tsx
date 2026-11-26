@@ -344,7 +344,7 @@ function Falas({ falas }: { falas: NonNullable<BlocoTexto['exemplo']> }) {
 // Mídias grandes: no máximo duas por linha. A de destaque ocupa a largura toda.
 function Galeria({ ids, cheia = 'primeira', render }: {
   ids: string[]
-  cheia?: 'primeira' | 'ultima' | 'todas' | 'triangulo'
+  cheia?: 'primeira' | 'ultima' | 'todas' | 'triangulo' | 'nenhuma'
   render: (id: string, indice: number) => React.ReactNode
 }) {
   if (ids.length === 0) return null
@@ -352,7 +352,7 @@ function Galeria({ ids, cheia = 'primeira', render }: {
   if (cheia === 'todas') ids.forEach(id => linhas.push([id]))
   else {
     const resto = [...ids]
-    const destaque = cheia === 'ultima' ? resto.pop() : resto.shift()
+    const destaque = cheia === 'ultima' ? resto.pop() : cheia === 'nenhuma' ? undefined : resto.shift()
     if ((cheia === 'primeira' || cheia === 'triangulo') && destaque) linhas.push([destaque])
     while (resto.length) linhas.push(resto.length === 1 ? [resto.shift()!] : [resto.shift()!, resto.shift()!])
     if (cheia === 'ultima' && destaque) linhas.push([destaque])
