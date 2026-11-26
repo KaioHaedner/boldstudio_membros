@@ -411,3 +411,59 @@
 .trat-kellen { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
 .trat-kellen > *, .trat-sugestao { min-width: 0; }
 .trat-sugestao__rotulo { white-space: normal; border-radius: 1rem; }
+
+/* ---- fundo inteiriço (feedback 26/11) ----
+   O verde é um fundo só, pintado no palco inteiro: as seções verdes ficam
+   transparentes e não marcam divisão. As seções amarelas e a clara entram e
+   saem em degradê, sem corte reto. As linhas de campo se alternam entre
+   esquerda, direita e centro e somem nas bordas. */
+.trat-palco {
+  --fade: clamp(5rem, 11vw, 10rem);
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--campo-aresta);
+  background:
+    radial-gradient(70% 22% at 88% 6%, var(--campo-verde), transparent 70%),
+    radial-gradient(60% 18% at 8% 34%, color-mix(in srgb, var(--campo-verde) 75%, transparent), transparent 70%),
+    radial-gradient(70% 20% at 92% 62%, var(--campo-verde), transparent 70%),
+    radial-gradient(60% 18% at 10% 90%, color-mix(in srgb, var(--campo-verde) 80%, transparent), transparent 70%),
+    var(--campo-escuro);
+}
+.trat-palco > :is(.trat-secao, .trat-palco__encerramento) { overflow: visible; border-radius: 0; }
+.trat .trat-palco > [data-trat-tone='black'],
+.trat .trat-palco__encerramento,
+.trat .trat-palco__encerramento > .trat-secao { background: transparent; }
+.trat .trat-palco > [data-trat-tone='yellow'] {
+  padding-block: calc(var(--jd-space) + var(--fade) * .6);
+  background: linear-gradient(to bottom, transparent, var(--jd-yellow) var(--fade), var(--jd-yellow) calc(100% - var(--fade)), transparent);
+}
+.trat .trat-palco > [data-trat-tone='white'] {
+  padding-block: calc(var(--jd-space) + var(--fade) * .6);
+  background: linear-gradient(to bottom, transparent, var(--campo-papel) var(--fade), var(--campo-papel) calc(100% - var(--fade)), transparent);
+}
+.trat-palco > :is(.trat-secao, .trat-palco__encerramento)::before {
+  mask-image: linear-gradient(transparent, #000 20%, #000 80%, transparent);
+}
+.trat .trat-palco > :is(.trat-secao, .trat-palco__encerramento)::after {
+  inset: auto;
+  top: 50%;
+  left: auto;
+  right: -14%;
+  width: min(72vw, 66rem);
+  translate: 0 -50%;
+  transform: none;
+  mask-image: radial-gradient(ellipse at center, #000 22%, transparent 66%);
+}
+.trat .trat-palco > :nth-child(3n + 1)::after { right: auto; left: -14%; transform: scaleX(-1); }
+.trat .trat-palco > :nth-child(3n)::after { right: auto; left: 50%; translate: -50% -50%; }
+
+/* peso da Bold nos títulos: mais encorpado */
+.trat .trat-palco .trat-titulo,
+.trat #sobre .trat-titulo,
+.trat #john-deere h1 { font-weight: 850; letter-spacing: -.04em; }
+.trat .trat-cabecalho--topico .trat-titulo { font-weight: 750; }
+/* bloco 3 → 4 → 5 são três tons claros seguidos: um passa direto para o
+   outro em degradê, sem a faixa verde no meio */
+.trat .trat-palco > #b3 { background: linear-gradient(to bottom, transparent, var(--jd-yellow) var(--fade), var(--jd-yellow) calc(100% - var(--fade)), var(--campo-papel)); padding-bottom: var(--jd-space); }
+.trat .trat-palco > #b4 { background: linear-gradient(to bottom, var(--campo-papel), var(--campo-papel) calc(100% - var(--fade)), var(--jd-yellow)); padding-block: var(--jd-space); }
+.trat .trat-palco > #b5 { background: linear-gradient(to bottom, var(--jd-yellow), var(--jd-yellow) calc(100% - var(--fade)), transparent); padding-top: var(--jd-space); }
