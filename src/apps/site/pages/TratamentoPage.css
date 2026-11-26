@@ -573,3 +573,21 @@
 @media (prefers-reduced-motion: reduce) {
   .trat-capa__logo img { animation: none; }
 }
+
+/* parallax nos blocos (mesmo princípio da capa): título e texto de apoio se
+   movem em velocidade diferente das imagens conforme a seção passa na tela */
+@supports (animation-timeline: view()) {
+  .trat-secao .trat-cabecalho,
+  .trat-secao .trat-topo2__texto {
+    animation: trat-bloco-par linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+}
+@keyframes trat-bloco-par {
+  from { transform: translateY(7vh); }
+  to { transform: translateY(-7vh); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trat-secao .trat-cabecalho, .trat-secao .trat-topo2__texto { animation: none; }
+}
