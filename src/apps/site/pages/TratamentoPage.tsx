@@ -344,7 +344,7 @@ function Falas({ falas }: { falas: NonNullable<BlocoTexto['exemplo']> }) {
 // Mídias grandes: no máximo duas por linha. A de destaque ocupa a largura toda.
 function Galeria({ ids, cheia = 'primeira', render }: {
   ids: string[]
-  cheia?: 'primeira' | 'ultima' | 'todas'
+  cheia?: 'primeira' | 'ultima' | 'todas' | 'triangulo'
   render: (id: string, indice: number) => React.ReactNode
 }) {
   if (ids.length === 0) return null
@@ -353,7 +353,7 @@ function Galeria({ ids, cheia = 'primeira', render }: {
   else {
     const resto = [...ids]
     const destaque = cheia === 'ultima' ? resto.pop() : resto.shift()
-    if (cheia === 'primeira' && destaque) linhas.push([destaque])
+    if ((cheia === 'primeira' || cheia === 'triangulo') && destaque) linhas.push([destaque])
     while (resto.length) linhas.push(resto.length === 1 ? [resto.shift()!] : [resto.shift()!, resto.shift()!])
     if (cheia === 'ultima' && destaque) linhas.push([destaque])
   }
@@ -361,7 +361,7 @@ function Galeria({ ids, cheia = 'primeira', render }: {
   return (
     <div className="trat-galeria">
       {linhas.map((linha, i) => (
-        <div key={i} className="trat-faixa" style={{ '--colunas': linha.length } as CSSProperties}>
+        <div key={i} className={`trat-faixa${cheia === 'triangulo' && i === 0 ? ' trat-faixa--triangulo' : ''}`} style={{ '--colunas': linha.length } as CSSProperties}>
           {linha.map(id => render(id, n++))}
         </div>
       ))}

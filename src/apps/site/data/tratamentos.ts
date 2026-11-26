@@ -28,7 +28,7 @@ export type BlocoTexto = {
   aviso?: string
   // quantas mídias entram depois de cada parágrafo; "ultima" põe a última do
   // grupo em tela cheia (a de destaque), o padrão é a primeira
-  grupos?: { n: number; cheia?: 'primeira' | 'ultima' | 'todas' }[]
+  grupos?: { n: number; cheia?: 'primeira' | 'ultima' | 'todas' | 'triangulo' }[]
   // nota de rodapé no fim do bloco, sem imagem
   nota?: string
   midias: string[]
@@ -157,7 +157,7 @@ export const BLOCOS: BlocoTexto[] = [
       'Iniciamos os inserts de depoimentos “entrando” no meio das situações para pontuar algo importante ou criar um gancho de atenção, bem no estilo reality.',
     ],
     nota: 'Aqui podemos introduzir o especialista John Deere para já fazer o tour pela propriedade, ou ele entra logo depois com a solução.',
-    grupos: [{ n: 3 }, { n: 3 }, { n: 6, cheia: 'todas' }],
+    grupos: [{ n: 3, cheia: 'triangulo' }, { n: 3 }, { n: 6, cheia: 'todas' }],
     midias: seq(15, 26),
   },
   {

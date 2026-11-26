@@ -613,3 +613,10 @@
 @media (prefers-reduced-motion: reduce) {
   #john-deere .trat-secao__miolo, #b1 .trat-secao__miolo, #camera .trat-secao__miolo, #som .trat-secao__miolo, #b7 .trat-secao__miolo { animation: none; }
 }
+
+/* bloco 4: a primeira mídia do grupo fica no centro, do tamanho das duas de baixo (triângulo) */
+.trat-faixa--triangulo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.trat-faixa--triangulo > :first-child { grid-column: 1 / -1; justify-self: center; width: calc((100% - clamp(.7rem, 2vw, 1.6rem)) / 2); }
+
+/* bloco 4: segundo texto centralizado, em amarelo, mais forte e mais largo (duas linhas) */
+.trat #b4 .trat-trecho:nth-of-type(2) .trat-corpo { text-align: center; margin-inline: auto; color: var(--jd-yellow); font-weight: 800; width: 100%; max-width: 96ch; }
