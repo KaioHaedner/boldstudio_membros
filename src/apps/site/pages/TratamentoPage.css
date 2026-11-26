@@ -540,3 +540,6 @@
 .trat #b2 .trat-topo2__texto .trat-corpo, .trat #b3 .trat-topo2__texto .trat-corpo { max-width: none; font-size: clamp(.9rem, 1.12vw, 1.08rem); line-height: 1.5; }
 /* bloco 2: "A entrada do Michel" centralizado, 80% da largura, amarelo */
 .trat #b2 .trat-secao__miolo > .trat-corpo { width: 90%; max-width: none; justify-self: center; text-align: center; color: var(--jd-yellow); font-weight: 600; }
+
+/* bloco 2: texto de apoio 20% maior e em amarelo */
+.trat #b2 .trat-topo2__texto .trat-corpo { font-size: clamp(1.08rem, 1.34vw, 1.3rem); color: var(--jd-yellow); }
