@@ -454,7 +454,8 @@ function BlocoView({
     )
   }
 
-  const tone = ['b1', 'b3', 'b5'].includes(bloco.id) ? 'yellow' : bloco.id === 'b4' ? 'white' : 'black'
+  // todos os blocos sobre o mesmo fundo verde: o amarelo fica só nos detalhes
+  const tone = 'black'
   return (
     <Secao id={bloco.id} tone={tone}>
       {cabecalho}

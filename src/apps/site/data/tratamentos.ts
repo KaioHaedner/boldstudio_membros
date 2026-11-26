@@ -79,7 +79,7 @@ export const CAPA = {
   titulo: 'Tratamento de roteiro',
   cliente: 'John Deere',
   texto:
-    'Muito obrigado pela oportunidade de fazermos parte desse projeto lindo. Queremos trazer uma visão nova sobre o formato, agregando uma qualidade visual de cinema, mas mantendo a narrativa cativante do reality.',
+    'Muito obrigado pela oportunidade de fazermos parte desse projeto lindo, queremos trazer uma visão nova sobre o formato, agregando uma qualidade visual de cinema, mas mantendo a narrativa cativante do reality.',
   midia: 'm1',
 }
 
@@ -103,7 +103,7 @@ export const BLOCOS: BlocoTexto[] = [
     menu: 'Bloco 1',
     eyebrow: 'Bloco 1',
     titulo: 'Chamada Kellen',
-    paragrafos: ['Muitos grafismos, dados e imagens complementares. Ganchos visuais e retenção.'],
+    paragrafos: ['Muitos grafismos, dados e imagens complementares, com ganchos visuais e retenção.'],
     exemplo: [
       {
         fala: 'Kellen',
@@ -121,8 +121,8 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 2',
     titulo: 'Chegada do Michel',
     paragrafos: [
-      'Iniciamos com uma montagem contextualizando onde o Michel está chegando. Cortes rápidos e poucas cenas, apenas para dar dinamismo à primeira parte da Kellen, que é mais estática.',
-      'A entrada do Michel é dentro do carro, falando rapidamente sobre a fazenda a que estamos chegando. Seguimos com a chegada dele em si, sendo recebido e cumprimentando o produtor (e a família, caso participem).',
+      'Iniciamos com uma montagem contextualizando onde o Michel está chegando, com cortes rápidos e poucas cenas, apenas para dar dinamismo à primeira parte da Kellen, que é mais estática.',
+      'A entrada do Michel é dentro do carro, falando rapidamente sobre a fazenda a que estamos chegando, e seguimos com a chegada dele em si, sendo recebido e cumprimentando o produtor (e a família, caso participem).',
     ],
     grupos: [{ n: 2 }, { n: 3 }],
     midias: seq(2, 6),
@@ -133,12 +133,12 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 3',
     titulo: 'Café com o produtor',
     paragrafos: [
-      'Introdução à fazenda, em depoimento. Aqui temos a primeira conversa com o produtor (e a família, caso queiram). Imaginamos uma sala da sede ou uma área externa mais aconchegante. A ideia é termos o produtor apresentando um breve relato da sua história e da propriedade.',
-      'Cobrimos com b-rolls da fazenda e do produtor no seu dia a dia. Não aprofundamos nos desafios ainda: aqui entra a história para humanizar o convidado.',
+      'Introdução à fazenda em depoimento, aqui temos a primeira conversa com o produtor (e a família, caso queiram), imaginamos uma sala da sede ou uma área externa mais aconchegante e a ideia é termos o produtor apresentando um breve relato da sua história e da propriedade.',
+      'Cobrimos com b-rolls da fazenda e do produtor no seu dia a dia e não aprofundamos nos desafios ainda, porque aqui entra a história para humanizar o convidado.',
     ],
     exemplo: [
       { fala: 'Michel', texto: 'Seu João, conta pra gente um pouquinho da sua história e da sua família no agro e sobre essa propriedade linda em que a gente está.' },
-      { fala: 'Seu João', texto: 'Minha família veio para a região em 1970, vindos do sul tentando uma vida melhor… Hoje a propriedade tem XXX hectares, plantamos soja, milho e temos XX cabeças de gado.' },
+      { fala: 'Seu João', texto: 'Minha família veio para a região em 1970, vindos do sul tentando uma vida melhor, hoje a propriedade tem XXX hectares, plantamos soja, milho e temos XX cabeças de gado.' },
       { fala: 'Michel', texto: 'Será que o senhor pode me levar pra conhecer melhor seu dia a dia?' },
     ],
     sugestao: { rotulo: 'Sugestão de conversa' },
@@ -167,7 +167,7 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 5',
     titulo: 'Criação do plano',
     paragrafos: [
-      'Voltamos para o ambiente da casa ou sala de reunião da fazenda. Hora de uma montagem dinâmica mostrando o planejamento e como as soluções da John Deere podem ajudar nosso produtor.',
+      'Voltamos para o ambiente da casa ou sala de reunião da fazenda, hora de uma montagem dinâmica mostrando o planejamento e como as soluções da John Deere podem ajudar nosso produtor.',
     ],
     midias: ['m28', 'm29', 'm27', 'm30', 'm31'],
   },
@@ -187,7 +187,7 @@ export const BLOCOS: BlocoTexto[] = [
     eyebrow: 'Bloco 7',
     titulo: 'Resultado e legado',
     paragrafos: [
-      'Fechamento do episódio: conversa entre Michel e o produtor falando sobre as mudanças feitas, com entrada de depoimentos do especialista. Finalizamos com Michel entrando na caminhonete e fazendo um convite para o próximo episódio, deixando o clima de suspense de para onde ele vai (ou já usando um pequeno teaser do próximo).',
+      'Fechamento do episódio com a conversa entre Michel e o produtor falando sobre as mudanças feitas, com entrada de depoimentos do especialista, e finalizamos com Michel entrando na caminhonete e fazendo um convite para o próximo episódio, deixando o clima de suspense de para onde ele vai (ou já usando um pequeno teaser do próximo).',
     ],
     midias: [],
   },
@@ -209,7 +209,7 @@ export const FOTOGRAFIA = {
   eyebrow: 'Direção de fotografia',
   titulo: 'Textura de cinema, tons quentes',
   texto:
-    'Textura cinematográfica, tons quentes e cores vivas. A ideia aqui é seguir uma uniformidade com o próprio material publicado pela John Deere recentemente (Você e John Deere. Uma só força.).',
+    'Textura cinematográfica, tons quentes e cores vivas, e a ideia aqui é seguir uma uniformidade com o próprio material publicado pela John Deere recentemente, na campanha “Você e John Deere, uma só força”.',
   midias: ['m41', 'm42', 'm43', 'm44', 'm45'],
 }
 
@@ -217,8 +217,8 @@ export const SOM = {
   eyebrow: 'Trilha e SFX',
   titulo: 'O campo também se escuta',
   itens: [
-    { nome: 'Trilha geral', texto: 'Pano de fundo: não queremos ela roubando a cena, e sim complementando as situações. Folk, viola, instrumental de cordas mais country.' },
-    { nome: 'SFX', texto: 'É aqui que construímos a identidade e a ambiência. Imersão do espectador com sons naturais do dia a dia do campo.' },
+    { nome: 'Trilha geral', texto: 'Pano de fundo, não queremos ela roubando a cena e sim complementando as situações, com folk, viola e instrumental de cordas mais country.' },
+    { nome: 'SFX', texto: 'É aqui que construímos a identidade e a ambiência, com a imersão do espectador nos sons naturais do dia a dia do campo.' },
   ],
 }
 

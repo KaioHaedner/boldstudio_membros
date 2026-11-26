@@ -433,14 +433,6 @@
 .trat .trat-palco > [data-trat-tone='black'],
 .trat .trat-palco__encerramento,
 .trat .trat-palco__encerramento > .trat-secao { background: transparent; }
-.trat .trat-palco > [data-trat-tone='yellow'] {
-  padding-block: calc(var(--jd-space) + var(--fade) * .6);
-  background: linear-gradient(to bottom, transparent, var(--jd-yellow) var(--fade), var(--jd-yellow) calc(100% - var(--fade)), transparent);
-}
-.trat .trat-palco > [data-trat-tone='white'] {
-  padding-block: calc(var(--jd-space) + var(--fade) * .6);
-  background: linear-gradient(to bottom, transparent, var(--campo-papel) var(--fade), var(--campo-papel) calc(100% - var(--fade)), transparent);
-}
 .trat-palco > :is(.trat-secao, .trat-palco__encerramento)::before {
   mask-image: linear-gradient(transparent, #000 20%, #000 80%, transparent);
 }
@@ -462,8 +454,5 @@
 .trat #sobre .trat-titulo,
 .trat #john-deere h1 { font-weight: 850; letter-spacing: -.04em; }
 .trat .trat-cabecalho--topico .trat-titulo { font-weight: 750; }
-/* bloco 3 → 4 → 5 são três tons claros seguidos: um passa direto para o
-   outro em degradê, sem a faixa verde no meio */
-.trat .trat-palco > #b3 { background: linear-gradient(to bottom, transparent, var(--jd-yellow) var(--fade), var(--jd-yellow) calc(100% - var(--fade)), var(--campo-papel)); padding-bottom: var(--jd-space); }
-.trat .trat-palco > #b4 { background: linear-gradient(to bottom, var(--campo-papel), var(--campo-papel) calc(100% - var(--fade)), var(--jd-yellow)); padding-block: var(--jd-space); }
-.trat .trat-palco > #b5 { background: linear-gradient(to bottom, var(--jd-yellow), var(--jd-yellow) calc(100% - var(--fade)), transparent); padding-top: var(--jd-space); }
+
+.trat .trat-palco > :is(.trat-secao, .trat-palco__encerramento)::after { opacity: .16; }
