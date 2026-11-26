@@ -385,11 +385,17 @@ function Carrossel({ ids, render }: { ids: string[]; render: (id: string, indice
         return (
           <div key={id} className={`trat-carrossel__item${posicao === meio ? ' is-centro' : ''}`} style={{ order: posicao }}>
             {render(id, i)}
+            {posicao === meio && <span className="trat-interrogacoes" aria-hidden="true">???</span>}
           </div>
         )
       })}
     </div>
   )
+}
+
+// vitrine: uma mídia em destaque (maior, com moldura amarela) e as outras giram em volta
+function Vitrine({ ids, render }: { ids: string[]; render: (id: string, indice: number) => React.ReactNode }) {
+  return <div className="trat-vitrine"><Carrossel ids={ids} render={render} /></div>
 }
 
 function Sugestao({ rotulo, intro, falas, solta, lado }: {
@@ -477,19 +483,27 @@ function BlocoView({
       </>
     )
   } else if (grupos && grupos.length) {
+    // o texto em cima, em duas colunas; depois uma vitrine por grupo
+    const vitrines: string[][] = []
     let pos = 0
-    corpo = bloco.paragrafos.map((p, i) => {
-      const g = grupos[i]
-      const fatia = g ? ids.slice(pos, pos + g.n) : []
-      pos += g ? g.n : 0
-      const ultimo = i === bloco.paragrafos.length - 1
-      return (
-        <div className="trat-trecho" key={i}>
-          <Texto partes={[p]} />
-          <Galeria ids={ultimo ? [...fatia, ...ids.slice(pos)] : fatia} cheia={g?.cheia} render={midia} />
-        </div>
-      )
+    grupos.forEach((g, i) => {
+      const fim = i === grupos.length - 1 ? ids.length : pos + g.n
+      vitrines.push(ids.slice(pos, fim))
+      pos = fim
     })
+    corpo = (
+      <>
+        {duasColunas(<Texto partes={bloco.paragrafos} />)}
+        {vitrines.map((fatia, i) => <Vitrine key={i} ids={fatia} render={midia} />)}
+      </>
+    )
+  } else if (['b5', 'b6', 'b7'].includes(bloco.id)) {
+    corpo = (
+      <>
+        {duasColunas(<Texto partes={bloco.paragrafos} />)}
+        {ids.length > 0 && <Vitrine ids={ids} render={midia} />}
+      </>
+    )
   } else {
     corpo = (
       <>
@@ -506,7 +520,7 @@ function BlocoView({
   const tone = 'black'
   return (
     <Secao id={bloco.id} tone={tone}>
-      {!['tom', 'b2', 'b3'].includes(bloco.id) && cabecalho}
+      {!['tom', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7'].includes(bloco.id) && cabecalho}
       {corpo}
       {bloco.id !== 'b1' && sugestao}
       {bloco.nota && <p className="trat-nota">“{bloco.nota}”</p>}
@@ -819,12 +833,14 @@ export function TratamentoPage() {
         </Secao>
 
         <Secao id="fotografia" tone="black">
-          <header className="trat-cabecalho trat-cabecalho--topico">
-            <p className="trat-eyebrow">{FOTOGRAFIA.eyebrow}</p>
-            <Titulo texto={FOTOGRAFIA.titulo} />
-          </header>
-          <Texto partes={[FOTOGRAFIA.texto]} />
-          <Galeria ids={FOTOGRAFIA.midias} render={(id, i) => (
+          <div className="trat-topo2">
+            <header className="trat-cabecalho">
+              <p className="trat-eyebrow">{FOTOGRAFIA.eyebrow}</p>
+              <Titulo texto={FOTOGRAFIA.titulo} />
+            </header>
+            <div className="trat-topo2__texto"><Texto partes={[FOTOGRAFIA.texto]} /></div>
+          </div>
+          <Vitrine ids={FOTOGRAFIA.midias} render={(id, i) => (
             <Midia key={id} id={id} proporcao="16 / 9" indice={i} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
           )} />
         </Secao>
