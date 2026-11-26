@@ -680,6 +680,21 @@ function Controle({
 
 // ---------- página ----------
 export function TratamentoPage() {
+  // logo do rodapé: entra como motion, com um leve estouro, quando aparece na tela
+  const logoRodapeRef = useRef<HTMLImageElement>(null)
+  useEffect(() => {
+    const logo = logoRodapeRef.current
+    if (!logo || typeof IntersectionObserver === 'undefined') return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    logo.classList.add('pode-animar')
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return
+      logo.classList.add('is-pop')
+      io.disconnect()
+    }, { threshold: 0.35 })
+    io.observe(logo)
+    return () => io.disconnect()
+  }, [])
   const { cliente = '' } = useParams()
   const [busca, setBusca] = useSearchParams()
   const layout: Layout = busca.get('layout') === 'bold' ? 'bold' : 'tratores'
@@ -880,7 +895,7 @@ export function TratamentoPage() {
             </li>
           ))}
         </ul>
-        <img className="trat-rodape__logo" src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" loading="lazy" />
+        <img ref={logoRodapeRef} className="trat-rodape__logo" src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" loading="lazy" />
       </footer>
 
       {!limpo && (aberto ? (
