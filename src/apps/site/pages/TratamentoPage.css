@@ -515,9 +515,9 @@
 /* bloco 3: produtor do café em evidência; o segundo texto numa linha, centralizado */
 .trat-faixa--cafe { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
 .trat-linha {
-  margin: 0; justify-self: center; max-width: 100%;
-  font-size: min(1.08vw, 1.15rem); font-weight: 600; line-height: 1.4;
-  text-align: center; white-space: nowrap;
+  margin: 0; justify-self: center; width: min(100%, 62ch);
+  font-size: min(1.08vw, 1.15rem); font-weight: 600; line-height: 1.5;
+  text-align: center; white-space: normal; color: var(--jd-yellow);
 }
 .trat-sugestao--lado .trat-falas { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; align-items: stretch; }
 .trat-sugestao--lado .trat-falas blockquote { margin-inline-start: 0; }
@@ -550,3 +550,5 @@
    numa linha só de 80% da largura, igual ao do bloco 2 */
 .trat #tom .trat-cabecalho--topico .trat-eyebrow { white-space: pre-line; }
 .trat #tom .trat-topo2__texto .trat-corpo { width: 80%; max-width: none; margin-inline: auto; font-size: clamp(.9rem, 1.12vw, 1.08rem); line-height: 1.5; color: var(--jd-yellow); font-weight: 600; text-align: center; }
+
+/* bloco 3: texto de apoio do segundo parágrafo em duas linhas, amarelo */
