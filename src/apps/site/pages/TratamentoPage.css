@@ -591,3 +591,25 @@
 @media (prefers-reduced-motion: reduce) {
   .trat-secao .trat-cabecalho, .trat-secao .trat-topo2__texto { animation: none; }
 }
+
+/* efeito de slide (do pacote Parallax Full Page) só nas seções curtas, que
+   cabem na tela: o conteúdo entra subindo, mais rápido que a rolagem, e sai
+   mais devagar. As seções longas seguem só com o parallax de título acima. */
+@supports (animation-timeline: view()) {
+  #john-deere .trat-secao__miolo,
+  #b1 .trat-secao__miolo,
+  #camera .trat-secao__miolo,
+  #som .trat-secao__miolo,
+  #b7 .trat-secao__miolo {
+    animation: trat-slide-curto linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 60%;
+  }
+}
+@keyframes trat-slide-curto {
+  from { transform: translateY(18vh); opacity: .2; }
+  to { transform: translateY(-6vh); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #john-deere .trat-secao__miolo, #b1 .trat-secao__miolo, #camera .trat-secao__miolo, #som .trat-secao__miolo, #b7 .trat-secao__miolo { animation: none; }
+}
