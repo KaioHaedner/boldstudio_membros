@@ -629,11 +629,24 @@
 /* ---- blocos 4 a 7 e direção de fotografia: vitrine com destaque que gira, surgindo ao rolar ---- */
 .trat-vitrine { min-width: 0; }
 .trat-carrossel__item { position: relative; }
-.trat-interrogacoes {
-  position: absolute; top: .5rem; left: .6rem; z-index: 2; pointer-events: none;
-  font-size: clamp(1.1rem, 2vw, 1.9rem); font-weight: 900; line-height: 1; letter-spacing: .08em;
-  color: var(--jd-yellow); text-shadow: 0 2px 0 #000, 0 0 .7rem #000b;
+/* três exclamações do lado de fora, abrindo em leque a partir do canto da mídia em destaque */
+.trat-exclamacoes { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 2; pointer-events: none; }
+.trat-exclamacoes i {
+  position: absolute; left: 0; bottom: 0; transform-origin: 50% 100%;
+  font-style: normal; font-size: clamp(1.1rem, 2vw, 1.8rem); font-weight: 900; line-height: 1;
+  color: var(--jd-yellow); text-shadow: 0 2px 0 #000, 0 0 .6rem #000a;
+  translate: -50% 0;
+  transform: rotate(var(--a)) translateY(-.55em);
+  animation: trat-exclama .26s cubic-bezier(.34, 1.56, .64, 1) both;
 }
+.trat-exclamacoes i:nth-child(1) { --a: -78deg; animation-delay: 0s; }
+.trat-exclamacoes i:nth-child(2) { --a: -45deg; animation-delay: .06s; }
+.trat-exclamacoes i:nth-child(3) { --a: -12deg; animation-delay: .12s; }
+@keyframes trat-exclama {
+  from { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(.3); }
+  to { opacity: 1; transform: rotate(var(--a)) translateY(-.55em) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .trat-exclamacoes i { animation: none; } }
 /* o rodapé fica por cima da capa fixa: a logo e os ícones deixam de ser cortados */
 .trat .trat-rodape { position: relative; z-index: 2; }
 @supports (animation-timeline: view()) {

@@ -385,7 +385,7 @@ function Carrossel({ ids, render }: { ids: string[]; render: (id: string, indice
         return (
           <div key={id} className={`trat-carrossel__item${posicao === meio ? ' is-centro' : ''}`} style={{ order: posicao }}>
             {render(id, i)}
-            {posicao === meio && <span className="trat-interrogacoes" aria-hidden="true">???</span>}
+            {posicao === meio && <span className="trat-exclamacoes" aria-hidden="true"><i>!</i><i>!</i><i>!</i></span>}
           </div>
         )
       })}
