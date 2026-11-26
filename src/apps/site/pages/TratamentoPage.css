@@ -376,7 +376,7 @@
   padding: .45rem .9rem; border-radius: 999px; background: #111; color: var(--jd-yellow);
   font-size: .85rem; font-weight: 800; letter-spacing: .03em;
 }
-.trat-sugestao__seta { font-size: 1.3rem; line-height: 1; }
+.trat-sugestao__seta { flex: none; width: 1.1em; height: 1.1em; }
 .trat-sugestao__intro { margin: 0; font-weight: 600; }
 .trat-sugestao--solta .trat-falas blockquote { padding: 0; background: none; box-shadow: none; color: inherit; border-radius: 0; }
 .trat-sugestao--solta .trat-falas strong { display: none; }
@@ -543,3 +543,5 @@
 
 /* bloco 2: texto de apoio 20% maior e em amarelo */
 .trat #b2 .trat-topo2__texto .trat-corpo { font-size: clamp(1.08rem, 1.34vw, 1.3rem); color: var(--jd-yellow); }
+
+/* seta da sugestão: Phosphor (set "ph" do Iconify), no lugar do caractere ↓ */
