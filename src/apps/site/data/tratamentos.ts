@@ -164,7 +164,7 @@ export const BLOCOS: BlocoTexto[] = [
     id: 'b5',
     menu: 'Bloco 5',
     eyebrow: 'Bloco 5',
-    titulo: 'Criação do plano',
+    titulo: 'Criação\ndo plano',
     paragrafos: [
       'Voltamos para o ambiente da casa ou sala de reunião da fazenda, hora de uma montagem dinâmica mostrando o planejamento e como as soluções da John Deere podem ajudar nosso produtor.',
     ],

@@ -665,3 +665,47 @@
 @media (prefers-reduced-motion: reduce) {
   .trat .trat-vitrine { animation: none; }
 }
+
+/* ---- rodada de 26/11 (2): grade parada com grow no hover, textos de apoio em amarelo ---- */
+.trat-vitrine {
+  --gap: clamp(.7rem, 1.8vw, 1.4rem);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap);
+  width: min(100%, 62rem); justify-self: center; margin-inline: auto; padding-block: .6rem;
+}
+.trat-vitrine__item {
+  position: relative; flex: 0 0 calc((100% - 2 * var(--gap)) / 3); min-width: 0;
+  transition: transform .24s cubic-bezier(.22, 1, .36, 1), opacity .24s ease, filter .24s ease;
+}
+.trat-vitrine .trat-exclamacoes { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .trat-vitrine:has(.trat-vitrine__item:hover) .trat-vitrine__item:not(:hover) { transform: scale(.94); opacity: .6; filter: saturate(.7); }
+  .trat-vitrine__item:hover { transform: scale(1.1); z-index: 2; }
+  .trat-vitrine__item:hover .trat-midia { box-shadow: 0 0 0 2px var(--jd-yellow), 0 0 2.4rem rgb(255 222 0 / 45%), 0 1.4rem 2.6rem -1rem #000c; }
+  .trat-vitrine__item:hover .trat-exclamacoes { display: block; }
+}
+@media (max-width: 600px) { .trat-vitrine__item { flex-basis: calc((100% - var(--gap)) / 2); } }
+@media (prefers-reduced-motion: reduce) { .trat-vitrine__item { transition: none; } }
+
+/* título à esquerda e texto de apoio amarelo à direita, do bloco 4 até a fotografia */
+.trat :is(#b4, #b5, #b6, #b7, #fotografia) .trat-topo2 { grid-template-columns: minmax(0, .75fr) minmax(0, 1.7fr); align-items: center; }
+.trat :is(#b4, #b5, #b6, #b7, #fotografia) .trat-topo2__texto .trat-corpo { max-width: none; font-size: clamp(.9rem, 1.12vw, 1.08rem); line-height: 1.5; }
+/* bloco 5: "Criação" em cima e "do plano" embaixo, para o texto ganhar largura */
+.trat #b5 .trat-titulo { white-space: pre-line; }
+.trat #b5 .trat-topo2 { grid-template-columns: auto minmax(0, 1fr); }
+/* direção de fotografia: o tópico é o título (maior), o subtítulo vem menor */
+.trat #fotografia .trat-topo2 { grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 1.25rem; }
+.trat #fotografia .trat-cabecalho--topico .trat-eyebrow { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.trat #fotografia .trat-cabecalho--topico .trat-titulo { font-size: clamp(.95rem, 1.3vw, 1.15rem); }
+.trat #fotografia .trat-topo2__texto .trat-corpo { font-size: clamp(.8rem, .92vw, .92rem); }
+/* bloco 4: os textos entre as fileiras em duas linhas */
+.trat #b4 .trat-linha { width: min(100%, 100ch); }
+
+/* linguagem de câmera e trilha: tudo centralizado */
+.trat :is(#camera, #som) .trat-cabecalho { justify-items: center; text-align: center; }
+.trat #camera .trat-lista { justify-content: center; }
+.trat #som .trat-som { width: min(100%, 56rem); margin-inline: auto; justify-self: center; }
+.trat #som .trat-som article { box-shadow: 0 1.2rem 2.4rem -.5rem rgb(0 0 0 / 55%), 0 .3rem .8rem rgb(0 0 0 / 25%); }
+
+@media (max-width: 899px) {
+  .trat :is(#b4, #b5, #b6, #b7, #fotografia) .trat-topo2 { grid-template-columns: minmax(0, 1fr); }
+}

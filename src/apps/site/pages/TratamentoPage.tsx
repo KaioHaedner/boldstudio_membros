@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { Navigate, useParams, useSearchParams } from 'react-router-dom'
 import { SlidersHorizontal, X } from 'lucide-react'
 import { useBioButtonAuras } from '@/shared/hooks/useBioButtonAuras'
@@ -393,9 +393,20 @@ function Carrossel({ ids, render }: { ids: string[]; render: (id: string, indice
   )
 }
 
-// vitrine: uma mídia em destaque (maior, com moldura amarela) e as outras giram em volta
+// vitrine: as mídias ficam paradas, três por linha (a sobra centralizada embaixo).
+// Com mouse, a que está sob o cursor cresce com a moldura amarela e as outras recuam.
 function Vitrine({ ids, render }: { ids: string[]; render: (id: string, indice: number) => React.ReactNode }) {
-  return <div className="trat-vitrine"><Carrossel ids={ids} render={render} /></div>
+  if (ids.length === 0) return null
+  return (
+    <div className="trat-vitrine">
+      {ids.map((id, i) => (
+        <div key={id} className="trat-vitrine__item">
+          {render(id, i)}
+          <span className="trat-exclamacoes" aria-hidden="true"><i>!</i><i>!</i><i>!</i></span>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 function Sugestao({ rotulo, intro, falas, solta, lado }: {
@@ -493,14 +504,19 @@ function BlocoView({
     })
     corpo = (
       <>
-        {duasColunas(<Texto partes={bloco.paragrafos} />)}
-        {vitrines.map((fatia, i) => <Vitrine key={i} ids={fatia} render={midia} />)}
+        {duasColunas(<Texto partes={[bloco.paragrafos[0]]} />, true)}
+        {vitrines.map((fatia, i) => (
+          <Fragment key={i}>
+            {i > 0 && bloco.paragrafos[i] && <p className="trat-linha">{bloco.paragrafos[i]}</p>}
+            <Vitrine ids={fatia} render={midia} />
+          </Fragment>
+        ))}
       </>
     )
   } else if (['b5', 'b6', 'b7'].includes(bloco.id)) {
     corpo = (
       <>
-        {duasColunas(<Texto partes={bloco.paragrafos} />)}
+        {duasColunas(<Texto partes={bloco.paragrafos} />, true)}
         {ids.length > 0 && <Vitrine ids={ids} render={midia} />}
       </>
     )
@@ -849,11 +865,11 @@ export function TratamentoPage() {
 
         <Secao id="fotografia" tone="black">
           <div className="trat-topo2">
-            <header className="trat-cabecalho">
+            <header className="trat-cabecalho trat-cabecalho--topico">
               <p className="trat-eyebrow">{FOTOGRAFIA.eyebrow}</p>
               <Titulo texto={FOTOGRAFIA.titulo} />
             </header>
-            <div className="trat-topo2__texto"><Texto partes={[FOTOGRAFIA.texto]} /></div>
+            <div className="trat-topo2__texto is-amarelo"><Texto partes={[FOTOGRAFIA.texto]} /></div>
           </div>
           <Vitrine ids={FOTOGRAFIA.midias} render={(id, i) => (
             <Midia key={id} id={id} proporcao="16 / 9" indice={i} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
