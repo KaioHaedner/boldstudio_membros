@@ -923,3 +923,8 @@ html:has(.trat) { scroll-snap-type: y proximity; }
 .trat-equipe h3 { color: #285e22; -webkit-text-stroke: 0; }
 .trat-equipe article:first-child p { font-size: clamp(.92rem, 1.035vw, 1.012rem); }
 .trat-equipe article:first-child p { font-size: clamp(1.012rem, 1.139vw, 1.113rem); }
+/* grow sem sobrepor o vizinho: cresce menos que o vão entre as mídias */
+@media (hover: hover) and (pointer: fine) {
+  .trat-vitrine__item:hover { transform: scale(1.03); }
+  .trat-vitrine:has(.trat-vitrine__item:hover) .trat-vitrine__item:not(:hover) { transform: scale(.97); }
+}
