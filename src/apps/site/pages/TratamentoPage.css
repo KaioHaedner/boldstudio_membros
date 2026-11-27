@@ -773,3 +773,11 @@
 }
 .trat #b4 .trat-topo2__texto { justify-self: stretch; width: 100%; text-align: center; }
 .trat #b4 .trat-topo2__texto .trat-corpo { width: auto; max-width: none; }
+
+/* quebra do paredão verde: alguns blocos em preto, alternando com o verde */
+.trat .trat-palco > :is(#b2, #b4, #b6, #camera) {
+  position: relative; z-index: 1;
+  background: radial-gradient(60% 40% at 85% 0%, #1c1c18, transparent 70%), #0b0b09;
+  box-shadow: 0 -1.4rem 2.8rem -1rem rgb(0 0 0 / 55%), 0 1.4rem 2.8rem -1rem rgb(0 0 0 / 55%);
+}
+.trat .trat-palco > :is(#b2, #b4, #b6, #camera) .trat-ondas { --onda-cor: #ffde00; --onda-forca: .1; }
