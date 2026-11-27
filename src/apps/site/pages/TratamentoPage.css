@@ -922,3 +922,4 @@ html:has(.trat) { scroll-snap-type: y proximity; }
 .trat-equipe p { color: #181a0c; font-weight: 600; } .trat-equipe h3 { color: #ffd712; -webkit-text-stroke: 6px #111; paint-order: stroke fill; }
 .trat-equipe h3 { color: #285e22; -webkit-text-stroke: 0; }
 .trat-equipe article:first-child p { font-size: clamp(.92rem, 1.035vw, 1.012rem); }
+.trat-equipe article:first-child p { font-size: clamp(1.012rem, 1.139vw, 1.113rem); }
