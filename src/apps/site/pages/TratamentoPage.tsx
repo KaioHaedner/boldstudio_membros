@@ -810,6 +810,7 @@ export function TratamentoPage() {
         <div className="trat-capa__logo">
           <img src={LOGO_BOLD} alt="Bold Studio" width="1357" height="486" fetchPriority="high" />
         </div>
+        <p className="trat-capa__celular">Para uma melhor experiência, abre no seu PC.<br /><br />Obrigado e Solta o Rec<br /><strong>BoldStudio Brasil!</strong></p>
       </header>
 
       <main>

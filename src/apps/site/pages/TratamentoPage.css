@@ -928,3 +928,16 @@ html:has(.trat) { scroll-snap-type: y proximity; }
   .trat-vitrine__item:hover { transform: scale(1.03); }
   .trat-vitrine:has(.trat-vitrine__item:hover) .trat-vitrine__item:not(:hover) { transform: scale(.97); }
 }
+
+/* celular: só a capa, com o aviso para abrir no PC */
+.trat-capa__celular { display: none; }
+@media (max-width: 767px) {
+  .trat > main, .trat > .trat-rodape { display: none; }
+  .trat .trat-capa { position: relative; min-height: 100svh; display: grid; place-content: center; justify-items: center; gap: 1.6rem; padding: 2rem 1.5rem; }
+  .trat .trat-capa .trat-capa__logo { position: static; transform: none; animation: none; }
+  .trat .trat-capa img { width: min(72vw, 22rem); }
+  .trat-capa__celular { display: block; margin: 0; max-width: 22rem; text-align: center; font-size: 1.05rem; line-height: 1.45; font-weight: 650; color: #181a0c; }
+  .trat-capa__celular strong { color: #d9a400; font-weight: 850; }
+  html:has(.trat) { scroll-snap-type: none; }
+}
+@media (max-width: 767px) { .trat .trat-capa img { animation: none; } .trat .trat-capa { gap: 2.4rem; } }
