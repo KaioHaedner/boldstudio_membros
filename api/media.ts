@@ -10,10 +10,12 @@ export const config = { runtime: 'edge' }
 // pros demais) — bucket/arquivo vêm por query string em vez de path.
 const LEGACY_ORIGIN = process.env.SUPABASE_MEDIA_LEGACY_URL || 'https://erhtqgaxibncpondscna.supabase.co'
 const PRIMARY_ORIGIN = process.env.SUPABASE_MEDIA_PRIMARY_URL || 'https://heriogfvynncvabbwspu.supabase.co'
+const INSTITUTIONAL = process.env.VITE_SITE_MODE === 'institutional'
+const INSTITUTIONAL_ORIGIN = process.env.SUPABASE_MEDIA_PRIMARY_URL
 
 // Cada bucket conserva sua origem até que seus objetos tenham sido migrados.
 // Trocar todas as URLs para o projeto novo não copia os arquivos armazenados.
-const BUCKET_ORIGIN: Record<string, string> = {
+const LEGACY_BUCKET_ORIGIN: Record<string, string> = {
   avatars: LEGACY_ORIGIN,
   CLIENTES_CONTEINER: LEGACY_ORIGIN,
   CLIENTES_CONTEINER_PREVIA_VD: LEGACY_ORIGIN,
@@ -23,6 +25,9 @@ const BUCKET_ORIGIN: Record<string, string> = {
   Videos_Cliente_New: PRIMARY_ORIGIN,
   ICONES_JORNADAS_SVG: PRIMARY_ORIGIN,
 }
+const BUCKET_ORIGIN: Record<string, string | undefined> = INSTITUTIONAL
+  ? Object.fromEntries(Object.keys(LEGACY_BUCKET_ORIGIN).map((bucket) => [bucket, INSTITUTIONAL_ORIGIN]))
+  : LEGACY_BUCKET_ORIGIN
 
 export default async function handler(req: Request) {
   if (req.method === 'OPTIONS') {

@@ -228,6 +228,7 @@ export function ContactForm() {
 
       <ShinyButton
         type="submit"
+        showArrow={false}
         disabled={status === 'sending'}
         className={cn('mt-1 w-full', status === 'sending' && 'pointer-events-none opacity-60')}
       >

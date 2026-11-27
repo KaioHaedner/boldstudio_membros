@@ -1,10 +1,10 @@
 /** Decorative signature below the footer. Clip with CSS; preserve the source. */
 export function FooterWordmark() {
   return (
-    <div className="footer-wordmark" aria-hidden="true">
+    <div className="footer-wordmark bg-black" data-footer-signature aria-hidden="true">
       <div className="footer-wordmark__crop">
         <img
-          src="/brand/boldstudio-footer-white-538e252ccec7.webp"
+          src="/brand/BoldStudio_logo_vetorizada_branca.svg"
           alt=""
           width={890}
           height={279}

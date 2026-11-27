@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Mail, MessageCircle, HelpCircle } from 'lucide-react'
+import { Mail, MessageCircle, HelpCircle } from 'lucide-react'
+import { ActionArrow as ArrowLeft } from '@/shared/components/ActionArrow'
 import { Footer } from '@/shared/components/Footer'
 import { whatsappLink } from '@/shared/lib/whatsapp'
 
@@ -10,7 +11,7 @@ const HOME_INSTITUCIONAL = '/home-bold-studio-sinop-brasil'
 
 function LegalShell({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-bold-black text-bold-white">
+    <div className="bold-editorial min-h-screen flex flex-col bg-bold-black text-bold-white">
       <header className="border-b border-bold-white/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to={HOME_INSTITUCIONAL} className="flex items-center gap-2">
@@ -139,7 +140,7 @@ export function PrivacidadePage() {
     <LegalShell titulo="Política de Privacidade">
       <p>
         A Bold Studio Brasil respeita sua privacidade e trata seus dados pessoais conforme a Lei Geral de Proteção
-        de Dados (LGPD — Lei 13.709/2018). Esta política explica quais dados coletamos, por que coletamos, como
+        de Dados (LGPD, Lei 13.709/2018). Esta política explica quais dados coletamos, por que coletamos, como
         usamos e protegemos, e quais são os seus direitos.
       </p>
 
@@ -175,9 +176,9 @@ export function PrivacidadePage() {
 
       <Secao titulo="4. Compartilhamento">
         <p>
-          Não vendemos seus dados. Compartilhamos apenas com parceiros essenciais à operação — provedor de banco de
+          Não vendemos seus dados. Compartilhamos apenas com parceiros essenciais à operação, provedor de banco de
           dados e hospedagem (Supabase), provedor de e-mail transacional (Resend), gateway de pagamento e
-          hospedagem de vídeo — sempre na medida necessária e sob obrigação de confidencialidade.
+          hospedagem de vídeo, sempre na medida necessária e sob obrigação de confidencialidade.
         </p>
       </Secao>
 
@@ -226,7 +227,7 @@ export function CookiesPage() {
 
       <Secao titulo="2. Tipos que usamos">
         <p>
-          <strong className="text-bold-white">Essenciais:</strong> necessários para o site funcionar —
+          <strong className="text-bold-white">Essenciais:</strong> necessários para o site funcionar,
           autenticação, sessão, segurança e o registro da sua escolha de cookies. Não podem ser desativados.
           <br />
           <strong className="text-bold-white">Funcionais:</strong> lembram preferências como idioma e progresso
@@ -242,7 +243,7 @@ export function CookiesPage() {
           Na sua primeira visita, exibimos uma barra de cookies onde você pode <strong className="text-bold-white">aceitar</strong> ou{' '}
           <strong className="text-bold-white">gerenciar</strong> os cookies não essenciais. Você pode rever sua
           escolha a qualquer momento limpando os dados do site no navegador. Também é possível bloquear ou apagar
-          cookies nas configurações do próprio navegador — lembrando que, sem os cookies essenciais, alguns
+          cookies nas configurações do próprio navegador, lembrando que, sem os cookies essenciais, alguns
           recursos podem deixar de funcionar.
         </p>
       </Secao>
@@ -260,7 +261,7 @@ export function CookiesPage() {
 /* ============== USO DA IA (RecIA) ============== */
 export function UsoIAPage() {
   return (
-    <LegalShell titulo="Uso da IA — RecIA">
+    <LegalShell titulo="Uso da IA: RecIA">
       <p>
         A <strong className="text-bold-white">RecIA</strong> é a assistente virtual da Bold Studio Brasil,
         disponível no nosso site institucional. Esta página explica, de forma transparente, o que ela faz, quais
@@ -303,7 +304,7 @@ export function UsoIAPage() {
       <Secao titulo="5. Limites da RecIA">
         <p>
           As respostas da RecIA têm caráter informativo e podem conter imprecisões. Elas não substituem um
-          atendimento personalizado nem constituem proposta comercial formal — valores, prazos e escopo são sempre
+          atendimento personalizado nem constituem proposta comercial formal, valores, prazos e escopo são sempre
           confirmados pela nossa equipe. Não compartilhe com a RecIA dados sensíveis (como documentos, senhas ou
           dados de cartão).
         </p>

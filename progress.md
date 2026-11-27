@@ -157,6 +157,16 @@
 - GSAP controla `opacity` e `visibility` com `autoAlpha`; somente o ativo e, no fim da transição, o próximo podem aparecer.
 - Lint focado, typecheck, build e `git diff --check`: aprovados.
 
+## Rodada 05/10/2026 — home e mídia
+
+Implementação na cópia BoldStudioHub. Relatório, capturas e gates atuais:
+`docs/qa/2026-10-05/README.md`. SAVE atual:
+`docs/saves/SAVE-HOME-MEDIA-2026-10-05.md`.
+Soluções com quatro fotos parallax, logos originais via CSS, nove fundos
+enviados/validados e media proxy/gestos com 20 testes passando.
+Build passou. Produção/DNS não alterados; auditoria integral e Android físico
+continuam pendentes. Informações abaixo são históricas, não gates desta rodada.
+
 ## Análise do ZIP original
 
 - Todos os arquivos textuais do ZIP foram lidos diretamente, sem extração ou alteração.

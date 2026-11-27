@@ -1,0 +1,209 @@
+{
+  "agrobaggio-institucional": {
+    "id": "agrobaggio-institucional",
+    "title": "AgroBaggio, John Deere",
+    "description": "Filme institucional da AgroBaggio John Deere produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-agrobaggio-institucional-5f0401d9e2c2-1080p.mp4",
+    "poster": "/media/services/bold-studio-agrobaggio-institucional-5f0401d9e2c2.webp",
+    "duration": 162.91275,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-agrobaggio-institucional-5f0401d9e2c2-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 33357834
+      },
+      {
+        "src": "/media/services/bold-studio-agrobaggio-institucional-5f0401d9e2c2-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 65424180
+      },
+      {
+        "src": "/media/services/bold-studio-agrobaggio-institucional-5f0401d9e2c2-2160p/index.m3u8",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 282835023
+      }
+    ]
+  },
+  "fazcarnes-institucional": {
+    "id": "fazcarnes-institucional",
+    "title": "FazCarnes",
+    "description": "Filme institucional da FazCarnes produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-fazcarnes-institucional-f2cb03c25e34-1080p.mp4",
+    "poster": "/media/services/bold-studio-fazcarnes-institucional-f2cb03c25e34.webp",
+    "duration": 85.251833,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-fazcarnes-institucional-f2cb03c25e34-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 21698559
+      },
+      {
+        "src": "/media/services/bold-studio-fazcarnes-institucional-f2cb03c25e34-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 44674621
+      }
+    ]
+  },
+  "mascarello-guerra-institucional": {
+    "id": "mascarello-guerra-institucional",
+    "title": "Mascarello & Guerra Advogados",
+    "description": "Filme institucional do escritório Mascarello & Guerra Advogados produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-mascarello-guerra-institucional-b47af90b0a3d-1080p.mp4",
+    "poster": "/media/services/bold-studio-mascarello-guerra-institucional-b47af90b0a3d.webp",
+    "duration": 107.649208,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-mascarello-guerra-institucional-b47af90b0a3d-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 17100256
+      },
+      {
+        "src": "/media/services/bold-studio-mascarello-guerra-institucional-b47af90b0a3d-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 40434055
+      },
+      {
+        "src": "/media/services/bold-studio-mascarello-guerra-institucional-b47af90b0a3d-2160p/index.m3u8",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 208727867
+      }
+    ]
+  },
+  "exponorte-2026-aftermovie": {
+    "id": "exponorte-2026-aftermovie",
+    "title": "Exponorte 2026",
+    "description": "Aftermovie da Exponorte 2026 produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-exponorte-2026-aftermovie-47505b66f938-718p.mp4",
+    "poster": "/media/services/bold-studio-exponorte-2026-aftermovie-47505b66f938.webp",
+    "duration": 172.962585,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-exponorte-2026-aftermovie-47505b66f938-718p.mp4",
+        "width": 1276,
+        "height": 718,
+        "bytes": 47762216
+      }
+    ]
+  },
+  "agrobaggio-confraternizacao-sorriso": {
+    "id": "agrobaggio-confraternizacao-sorriso",
+    "title": "AgroBaggio, Confraternização em Sorriso",
+    "description": "Cobertura da confraternização AgroBaggio em Sorriso pela Bold Studio.",
+    "src": "/media/services/bold-studio-agrobaggio-confraternizacao-sorriso-8139e689eb9a-720p.mp4",
+    "poster": "/media/services/bold-studio-agrobaggio-confraternizacao-sorriso-8139e689eb9a.webp",
+    "duration": 115.748617,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-agrobaggio-confraternizacao-sorriso-8139e689eb9a-720p.mp4",
+        "width": 720,
+        "height": 1280,
+        "bytes": 24092530
+      }
+    ]
+  },
+  "agrobaggio-resumo-feira-dia-5": {
+    "id": "agrobaggio-resumo-feira-dia-5",
+    "title": "AgroBaggio, Resumo da feira",
+    "description": "Resumo do quinto dia de feira da AgroBaggio produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-agrobaggio-resumo-feira-dia-5-264c180720a9-1080p.mp4",
+    "poster": "/media/services/bold-studio-agrobaggio-resumo-feira-dia-5-264c180720a9.webp",
+    "duration": 116.116,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-agrobaggio-resumo-feira-dia-5-264c180720a9-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 33542111
+      },
+      {
+        "src": "/media/services/bold-studio-agrobaggio-resumo-feira-dia-5-264c180720a9-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 70335018
+      }
+    ]
+  },
+  "forteza-filme-produto": {
+    "id": "forteza-filme-produto",
+    "title": "Forteza",
+    "description": "Filme de produto Forteza produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-forteza-filme-produto-5c362b314d13-720p.mp4",
+    "poster": "/media/services/bold-studio-forteza-filme-produto-5c362b314d13.webp",
+    "duration": 41.421542,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-forteza-filme-produto-5c362b314d13-720p.mp4",
+        "width": 1278,
+        "height": 720,
+        "bytes": 6038527
+      }
+    ]
+  },
+  "louvada-weis-filme-produto": {
+    "id": "louvada-weis-filme-produto",
+    "title": "Louvada Weis",
+    "description": "Filme de produto Louvada Weis produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-louvada-weis-filme-produto-d0eb791b4ab0-1080p.mp4",
+    "poster": "/media/services/bold-studio-louvada-weis-filme-produto-d0eb791b4ab0.webp",
+    "duration": 24.77475,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-louvada-weis-filme-produto-d0eb791b4ab0-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 3640144
+      },
+      {
+        "src": "/media/services/bold-studio-louvada-weis-filme-produto-d0eb791b4ab0-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 7295227
+      },
+      {
+        "src": "/media/services/bold-studio-louvada-weis-filme-produto-d0eb791b4ab0-2160p/index.m3u8",
+        "width": 3840,
+        "height": 2160,
+        "bytes": 28122651
+      }
+    ]
+  },
+  "mangut-fit-batata-doce": {
+    "id": "mangut-fit-batata-doce",
+    "title": "Mangut Fit, Batata Doce",
+    "description": "Filme de produto Batata Doce da Mangut Fit produzido pela Bold Studio.",
+    "src": "/media/services/bold-studio-mangut-fit-batata-doce-ab82cadfbb6d-1080p.mp4",
+    "poster": "/media/services/bold-studio-mangut-fit-batata-doce-ab82cadfbb6d.webp",
+    "duration": 43.168125,
+    "uploadDate": "2026-10-22T00:00:00-03:00",
+    "variants": [
+      {
+        "src": "/media/services/bold-studio-mangut-fit-batata-doce-ab82cadfbb6d-720p.mp4",
+        "width": 1280,
+        "height": 720,
+        "bytes": 7066898
+      },
+      {
+        "src": "/media/services/bold-studio-mangut-fit-batata-doce-ab82cadfbb6d-1080p.mp4",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 14907356
+      }
+    ]
+  }
+}

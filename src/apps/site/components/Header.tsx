@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
+import { ActionArrow as ArrowRight } from '@/shared/components/ActionArrow'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { homeSectionHref, isPlainNavigation } from '@/apps/site/lib/home-navigation'
 import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'
@@ -100,13 +101,13 @@ export function Header() {
 
           <div className="pointer-events-auto flex items-center gap-1 rounded-full border border-white/15 bg-black/35 p-1.5 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)] backdrop-blur-2xl backdrop-saturate-150">
             <div className="hidden md:block">
-              <LanguageSwitcher />
+              <LanguageSwitcher embedded />
             </div>
 
             {/* No mobile o seletor de idioma aparece ao lado do X, so com o menu aberto */}
             {menuOpen && (
               <div className="md:hidden">
-                <LanguageSwitcher />
+                <LanguageSwitcher embedded />
               </div>
             )}
 

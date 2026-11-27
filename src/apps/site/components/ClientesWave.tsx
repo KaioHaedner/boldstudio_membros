@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, MapPin, Phone, Play, X } from 'lucide-react'
+import { MapPin, Phone, Play, X } from 'lucide-react'
+import { ActionArrow as ArrowRight, ActionArrow as ArrowUpRight } from '@/shared/components/ActionArrow'
 import { ShinyButton } from '@/shared/components/ShinyButton'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
 import { CLIENTES, type Cliente } from '@/apps/site/data/clientes'
@@ -12,16 +13,7 @@ import { bindDialogBehavior } from '@/apps/site/lib/dialog-behavior'
 function DicaDeClique({ label }: { label: string }) {
   return (
     <div className="clientes-dica">
-      <svg className="clientes-dica__svg" viewBox="0 0 150 120" aria-hidden="true">
-        <path className="clientes-dica__curva" d="M18 112C26 62 48 30 80 8" />
-        <path className="clientes-dica__ponta" d="m64 12 16-4-4 16" />
-        <g transform="translate(80 8)">
-          <circle className="clientes-dica__pulso clientes-dica__pulso--logo" cx="0" cy="0" r="12" />
-          <g className="clientes-dica__cursor clientes-dica__cursor--logo">
-            <path d="M0 0v31l8-8 8 17 8-4-8-16h13z" />
-          </g>
-        </g>
-      </svg>
+      <ArrowUpRight size={32} className="text-bold-yellow" />
       <p className="clientes-dica__label">{label}</p>
     </div>
   )
@@ -31,7 +23,7 @@ function DicaDeClique({ label }: { label: string }) {
 // duplicada para o loop infinito; a segunda cópia fica fora da acessibilidade.
 // Clicar num logo abre o modal com preview/depoimento e link pro projeto.
 export function ClientesWave() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const navigate = useNavigate()
   const [selected, setSelected] = useState<Cliente | null>(null)
   const detailPanelRef = useRef<HTMLDivElement>(null)
@@ -91,7 +83,8 @@ export function ClientesWave() {
             document.querySelector('#contato')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }
         >
-          {t.clientes.ctaButton}
+          <span className="hidden sm:inline">{t.clientes.ctaButton}</span>
+          <span className="sm:hidden">{lang === 'pt' ? 'Quero ser a próxima marca' : lang === 'es' ? 'Quiero ser la próxima marca' : 'I want to be the next brand'}</span>
         </ShinyButton>
       </div>
 
@@ -121,11 +114,10 @@ export function ClientesWave() {
 
             <div className="clientes-detail-card__surface">
               <div className="aspect-video w-full overflow-hidden bg-[#858585]">
-                {selected.videos[0] ? (
+                {selected.videos[0] && videoPreview(selected.videos[0]) ? (
                   <BudgetVideo
-                    src={videoPreview(selected.videos[0]) || selected.videos[0]}
-                    autoPlay={Boolean(videoPreview(selected.videos[0]))}
-                    controls={!videoPreview(selected.videos[0])}
+                    src={videoPreview(selected.videos[0])!}
+                    autoPlay
                     poster={selected.logo}
                     loop
                     muted

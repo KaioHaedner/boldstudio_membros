@@ -30,7 +30,7 @@ const pt = {
     titleHighlight: 'resultados',
     titleB: 'não vídeos!',
     subtitle:
-      'Foto e vídeo não é sobre imagem bonita e sim sobre **resultado**, do Agro à indústria a gente cria conteúdo de **alto padrão** que coloca a sua marca na frente e faz sua empresa vender mais!',
+      'Foto e vídeo não é sobre imagem bonita e sim sobre resultado, do Agro à indústria a gente cria conteúdo de alto padrão que coloca a sua marca na frente e faz sua empresa vender mais!',
     ctaPrimary: 'Vem gravar com a Bold',
     ctaSecondary: 'Ver nossos cases',
   },
@@ -39,9 +39,9 @@ const pt = {
     title: 'Quem é a BoldStudio',
     body: 'Somos uma produtora audiovisual especializada em soluções estratégicas de foto e vídeo para empresas, eventos e marcas. Seja no Agro, indústrias, produtos ou eventos, atuamos sempre com foco em resultado, eficiência de produção e alto padrão visual.',
     paragraphs: [
-      'A BoldStudio é a produtora que o **resultado** construiu. Nascemos no **Agro**, na **indústria** e nos eventos mais exigentes do país — forjando uma linguagem audiovisual **nativa, real e orientada a performance**.',
-      'Hoje é exatamente isso que **marcas e empresas** precisam: no lançamento de um produto, numa **ativação de marca** ou numa **campanha digital** de alto padrão visual.',
-      'Não entregamos **vídeo**. Entregamos a **certeza** de que o resultado vem junto.',
+      'A BoldStudio é a produtora que o resultado construiu. Nascemos no Agro, na indústria e nos eventos mais exigentes do país, forjando uma linguagem audiovisual nativa, real e orientada a performance.',
+      'Hoje é exatamente isso que marcas e empresas precisam: no lançamento de um produto, numa ativação de marca ou numa campanha digital de alto padrão visual.',
+      'Não entregamos vídeo. Entregamos a certeza de que o resultado vem junto.',
     ],
     diffs: [
       'Processos claros do briefing à entrega final',
@@ -135,11 +135,10 @@ const pt = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'Eles confiaram na',
-    lineB: 'e suas marcas estão',
-    highlight: 'eternizadas',
+    lineA: 'Marcas que confiaram na',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Indústria', 'Eventos', 'Produtos'],
     recoveredPreview: 'Prévia recuperada de 10s. O vídeo completo novo ainda está indisponível.',
+    previewFinished: 'Fim da prévia de 10 segundos',
     unavailable: 'Vídeo temporariamente indisponível. Estamos recuperando este arquivo.',
   },
   clientes: {
@@ -155,6 +154,8 @@ const pt = {
   projeto: {
     back: 'Voltar para a home',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Assistir ao vídeo completo',
+    fullVideoSoon: 'Prévia disponível. O vídeo completo será adicionado em breve.',
     reelsTitle: 'Reels do projeto',
     reelsSoon: 'Reels em breve',
     testimonialTitle: 'O que dizem',
@@ -320,9 +321,9 @@ const en: Dict = {
     title: 'Who is BoldStudio',
     body: "We're an audiovisual studio specialized in strategic photo and video solutions for companies, events and brands. Whether in Agribusiness, industry, products or events, we always work focused on results, production efficiency and high visual standards.",
     paragraphs: [
-      "BoldStudio is the studio that **results** built. We were born in **Agribusiness**, **industry** and the country's most demanding events — forging an audiovisual language that is **native, real and performance-driven**.",
-      'Today this is exactly what **brands and companies** need: in a product launch, a **brand activation** or a **high-end digital campaign**.',
-      "We don't deliver **video**. We deliver the **certainty** that results come with it.",
+      "BoldStudio is the studio that results built. We were born in Agribusiness, industry and the country's most demanding events, forging an audiovisual language that is native, real and performance-driven.",
+      'Today this is exactly what brands and companies need: in a product launch, a brand activation or a high-end digital campaign.',
+      "We don't deliver video. We deliver the certainty that results come with it.",
     ],
     diffs: [
       'Clear processes from briefing to final delivery',
@@ -416,11 +417,10 @@ const en: Dict = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'They trusted',
-    lineB: 'and their brands are',
-    highlight: 'eternalized',
+    lineA: 'Brands that trusted',
     typeWords: ['Live Experience', 'Brand Experience', 'Agribusiness', 'Industry', 'Events', 'Products'],
     recoveredPreview: 'Recovered 10s preview. The new full video is still unavailable.',
+    previewFinished: 'End of the 10-second preview',
     unavailable: 'Video temporarily unavailable. We are recovering this file.',
   },
   clientes: {
@@ -436,6 +436,8 @@ const en: Dict = {
   projeto: {
     back: 'Back to home',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Watch the full video',
+    fullVideoSoon: 'Preview available. The full video will be added soon.',
     reelsTitle: 'Project reels',
     reelsSoon: 'Reels coming soon',
     testimonialTitle: 'What they say',
@@ -456,7 +458,7 @@ const en: Dict = {
   contato: {
     eyebrow: 'Contact',
     title: "Let's shoot something bold?",
-    helper: 'Tell us the challenge. We bring back a plan — and the camera ready.',
+    helper: 'Tell us the challenge. We bring back a plan, and the camera ready.',
     headlineA: 'Your brand deserves ',
     headlineHi: 'results',
     supportA: 'Every brand carries a story ready to turn into results, and the right audiovisual is what makes it happen, so fill in your details ',
@@ -599,9 +601,9 @@ const es: Dict = {
     title: 'Quién es BoldStudio',
     body: 'Somos un estudio audiovisual especializado en soluciones estratégicas de foto y video para empresas, eventos y marcas. Sea en el Agro, industrias, productos o eventos, actuamos siempre con foco en resultados, eficiencia de producción y alto estándar visual.',
     paragraphs: [
-      'BoldStudio es la productora que el **resultado** construyó. Nacimos en el **Agro**, la **industria** y los eventos más exigentes del país — forjando un lenguaje audiovisual **nativo, real y orientado al rendimiento**.',
-      'Hoy es exactamente eso lo que **marcas y empresas** necesitan: en el lanzamiento de un producto, una **activación de marca** o una **campaña digital** de alto estándar visual.',
-      'No entregamos **video**. Entregamos la **certeza** de que el resultado viene junto.',
+      'BoldStudio es la productora que el resultado construyó. Nacimos en el Agro, la industria y los eventos más exigentes del país, forjando un lenguaje audiovisual nativo, real y orientado al rendimiento.',
+      'Hoy es exactamente eso lo que marcas y empresas necesitan: en el lanzamiento de un producto, una activación de marca o una campaña digital de alto estándar visual.',
+      'No entregamos video. Entregamos la certeza de que el resultado viene junto.',
     ],
     diffs: [
       'Procesos claros del briefing a la entrega final',
@@ -695,11 +697,10 @@ const es: Dict = {
   },
   cases: {
     label: 'Cases',
-    lineA: 'Confiaron en',
-    lineB: 'y sus marcas están',
-    highlight: 'eternizadas',
+    lineA: 'Marcas que confiaron en',
     typeWords: ['Live Experience', 'Brand Experience', 'Agro', 'Industria', 'Eventos', 'Productos'],
     recoveredPreview: 'Vista previa recuperada de 10s. El nuevo video completo aún no está disponible.',
+    previewFinished: 'Fin de la vista previa de 10 segundos',
     unavailable: 'Video temporalmente no disponible. Estamos recuperando este archivo.',
   },
   clientes: {
@@ -715,6 +716,8 @@ const es: Dict = {
   projeto: {
     back: 'Volver al inicio',
     demoreelTitle: 'Demoreel',
+    playFullVideo: 'Ver el video completo',
+    fullVideoSoon: 'Vista previa disponible. El video completo se añadirá pronto.',
     reelsTitle: 'Reels del proyecto',
     reelsSoon: 'Reels en breve',
     testimonialTitle: 'Lo que dicen',

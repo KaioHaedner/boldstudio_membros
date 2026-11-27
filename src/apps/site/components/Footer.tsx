@@ -112,10 +112,7 @@ export function Footer() {
     return () => trigger?.focus({ preventScroll: true })
   }, [kaioOpen])
   return (
-    <footer className="relative z-10 overflow-hidden border-t border-white/10 bg-[#050505] px-6 pb-6 pt-14 text-bold-white">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="footer-yellow-glow footer-yellow-glow--top animate-blob-1 absolute -left-[6%] -top-[35%] h-[22vw] w-[22vw] min-h-[180px] min-w-[180px] rounded-full bg-bold-yellow/30 blur-[55px]" />
-      </div>
+    <footer className="relative z-10 overflow-hidden bg-black px-6 pb-6 pt-14 text-bold-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-10 md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
           <img
@@ -177,12 +174,11 @@ export function Footer() {
       </div>
 
       <div className="footer-credits mx-auto mt-12 grid max-w-5xl grid-cols-2 items-start gap-6 border-t border-white/5 pt-6 sm:items-center">
-        <p className="text-left text-xs text-bold-white/40">
-          © {new Date().getFullYear()} Bold Studio Brasil. {t.footer.rights}
+        <p className="footer-copyright text-left text-xs text-bold-yellow">
+          © {new Date().getFullYear()} Bold Studio Brasil<span className="hidden sm:inline">. {t.footer.rights}</span>
         </p>
         <div className="flex flex-col items-end gap-4 text-right text-[15.6px] text-bold-white/70">
           <p>
-            Powered by{' '}
             <button
               ref={creditTrigger}
               type="button"
@@ -190,9 +186,10 @@ export function Footer() {
               aria-expanded={kaioOpen}
               aria-haspopup="dialog"
               aria-controls="bold-credit-dialog"
-              className="font-semibold text-bold-yellow underline-offset-4 transition-colors hover:underline"
+              aria-label="Kaio Haedner"
+              className="kaio-credit__trigger"
             >
-              Kaio Haedner
+              <img className="kaio-credit__logo" src="/brand/kaiohaedner-logo-horizontal-white.webp" alt="Kaio Haedner" width="300" height="100" loading="lazy" decoding="async" />
             </button>
           </p>
           {kaioOpen && (

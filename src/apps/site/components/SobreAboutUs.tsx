@@ -1,9 +1,10 @@
 import { Fragment, useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '@/shared/lib/gsap'
 import { useI18n } from '@/apps/site/i18n/I18nContext'
-import { CoinDecor } from '@/apps/site/components/CoinDecor'
+import { usePointerTilt } from '@/shared/hooks/usePointerTilt'
+import { CoinDecor } from './CoinDecor'
 
-const CREW_IMG = '/media/backgrounds/boldstudio-about-us-09c5b22b95fb.webp'
+const CREW_IMG = '/media/backgrounds/boldstudio-quem-somos-1400-v2.webp'
 
 // Destaca em amarelo os trechos marcados com **...** no texto das traduções.
 export function renderHighlighted(text: string) {
@@ -19,42 +20,20 @@ export function renderHighlighted(text: string) {
   })
 }
 
-// Mancha branca irregular (respingo estilo Nickelodeon) atrás da foto do crew.
-function SplatBlob() {
-  return (
-    <svg
-      viewBox="0 0 220 200"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      className="absolute inset-0 -z-10 h-full w-full drop-shadow-[0_20px_60px_rgba(255,255,255,0.12)]"
-    >
-      <g fill="#ffffff">
-        <path d="M96,14 C132,6 154,26 160,52 C165,74 186,72 194,96 C203,122 182,136 180,158 C178,182 150,194 122,186 C100,180 92,198 64,192 C36,186 20,170 20,142 C20,120 6,112 10,86 C14,58 30,52 40,34 C52,14 66,22 96,14 Z" />
-        {/* gota arrastada / puxada */}
-        <path d="M188,150 C200,150 208,160 205,172 C202,183 190,185 184,178 C178,171 176,150 188,150 Z" />
-        {/* respingos */}
-        <circle cx="204" cy="60" r="9" />
-        <circle cx="30" cy="176" r="6" />
-        <circle cx="196" cy="118" r="4" />
-      </g>
-    </svg>
-  )
-}
-
-// Seção "Sobre" no estilo Sand: foto do crew (com "ABOUT US" embutido) sobre uma
-// mancha branca irregular, em parallax; ao lado, o texto em parágrafos bold que
-// surgem do nada conforme o scroll chega em cada um.
+// Foto do time em primeiro plano e fundo fornecido em P&B, com gradiente
+// escuro para manter contraste durante a revelacao dos textos no scroll.
 export function SobreAboutUs() {
   const { t } = useI18n()
   const sectionRef = useRef<HTMLElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
+  const photoRef = usePointerTilt()
 
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
 
     const ctx = gsap.context(() => {
-      if (imgRef.current) {
+      if (imgRef.current && matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
         gsap.fromTo(
           imgRef.current,
           { yPercent: -8 },
@@ -99,18 +78,28 @@ export function SobreAboutUs() {
       id="sobre"
       className="relative scroll-mt-24 overflow-hidden px-5 py-[var(--espaco-secao)] sm:px-8 lg:px-12"
     >
+      <img src="/media/backgrounds/boldstudio-quem-somos-bg.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.3),rgba(0,0,0,.75)),linear-gradient(0deg,#000_0%,transparent_25%,transparent_75%,#000_100%)]" aria-hidden="true" />
       <CoinDecor className="right-6 top-10 w-16 opacity-15 sm:w-24 lg:right-16" rotate={20} floatDuration={7.5} />
-      <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
-        {/* Foto do crew sobre mancha branca irregular (parallax) */}
+      <div className="relative mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
+        {/* Foto do time em primeiro plano (parallax). */}
         <div className="relative flex items-center justify-center">
-          <SplatBlob />
+          <div ref={photoRef} className="about-photo">
+          <div className="about-photo__tilt">
           <img
             ref={imgRef}
             src={CREW_IMG}
-            alt="Equipe da BoldStudio — About Us"
+            srcSet="/media/backgrounds/boldstudio-quem-somos-700-v2.webp 700w, /media/backgrounds/boldstudio-quem-somos-1400-v2.webp 1400w"
+            sizes="(min-width: 1200px) 560px, (min-width: 1024px) 48vw, (min-width: 640px) 560px, calc(100vw - 40px)"
+            width={1400}
+            height={933}
+            alt="Equipe da BoldStudio"
             loading="lazy"
-            className="relative w-full max-w-lg will-change-transform"
+            decoding="async"
+            className="relative w-full rounded-3xl"
           />
+          </div>
+          </div>
         </div>
 
         {/* Texto em parágrafos que surgem com o scroll */}

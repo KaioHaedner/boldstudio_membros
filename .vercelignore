@@ -1,0 +1,21 @@
+# Upload source and public assets, never local builds, credentials or QA masters.
+.git/
+node_modules/
+dist/
+dist-ssr/
+.verification/
+.vercel/
+.env*
+.firebase/
+.npm-cache/
+.migration-baseline.zip
+.vscode/
+.idea/
+docs/
+tests/
+*.log
+*.zip
+**/*serviceAccount*.json
+**/*service-account*.json
+Thumbs.db
+desktop.ini

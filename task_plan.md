@@ -142,6 +142,21 @@ Fase 14
 - [x] Remover o mesmo fundo das páginas de projetos e definir base preta explícita
 - **Status:** validação concluída; publicação pendente
 
+## Rodada 05/10/2026 — home e mídia (cópia BoldStudioHub)
+
+- [x] Recuperar arquivos acessíveis do projeto antigo; preservar backup
+- [x] Endurecer proxy e reduzir autoplay/arquivos de preview
+- [x] Corrigir reconhecimento de gesto Crew e fallback de carregamento
+- [x] Importar nove fundos e verificar upload/binary hashes
+- [x] Importar 15 logos originais e aplicar branco por CSS no carrossel
+- [x] Adaptar quatro fotos parallax em Soluções sem scroll hijacking
+- [x] Build, 20 testes, QA visual mobile/desktop e SAVE desta rodada
+- [x] Registrar estimativa Firebase com premissas e fontes
+- [ ] Validar Android físico e fluxos admin/Academy autenticados
+- [ ] Recuperar nove vídeos/13 SVGs ainda bloqueados na organização nova
+- [x] Receber e integrar originais DuoTorri/Sonhalto
+- [ ] Revisar mudanças concorrentes, autorizar publicação e validar produção
+
 ## Erros da fase 16
 
 | Erro | Tentativa | Resolução |

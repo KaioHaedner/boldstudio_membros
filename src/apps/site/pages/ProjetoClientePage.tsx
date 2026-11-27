@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Globe, Phone, Play } from 'lucide-react'
+import { Globe, Phone, Play } from 'lucide-react'
+import { ActionArrow as ArrowLeft, ActionArrow as ArrowRight } from '@/shared/components/ActionArrow'
 import { I18nProvider, useI18n } from '@/apps/site/i18n/I18nContext'
-import { LanguageSwitcher } from '@/apps/site/components/LanguageSwitcher'
+import { Header } from '@/apps/site/components/Header'
 import { Footer } from '@/shared/components/Footer'
 import { getClienteBySlug, type Cliente } from '@/apps/site/data/clientes'
 import { BudgetVideo } from '@/shared/components/BudgetVideo'
 import { videoPreview } from '@/shared/lib/video-preview'
+import { IPhoneFrame } from '@/shared/components/IPhoneFrame'
 
 const MIN_PHONES = 3
 
@@ -14,16 +16,14 @@ const MIN_PHONES = 3
 // override no index.css). Reel roda em loop cortado em 10s. Sem src, mostra a
 // logo da Bold — assim todo cliente exibe pelo menos 3 celulares.
 function PhoneReel({ src, index }: { src?: string; index: number }) {
+  const preview = src ? videoPreview(src) : undefined
   return (
-    <div className="bold-iphone-wrap">
-      <div className="device device-iphone-x bold-iphone">
-        <div className="device-frame">
-          {src ? (
+    <IPhoneFrame>
+          {preview ? (
             <BudgetVideo
               className="device-screen"
-              src={videoPreview(src) || src}
-              autoPlay={Boolean(videoPreview(src))}
-              controls={!videoPreview(src)}
+              src={preview}
+              autoPlay
               loop
               muted
               playsInline
@@ -40,35 +40,59 @@ function PhoneReel({ src, index }: { src?: string; index: number }) {
               <img src="/brand/logo-boldstudio.webp" alt="" aria-hidden="true" className="w-24 opacity-15" />
             </div>
           )}
-        </div>
-        <div className="device-stripe" />
-        <div className="device-header" />
-        <div className="device-sensors" />
-        <div className="device-btns" />
-        <div className="device-power" />
-      </div>
-    </div>
+    </IPhoneFrame>
+  )
+}
+
+function FullProjectVideo({ src, poster }: { src: string; poster: string }) {
+  const { t } = useI18n()
+  const [started, setStarted] = useState(false)
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return <div className="project-full-video__poster" role="status">{t.cases.unavailable}</div>
+  }
+
+  return started ? (
+    <video
+      src={src}
+      controls
+      autoPlay
+      playsInline
+      preload="none"
+      poster={poster}
+      className="aspect-video w-full object-cover"
+      onError={() => setFailed(true)}
+    />
+  ) : (
+    <button
+      type="button"
+      className="project-full-video__poster"
+      onClick={() => setStarted(true)}
+      aria-label={t.projeto.playFullVideo}
+    >
+      <img src={poster} alt="" loading="lazy" />
+      <span><Play size={20} fill="currentColor" aria-hidden="true" /> {t.projeto.playFullVideo}</span>
+    </button>
   )
 }
 
 function ProjetoContent({ cliente }: { cliente: Cliente }) {
   const { t } = useI18n()
+  const awaitingNewMedia = import.meta.env.VITE_SITE_MODE === 'institutional'
 
   return (
-    <div className="relative isolate min-h-screen bg-bold-black text-bold-white">
+    <div className="bold-editorial bold-editorial--project relative isolate min-h-screen bg-bold-black text-bold-white">
 
-      {/* topo: voltar + seletor de idioma */}
-      <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-5xl items-center justify-between px-4">
+      <Header />
+
+      <main className="relative z-10 mx-auto max-w-5xl px-6 pb-28 pt-32">
         <Link
           to={`/home-bold-studio-sinop-brasil?case=${cliente.slug}#cases`}
-          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-bold-gray/40 px-3.5 py-2 text-sm font-medium text-bold-white/85 backdrop-blur-xl transition-colors hover:border-bold-yellow/50 hover:text-bold-yellow"
+          className="button-link mb-10 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-bold-gray/40 px-3.5 py-2 text-sm font-medium text-bold-white/85 backdrop-blur-xl transition-colors hover:border-bold-yellow/50 hover:text-bold-yellow"
         >
           <ArrowLeft size={16} /> {t.projeto.back}
         </Link>
-        <LanguageSwitcher />
-      </header>
-
-      <main className="relative z-10 mx-auto max-w-5xl px-6 pb-28 pt-32">
         {/* hero: logo + nome + segmento + contato */}
         <section className="flex flex-col items-center text-center">
           <div className="flex h-28 w-64 items-center justify-center">
@@ -93,7 +117,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
                   href={cliente.site}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-bold-white/80 transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
+                  className="button-link inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-bold-white/80 transition-colors hover:border-bold-yellow/60 hover:text-bold-yellow"
                 >
                   <Globe size={15} className="text-bold-yellow" /> {t.projeto.visitSite}
                 </a>
@@ -107,13 +131,14 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           <section className="mt-20">
             <p className="text-xs font-bold uppercase tracking-wider text-bold-yellow">{t.projeto.demoreelTitle}</p>
             <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-black/60">
-              <BudgetVideo
-                src={cliente.videos[0]}
-                controls
-                playsInline
-                poster=""
-                className="aspect-video w-full object-cover"
-              />
+              {awaitingNewMedia ? (
+                <div className="project-full-video__poster" role="status">
+                  <img src={cliente.logo} alt="" loading="lazy" />
+                  <p className="max-w-sm text-sm font-semibold text-white/70">{t.projeto.fullVideoSoon}</p>
+                </div>
+              ) : (
+                <FullProjectVideo key={cliente.slug} src={cliente.videos[0]} poster={cliente.logo} />
+              )}
             </div>
           </section>
         )}
@@ -145,7 +170,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
               <p className="text-lg font-medium leading-relaxed text-bold-white/90 md:text-xl">
                 “{cliente.depoimento.texto}”
               </p>
-              <footer className="mt-5 text-sm font-bold text-bold-yellow">— {cliente.depoimento.autor}</footer>
+              <footer className="mt-5 text-sm font-bold text-bold-yellow">{cliente.depoimento.autor}</footer>
             </blockquote>
           </section>
         )}
@@ -159,7 +184,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
                 <div key={img} className="group relative aspect-[4/5] overflow-hidden rounded-lg">
                   <img
                     src={img}
-                    alt={`${cliente.nome} — ${i + 1}`}
+                    alt={`${cliente.nome}, foto ${i + 1}`}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -182,7 +207,7 @@ function ProjetoContent({ cliente }: { cliente: Cliente }) {
           <p className="max-w-md text-2xl font-bold md:text-3xl">{t.projeto.ctaText}</p>
           <Link
             to="/home-bold-studio-sinop-brasil#contato"
-            className="inline-flex items-center gap-2 rounded-lg bg-bold-yellow px-7 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-105"
+            className="button-link inline-flex items-center gap-2 rounded-lg bg-bold-yellow px-7 py-3 text-sm font-bold text-bold-black transition-transform hover:scale-105"
           >
             {t.projeto.ctaButton} <ArrowRight size={16} />
           </Link>
