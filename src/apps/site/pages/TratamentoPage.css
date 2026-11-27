@@ -721,3 +721,55 @@
 
 /* tom: mesma grade dos outros blocos (título à esquerda, apoio alinhado à direita) */
 .trat #tom .trat-topo2 { grid-template-columns: minmax(0, .75fr) minmax(0, 1.7fr); align-items: center; }
+
+/* ---- rodada de 26/11 (3): GIFs maiores, blocos 3 a 6, sombra na borda do verde ---- */
+
+/* GIFs ~80% maiores: duas mídias por linha (a sobra centralizada embaixo) */
+.trat-vitrine { width: min(100%, 74rem); }
+.trat-vitrine__item { flex-basis: calc((100% - var(--gap)) / 2); }
+@media (hover: hover) and (pointer: fine) {
+  .trat-vitrine__item:hover { transform: scale(1.06); }
+  .trat-vitrine:has(.trat-vitrine__item:hover) .trat-vitrine__item:not(:hover) { transform: scale(.96); }
+}
+@media (max-width: 600px) { .trat-vitrine__item { flex-basis: 100%; } }
+/* bloco 3: as fileiras de três viram duas por linha */
+.trat #b3 .trat-faixa:not(.trat-faixa--cafe) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.trat #b3 .trat-faixa:not(.trat-faixa--cafe) > :last-child:nth-child(odd) {
+  grid-column: 1 / -1; justify-self: center; width: calc((100% - clamp(.7rem, 2vw, 1.6rem)) / 2);
+}
+/* bloco 2: as duas de cima e o carrossel ~30% maiores */
+.trat #b2 .trat-faixa--menor { width: min(100%, 68rem); }
+.trat #b2 .trat-carrossel { width: min(100%, 80rem); }
+
+/* bloco 3: textos de apoio maiores e parados (o parallax deixava o texto "arrastando" na rolagem) */
+.trat #b3 .trat-topo2__texto .trat-corpo { font-size: clamp(1rem, 1.38vw, 1.28rem); }
+.trat #b3 .trat-linha { width: min(100%, 86ch); font-size: clamp(1.02rem, 1.38vw, 1.3rem); }
+.trat #b3 :is(.trat-cabecalho, .trat-topo2__texto) { animation: none; transform: none; }
+
+/* bloco 4: título em duas linhas em cima; "Câmera na mão" logo acima dos GIFs, maior */
+.trat #b4 .trat-topo2 { grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 2.4vw, 2rem); }
+.trat #b4 .trat-titulo { white-space: pre-line; max-width: none; }
+.trat #b4 .trat-topo2__texto .trat-corpo {
+  text-align: center; margin-inline: auto; font-weight: 800;
+  font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+}
+.trat #b4 .trat-linha { width: min(100%, 110ch); font-size: clamp(1.02rem, 1.38vw, 1.3rem); }
+
+/* blocos 5 e 6: texto de apoio maior, à direita, em três linhas */
+.trat :is(#b5, #b6) .trat-topo2__texto .trat-corpo {
+  font-size: clamp(1rem, 1.32vw, 1.22rem); text-align: right; margin-inline: auto 0;
+  text-wrap: balance;
+}
+.trat #b5 .trat-topo2__texto .trat-corpo { width: min(100%, 64ch); }
+.trat #b6 .trat-topo2__texto .trat-corpo { width: min(100%, 82ch); }
+
+/* sombra na divisão do branco com o verde (em cima e embaixo do palco) */
+.trat .trat-palco {
+  box-shadow: 0 -1.6rem 3rem -1.2rem rgb(0 0 0 / 38%), 0 1.6rem 3rem -1.2rem rgb(0 0 0 / 38%);
+}
+
+@media (max-width: 899px) {
+  .trat :is(#b4, #b5, #b6) .trat-topo2__texto .trat-corpo { width: auto; text-align: left; margin-inline: 0; }
+}
+.trat #b4 .trat-topo2__texto { justify-self: stretch; width: 100%; text-align: center; }
+.trat #b4 .trat-topo2__texto .trat-corpo { width: auto; max-width: none; }
