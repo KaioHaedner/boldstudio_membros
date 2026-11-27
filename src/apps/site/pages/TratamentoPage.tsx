@@ -672,6 +672,13 @@ function Controle({
 }
 
 // ---------- página ----------
+const EQUIPE = [
+  { opcao: 'Opção 01 · High end', nome: 'Thiago Cauduro', foto: '', link: 'https://www.youtube.com/watch?v=rMusaQxow2U&t=9s', rotuloLink: 'Ver trabalho',
+    texto: "DP de nível internacional, com experiência em grandes projetos para marcas como McDonald's, Renault, Seara, Amazon e muitas outras." },
+  { opcao: 'Opção 02 · Custo-benefício', nome: 'Marcos Maia', foto: '', link: 'https://marcosmaia.rec.br', rotuloLink: 'marcosmaia.rec.br',
+    texto: 'DP conhecido no Centro-Oeste, com trabalhos para as principais produtoras e marcas da região. Trabalho consistente e muita experiência entregando resultado de alto padrão com estrutura mais enxuta.' },
+]
+
 export function TratamentoPage() {
   // logo do rodapé: entra como motion, com um leve estouro, quando aparece na tela
   const logoRodapeRef = useRef<HTMLImageElement>(null)
@@ -851,6 +858,24 @@ export function TratamentoPage() {
           <Vitrine ids={FOTOGRAFIA.midias} render={(id, i) => (
             <Midia key={id} id={id} proporcao="16 / 9" indice={i} selecionavel={false} selecionada={false} aoSelecionar={() => {}} />
           )} />
+        </Secao>
+
+        <Secao id="equipe" tone="black">
+          <header className="trat-cabecalho trat-cabecalho--topico">
+            <p className="trat-eyebrow">Equipe</p>
+            <Titulo texto="Diretores de fotografia" />
+          </header>
+          <div className="trat-equipe">
+            {EQUIPE.map(p => (
+              <article key={p.nome}>
+                <div className="trat-equipe__foto">{p.foto ? <img src={p.foto} alt={p.nome} loading="lazy" /> : <span aria-hidden="true">{p.nome.split(' ').map(n => n[0]).join('')}</span>}</div>
+                <small>{p.opcao}</small>
+                <h3>{p.nome}</h3>
+                <p>{p.texto}</p>
+                <a href={p.link} target="_blank" rel="noopener noreferrer">{p.rotuloLink} ↗</a>
+              </article>
+            ))}
+          </div>
         </Secao>
 
         <div className="trat-palco__encerramento">

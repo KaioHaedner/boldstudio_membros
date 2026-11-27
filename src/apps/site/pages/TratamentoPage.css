@@ -861,3 +861,17 @@ html:has(.trat) { scroll-snap-type: y proximity; }
   .trat #fotografia .trat-topo2 { grid-template-columns: minmax(0, 1fr); }
 }
 .trat #som .trat-som article :is(h3, p) { text-align: center; margin-inline: auto; }
+
+/* equipe: os dois diretores de fotografia propostos */
+.trat #equipe .trat-cabecalho { justify-items: center; text-align: center; }
+.trat-equipe { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2.4rem); width: min(100%, 60rem); margin-inline: auto; }
+.trat-equipe article { display: grid; justify-items: center; gap: .6rem; text-align: center; padding: clamp(1.2rem, 2.5vw, 2rem); border-radius: 1.4rem; background: rgb(255 255 255 / 6%); border: 1px solid rgb(255 222 0 / 22%); box-shadow: 0 1.2rem 2.4rem -.5rem rgb(0 0 0 / 55%); }
+.trat-equipe__foto { width: min(100%, 15rem); aspect-ratio: 4 / 5; border-radius: 1rem; overflow: hidden; background: #1a1a16; display: grid; place-items: center; box-shadow: 0 1rem 2rem -.6rem #000c; }
+.trat-equipe__foto img { width: 100%; height: 100%; object-fit: cover; }
+.trat-equipe__foto span { font-size: 3.4rem; font-weight: 850; color: var(--jd-yellow); }
+.trat-equipe small { color: var(--jd-yellow); font-weight: 800; letter-spacing: .04em; text-transform: uppercase; font-size: .78rem; }
+.trat-equipe h3 { margin: 0; font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 850; color: #fffdf4; }
+.trat-equipe p { margin: 0; max-width: 40ch; color: #fffdf4cc; line-height: 1.5; }
+.trat-equipe a { margin-top: .4rem; padding: .7rem 1.3rem; border-radius: 999px; background: var(--jd-yellow); color: #111; font-weight: 800; text-decoration: none; transition: transform .2s ease; }
+.trat-equipe a:hover { transform: translateY(-2px); }
+@media (max-width: 700px) { .trat-equipe { grid-template-columns: minmax(0, 1fr); } }
