@@ -917,3 +917,5 @@ html:has(.trat) { scroll-snap-type: y proximity; }
 .trat-equipe__foto { flex-shrink: 0; transform: translate3d(calc(var(--mx) * 10px), calc(var(--my) * 10px), 0); }
 .trat-equipe h3 { margin-top: .5rem; }
 .trat-equipe p { font-size: clamp(.8rem, .9vw, .88rem); }
+.trat-equipe p { color: #ffd712; -webkit-text-stroke: 3px #111; paint-order: stroke fill; font-weight: 800; letter-spacing: .01em; }
+.trat-equipe p { -webkit-text-stroke: 0; }
