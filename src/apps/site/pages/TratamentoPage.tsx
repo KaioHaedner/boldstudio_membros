@@ -869,7 +869,6 @@ export function TratamentoPage() {
             {EQUIPE.map(p => (
               <article key={p.nome}>
                 <div className="trat-equipe__foto">{p.foto ? <img src={p.foto} alt={p.nome} loading="lazy" /> : <span aria-hidden="true">{p.nome.split(' ').map(n => n[0]).join('')}</span>}</div>
-                <small>{p.opcao}</small>
                 <h3>{p.nome}</h3>
                 <p>{p.texto}</p>
                 <a href={p.link} target="_blank" rel="noopener noreferrer">{p.rotuloLink} ↗</a>

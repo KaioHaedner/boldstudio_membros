@@ -875,3 +875,14 @@ html:has(.trat) { scroll-snap-type: y proximity; }
 .trat-equipe a { margin-top: .4rem; padding: .7rem 1.3rem; border-radius: 999px; background: var(--jd-yellow); color: #111; font-weight: 800; text-decoration: none; transition: transform .2s ease; }
 .trat-equipe a:hover { transform: translateY(-2px); }
 @media (max-width: 700px) { .trat-equipe { grid-template-columns: minmax(0, 1fr); } }
+/* equipe (ajuste): cards brancos e mais quadrados, apoio em amarelo, botões no estilo dos cards de câmera */
+.trat-equipe article { border-radius: .8rem; background: #fff; border-color: #0000000f; box-shadow: 0 1.4rem 2.6rem -.8rem rgb(0 0 0 / 55%); }
+.trat-equipe__foto { width: 100%; aspect-ratio: 1; border-radius: .6rem; }
+.trat-equipe h3 { color: #181a0c; }
+.trat-equipe p { color: #d9a400; font-weight: 650; }
+.trat-equipe a {
+  position: relative; overflow: hidden; border-radius: .8rem; padding: .9rem 1.6rem 1.3rem;
+  border: 1px solid #2d22083b; background: linear-gradient(to bottom, var(--jd-yellow) 70%, #c79b05);
+  color: #181a0c; font-weight: 650; box-shadow: 0 .6rem 1.8rem -.65rem rgb(0 0 0 / 30%);
+}
+.trat-equipe article { grid-template-rows: auto auto 1fr auto; align-content: start; } .trat-equipe a { align-self: end; }
