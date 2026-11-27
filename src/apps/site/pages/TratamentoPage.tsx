@@ -672,6 +672,19 @@ function Controle({
 }
 
 // ---------- página ----------
+// parallax dos cards da equipe: o card inclina com o mouse e a foto anda um pouco mais que ele
+function inclinarCard(e: React.PointerEvent<HTMLElement>) {
+  if (e.pointerType !== 'mouse') return
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  el.style.setProperty('--mx', String((e.clientX - r.left) / r.width - 0.5))
+  el.style.setProperty('--my', String((e.clientY - r.top) / r.height - 0.5))
+}
+function soltarCard(e: React.PointerEvent<HTMLElement>) {
+  e.currentTarget.style.setProperty('--mx', '0')
+  e.currentTarget.style.setProperty('--my', '0')
+}
+
 const EQUIPE = [
   { opcao: 'Opção 01 · High end', nome: 'Thiago Cauduro', foto: '/tratamento/equipe/thiago-cauduro.jpg', link: 'https://www.youtube.com/watch?v=rMusaQxow2U&t=9s', rotuloLink: 'Ver trabalho',
     texto: "DP de nível internacional, com experiência em grandes projetos para marcas como McDonald's, Renault, Seara, Amazon e muitas outras." },
@@ -867,11 +880,11 @@ export function TratamentoPage() {
           </header>
           <div className="trat-equipe">
             {EQUIPE.map(p => (
-              <article key={p.nome}>
+              <article key={p.nome} onPointerMove={inclinarCard} onPointerLeave={soltarCard}>
                 <div className="trat-equipe__foto">{p.foto ? <img src={p.foto} alt={p.nome} loading="lazy" /> : <span aria-hidden="true">{p.nome.split(' ').map(n => n[0]).join('')}</span>}</div>
                 <h3>{p.nome}</h3>
                 <p>{p.texto}</p>
-                <a href={p.link} target="_blank" rel="noopener noreferrer">{p.rotuloLink} ↗</a>
+                <a href={p.link} target="_blank" rel="noopener noreferrer">{p.rotuloLink} <IconeExterno /></a>
               </article>
             ))}
           </div>

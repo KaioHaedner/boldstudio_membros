@@ -886,3 +886,29 @@ html:has(.trat) { scroll-snap-type: y proximity; }
   color: #181a0c; font-weight: 650; box-shadow: 0 .6rem 1.8rem -.65rem rgb(0 0 0 / 30%);
 }
 .trat-equipe article { grid-template-rows: auto auto 1fr auto; align-content: start; } .trat-equipe a { align-self: end; }
+.trat-equipe { width: min(100%, 50rem); } .trat-equipe article { aspect-ratio: 3 / 4; } .trat-equipe__foto { width: 58%; }
+/* parallax no mouse */
+.trat-equipe { perspective: 1000px; }
+.trat-equipe article {
+  --mx: 0; --my: 0;
+  transform: rotateY(calc(var(--mx) * 10deg)) rotateX(calc(var(--my) * -10deg));
+  transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+  transform-style: preserve-3d;
+}
+.trat-equipe__foto { transform: translate3d(calc(var(--mx) * 14px), calc(var(--my) * 14px), 30px); transition: transform .25s cubic-bezier(.22, 1, .36, 1); }
+@media (prefers-reduced-motion: reduce) { .trat-equipe article, .trat-equipe__foto { transform: none; } }
+.trat-equipe article { background: #f4efe3; }
+.trat-equipe p { color: #b98c00; }
+.trat-equipe a { display: inline-flex; align-items: center; gap: .45rem; }
+.trat-equipe a svg { width: 1em; height: 1em; }
+/* foto ocupa o espaço que sobra no card 3:4, sem passar por cima do nome */
+.trat-equipe article { grid-template-rows: minmax(0, 1fr) auto auto auto; }
+.trat-equipe__foto { width: auto; height: 100%; max-width: 100%; min-height: 0; aspect-ratio: 1; }
+.trat-equipe__foto { width: clamp(8rem, 13vw, 10rem); height: auto; } .trat-equipe article { grid-template-rows: auto auto 1fr auto; }
+.trat-equipe a { box-shadow: 0 .8rem 1.6rem -.4rem rgb(0 0 0 / 60%), 0 .2rem .5rem rgb(0 0 0 / 30%); }
+/* equipe em três colunas: título à esquerda, os dois cards à direita */
+@media (min-width: 900px) {
+  .trat #equipe :has(> .trat-equipe) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: center; gap: clamp(1.5rem, 4vw, 3.5rem); }
+  .trat #equipe .trat-cabecalho { justify-items: start; text-align: left; }
+  .trat #equipe .trat-equipe { width: 100%; margin: 0; }
+}
