@@ -912,3 +912,8 @@ html:has(.trat) { scroll-snap-type: y proximity; }
   .trat #equipe .trat-cabecalho { justify-items: start; text-align: left; }
   .trat #equipe .trat-equipe { width: 100%; margin: 0; }
 }
+/* foto não invade o nome: sem altura forçada no card nem profundidade na foto */
+.trat-equipe article { aspect-ratio: auto; min-height: 0; }
+.trat-equipe__foto { flex-shrink: 0; transform: translate3d(calc(var(--mx) * 10px), calc(var(--my) * 10px), 0); }
+.trat-equipe h3 { margin-top: .5rem; }
+.trat-equipe p { font-size: clamp(.8rem, .9vw, .88rem); }
