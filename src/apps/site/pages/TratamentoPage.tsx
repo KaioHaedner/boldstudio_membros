@@ -685,7 +685,7 @@ export function TratamentoPage() {
       logo.classList.add('is-pop')
       io.disconnect()
     }, { threshold: 0.35 })
-    io.observe(logo)
+    io.observe(logo.closest('footer') ?? logo)
     return () => io.disconnect()
   }, [])
   const { cliente = '' } = useParams()

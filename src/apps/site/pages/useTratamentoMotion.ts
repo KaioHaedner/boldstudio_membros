@@ -101,7 +101,7 @@ export function useTratamentoMotion(rootRef: RefObject<HTMLDivElement | null>, m
       root.querySelectorAll<HTMLElement>('.trat-faixa').forEach(faixa => {
         registrar(faixa, 'grow-midia', Array.from(faixa.querySelectorAll<HTMLElement>(':scope > .trat-midia')))
       })
-      root.querySelectorAll<HTMLElement>('.trat-jd__cena > .trat-midia, .trat-abre-duas > .trat-midia, .trat-obrigado > .trat-midia, .trat-yt, .trat-rodape__logo')
+      root.querySelectorAll<HTMLElement>('.trat-jd__cena > .trat-midia, .trat-abre-duas > .trat-midia, .trat-obrigado > .trat-midia, .trat-yt')
         .forEach(el => registrar(el, 'grow-midia', [el]))
 
       // 2) Títulos e divisores: Fade-in-up
