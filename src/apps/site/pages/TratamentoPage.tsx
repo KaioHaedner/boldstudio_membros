@@ -688,7 +688,7 @@ function soltarCard(e: React.PointerEvent<HTMLElement>) {
 const EQUIPE = [
   { opcao: 'Opção 01 · High end', nome: 'Thiago Cauduro', foto: '/tratamento/equipe/thiago-cauduro.jpg', link: 'https://www.youtube.com/watch?v=rMusaQxow2U&t=9s', rotuloLink: 'Ver trabalho',
     texto: "DP de nível internacional, com experiência em grandes projetos para marcas como McDonald's, Renault, Seara, Amazon e muitas outras." },
-  { opcao: 'Opção 02 · Custo-benefício', nome: 'Marcos Maia', foto: '/tratamento/equipe/marcos-maia.jpg', link: 'https://marcosmaia.rec.br', rotuloLink: 'marcosmaia.rec.br',
+  { opcao: 'Opção 02 · Custo-benefício', nome: 'Marcos Maia', foto: '/tratamento/equipe/marcos-maia.webp', link: 'https://marcosmaia.rec.br', rotuloLink: 'marcosmaia.rec.br',
     texto: 'DP conhecido no Centro-Oeste, com trabalhos para as principais produtoras e marcas da região. Trabalho consistente e muita experiência entregando resultado de alto padrão com estrutura mais enxuta.' },
 ]
 
