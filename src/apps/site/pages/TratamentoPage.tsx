@@ -369,31 +369,8 @@ function Galeria({ ids, cheia = 'primeira', render }: {
   )
 }
 
-function Carrossel({ ids, render }: { ids: string[]; render: (id: string, indice: number) => React.ReactNode }) {
-  const [passo, setPasso] = useState(0)
-  useEffect(() => {
-    if (ids.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = window.setInterval(() => setPasso(s => (s + 1) % ids.length), 3200)
-    return () => window.clearInterval(t)
-  }, [ids.length])
-  if (ids.length === 0) return null
-  const meio = Math.floor(Math.min(ids.length, 3) / 2)
-  return (
-    <div className="trat-carrossel" style={{ '--itens': ids.length } as CSSProperties}>
-      {ids.map((id, i) => {
-        const posicao = (i - passo + ids.length) % ids.length
-        return (
-          <div key={id} className={`trat-carrossel__item${posicao === meio ? ' is-centro' : ''}`} style={{ order: posicao }}>
-            {render(id, i)}
-            {posicao === meio && <span className="trat-exclamacoes" aria-hidden="true"><i>!</i><i>!</i><i>!</i></span>}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
 
-// vitrine: as mídias ficam paradas, três por linha (a sobra centralizada embaixo).
+// vitrine: as mídias ficam paradas, duas por linha (a sobra centralizada embaixo).
 // Com mouse, a que está sob o cursor cresce com a moldura amarela e as outras recuam.
 function Vitrine({ ids, render }: { ids: string[]; render: (id: string, indice: number) => React.ReactNode }) {
   if (ids.length === 0) return null
@@ -481,7 +458,7 @@ function BlocoView({
         {duasColunas(<Texto partes={[bloco.paragrafos[0]]} />)}
         {grade(ids.slice(0, 2), 2, 'trat-faixa--menor')}
         <Texto partes={[bloco.paragrafos[1]]} />
-        <Carrossel ids={ids.slice(2)} render={midia} />
+        <Vitrine ids={ids.slice(2)} render={midia} />
       </>
     )
   } else if (bloco.id === 'b3') {
@@ -714,7 +691,7 @@ export function TratamentoPage() {
   const { cliente = '' } = useParams()
   const [busca, setBusca] = useSearchParams()
   const layout: Layout = busca.get('layout') === 'bold' ? 'bold' : 'tratores'
-  const limpo = busca.has('limpo')
+  const limpo = !busca.has('controle')
   const chaveSalva = `tratamento-${cliente}-v3`
 
   const [estadoPorChave, setEstadoPorChave] = useState<{ chave: string; estado: EstadoTratamento }>(() => ({

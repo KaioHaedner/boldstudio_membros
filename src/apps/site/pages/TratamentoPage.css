@@ -654,13 +654,14 @@
 }
 @keyframes trat-surge { from { opacity: 0; transform: translateY(70px); } to { opacity: 1; transform: none; } }
 /* motion da logo: parte do zero e estoura um pouco antes de assentar */
-.trat .trat-rodape__logo.pode-animar { transform: scale(0); }
-.trat .trat-rodape__logo.is-pop { animation: trat-pop 1s cubic-bezier(.34, 1.56, .64, 1) both; }
-@keyframes trat-pop {
-  0% { transform: scale(0); }
-  60% { transform: scale(1.08); }
-  80% { transform: scale(.97); }
-  100% { transform: scale(1); }
+.trat .trat-rodape { overflow-x: clip; }
+.trat .trat-rodape__logo.pode-animar { transform: translateX(-110vw); }
+.trat .trat-rodape__logo.is-pop { animation: trat-entra 1.1s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes trat-entra {
+  0% { transform: translateX(-110vw); }
+  62% { transform: translateX(4%); }
+  80% { transform: translateX(-1.5%); }
+  100% { transform: translateX(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .trat .trat-vitrine { animation: none; }
@@ -793,3 +794,70 @@
   text-align: center; margin-inline: auto; font-weight: 650;
 }
 .trat #b4 .trat-topo2__texto :is(.trat-corpo, p) { font-weight: 850; }
+
+/* ---- rodada de 27/11 ---- */
+
+/* sobre nós: texto de apoio em duas linhas; foto do avião com sombra preta */
+@media (min-width: 900px) {
+  .trat #sobre .trat-topo2 { grid-template-columns: auto minmax(0, 1fr); }
+  .trat #sobre .trat-titulo { white-space: nowrap; }
+  .trat #sobre .trat-topo2__texto :is(.trat-corpo, p) { max-width: none; text-wrap: balance; }
+}
+.trat #sobre .trat-midia { box-shadow: 0 2.2rem 3.6rem -1rem rgb(0 0 0 / 55%), 0 .8rem 1.4rem rgb(0 0 0 / 22%); }
+
+/* sombra mais marcada no topo do card verde */
+.trat .trat-palco { box-shadow: 0 -1.8rem 3.4rem -.6rem rgb(0 0 0 / 42%), 0 1.8rem 3.4rem -.6rem rgb(0 0 0 / 42%); }
+
+/* tom: texto de apoio 30% maior */
+.trat #tom .trat-topo2__texto :is(.trat-corpo, p) { font-size: clamp(1.17rem, 1.46vw, 1.4rem); }
+
+/* bloco 2: texto de apoio maior, três linhas parelhas */
+.trat #b2 .trat-topo2__texto :is(.trat-corpo, p) { font-size: clamp(1.1rem, 1.42vw, 1.36rem); text-wrap: balance; }
+
+/* bloco 3: na sugestão de conversa, a fala do Seu João desce um pouco */
+@media (min-width: 900px) { .trat #b3 .trat-falas blockquote:nth-child(2) { translate: 0 2.4rem; } }
+
+/* verde e preto se conectam em degradê, sem linha de corte */
+.trat .trat-palco > :is(#b2, #b4, #b6, #camera) {
+  box-shadow: none;
+  background: linear-gradient(to bottom, transparent, #0b0b09 clamp(8rem, 18vh, 14rem), #0b0b09 calc(100% - clamp(8rem, 18vh, 14rem)), transparent);
+}
+
+/* bloco 4: título numa linha só (10% menor); textos amarelos maiores e mais encorpados */
+.trat #b4 .trat-titulo { font-size: clamp(2.2rem, 4.5vw, 4.05rem); white-space: normal; }
+@media (min-width: 900px) { .trat #b4 .trat-titulo { white-space: nowrap; } }
+.trat #b4 .trat-topo2__texto :is(.trat-corpo, p) { font-size: clamp(1.37rem, 1.95vw, 1.82rem); }
+.trat #b4 .trat-linha { font-size: clamp(1.12rem, 1.52vw, 1.45rem); font-weight: 850; }
+
+/* bloco 5: título maior (tem espaço) */
+.trat #b5 .trat-titulo { font-size: clamp(3rem, 7vw, 6.4rem); }
+
+/* linguagem de câmera: o card sob o mouse cresce; os outros recuam e ficam preto e branco */
+.trat #camera .trat-lista li { transition: transform .24s cubic-bezier(.22, 1, .36, 1), filter .24s ease, opacity .24s ease; }
+@media (hover: hover) and (pointer: fine) {
+  /* !important: a entrada (gsap) deixa transform/filter inline nos cards */
+  .trat #camera .trat-lista:has(li:hover) li:not(:hover) { transform: scale(.94) !important; filter: grayscale(1) !important; opacity: .7 !important; }
+  .trat #camera .trat-lista li:hover { transform: scale(1.08) !important; z-index: 2; }
+}
+
+/* direção de fotografia: "Direção de / fotografia" grande e branco; subtítulo em amarelo; apoio em três linhas, maior */
+.trat #fotografia .trat-topo2 { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); }
+.trat #fotografia .trat-cabecalho--topico .trat-eyebrow {
+  white-space: pre-line; color: var(--branco, #fffdf4); font-size: clamp(2.6rem, 5.6vw, 5.2rem);
+  font-weight: 850; letter-spacing: -.04em; line-height: .95; max-width: none;
+}
+.trat #fotografia .trat-cabecalho--topico .trat-titulo { color: var(--jd-yellow); font-size: clamp(1.2rem, 1.9vw, 1.7rem); }
+.trat #fotografia .trat-topo2__texto :is(.trat-corpo, p) { font-size: clamp(1.08rem, 1.42vw, 1.34rem); width: min(100%, 64ch); text-wrap: balance; }
+
+/* trilha e SFX: texto centralizado dentro dos dois cards */
+.trat #som .trat-som article { text-align: center; }
+
+/* rolagem: cada bloco encaixa na tela quando a rolagem para perto do começo dele */
+html:has(.trat) { scroll-snap-type: y proximity; }
+.trat :is(#sobre, #john-deere, .trat-palco > .trat-secao, .trat-palco__encerramento > .trat-secao, #obrigado) { scroll-snap-align: start; }
+@media (prefers-reduced-motion: reduce) { html:has(.trat) { scroll-snap-type: none; } }
+
+@media (max-width: 899px) {
+  .trat #fotografia .trat-topo2 { grid-template-columns: minmax(0, 1fr); }
+}
+.trat #som .trat-som article :is(h3, p) { text-align: center; margin-inline: auto; }

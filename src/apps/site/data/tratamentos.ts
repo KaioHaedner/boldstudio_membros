@@ -150,7 +150,7 @@ export const BLOCOS: BlocoTexto[] = [
     id: 'b4',
     menu: 'Bloco 4',
     eyebrow: 'Bloco 4',
-    titulo: 'Entendendo os desafios,\nvivendo na pele',
+    titulo: 'Entendendo os desafios, vivendo na pele',
     paragrafos: [
       'Câmera na mão, movimento e uma troca mais espontânea entre os protagonistas.',
       'Seguimos para a “lida” do dia a dia, conhecendo melhor a fazenda e entendendo os desafios que o produtor enfrenta (focando no assunto do episódio), com os protagonistas passando por vários locais e situações.',
@@ -205,7 +205,7 @@ export const CAMERA = {
 }
 
 export const FOTOGRAFIA = {
-  eyebrow: 'Direção de fotografia',
+  eyebrow: 'Direção de\nfotografia',
   titulo: 'Textura de cinema, tons quentes',
   texto:
     'Textura cinematográfica, tons quentes e cores vivas, e a ideia aqui é seguir uma uniformidade com o próprio material publicado pela John Deere recentemente, na campanha “Você e John Deere, uma só força”.',
