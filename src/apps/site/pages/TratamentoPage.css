@@ -781,3 +781,15 @@
   box-shadow: 0 -1.4rem 2.8rem -1rem rgb(0 0 0 / 55%), 0 1.4rem 2.8rem -1rem rgb(0 0 0 / 55%);
 }
 .trat .trat-palco > :is(#b2, #b4, #b6, #camera) .trat-ondas { --onda-cor: #ffde00; --onda-forca: .1; }
+
+/* títulos sempre em 40% e texto de apoio amarelo em 60%, centralizado na coluna dele e um pouco mais encorpado */
+@media (min-width: 900px) {
+  .trat :is(#sobre, #tom, #b2, #b3, #b5, #b6, #b7, #fotografia) .trat-topo2 {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  }
+}
+.trat :is(#sobre, #tom, #b2, #b3, #b5, #b6, #b7, #fotografia) .trat-topo2__texto { justify-self: stretch; text-align: center; }
+.trat :is(#sobre, #tom, #b2, #b3, #b5, #b6, #b7, #fotografia) .trat-topo2__texto :is(.trat-corpo, p) {
+  text-align: center; margin-inline: auto; font-weight: 650;
+}
+.trat #b4 .trat-topo2__texto :is(.trat-corpo, p) { font-weight: 850; }
